@@ -12,43 +12,47 @@ perdat= read.csv('period_dates_single.csv')
 
 perdat$date = as.Date(perdat$date,format='%m/%d/%Y')
 
-# LDA
-k = 5
-ldamodel = LDA(dat,k,control=list(seed=100,estimate.alpha=F,alpha=1),method="VEM")
+# LDA models: groups from 2 to 5
+ldamodel2 = LDA(dat,2,control=list(seed=30,estimate.alpha=F,alpha=1),method="VEM")
+ldamodel3 = LDA(dat,3,control=list(seed=30,estimate.alpha=F,alpha=1),method="VEM")
+ldamodel4 = LDA(dat,4,control=list(seed=30,estimate.alpha=F,alpha=1),method="VEM")
+ldamodel5 = LDA(dat,5,control=list(seed=30,estimate.alpha=F,alpha=1),method="VEM")
 
 # composition of component communities, to identify most important species
-structure(round(exp(ldamodel@beta), 3), dimnames = list(NULL, ldamodel@terms))
-
-# plots like in Valle et al 2014
-#get parameter estimates
-z=posterior(ldamodel)
-commun.plot=z$topics
-commun.spp=z$terms
-
-dates = as.Date(perdat$date[1:length(dat[,1])])
+structure(round(exp(ldamodel2@beta), 3), dimnames = list(NULL, ldamodel2@terms))
 
 
 # ===========================================
 # figures
 
-#plot relative abundance of component communities for each sampling unit
-par(mfrow=c(1,1))
-plot(NA,NA,xlim=c(dates[1],dates[436]),ylim=c(0,1),xlab='',ylab='Relative abundance',xaxt='n')
-for (i in 1:k){
-  lines(dates,commun.plot[,i],col=i)
+dates = as.Date(perdat$date[1:length(dat[,1])])
+
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+plot_component_communities = function(ldamodel,k) {
+  # function to take output of LDA function and plot time series of component communities
+  z = posterior(ldamodel)
+  ldaplot = data.frame(date=c(),relabund = c(), community = c())
+  for (k1 in seq(k)) {
+    ldaplot = rbind(ldaplot,data.frame(date=dates,relabund=z$topics[,k1],community = as.factor(rep(k1,436))))
+  }
+  ggplot(ldaplot, aes(x=date,y=relabund,colour=community)) + 
+    geom_point() +
+    geom_line(size=1) +
+    scale_x_date(name='') +
+    scale_y_continuous(name='Percent Similarity') +
+    theme(axis.text=element_text(size=18),
+          axis.title=element_text(size=18),
+          legend.text=element_text(size=18),
+          legend.title=element_text(size=18)) +
+    scale_colour_manual(name="",
+                        breaks=as.character(seq(k)),
+                        values=cbPalette[1:k])
+
 }
-axis(1,at=as.Date(c('1980-01-01','1985-01-01','1990-01-01','1995-01-01','2000-01-01','2005-01-01','2010-01-01','2015-01-01')),
-     labels=c('1980','1985','1990','1995','2000','2005','2010','2015'))
 
-# ggplot version
-ldaplot = data.frame(date = dates,comm1=commun.plot[,1],comm2=commun.plot[,2])
-ggplot(ldaplot, aes(date)) + 
-  geom_line(aes(y = comm1, colour = "Community A"),size=1) + 
-  geom_line(aes(y = comm2, colour = "Community B"),size=1) +
-  scale_x_date(name='') +
-  scale_y_continuous(name='Percent Similarity') +
-  theme(axis.text=element_text(size=18),
-        axis.title=element_text(size=18),
-        legend.text=element_text(size=18),
-        legend.title=element_text(size=18))
 
+plot_component_communities(ldamodel2,2)
+plot_component_communities(ldamodel3,3)
+plot_component_communities(ldamodel4,4)
+plot_component_communities(ldamodel5,5)
