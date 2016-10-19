@@ -32,7 +32,7 @@ abline(v=3.25,col='orange',lwd=2) # 1984 after octave
 abund_dat$color = rep(0)
 abund_dat$color[257] = 1      # Sep 1999
 abund_dat$color[377:385] = 2  # Sep 2009 - May 2010 (< 4 animals/plot)
-abund_dat$color[187:199] = 3  # Sep 1993 - Sep 1994
+abund_dat$color[184:199] = 3  # Sep 1993 - Sep 1994
 abund_dat$color[77:82] = 4    # Mar 1984 - Aug 1984
 
 # expanded definition of droughts
