@@ -11,27 +11,20 @@ library(RColorBrewer)
 my_colors = brewer.pal(5, name = "Set2")
 
 # load csv of abundance of each sp per plot
-rdat = read.csv('rodent dat.csv')
-# mult by 4 plots to get whole numbers
-dat = rdat[,2:length(rdat)]*8
-# have to round, because some periods did not contain 8 control plots
-dat = round(dat,0)
+dat = read.csv('Rodent_table_dat.csv',na.strings = '',as.is=T)
 
 # how many species
-nsp = length(names(dat))
+#nsp = length(names(dat))
 
 # dates of trapping periods
 perdat = read.csv('Period_dates_single.csv')
-
 perdat$date = as.Date(perdat$date,format='%m/%d/%Y')
 
-date_dat = dat
-date_dat$year = perdat$yr[1:length(date_dat[,1])]
+#date_dat = dat
+#date_dat$year = perdat$yr[1:length(date_dat[,1])]
 
-yearly_dat = aggregate(date_dat[,1:21],by=list(year=date_dat$year),FUN=mean)
-yearly_dat = round(yearly_dat[-1],0)
-
-length(perdat$date)
+#yearly_dat = aggregate(date_dat[,1:21],by=list(year=date_dat$year),FUN=mean)
+#yearly_dat = round(yearly_dat[-1],0)
 
 #=======================
 # LDA
@@ -42,7 +35,7 @@ set.seed(12345)
 
 n_changepoints = 4 
 
-d = ymd(as.Date(perdat$date[1:length(rdat[,1])]))
+d = ymd(as.Date(perdat$date[1:length(dat[,1])]))
 yday = yday(d)
 year_continuous = 1970 + as.integer(julian(d)) / 365.25
 x = data.frame(
