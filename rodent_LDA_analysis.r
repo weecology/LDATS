@@ -19,7 +19,7 @@ ldamodel4 = LDA(dat,4,control=list(seed=30,estimate.alpha=F,alpha=1),method="VEM
 ldamodel5 = LDA(dat,5,control=list(seed=30,estimate.alpha=F,alpha=1),method="VEM")
 
 # composition of component communities, to identify most important species
-structure(round(exp(ldamodel2@beta), 3), dimnames = list(NULL, ldamodel2@terms))
+structure(round(exp(ldamodel4@beta), 3), dimnames = list(NULL, ldamodel2@terms))
 
 
 # ===========================================
