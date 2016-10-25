@@ -33,12 +33,6 @@ perdat$date = as.Date(perdat$date,format='%m/%d/%Y')
 #=======================
 # LDA
 
-k = 4
-ldamodel = LDA(dat,k,control=list(seed=30,estimate.alpha=F,alpha=1),method="VEM")
-set.seed(12345)
-
-n_changepoints = 4 
-
 d = ymd(as.Date(perdat$date[1:length(dat[,1])]))
 yday = yday(d)
 year_continuous = 1970 + as.integer(julian(d)) / 365.25
@@ -51,7 +45,7 @@ x = data.frame(
 # Begin changepoint model -------------------------------------------------
 
 
-changepoint_model = function(ldamodel,n_changepoints) {
+changepoint_model = function(ldamodel,n_changepoints,maxit=1E6) {
   
   # Simulated annealing uses a "cooling schedule" or "annealing schedule" that 
   # drops the temperature from very high (i.e. very random, very easy to kick the 
@@ -141,7 +135,6 @@ changepoint_model = function(ldamodel,n_changepoints) {
   changepoints = sort(sample.int(length(year_continuous), n_changepoints))
   ll = get_ll(changepoints)
   
-  maxit = 1E6
   cp = matrix(NA, n_changepoints, maxit / 1E3)
   
   kick_signs = sample(c(-1, 1), maxit, replace = TRUE)
@@ -153,10 +146,6 @@ changepoint_model = function(ldamodel,n_changepoints) {
   max_observed_ll = -Inf
   
   temperatures = cooling(1:maxit, shift, scale)
-  
-  
-  #plot(temperatures, type = "l", log = "y")
-  #plot(temperatures, type = "l", log = "")
   
   
   for (i in 1:maxit) {
@@ -211,6 +200,4 @@ changepoint_model = function(ldamodel,n_changepoints) {
     ylab = "year of breakpoint",
     lwd = 1/2
   )
-  
-  #beepr::beep()
 }
