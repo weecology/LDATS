@@ -1,3 +1,7 @@
+if (packageVersion("memoise") <= "1.0.0") {
+  devtools::install_github("hadley/memoise")
+}
+
 library(memoise)     # For avoiding redundante computations
 library(lubridate)   # For dates
 library(progress)
@@ -103,7 +107,7 @@ changepoint_model = function(ldamodel,n_changepoints) {
       
       logLik(m)
     }
-    fit_chunk = memoise(fit_chunk_non_memoized)
+    fit_chunk = memoise(fit_chunk_non_memoized, cache = cache_filesystem("cache_chunk"))
   }
   
   # Get the log-likelihood associated with a set of breakpoints
@@ -129,7 +133,7 @@ changepoint_model = function(ldamodel,n_changepoints) {
         )
       )
     }
-    get_ll = memoise(get_ll_non_memoized)
+    get_ll = memoise(get_ll_non_memoized, cache = cache_filesystem("cache_ll"))
     
   }
   
