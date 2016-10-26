@@ -3,6 +3,7 @@
 # LDA =================================
 library(topicmodels)
 library(ggplot2)
+set.seed(1)
 
 # load csv of abundance of each sp per plot
 dat = read.csv('Rodent_table_dat.csv',na.strings = '',as.is=T)
@@ -13,10 +14,11 @@ perdat= read.csv('period_dates_single.csv')
 perdat$date = as.Date(perdat$date,format='%m/%d/%Y')
 
 # LDA models: groups from 2 to 5
-ldamodel2 = LDA(dat,2,control=list(seed=30,estimate.alpha=F,alpha=1),method="VEM")
-ldamodel3 = LDA(dat,3,control=list(seed=30,estimate.alpha=F,alpha=1),method="VEM")
-ldamodel4 = LDA(dat,4,control=list(seed=30,estimate.alpha=F,alpha=1),method="VEM")
-ldamodel5 = LDA(dat,5,control=list(seed=30,estimate.alpha=F,alpha=1),method="VEM")
+nstart = 20 # For the final analysis, maybe do 1000
+ldamodel2 = LDA(dat,2,control=list(estimate.alpha=F,alpha=1, nstart = nstart),method="VEM")
+ldamodel3 = LDA(dat,3,control=list(estimate.alpha=F,alpha=1, nstart = nstart),method="VEM")
+ldamodel4 = LDA(dat,4,control=list(estimate.alpha=F,alpha=1, nstart = nstart),method="VEM")
+ldamodel5 = LDA(dat,5,control=list(estimate.alpha=F,alpha=1, nstart = nstart),method="VEM")
 
 # composition of component communities, to identify most important species
 structure(round(exp(ldamodel4@beta), 3), dimnames = list(NULL, ldamodel2@terms))
