@@ -201,3 +201,11 @@ changepoint_model = function(ldamodel,n_changepoints,maxit=1E6) {
     lwd = 1/2
   )
 }
+
+# =========================================================================
+# Run the model
+
+nstart = 20 # For the final analysis, maybe do 1000
+ldamodel2 = LDA(dat,2,control=list(estimate.alpha=F,alpha=1, nstart = nstart),method="VEM")
+
+changepoint_model(ldamodel2,2)
