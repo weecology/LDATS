@@ -13,6 +13,17 @@ perdat= read.csv('period_dates_single.csv')
 
 perdat$date = as.Date(perdat$date,format='%m/%d/%Y')
 
+
+d = ymd(as.Date(perdat$date[1:length(dat[,1])]))
+year_continuous = 1970 + as.integer(julian(d)) / 365.25
+x = data.frame(
+  year_continuous = year_continuous,
+  sin_year = sin(year_continuous * 2 * pi),
+  cos_year = cos(year_continuous * 2 * pi)
+)
+
+
+
 # LDA models: groups from 2 to 5
 nstart = 20 # For the final analysis, maybe do 1000
 ldamodel2 = LDA(dat,2,control=list(estimate.alpha=F,alpha=1, nstart = nstart),method="VEM")

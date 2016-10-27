@@ -4,208 +4,234 @@ if (packageVersion("memoise") <= "1.0.0") {
 
 library(memoise)     # For avoiding redundante computations
 library(lubridate)   # For dates
-library(progress)
+library(progress)    # For progress bar
 library(topicmodels) # For LDA
 library(ggplot2)
 library(viridis)
 library(nnet)        # For multinomial model (part of changepoint analysis)
 library(RColorBrewer)
 
-
 my_colors = brewer.pal(5, name = "Set2")
-
-# load csv of abundance of each sp per plot
-dat = read.csv('Rodent_table_dat.csv',na.strings = '',as.is=T)
-
-# how many species
-#nsp = length(names(dat))
-
-# dates of trapping periods
-perdat = read.csv('Period_dates_single.csv')
-perdat$date = as.Date(perdat$date,format='%m/%d/%Y')
-
-#date_dat = dat
-#date_dat$year = perdat$yr[1:length(date_dat[,1])]
-
-#yearly_dat = aggregate(date_dat[,1:21],by=list(year=date_dat$year),FUN=mean)
-#yearly_dat = round(yearly_dat[-1],0)
-
-#=======================
-# LDA
-
-d = ymd(as.Date(perdat$date[1:length(dat[,1])]))
-yday = yday(d)
-year_continuous = 1970 + as.integer(julian(d)) / 365.25
-x = data.frame(
-  sin_year = sin(year_continuous * 2 * pi),
-  cos_year = cos(year_continuous * 2 * pi)
-)
-
 
 # Begin changepoint model -------------------------------------------------
 
 
-changepoint_model = function(ldamodel,n_changepoints,maxit=1E6) {
+# Fit a model to dates in (start,end] and return the log likelihood.
+# Memoization is a trick that lets us save the output for a given chunk and
+# avoid finding the answer more than once.
+fit_chunk_non_memoized = function(ldamodel, x, start, end, make_plot = FALSE, ...) {
+  # Weights average to 1, & are proportional to total rodents caught that month
+  m = multinom(
+    ldamodel@gamma ~ sin_year + cos_year, 
+    data = x,
+    maxit = 1E5,
+    weights = rowMeans(dat) / mean(as.matrix(dat)),
+    subset = x$year_continuous > start & x$year_continuous <= end,
+    trace = FALSE
+  )
   
-  # Simulated annealing uses a "cooling schedule" or "annealing schedule" that 
-  # drops the temperature from very high (i.e. very random, very easy to kick the 
-  # changepoints into bad configurations) to very low (where the model freezes up 
-  # an optimum). When the termperature is 1, we're basically doing MCMC on the
-  # original model. Schedules of the form a/(x+b) have good theoretical properties
-  # for convergence, but they fall too quickly at the start of the schedule, so I
-  # use a more convenient scheudle to get us down to a temperature of 1 and then 
-  # do a/(a + x) from there to the end.
-  {
-    a = 1E4
-    switch = 5E5
-    start_temp = 10
-    cooling = function(x, shift, scale){
-      out = a / (a + x - switch)
-      ifelse(x < switch, (start_temp + 1) - x/switch * start_temp, out)
-    }
-    par(mfrow = c(1, 2))
-    curve(cooling(x, shift, scale), to = 1E6, n = 1E4, log = "y", type = "p")
-    curve(cooling(x, shift, scale), to = 1E6, n = 1E4, log = "", yaxs = "i", ylim = c(0, 20), xaxs = "i")
-    par(mfrow = c(1, 1))
+  if (make_plot) {
+    plotfun = ifelse(start == -Inf, matplot, matlines)
+    plotfun(
+      x$year_continuous[x$year_continuous > start & x$year_continuous <= end], 
+      fitted(m),
+      ylim = c(0, 1), 
+      xlim = range(x$year_continuous),
+      type = "l",
+      lty = 1,
+      col = my_colors,
+      ...
+    )
+    abline(v = start)
   }
   
-  # Fit a model to dates in (start,end] and return the log likelihood.
-  # Memoization is a trick that lets us save the output for a given chunk and
-  # avoid finding the answer more than once.
-  if (!exists("fit_chunk")) {
-    fit_chunk_non_memoized = function(start, end, make_plot = FALSE, ...) {
-      # Weights average to 1, & are proportional to total rodents caught that month
-      m = multinom(
-        ldamodel@gamma ~ sin_year + cos_year, 
-        data = x,
-        maxit = 1E5,
-        weights = rowMeans(dat) / mean(as.matrix(dat)),
-        subset = year_continuous > start & year_continuous <= end,
-        trace = FALSE
-      )
-      
-      if (make_plot) {
-        plotfun = ifelse(start == -Inf, matplot, matlines)
-        plotfun(
-          year_continuous[year_continuous > start & year_continuous <= end], 
-          fitted(m),
-          ylim = c(0, 1), 
-          xlim = range(year_continuous),
-          type = "l",
-          lty = 1,
-          col = my_colors,
-          ...
-        )
-        abline(v = start)
+  logLik(m)
+}
+
+
+# Get the log-likelihood associated with a set of breakpoints
+get_ll_non_memoized = function(ldamodel, x, changepoints, make_plot = FALSE, ...){
+  if (make_plot) {
+    fit_chunk = fit_chunk_non_memoized
+  }
+  
+  if (any(changepoints <= 0) | any(changepoints >= length(x$year_continuous)) | 
+      is.unsorted(changepoints, strictly = TRUE)) {
+    return(-Inf)
+  }
+  
+  
+  changedates = c(-Inf, x$year_continuous[changepoints], Inf)
+  sum(
+    sapply(
+      seq_len(length(changedates) - 1),
+      function(i){
+        fit_chunk(ldamodel, x, changedates[i], changedates[i + 1], make_plot = make_plot, ...)
       }
-      
-      logLik(m)
-    }
-    fit_chunk = memoise(fit_chunk_non_memoized, cache = cache_filesystem("cache_chunk"))
-  }
-  
-  # Get the log-likelihood associated with a set of breakpoints
-  if (!exists("get_ll")) {
-    get_ll_non_memoized = function(changepoints, make_plot = FALSE, ...){
-      if(make_plot){
-        fit_chunk = fit_chunk_non_memoized
-      }
-      
-      if (any(changepoints <= 0) | any(changepoints >= length(year_continuous)) | 
-          is.unsorted(changepoints, strictly = TRUE)) {
-        return(-Inf)
-      }
-      
-      
-      changedates = c(-Inf, year_continuous[changepoints], Inf)
-      sum(
-        sapply(
-          seq_len(length(changedates) - 1),
-          function(i){
-            fit_chunk(changedates[i], changedates[i + 1], make_plot = make_plot, ...)
-          }
-        )
-      )
-    }
-    get_ll = memoise(get_ll_non_memoized, cache = cache_filesystem("cache_ll"))
-    
-  }
-  
-  # Set initial changepoints randomly
-  changepoints = sort(sample.int(length(year_continuous), n_changepoints))
-  ll = get_ll(changepoints)
-  
-  cp = matrix(NA, n_changepoints, maxit / 1E3)
-  
-  kick_signs = sample(c(-1, 1), maxit, replace = TRUE)
-  kick_magnitudes = 1 + rbinom(maxit, size = 11, prob = 1/4)
-  
-  which_kicked = sample.int(n_changepoints, maxit, replace = TRUE)
-  runifs = runif(maxit)
-  
-  max_observed_ll = -Inf
-  
-  temperatures = cooling(1:maxit, shift, scale)
-  
-  
-  for (i in 1:maxit) {
-    T = temperatures[i]
-    
-    # Choose a changepoint at random and either kick it one step to the left or
-    # to the right.
-    proposed_changepoints = changepoints
-    proposed_changepoints[which_kicked[i]] = 
-      proposed_changepoints[which_kicked[i]] + kick_signs[i] * kick_magnitudes[i]
-    
-    # Metropolis decision rule for accepting proposals
-    proposed_ll = get_ll(proposed_changepoints)
-    energy_difference = (proposed_ll - ll) / T
-    if (exp(energy_difference) > runifs[i]) {
-      changepoints = proposed_changepoints
-      ll = proposed_ll
-    }
-    
-    # Print status
-    if (i %% 1000 == 0) {
-      print(paste("i:", i, "  T:", T, "  ll:", ll))
-      cp[ ,i / 1000] = changepoints
-    }
-    
-    # Save the best value observed so far
-    if (ll > max_observed_ll) {
-      max_observed_ll = ll
-      best_changepoints = changepoints
-    }
-  }
-  
-  
-  
-  # Plot changepoint model & LDA output over time
-  par(mfrow = c(1, 2))
-  get_ll_non_memoized(best_changepoints, make_plot = TRUE, lwd = 2)
-  matplot(year_continuous, ldamodel@gamma, type = "l", lty = 1, col = my_colors, lwd = 2)
-  abline(v = year_continuous[best_changepoints], lwd = 2)
-  par(mfrow = c(1, 1))
-  
-  
-  matplot(
-    seq(1E3, maxit, 1E3),
-    matrix(year_continuous[t(cp)], ncol = n_changepoints), 
-    col = brewer.pal(5, "Dark2"), 
-    type = "l", 
-    lty = 1,
-    xlab = "iterations",
-    ylim = range(year_continuous),
-    yaxs = "i",
-    ylab = "year of breakpoint",
-    lwd = 1/2
+    )
   )
 }
 
-# =========================================================================
-# Run the model
 
-nstart = 20 # For the final analysis, maybe do 1000
-ldamodel2 = LDA(dat,2,control=list(estimate.alpha=F,alpha=1, nstart = nstart),method="VEM")
+# Not saving the caches in the working directory because that makes
+# RStudio unhappy.
+fit_chunk = memoise(fit_chunk_non_memoized, 
+                    cache = cache_filesystem("../.cache_chunk"))
+get_ll = memoise(get_ll_non_memoized, 
+                 cache = cache_filesystem("../.cache_ll"))
 
-changepoint_model(ldamodel2,2)
+
+
+
+
+# k is the exponent controlling the temperature sequence: 0 implies
+# geometric sequence, 1 implies squaring before exponentiating.
+# Use larger values if the cooler chains aren't swapping enough.
+changepoint_model = function(ldamodel,
+                             x,
+                             n_changepoints,
+                             N_temps = 8,
+                             maxit = 1E4,
+                             max_temp = 4096,
+                             k = .5){
+  
+  # Temperature sequence
+  sequence = seq(0, log2(max_temp), length.out = N_temps)
+  log_temps = sequence^(1 + k) / log2(max_temp)^k
+  temps = 2^(log_temps)
+  betas = 1/temps # "inverse temperature"
+  
+  # Initialize randomly, with the best starting values in the coldest chain
+  changepoints = replicate(N_temps, sort(sample.int(length(x$year_continuous), n_changepoints)))
+  lls = sapply(1:N_temps, function(j){get_ll(ldamodel, x, changepoints[ , j])})
+  changepoints = changepoints[ , order(lls, decreasing = TRUE)]
+  lls = sort(lls, decreasing = TRUE)
+  
+  saved = array(NA, c(n_changepoints, N_temps, maxit))
+  saved_lls = matrix(NA, N_temps, maxit)
+  saved_ids = saved_lls
+  
+  accept_rate = 0
+  ids = 1:N_temps
+  swap_accepted = matrix(FALSE, maxit, N_temps - 1)
+  
+  # Pre-calculate proposal distributions
+  kick_signs = sample(c(-1, 1), maxit * N_temps, replace = TRUE)
+  kick_magnitudes = 1 + rbinom(maxit * N_temps, size = 11, prob = 3 / 11)
+  kicks = matrix(kick_signs * kick_magnitudes, nrow = maxit)
+  which_kicked = matrix(
+    sample.int(n_changepoints, maxit * N_temps, replace = TRUE),
+    nrow = maxit
+  )
+  
+  pb = progress_bar$new(format = "  [:bar] :percent eta: :eta",
+                        total = maxit, clear = FALSE, width = 60)
+  for (i in 1:maxit) {
+    pb$tick()
+    # Make proposals for each temperature
+    proposed_changepoints = changepoints
+    proposed_changepoints[cbind(which_kicked[i, ], 1:N_temps)] = 
+      changepoints[cbind(which_kicked[i, ], 1:N_temps)] + kicks[i, ]
+    proposed_lls = sapply(1:N_temps, function(j){get_ll(ldamodel, x, proposed_changepoints[ , j])})
+    
+    # Accept some proposals via Metropolis rule; update the changepoints
+    # and the associated log-likelihoods
+    accepts = runif(N_temps) < exp((proposed_lls - lls) * betas)
+    accept_rate = accept_rate + accepts / maxit
+    changepoints[ , accepts] = proposed_changepoints[ , accepts]
+    lls[accepts] = proposed_lls[accepts]
+    
+    for (j in seq(N_temps - 1, 1)) {
+      # Propose a swap between temperature j and temperature j+1
+      accept_swap = runif(1) < exp((betas[j] - betas[j + 1]) * (lls[j + 1] - lls[j]))
+      if (accept_swap) {
+        swap_accepted[i, j] = TRUE
+        
+        # Swap changepoint vectors between MCMC replicas
+        placeholder = changepoints[, j]
+        changepoints[ , j] = changepoints[, j + 1]
+        changepoints[ , j + 1] = placeholder
+        
+        # Swap the associated log-likelihood values
+        placeholder = lls[j]
+        lls[j] = lls[j + 1]
+        lls[j + 1] = placeholder
+        
+        placeholder = ids[j]
+        ids[j] = ids[j + 1]
+        ids[j + 1] = placeholder
+      }
+    }
+    saved[,,i] = changepoints
+    saved_ids[,i] = ids
+    saved_lls[,i] = lls
+  }
+  
+  list(
+    temps = temps,
+    saved = saved,
+    saved_ids = saved_ids,
+    saved_lls = saved_lls,
+    swap_rates = colMeans(swap_accepted),
+    accept_rate = accept_rate
+  )
+}
+
+
+
+# Functions for viewing/diagnosing the changepoints -----------------------
+
+# Number of times the particle went from hottest chain to the coldest one,
+# indicating good mixing.  Should probably be in the mid-hundreds or low
+# thousands if we want to be really confident about the results.
+count_trips = function(results){
+  N_temps = length(results$accept_rate)
+  maxit = ncol(results$saved_lls)
+  sapply(
+    1:N_temps,
+    function(k){
+      last_extreme = NA
+      last_extreme_vector = numeric(maxit)
+      for (i in 1:maxit) {
+        if (results$saved_ids[1, i] == k) {
+          last_extreme = "bottom"
+        }
+        if (results$saved_ids[N_temps, i] == k) {
+          last_extreme = "top"
+        }
+        last_extreme_vector[i] = last_extreme
+      }
+      
+      first_top = match("top", last_extreme_vector)
+      
+      sum(rle(last_extreme_vector[first_top:maxit])$values == "bottom")
+    }
+  )
+}
+
+
+# Histogram showing percentage of MCMC samples that contained
+# a changepoint in a given year.
+annual_hist = function(results, year_continuous){
+  hist(year_continuous[results$saved[,1,]], 
+       breaks = seq(0, 3000), xlim = range(year_continuous), 
+       axes = FALSE, freq = FALSE, ylim = range(0, 1 / dim(results$saved)[1]),
+       yaxs = "i")
+  axis(2, seq(0, 1, 0.25), seq(0, 1, .25) * dim(results$saved)[1])
+  axis(1)
+}
+
+
+# It's also good to check the swap_rates (should all be between 0.2 and 0.8,
+# except at the hottest temperatures which can be close to 1.0).
+# Also good to check acceptance rates (first one should be vaguely near
+# 0.5-ish, last one should be very close to 1.0 (e.g. 0.98))
+
+
+# # =========================================================================
+# # Run the model
+# 
+# nstart = 20 # For the final analysis, maybe do 1000
+# ldamodel2 = LDA(dat,2,control=list(estimate.alpha=F,alpha=1, nstart = nstart),method="VEM")
+# 
+# changepoint_model(ldamodel2, x, 2)
