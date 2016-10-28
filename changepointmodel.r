@@ -73,12 +73,12 @@ get_ll_non_memoized = function(ldamodel, x, changepoints, make_plot = FALSE, ...
 }
 
 
-# Not saving the caches in the working directory because that makes
-# RStudio unhappy.
+# Saving the caches as hidden folders to prevent silly Mac computers
+# (and RStudio) from wasting resources trying to index them
 fit_chunk = memoise(fit_chunk_non_memoized, 
-                    cache = cache_filesystem("../.cache_chunk"))
+                    cache = cache_filesystem(".cache_chunk"))
 get_ll = memoise(get_ll_non_memoized, 
-                 cache = cache_filesystem("../.cache_ll"))
+                 cache = cache_filesystem(".cache_ll"))
 
 
 
@@ -90,15 +90,16 @@ get_ll = memoise(get_ll_non_memoized,
 changepoint_model = function(ldamodel,
                              x,
                              n_changepoints,
-                             N_temps = 8,
+                             N_temps = 6,
                              maxit = 1E4,
-                             max_temp = 4096,
-                             k = .5){
+                             penultimate_temp = 2^6,
+                             k = 0){
   
   # Temperature sequence
-  sequence = seq(0, log2(max_temp), length.out = N_temps)
-  log_temps = sequence^(1 + k) / log2(max_temp)^k
+  sequence = seq(0, log2(penultimate_temp), length.out = N_temps - 1)
+  log_temps = sequence^(1 + k) / log2(penultimate_temp)^k
   temps = 2^(log_temps)
+  temps = c(temps, 1E10) # Highest temperature
   betas = 1/temps # "inverse temperature"
   
   # Initialize randomly, with the best starting values in the coldest chain
@@ -117,7 +118,7 @@ changepoint_model = function(ldamodel,
   
   # Pre-calculate proposal distributions
   kick_signs = sample(c(-1, 1), maxit * N_temps, replace = TRUE)
-  kick_magnitudes = 1 + rbinom(maxit * N_temps, size = 11, prob = 3 / 11)
+  kick_magnitudes = 1 + rgeom(maxit * N_temps, 1/12)
   kicks = matrix(kick_signs * kick_magnitudes, nrow = maxit)
   which_kicked = matrix(
     sample.int(n_changepoints, maxit * N_temps, replace = TRUE),
@@ -213,20 +214,16 @@ count_trips = function(results){
 # Histogram showing percentage of MCMC samples that contained
 # a changepoint in a given year.
 annual_hist = function(results, year_continuous){
+  if (missing(year_continuous)) {
+    year_continuous = 1:max(results$saved) / 12
+  }
   hist(year_continuous[results$saved[,1,]], 
        breaks = seq(0, 3000), xlim = range(year_continuous), 
-       axes = FALSE, freq = FALSE, ylim = range(0, 1 / dim(results$saved)[1]),
-       yaxs = "i")
-  axis(2, seq(0, 1, 0.25), seq(0, 1, .25) * dim(results$saved)[1])
+       axes = FALSE, yaxs = "i", ylim = c(0, 1.04 * length(results$saved[1,1,])))
+  axis(2, seq(0, 1, 0.25) * length(results$saved[1,1,]), 
+       seq(0, 1, .25))
   axis(1)
 }
-
-
-# It's also good to check the swap_rates (should all be between 0.2 and 0.8,
-# except at the hottest temperatures which can be close to 1.0).
-# Also good to check acceptance rates (first one should be vaguely near
-# 0.5-ish, last one should be very close to 1.0 (e.g. 0.98))
-
 
 # # =========================================================================
 # # Run the model
@@ -234,4 +231,4 @@ annual_hist = function(results, year_continuous){
 # nstart = 20 # For the final analysis, maybe do 1000
 # ldamodel2 = LDA(dat,2,control=list(estimate.alpha=F,alpha=1, nstart = nstart),method="VEM")
 # 
-# changepoint_model(ldamodel2, x, 2)
+# results = changepoint_model(ldamodel2, x, 3)
