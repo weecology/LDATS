@@ -12,7 +12,7 @@ source('gibbs functions.R')
 dat.agg=data.matrix(read.csv('Rodent_table_dat.csv',as.is=T))
 
 ngibbs=1000 # has to be greater than 200
-ncommun=3   # number of topics
+ncommun=4   # number of topics
 results=gibbs.samp(dat.agg=dat.agg,ngibbs=ngibbs,ncommun=ncommun,a.betas=1,a.theta=1)
 
 #plot results
@@ -44,12 +44,16 @@ thetasd = matrix(apply(results$theta,2,sd),ncommun,nplots)
 # ===================================================================
 # ggplot version
 
-thetadf = data.frame(grp1 = theta1[1,],grp2 = theta1[2,],grp3=theta1[3,],sd1=thetasd[1,],sd2=thetasd[2,],sd3=thetasd[3,])
+# make data frame of theta estimate and sd
+
+thetadf = data.frame(grp1 = theta1[1,],grp2 = theta1[2,],sd1=thetasd[1,],sd2=thetasd[2,],grp3=theta1[3,],sd3=thetasd[3,],grp4=theta1[4,],sd4=thetasd[4,])
 
 ggplot(thetadf) +
-  geom_ribbon(data = thetadf, mapping = aes_string(x = seq(436), ymin = thetadf$grp1-1.96*thetadf$sd1, ymax = thetadf$grp1+1.96*thetadf$sd1), fill = "grey") +
+  geom_ribbon(data = thetadf, mapping = aes_string(x = seq(436), ymin = thetadf$grp1-1.96*thetadf$sd1, ymax = thetadf$grp1+1.96*thetadf$sd1,alpha=.4), fill = "grey") +
   geom_line(aes(y = thetadf$grp1,x=seq(436))) +
-  geom_ribbon(data = thetadf, mapping = aes_string(x = seq(436), ymin = thetadf$grp2-1.96*thetadf$sd2, ymax = thetadf$grp2+1.96*thetadf$sd2), fill = "pink") +
+  geom_ribbon(data = thetadf, mapping = aes_string(x = seq(436), ymin = thetadf$grp2-1.96*thetadf$sd2, ymax = thetadf$grp2+1.96*thetadf$sd2,alpha=.4), fill = "pink") +
   geom_line(aes(y = thetadf$grp2,x=seq(436)),color='red') +
-  geom_ribbon(data = thetadf, mapping = aes_string(x = seq(436), ymin = thetadf$grp3-1.96*thetadf$sd3, ymax = thetadf$grp3+1.96*thetadf$sd3), fill = "lightgreen") +
-  geom_line(aes(y = thetadf$grp3,x=seq(436)),color='forestgreen')
+  geom_ribbon(data = thetadf, mapping = aes_string(x = seq(436), ymin = thetadf$grp3-1.96*thetadf$sd3, ymax = thetadf$grp3+1.96*thetadf$sd3,alpha=.4), fill = "lightgreen") +
+  geom_line(aes(y = thetadf$grp3,x=seq(436)),color='forestgreen') +
+  geom_ribbon(data = thetadf, mapping = aes_string(x = seq(436), ymin = thetadf$grp4-1.96*thetadf$sd4, ymax = thetadf$grp4+1.96*thetadf$sd4,alpha=.4), fill = "plum") +
+  geom_line(aes(y = thetadf$grp4,x=seq(436)),color='purple4') 
