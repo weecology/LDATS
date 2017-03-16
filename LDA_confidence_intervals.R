@@ -5,14 +5,14 @@ library(ggplot2)
 
 
 setwd('C:/Users/EC/Desktop/git/Extreme-events-LDA')
-source('gibbs functions.R')
+source('gibbs_functions.R')
 
 # ================================================================
 # load data and run LDA model
 dat.agg=data.matrix(read.csv('Rodent_table_dat.csv',as.is=T))
 
 ngibbs=1000 # has to be greater than 200
-ncommun=4   # number of topics
+ncommun=2  # number of topics
 results=gibbs.samp(dat.agg=dat.agg,ngibbs=ngibbs,ncommun=ncommun,a.betas=1,a.theta=1)
 
 #plot results
@@ -46,14 +46,24 @@ thetasd = matrix(apply(results$theta,2,sd),ncommun,nplots)
 
 # make data frame of theta estimate and sd
 
-thetadf = data.frame(grp1 = theta1[1,],grp2 = theta1[2,],sd1=thetasd[1,],sd2=thetasd[2,],grp3=theta1[3,],sd3=thetasd[3,],grp4=theta1[4,],sd4=thetasd[4,])
+thetadf = data.frame(grp1 = theta1[1,],grp2 = theta1[2,],sd1=thetasd[1,],sd2=thetasd[2,],grp3=theta1[3,],sd3=thetasd[3,])#,grp4=theta1[4,],sd4=thetasd[4,])
 
-ggplot(thetadf) +
+ggplot(betadf) +
   geom_ribbon(data = thetadf, mapping = aes_string(x = seq(436), ymin = thetadf$grp1-1.96*thetadf$sd1, ymax = thetadf$grp1+1.96*thetadf$sd1,alpha=.4), fill = "grey") +
-  geom_line(aes(y = thetadf$grp1,x=seq(436))) +
+  geom_line(aes(y = thetadf$grp1,x=seq(21))) +
   geom_ribbon(data = thetadf, mapping = aes_string(x = seq(436), ymin = thetadf$grp2-1.96*thetadf$sd2, ymax = thetadf$grp2+1.96*thetadf$sd2,alpha=.4), fill = "pink") +
-  geom_line(aes(y = thetadf$grp2,x=seq(436)),color='red') +
+  geom_line(aes(y = thetadf$grp2,x=seq(21)),color='red') 
   geom_ribbon(data = thetadf, mapping = aes_string(x = seq(436), ymin = thetadf$grp3-1.96*thetadf$sd3, ymax = thetadf$grp3+1.96*thetadf$sd3,alpha=.4), fill = "lightgreen") +
-  geom_line(aes(y = thetadf$grp3,x=seq(436)),color='forestgreen') +
+  geom_line(aes(y = thetadf$grp3,x=seq(436)),color='forestgreen') 
   geom_ribbon(data = thetadf, mapping = aes_string(x = seq(436), ymin = thetadf$grp4-1.96*thetadf$sd4, ymax = thetadf$grp4+1.96*thetadf$sd4,alpha=.4), fill = "plum") +
   geom_line(aes(y = thetadf$grp4,x=seq(436)),color='purple4') 
+  
+  
+  # plot credible intervals around sp comp
+  betadf = data.frame(grp1 = beta1[1,],grp2 = beta1[2,],sd1=betasd[1,],sd2=betasd[2,])
+  
+  ggplot(betadf) +
+    geom_ribbon(data = betadf, mapping = aes_string(x = seq(21), ymin = betadf$grp1-1.96*betadf$sd1, ymax = betadf$grp1+1.96*betadf$sd1,alpha=.4), fill = "grey") +
+    geom_line(aes(y = betadf$grp1,x=seq(21))) +
+    geom_ribbon(data = betadf, mapping = aes_string(x = seq(21), ymin = betadf$grp2-1.96*betadf$sd2, ymax = betadf$grp2+1.96*betadf$sd2,alpha=.4), fill = "pink") +
+    geom_line(aes(y = betadf$grp2,x=seq(21)),color='red') 
