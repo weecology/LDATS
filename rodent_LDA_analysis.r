@@ -31,6 +31,9 @@ ldamodel6 = LDA(dat,6,control=list(estimate.alpha=F,alpha=.5, nstart = nstart),m
 ldamodel7 = LDA(dat,7,control=list(estimate.alpha=F,alpha=.5, nstart = nstart),method="VEM")
 
 
+# model selection
+aic_values = aic
+
 # ==========================================================================================
 # figures
 
