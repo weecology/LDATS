@@ -14,6 +14,7 @@
 
 source('LDA_figure_scripts.R')
 source('AIC_model_selection.R')
+source('changepointmodel.r')
 
 nspecies = 20
 topics = 2
@@ -49,8 +50,7 @@ gamma_slow[,2] = seq(400)*(.8/400)+.1
 
 # ==================================================================================
 # plot beta and gammas
-par(mfrow=c(topics,1))
-for (i in 1:topics) {plot(1:nspecies,beta[i,],type='l',xlab='',ylim=c(0,.2),col=i,lwd=2) }
+plot_community_composition(beta,c(0,.2))
 
 par(mfrow=c(1,1))
 plot(gamma_constant[,1],type='l',xlab='time',ylab='topic',ylim=c(0,1),main='constant')
@@ -79,5 +79,11 @@ aic_values1 = aic_model(dataset1)
 aic_values2 = aic_model(dataset2)
 aic_values3 = aic_model(dataset3)
 
-# changepoint model
-
+# changepoint model  -- doesn't work yet
+#year_continuous = 1970+seq(400)/12
+#x = data.frame(
+#  year_continuous = year_continuous,
+#  sin_year = sin(year_continuous * 2 * pi),
+#  cos_year = cos(year_continuous * 2 * pi)
+#)
+#results = changepoint_model(ldamodel, x, 2)

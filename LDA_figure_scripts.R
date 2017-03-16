@@ -17,7 +17,7 @@ plot_component_communities = function(ldamodel,k,xticks) {
   ggplot(ldaplot, aes(x=date,y=relabund,colour=community)) + 
     geom_point() +
     geom_line(size=1) +
-    scale_y_continuous(name='Percent Similarity') +
+    scale_y_continuous(name='Percent Similarity',limits=c(0,1)) +
     theme(axis.text=element_text(size=18),
           axis.title=element_text(size=18),
           legend.text=element_text(size=18),
@@ -65,5 +65,17 @@ plot_component_communities_smooth = function(ldamodel,k,xticks) {
 community_composition = function(ldamodel) {
   # function that returns a matrix of the species composition of the component communities (to 3 decimal places)
   return(structure(round(exp(ldamodel@beta), 3), dimnames = list(NULL, ldamodel@terms)))
+}
+
+plot_community_composition = function(composition,ylimits) {
+  # function to plot species composition of topics
+  # Inputs:
+  #  - composition = matrix of sp comp
+  #  - ylimits = limits on y axis-- for example c(0,1)
+  
+  nspecies = dim(composition)[2]
+  topics = dim(composition)[1]
+  par(mfrow=c(topics,1))
+  for (i in 1:topics) {plot(1:nspecies,composition[i,],type='l',xlab='',ylim=ylimits,col=i,lwd=2) }
 }
 

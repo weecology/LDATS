@@ -38,10 +38,11 @@ aic_values = aic
 # figures
 
 # look at sp comp of topics
-community_composition(ldamodel2)
+comp_matrix = community_composition(ldamodel2)
+comp_matrix
 
 # make figure of sp comp of topics
-
+plot_community_composition(comp_matrix,c(0,.6))
 
 # time series plot of topics
 dates = as.Date(perdat$date[1:length(dat[,1])])
