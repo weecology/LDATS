@@ -22,7 +22,7 @@ my_colors = brewer.pal(5, name = "Set2")
 fit_chunk_non_memoized = function(ldamodel, x, start, end, make_plot = FALSE, ...) {
   # Weights average to 1, & are proportional to total rodents caught that month
   m = multinom(
-    ldamodel@gamma ~ sin_year + cos_year, 
+    ldamodel@gamma ~ year_continuous + sin_year + cos_year, 
     data = x,
     maxit = 1E5,
     weights = rowMeans(dat) / mean(as.matrix(dat)),
@@ -231,4 +231,6 @@ annual_hist = function(results, year_continuous){
 # nstart = 20 # For the final analysis, maybe do 1000
 # ldamodel2 = LDA(dat,2,control=list(estimate.alpha=F,alpha=1, nstart = nstart),method="VEM")
 # 
-# results = changepoint_model(ldamodel2, x, 3)
+results3_3 = changepoint_model(ldamodel3, x, 3)
+annual_hist(results,year_continuous)
+get_ll_non_memoized(ldamodel3,x,2,)
