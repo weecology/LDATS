@@ -12,6 +12,9 @@
 #  gamma = matrix of prevalence of topics through time
 #  assume even species composition and no overlap of species between topics
 
+source('LDA_figure_scripts.R')
+source('AIC_model_selection.R')
+
 nspecies = 20
 topics = 2
 tsteps = 400 #I think of these as monthly time steps
@@ -49,6 +52,7 @@ gamma_slow[,2] = seq(400)*(.8/400)+.1
 par(mfrow=c(topics,1))
 for (i in 1:topics) {plot(1:nspecies,beta[i,],type='l',xlab='',ylim=c(0,.2),col=i,lwd=2) }
 
+par(mfrow=c(1,1))
 plot(gamma_constant[,1],type='l',xlab='time',ylab='topic',ylim=c(0,1),main='constant')
 lines(gamma_constant[,2],col='red')
 plot(gamma_fast[,1],type='l',xlab='time',ylab='topic',ylim=c(0,1),main='fast')
@@ -66,6 +70,14 @@ dataset3 = round(as.data.frame(gamma_slow %*% beta) *N,digits=0)
 # =================================================================================
 # run LDA model
 nstart = 20 # For the final analysis, maybe do 1000
-ldamodel = LDA(dataset3,2,control=list(estimate.alpha=F,alpha=.5, nstart = nstart),method="VEM")
-plot_component_communities(ldamodel,2,seq(400))
+ldamodel = LDA(dataset3,3,control=list(estimate.alpha=F,alpha=.5, nstart = nstart),method="VEM")
+
+plot_component_communities(ldamodel,3,seq(400))
+
+# AIC model selection for number of topics
+aic_values1 = aic_model(dataset1)
+aic_values2 = aic_model(dataset2)
+aic_values3 = aic_model(dataset3)
+
+# changepoint model
 
