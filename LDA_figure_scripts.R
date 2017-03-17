@@ -79,3 +79,26 @@ plot_community_composition = function(composition,ylimits) {
   for (i in 1:topics) {plot(1:nspecies,composition[i,],type='l',xlab='',ylim=ylimits,col=i,lwd=2) }
 }
 
+plot_component_communities_gibbs = function(results,k,xticks) {
+  # function to plot time series of component communities from LDA run with a gibbs sampler
+  
+  cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+  
+  theta1=matrix(apply(results$theta,2,mean),k,length(xticks))
+  ldaplot = data.frame(date=c(),relabund = c(), community = c())
+  for (k1 in seq(k)) {
+    ldaplot = rbind(ldaplot,data.frame(date=xticks,relabund=theta1[k1,],community = as.factor(rep(k1,length(xticks)))))
+  }
+  
+  ggplot(ldaplot, aes(x=date,y=relabund,colour=community)) + 
+    geom_point() +
+    geom_line(size=1) +
+    scale_y_continuous(name='Percent Similarity',limits=c(0,1)) +
+    theme(axis.text=element_text(size=18),
+          axis.title=element_text(size=18),
+          legend.text=element_text(size=18),
+          legend.title=element_text(size=18)) +
+    scale_colour_manual(name="",
+                        breaks=as.character(seq(k)),
+                        values=cbPalette[1:k])
+}
