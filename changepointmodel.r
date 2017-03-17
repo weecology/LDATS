@@ -231,6 +231,6 @@ annual_hist = function(results, year_continuous){
 # nstart = 20 # For the final analysis, maybe do 1000
 # ldamodel2 = LDA(dat,2,control=list(estimate.alpha=F,alpha=1, nstart = nstart),method="VEM")
 # 
-results3_3 = changepoint_model(ldamodel3, x, 3)
-annual_hist(results,year_continuous)
-get_ll_non_memoized(ldamodel3,x,2,)
+#results3_3 = changepoint_model(ldamodel3, x, 3)
+#annual_hist(results,year_continuous)
+#get_ll_non_memoized(ldamodel3,x,2,)
