@@ -12,10 +12,12 @@
 #  gamma = matrix of prevalence of topics through time
 #  assume even species composition and no overlap of species between topics
 
+setwd('C:/Users/EC/Desktop/git/Extreme-events-LDA')
 source('LDA_figure_scripts.R')
 source('AIC_model_selection.R')
 source('changepointmodel.r')
 
+source('gibbs_functions.r')
 
 
 # ====================================================
@@ -38,14 +40,14 @@ gamma_constant[,1] = rep(1,tsteps)
 # gamma for a fast transition from topic1 to topic2 (one year/12 time steps)
 gamma_fast = matrix(rep(0,tsteps*topics),nrow=tsteps,ncol=topics)
 # proportions are constant for first 200 time steps
-gamma_fast[1:tsteps/2,1] = rep(.9)
-gamma_fast[1:tsteps/2,2] = rep(.1)
+gamma_fast[1:200,1] = rep(.9)
+gamma_fast[1:200,2] = rep(.1)
 # fast transition from tstep 201-212
-gamma_fast[(tsteps/2)+1:(tsteps/2)+12,1] = seq(12)*(-.8/12)+.9
-gamma_fast[(tsteps/2)+1:(tsteps/1)+12,2] = seq(12)*(.8/12)+.1
+gamma_fast[201:212,1] = seq(12)*(-.8/12)+.9
+gamma_fast[201:212,2] = seq(12)*(.8/12)+.1
 # proportions are constant for rest of time series
-gamma_fast[(tsteps/2)+13:tsteps,1] = rep(.1)
-gamma_fast[(tsteps/2)+13:tsteps,2] = rep(.9) 
+gamma_fast[213:tsteps,1] = rep(.1)
+gamma_fast[213:tsteps,2] = rep(.9) 
 
 # gamma for a slow transition from topic1 to topic2 that takes the entire time series
 gamma_slow = matrix(rep(0,tsteps*topics),nrow=tsteps,ncol=topics)
@@ -119,11 +121,16 @@ dataset1 = round(as.data.frame(gamma_constant %*% beta) *N,digits=0)
 dataset2 = ceiling(as.data.frame(gamma_fast %*% beta) *N)
 dataset3 = round(as.data.frame(gamma_slow %*% beta) *N,digits=0)
 
+# ================================================================================
+# option to add noise to datasets
+gamma_fast_noise = gamma_fast + rnorm(n=length(gamma_fast),mean=0,sd=.05)
+
+
 
 # =================================================================================
-# run LDA model
+# run LDA model -- VEM
 nstart = 20 # For the final analysis, maybe do 1000
-ldamodel = LDA(dataset1,3,control=list(estimate.alpha=F,alpha=.5, nstart = nstart),method="VEM")
+ldamodel = LDA(dataset1,2,control=list(estimate.alpha=F,alpha=.5, nstart = nstart),method="VEM")
 
 plot_component_communities(ldamodel,3,seq(400))
 
@@ -132,6 +139,21 @@ aic_values1 = aic_model(dataset1)
 aic_values2 = aic_model(dataset2)
 aic_values3 = aic_model(dataset3)
 
+
+# =================================================================================
+# run LDA model -- Gibbs
+
+ngibbs=1000 #has to be greater than 200
+ncommun=2
+results=gibbs.samp(dat.agg=dataset2,ngibbs=ngibbs,ncommun=ncommun,a.betas=1,a.theta=1)
+
+# plots
+beta1=matrix(apply(results$beta,2,mean),ncommun,nspecies)
+plot_community_composition(beta1,c(0,1))
+
+plot_component_communities_gibbs(results,ncommun,seq(400))
+
+# =================================================================================
 # changepoint model  -- doesn't work yet
 #year_continuous = 1970+seq(400)/12
 #x = data.frame(
