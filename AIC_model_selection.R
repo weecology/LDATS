@@ -23,3 +23,23 @@ aic_model = function(dat) {
   }
   return(aic_values)
 }
+
+
+# AIC and model selection for LDA using gibbs sampler
+
+aic_model_gibbs = function(dat,nspp,tsteps) {
+  source('gibbs_functions.R')
+  
+  ngibbs=1000 #has to be greater than 200
+  aic_values = c()
+  # run LDA using gibbs
+  for (k in seq(2,7)) {
+    results=gibbs.samp(dat.agg=dat,ngibbs=ngibbs,ncommun=k,a.betas=1,a.theta=1)
+    save(results,file=paste('gibbs_results_',k,'topics'))
+    max.logl=max(results$logL) #extract estimate of maximum loglikelihood SUM or MAX?
+    nparam=(tsteps-1)*(k)+nspp*(k-1) #number of parameters
+    aic=2*nparam-2*max.logl   #aic calculation
+    aic_values = rbind(aic_values,c(k,aic))
+  }
+  return(aic_values)
+}

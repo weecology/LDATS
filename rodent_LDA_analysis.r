@@ -3,6 +3,7 @@ library(topicmodels)
 library(ggplot2)
 library(lubridate)
 
+source('LDA_figure_scripts.R')
 
 # =========================================================================================
 # LDA analyses
@@ -32,7 +33,15 @@ ldamodel7 = LDA(dat,7,control=list(estimate.alpha=F,alpha=.5, nstart = nstart),m
 
 
 # model selection
-aic_values = aic
+aic_values = aic_model(dat)
+
+# gibbs method and aic model selection
+source('AIC_model_selection.R')
+nspecies = ncol(dat)
+tsteps = nrow(dat)
+aic_values = aic_model_gibbs(dat,nspecies,tsteps)
+
+
 
 # ==========================================================================================
 # figures
@@ -53,6 +62,10 @@ plot_component_communities(ldamodel4,4,dates)
 plot_component_communities(ldamodel5,5,dates)
 plot_component_communities(ldamodel6,6,dates)
 plot_component_communities(ldamodel7,7,dates)
+
+# gibbs method
+ncommun=5
+plot_component_communities_gibbs(results,ncommun,dates)
 
 # time series plot of topics, smoothed
 plot_component_communities_smooth(ldamodel2,2,dates)

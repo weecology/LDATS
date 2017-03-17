@@ -144,14 +144,19 @@ aic_values3 = aic_model(dataset3)
 # run LDA model -- Gibbs
 
 ngibbs=1000 #has to be greater than 200
-ncommun=2
-results=gibbs.samp(dat.agg=dataset2,ngibbs=ngibbs,ncommun=ncommun,a.betas=1,a.theta=1)
+ncommun=3
+results=gibbs.samp(dat.agg=dataset1,ngibbs=ngibbs,ncommun=ncommun,a.betas=1,a.theta=1)
 
 # plots
 beta1=matrix(apply(results$beta,2,mean),ncommun,nspecies)
 plot_community_composition(beta1,c(0,1))
 
 plot_component_communities_gibbs(results,ncommun,seq(400))
+
+# AIC
+aic_values1 = aic_model_gibbs(dataset1,nspecies,tsteps)
+aic_values2 = aic_model_gibbs(dataset2,nspecies,tsteps)
+aic_values3 = aic_model_gibbs(dataset3,nspecies,tsteps)
 
 # =================================================================================
 # changepoint model  -- doesn't work yet
