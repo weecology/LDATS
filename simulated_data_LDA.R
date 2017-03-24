@@ -57,62 +57,68 @@ dataset3 = round(as.data.frame(gamma_slow %*% beta) *N,digits=0)
 
 # ================================================================================
 # option to add noise to datasets
-gamma_fast_noise = gamma_fast + rnorm(n=length(gamma_fast),mean=0,sd=.05)
+#gamma_fast_noise = gamma_fast + rnorm(n=length(gamma_fast),mean=0,sd=.05)
 
 
 
 # =================================================================================
 # run LDA model -- VEM
 nstart = 20 # For the final analysis, maybe do 1000
-ldamodel = LDA(dataset3,2,control=list(estimate.alpha=F,alpha=.1, nstart = nstart),method="VEM")
+ldamodel = LDA(dataset2,2,control=list(estimate.alpha=F,alpha=.1, nstart = nstart),method="VEM")
 
 plot_component_communities(ldamodel,2,seq(400))
 
-# AIC model selection for number of topics
-aic_values1 = aic_model(dataset1)
-aic_values2 = aic_model(dataset2)
-aic_values3 = aic_model(dataset3)
+# # AIC model selection for number of topics
+# aic_values1 = aic_model(dataset1)
+# aic_values2 = aic_model(dataset2)
+# aic_values3 = aic_model(dataset3)
 
 # =================================================================================
 # run LDA model -- Gibbs
-nstart = 20 # For the final analysis, maybe do 1000
-ldamodel = LDA(dataset2,2,control=list(iter=10000,delta=1),method="Gibbs")
-ldamodel = LDA(dataset3,3,control=list(iter=10000,alpha=.1),method="Gibbs")
-
-plot_component_communities(ldamodel,3,seq(400))
-
-plot_community_composition(community_composition(ldamodel2),c(0,.2))
-
-
-# AIC model selection for number of topics
-aic_values1 = aic_model(dataset1)
-aic_values2 = aic_model(dataset2)
-aic_values3 = aic_model(dataset3)
+# nstart = 20 # For the final analysis, maybe do 1000
+# ldamodel = LDA(dataset2,2,control=list(iter=10000,delta=1),method="Gibbs")
+# ldamodel = LDA(dataset3,3,control=list(iter=10000,alpha=.1),method="Gibbs")
+# 
+# plot_component_communities(ldamodel,3,seq(400))
+# 
+# plot_community_composition(community_composition(ldamodel2),c(0,.2))
+# 
+# 
+# # AIC model selection for number of topics
+# aic_values1 = aic_model(dataset1)
+# aic_values2 = aic_model(dataset2)
+# aic_values3 = aic_model(dataset3)
+# 
+# # =================================================================================
+# # run LDA model -- Denis Valle's version of Gibbs
+# 
+# ngibbs=1000 #has to be greater than 200
+# ncommun=2
+# results=gibbs.samp(dat.agg=dataset3,ngibbs=ngibbs,ncommun=ncommun,a.betas=1,a.theta=25)
+# 
+# # plots
+# beta1=matrix(apply(results$beta,2,mean),ncommun,nspecies)
+# plot_community_composition(beta1,c(0,.2))
+# 
+# plot_component_communities_gibbs(results,ncommun,seq(400))
+# 
+# # AIC
+# aic_values1 = aic_model_gibbs(dataset1,nspecies,tsteps)
+# aic_values2 = aic_model_gibbs(dataset2,nspecies,tsteps)
+# aic_values3 = aic_model_gibbs(dataset3,nspecies,tsteps)
 
 # =================================================================================
-# run LDA model -- Denis Valle's version of Gibbs
-
-ngibbs=1000 #has to be greater than 200
-ncommun=2
-results=gibbs.samp(dat.agg=dataset3,ngibbs=ngibbs,ncommun=ncommun,a.betas=1,a.theta=25)
-
-# plots
-beta1=matrix(apply(results$beta,2,mean),ncommun,nspecies)
-plot_community_composition(beta1,c(0,.2))
-
-plot_component_communities_gibbs(results,ncommun,seq(400))
-
-# AIC
-aic_values1 = aic_model_gibbs(dataset1,nspecies,tsteps)
-aic_values2 = aic_model_gibbs(dataset2,nspecies,tsteps)
-aic_values3 = aic_model_gibbs(dataset3,nspecies,tsteps)
-
-# =================================================================================
-# changepoint model  -- doesn't work yet
-year_continuous = seq(400)
+# changepoint model 
+year_continuous = seq(400)/12
 x = data.frame(
   year_continuous=year_continuous,
   sin_year = sin(year_continuous * 2 * pi),
   cos_year = cos(year_continuous * 2 * pi))
+dat = dataset2
 
 cp_results = changepoint_model(ldamodel, x, 2)
+
+save(cp_results,file='C:/Users/EC/Desktop/git/Extreme-events-LDA/changepoint results/chpoint_2topics_fastgamma_VEM')
+# changepoint visualizations
+par(mfrow=c(1,1))
+annual_hist(cp_results,year_continuous)
