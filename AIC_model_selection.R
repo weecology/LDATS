@@ -1,13 +1,28 @@
+# Functions for using AIC for model seclection on LDA models with different numbers of topics
 
-# AIC and model selection
+library(topicmodels)
 
-aic_model = function(dat) {
+
+
+#' AIC model selection for LDA using VEM method
+#' 
+#' Runs LDA using different numbers of topics and VEM method, calculates AIC values for comparison
+#' 
+#' @param dat Table of integer data (species counts by period)
+#' @param SEED set seed to keep LDA model runs consistent (default 2010)
+#' @param topic_min lowest number of topics; must be >=2
+#' @param topic_max highest number of topics
+#' 
+#' @return data frame of number of topics (k) and aic value (aic)
+#' 
+#' @example aic_values = aic_model(dat,2010,2,10)
+
+
+aic_model = function(dat,SEED=2010,topic_min,topic_max) {
   
-  #run LDA
-  SEED=2010
-  # run model for number of groups ranging from 2 to 10
-  aic_values = c()
-  for (k in seq(2,19)) {
+  aic_values = data.frame()
+  for (k in seq(topic_min,topic_max)) {
+    #run LDA
     VEM=LDA(dat,k, control = list(seed = SEED),method='VEM')
   
     #get parameter estimates
@@ -21,28 +36,50 @@ aic_model = function(dat) {
     aic=2*nparam-2*max.logl   #aic calculation
     aic_values = rbind(aic_values,c(k,aic))
   }
+  names(aic_values) = c('k','aic')
   return(aic_values)
 }
 
 
-# AIC and model selection for LDA using gibbs sampler
 
-aic_model_gibbs = function(dat,nspp,tsteps) {
+
+
+#' AIC model selection for LDA using Gibbs sampler method
+#' 
+#' Runs LDA using different numbers of topics and Gibbs method, calculates AIC values for comparison
+#' 
+#' @param dat Table of integer data (species counts by period)
+#' @param ngibbs number of iterations for gibbs sampler -- must be greater than 200 (default 1000)
+#' @param topic_min lowest number of topics; must be >=2
+#' @param topic_max highest number of topics
+#' @param save_runs T/F whether to save each run of LDA for later retrieval (these take a long time to run)
+#' 
+#' @return data frame containing column for number of topics (k) and aic values (aic)
+#' 
+#' @example aic_values = aic_model_gibbs(dat,500,2,3,T)
+#' 
+#' 
+
+aic_model_gibbs = function(dat,ngibbs=1000,topic_min,topic_max,save_runs=T) {
   source('gibbs_functions.R')
   
-  ngibbs=1000 #has to be greater than 200
+  nspp = ncol(dat)   # number of species
+  tsteps = nrow(dat) # number of time steps
+
   aic_values = c()
   # run LDA using gibbs
-  for (k in seq(2,7)) {
+  for (k in seq(topic_min,topic_max)) {
     results=gibbs.samp(dat.agg=dat,ngibbs=ngibbs,ncommun=k,a.betas=1,a.theta=1)
-    save(results,file=paste('gibbs_results_',k,'topics'))
-    max.logl=max(results$logL) #extract estimate of maximum loglikelihood SUM or MAX?
+    if (save_runs==T) {save(results,file=paste('gibbs_results_',k,'topics'))}
+    max.logl=max(results$logL) #extract estimate of maximum loglikelihood
     nparam=(tsteps-1)*(k)+nspp*(k-1) #number of parameters
     aic=2*nparam-2*max.logl   #aic calculation
     aic_values = rbind(aic_values,c(k,aic))
   }
   return(aic_values)
 }
+
+
 
 
 # WAIC -- doesn't work yet
