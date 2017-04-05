@@ -1,4 +1,4 @@
-# LDA and changepoint analysis pipeline on rodent data
+# LDA and changepoint analysis pipeline on rodent data -- uses Denis Valle's Gibbs method
 #
 #  1. prepare data
 #      - specific script for each data set
