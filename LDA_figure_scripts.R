@@ -158,3 +158,39 @@ plot_component_communities_gibbs = function(results,ntopics,xticks) {
                         breaks=as.character(seq(ntopics)),
                         values=cbPalette[1:ntopics])
 }
+
+
+
+
+#' Plot component communities including credible intervals --- WIP!
+#' so far only works with 3 topics -- need to make more general
+#' 
+#' Plots timeseries of component communities (topics) from LDA using Gibbs sampler
+#' 
+#' @param ldamodel model output of LDA model using Gibbs
+#' @param ntopics number of topics used in ldamodel
+#' @param xticks vector of dates for x-axis labels
+#' 
+#' @return None
+#' 
+#' @example plot_component_communities_gibbs_credible(ldamodel,ntopics,period_dates$date)
+
+
+plot_component_communities_gibbs_credible = function(ldamodel,ntopics,xticks) {
+  nsteps = length(xticks)
+  theta1=matrix(apply(ldamodel$theta,2,mean),ntopics,nsteps)
+  thetasd = matrix(apply(ldamodel$theta,2,sd),ntopics,nsteps)
+  
+  thetadf = data.frame(grp1 = theta1[1,],grp2 = theta1[2,],sd1=thetasd[1,],sd2=thetasd[2,],grp3=theta1[3,],sd3=thetasd[3,])
+  ggplot(thetadf) +
+    geom_ribbon(data = thetadf, mapping = aes_string(x = xticks, ymin = thetadf$grp1-1.96*thetadf$sd1, ymax = thetadf$grp1+1.96*thetadf$sd1,alpha=.4), fill = "grey") +
+    geom_line(aes(y = thetadf$grp1,x=xticks)) +
+    geom_ribbon(data = thetadf, mapping = aes_string(x = xticks, ymin = thetadf$grp2-1.96*thetadf$sd2, ymax = thetadf$grp2+1.96*thetadf$sd2,alpha=.4), fill = "pink") +
+    geom_line(aes(y = thetadf$grp2,x=xticks),color='red') +
+    geom_ribbon(data = thetadf, mapping = aes_string(x = xticks, ymin = thetadf$grp3-1.96*thetadf$sd3, ymax = thetadf$grp3+1.96*thetadf$sd3,alpha=.4), fill = "lightgreen") +
+    geom_line(aes(y = thetadf$grp3,x=xticks),color='forestgreen') +
+    scale_y_continuous(name='Relative Abundance',limits=c(0,1)) +
+    scale_x_date(name='')
+
+
+}
