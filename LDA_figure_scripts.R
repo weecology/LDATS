@@ -108,15 +108,15 @@ community_composition = function(ldamodel) {
 #' Plot species composition of topics
 #' 
 #' @param composition matrix of species composition of topics; as in output of community_composition()
-#' @param ylimits vector of (ymin,ymax) for plotting species composition
 #' 
 #' @return None
 #'
-#' @example plot_community_composition(community_composition(ldamodel),c(0,1))
+#' @example plot_community_composition(community_composition(ldamodel))
 
-plot_community_composition = function(composition,ylimits) {
+plot_community_composition = function(composition) {
   nspecies = dim(composition)[2]
   topics = dim(composition)[1]
+  ylimits = c(0,round(max(composition),1)+.1)
   par(mfrow=c(topics,1))
   for (i in 1:topics) {plot(1:nspecies,composition[i,],type='l',xlab='',ylim=ylimits,col=i,lwd=2,xaxt='n',ylab='')
     axis(1,at=1:nspecies,labels=colnames(composition))}
@@ -148,13 +148,13 @@ plot_component_communities_gibbs = function(results,ntopics,xticks) {
   ggplot(ldaplot, aes(x=date,y=relabund,colour=community)) + 
     geom_point() +
     geom_line(size=1) +
-    scale_y_continuous(name='Percent Similarity',limits=c(0,1)) +
+    scale_y_continuous(name='Relative Abundance',limits=c(0,1)) +
     scale_x_date(name='') +
     theme(axis.text=element_text(size=18),
           axis.title=element_text(size=18),
           legend.text=element_text(size=18),
           legend.title=element_text(size=18)) +
-    scale_colour_manual(name="",
+    scale_colour_manual(name="Component \nCommunity",
                         breaks=as.character(seq(ntopics)),
                         values=cbPalette[1:ntopics])
 }

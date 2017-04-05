@@ -66,7 +66,7 @@ aic_model_gibbs = function(dat,ngibbs=1000,topic_min,topic_max,save_runs=T) {
   nspp = ncol(dat)   # number of species
   tsteps = nrow(dat) # number of time steps
 
-  aic_values = c()
+  aic_values = data.frame()
   # run LDA using gibbs
   for (k in seq(topic_min,topic_max)) {
     results=gibbs.samp(dat.agg=dat,ngibbs=ngibbs,ncommun=k,a.betas=1,a.theta=1)
@@ -76,13 +76,16 @@ aic_model_gibbs = function(dat,ngibbs=1000,topic_min,topic_max,save_runs=T) {
     aic=2*nparam-2*max.logl   #aic calculation
     aic_values = rbind(aic_values,c(k,aic))
   }
+  names(aic_values) = c('k','aic')
   return(aic_values)
 }
 
 
 
 
-# WAIC -- doesn't work yet
+#' WAIC -- doesn't work yet
+#' 
+#' @param lda output of LDA model
 
 waic_model_gibbs = function(lda) {
   ll = purrr::map_dbl(lda@fitted, function(x) x@loglikelihood)

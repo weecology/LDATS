@@ -14,7 +14,7 @@ library(dplyr)
 #' 
 #' @return Table of species counts per period
 #' 
-#' @examples
+#' @example
 #' r_table = create_rodent_table(1,436,c(2,4,8,11,12,14,17,22),
 #                              selected_species = c('BA','DM','DO','DS','NA','OL','OT','PB','PE','PF','PH','PI','PL','PM','PP','RF','RM','RO','SF','SH','SO'))
 #'
