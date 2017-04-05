@@ -1,87 +1,73 @@
-# LDA analysis (with figures) for the extreme events/ LDA project
-library(topicmodels)
-library(ggplot2)
-library(lubridate)
+# LDA and changepoint analysis pipeline on rodent data
+#
+#  1. prepare data
+#      - specific script for each data set
+#  2a. run LDA with different number of topics and use AIC to select best model
+#  2b. run LDA with best number of topics (determined by 2a)
+#  3. run changepoint model
+#  4. produce figures
 
+
+library(topicmodels)
+library(RCurl)
+
+
+source('rodent_data_for_LDA.R')
+source('LDA_analysis.R')
 source('LDA_figure_scripts.R')
 
-# =========================================================================================
-# LDA analyses
-set.seed(20)
 
-setwd('C:/Users/EC/Desktop/git/Extreme-events-LDA')
+# ===================================================================
+# prepare rodent data
+dat = create_rodent_table(1,436,c(2,4,8,11,12,14,17,22),
+                          selected_species = c('BA','DM','DO','DS','NA','OL','OT','PB','PE','PF','PH','PI','PL','PM','PP','RF','RM','RO','SF','SH','SO'))
 
-# load csv of abundance of each sp per plot
-dat = read.csv('Rodent_table_dat.csv',na.strings = '',as.is=T)
-
-# dates of trapping periods
-perdat = read.csv('period_dates_single.csv')
-
-perdat$date = as.Date(perdat$date,format='%m/%d/%Y')
-
-
-
-# LDA models: groups from 2 to 7
-nstart = 200 # For the final analysis, maybe do 1000
-ldamodel2 = LDA(dat,2,control=list(estimate.alpha=F,alpha=.5, nstart = nstart),method="VEM")
-ldamodel3 = LDA(dat,3,control=list(estimate.alpha=F,alpha=.5, nstart = nstart),method="VEM")
-ldamodel4 = LDA(dat,4,control=list(estimate.alpha=F,alpha=.5, nstart = nstart),method="VEM")
-ldamodel5 = LDA(dat,5,control=list(estimate.alpha=F,alpha=.5, nstart = nstart),method="VEM")
-ldamodel5 = LDA(dat,5,control=list(estimate.alpha=F,alpha=.5, nstart = nstart),method="VEM")
-ldamodel6 = LDA(dat,6,control=list(estimate.alpha=F,alpha=.5, nstart = nstart),method="VEM")
-ldamodel7 = LDA(dat,7,control=list(estimate.alpha=F,alpha=.5, nstart = nstart),method="VEM")
-
-
-# model selection
-aic_values = aic_model(dat)
-
-# gibbs method and aic model selection
-source('AIC_model_selection.R')
-nspecies = ncol(dat)
-tsteps = nrow(dat)
-aic_values = aic_model_gibbs(dat,nspecies,tsteps)
+# dates to go with count data
+moondat = read.csv(text=getURL("https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/moon_dates.csv"),stringsAsFactors = F)
+moondat$date = as.Date(moondat$CensusDate)
+#awkward temporary patch for problem with moon_dates.csv file
+moondat[moondat$NewMoonNumber==205,'Period'] = 191
+moondat[moondat$NewMoonNumber==205,'date'] = as.Date('1994-02-01')
+period_dates = filter(moondat,Period %in% rownames(dat)) %>% select(Period,date)
+dates = period_dates$date
 
 
 
-# ==========================================================================================
+# ===================================
+# model parameters -- could be inputs for future wrapper function:
+ngibbs=500
+test_topics = c(2,3) # only comparing models with 2 or 3 topics for now -- faster
+n_chpoints = 2
+maxit = 1000
+nspp = 21
+nplots = 436
+
+# ==================================================================
+# select number of topics
+
+# choose number of topics -- model selection using AIC
+aic_values = aic_model_gibbs(dat,ngibbs,test_topics[1],test_topics[2],F)
+
+# ==================================================================
+# run LDA model
+ntopics = filter(aic_values,aic==min(aic)) %>% select(k) %>% as.numeric()
+ldamodel = gibbs.samp(dat.agg=dat,ngibbs=ngibbs,ncommun=ntopics,a.betas=1,a.theta=1)
+
+# ==================================================================
+# change point model -- Not working today.  Not sure why.
+
+# year_continuous = 1970 + as.integer(julian(dates)) / 365.25
+# x = data.frame(
+#   year_continuous = year_continuous,
+#   sin_year = sin(year_continuous * 2 * pi),
+#   cos_year = cos(year_continuous * 2 * pi)
+# )
+# cp_results = changepoint_model(ldamodel, x, n_chpoints, maxit)
+
+# =================================================================
 # figures
 
-# look at sp comp of topics
-comp_matrix = community_composition(ldamodel2)
-comp_matrix
+beta1=matrix(apply(ldamodel$beta,2,mean),ntopics,nspp)
+plot_community_composition(beta1)
 
-# make figure of sp comp of topics
-plot_community_composition(comp_matrix,c(0,.6))
-
-# time series plot of topics
-dates = as.Date(perdat$date[1:length(dat[,1])])
-
-plot_component_communities(ldamodel2,2,dates)
-plot_component_communities(ldamodel3,3,dates)
-plot_component_communities(ldamodel4,4,dates)
-plot_component_communities(ldamodel5,5,dates)
-plot_component_communities(ldamodel6,6,dates)
-plot_component_communities(ldamodel7,7,dates)
-
-# gibbs method
-ncommun=5
-plot_component_communities_gibbs(results,ncommun,dates)
-
-# time series plot of topics, smoothed
-plot_component_communities_smooth(ldamodel2,2,dates)
-
-# =========================================================================================
-# running changepoint model
-
-source('changepointmodel.r')
-
-d = ymd(as.Date(perdat$date[1:length(dat[,1])]))
-year_continuous = 1970 + as.integer(julian(d)) / 365.25
-x = data.frame(
-  year_continuous = year_continuous,
-  sin_year = sin(year_continuous * 2 * pi),
-  cos_year = cos(year_continuous * 2 * pi)
-)
-
-results = changepoint_model(ldamodel3, x, 2, maxit = 1000)
- 
+plot_component_communities_gibbs_credible(ldamodel,ntopics,dates)
