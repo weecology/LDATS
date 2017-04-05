@@ -11,7 +11,6 @@ library(viridis)
 library(nnet)        # For multinomial model (part of changepoint analysis)
 library(RColorBrewer)
 
-my_colors = brewer.pal(5, name = "Set2")
 
 # Begin changepoint model -------------------------------------------------
 
@@ -31,6 +30,7 @@ fit_chunk_non_memoized = function(ldamodel, x, start, end, make_plot = FALSE, ..
   )
   
   if (make_plot) {
+    my_colors = brewer.pal(5, name = "Set2")
     plotfun = ifelse(start == -Inf, matplot, matlines)
     plotfun(
       x$year_continuous[x$year_continuous > start & x$year_continuous <= end], 
@@ -84,9 +84,22 @@ get_ll = memoise(get_ll_non_memoized,
 
 
 
-# k is the exponent controlling the temperature sequence: 0 implies
-# geometric sequence, 1 implies squaring before exponentiating.
-# Use larger values if the cooler chains aren't swapping enough.
+
+
+#' Model to locate given number of change points in an LDA model output
+#' 
+#' @param ldamodel output object from LDA model using VEM
+#' @param x
+#' @param n_changepoints integer number of changepoints to look for
+#' @param maxit maximum iterations
+#' @param penultimate_temp
+#' @param k the exponent controlling the temperature sequence: 0 implies geometric sequence, 
+#'          1 implies squaring before exponentiating. Use larger values if the cooler chains aren't swapping enough.
+#'          
+#' @return 
+#' 
+#' @author Dave Harris
+
 changepoint_model = function(ldamodel,
                              x,
                              n_changepoints,
