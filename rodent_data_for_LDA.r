@@ -1,34 +1,51 @@
-# code used for getting rodent data into table form for LDA analysis
+library(RCurl)
+library(dplyr)
 
 
+#' Create rodent species table
+#'
+#' Processes rodent capture data so it can be used for LDA analysis
+#' 
+#'
+#' @param period_first first trapping period desired
+#' @param period_last last trapping period desired
+#' @param selected_plots vector of plot numbers to be included
+#' @param selected_species vector of species codes to be included
+#' 
+#' @return Table of species counts per period
+#' 
+#' @examples
+#' r_table = create_rodent_table(1,436,c(2,4,8,11,12,14,17,22),
+#                              selected_species = c('BA','DM','DO','DS','NA','OL','OT','PB','PE','PF','PH','PI','PL','PM','PP','RF','RM','RO','SF','SH','SO'))
+#'
 
-rod = read.csv('../PortalData/Rodents/Portal_rodent.csv',na.strings = '',as.is=T)
-
-# remove negative period, non-census
-rod = rod[rod$period>0,]
-
-# only up to period 436, when plots were switched
-rod = rod[rod$period<=436,]
-
-# controls only
-controls = c(2,4,8,11,12,14,17,22)
-rod = rod[rod$plot %in% controls,]
-
-# target species only
-rod = rod[rod$species %in% c('BA','DM','DO','DS','NA','OL','OT','PB','PE','PF','PH','PI','PL','PM','PP','RF','RM','RO','SF','SH','SO'),]
-
-# aggregate by period and species
-r_table = table(rod$period,rod$species)
-
-# adjust for number of plots trapped that month
-trap_table = read.csv('../PortalData/Rodents/Portal_rodent_trapping.csv')
-trap_table_controls = trap_table[trap_table$Plot %in% controls,]
-nplots_controls = aggregate(trap_table_controls$Sampled,by=list(Period = trap_table_controls$Period),FUN=sum)
-
-r_table_adjusted = as.data.frame.matrix(r_table)
-for (n in 1:436) {
-  #divide by number of control plots actually trapped (should be 8) and multiply by 8 to estimate captures as if all plots were trapped
-  r_table_adjusted[n,] = round(r_table_adjusted[n,]/nplots_controls$x[n]*8)
+create_rodent_table = function(period_first,period_last,selected_plots,selected_species) {
+  
+  # retrieve current version of rodent data
+  rodents = read.csv(text=getURL("https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent.csv"),
+                     na.strings=c(""), colClasses=c('tag'='character'), stringsAsFactors = FALSE)
+  
+  # extract desired data by period, plot, and species
+  rod = filter(rodents, period>=period_first, period<=period_last,
+               plot %in% selected_plots,
+               species %in% selected_species)
+  
+  # create table of species counts by period
+  r_table = table(rod$period,rod$species)
+  
+  # retrieve data on number of plots trapped per month
+  trap_table = read.csv('https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent_trapping.csv')
+  trap_table_controls = filter(trap_table, Plot %in% selected_plots)
+  nplots_controls = aggregate(trap_table_controls$Sampled,by=list(Period = trap_table_controls$Period),FUN=sum)
+  
+  # adjust species counts by number of plots trapped that month
+  r_table_adjusted = as.data.frame.matrix(r_table)
+  for (n in 1:436) {
+    #divide by number of control plots actually trapped (should be 8) and multiply by 8 to estimate captures as if all plots were trapped
+    r_table_adjusted[n,] = round(r_table_adjusted[n,]/nplots_controls$x[n]*8)
+  }
+  
+  #write.table(r_table_adjusted,'Rodent_table_dat.csv',sep=',',row.names = F)
+  return(r_table_adjusted)
 }
 
-write.table(r_table_adjusted,'Rodent_table_dat.csv',sep=',',row.names = F)
