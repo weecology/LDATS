@@ -25,9 +25,7 @@ dat = create_rodent_table(1,436,c(2,4,8,11,12,14,17,22),
 # dates to go with count data
 moondat = read.csv(text=getURL("https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/moon_dates.csv"),stringsAsFactors = F)
 moondat$date = as.Date(moondat$CensusDate)
-#awkward temporary patch for problem with moon_dates.csv file
-moondat[moondat$NewMoonNumber==205,'Period'] = 191
-moondat[moondat$NewMoonNumber==205,'date'] = as.Date('1994-02-01')
+
 period_dates = filter(moondat,Period %in% rownames(dat)) %>% select(Period,date)
 dates = period_dates$date
 
@@ -36,7 +34,7 @@ dates = period_dates$date
 # ===================================
 # model parameters -- could be inputs for future wrapper function:
 ngibbs=500
-test_topics = c(2,3) # only comparing models with 2 or 3 topics for now -- faster
+test_topics = c(2,8) # only comparing models with 2 or 3 topics for now -- faster
 n_chpoints = 2
 maxit = 1000
 nspp = 21
