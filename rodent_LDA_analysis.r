@@ -13,7 +13,7 @@ library(RCurl)
 
 
 source('rodent_data_for_LDA.R')
-source('LDA_analysis.R')
+source('AIC_model_selection.R')
 source('LDA_figure_scripts.R')
 
 
