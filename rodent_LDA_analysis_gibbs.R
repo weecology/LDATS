@@ -1,4 +1,4 @@
-# LDA and changepoint analysis pipeline on rodent data -- uses VEM method
+# LDA and changepoint analysis pipeline on rodent data -- uses Denis Valle's Gibbs method
 #
 #  1. prepare data
 #      - specific script for each data set
@@ -32,21 +32,24 @@ dates = period_dates$date
 
 
 # ===================================
-# model parameters:
-SEED = 2010
-topic_min = 2
-topic_max = 9
+# model parameters -- could be inputs for future wrapper function:
+ngibbs=500
+test_topics = c(2,8) # only comparing models with 2 or 3 topics for now -- faster
+n_chpoints = 2
+maxit = 1000
+nspp = 21
+nplots = 436
 
 # ==================================================================
 # select number of topics
 
 # choose number of topics -- model selection using AIC
-aic_values = aic_model(dat,SEED=2010,topic_min,topic_max)
+aic_values = aic_model_gibbs(dat,ngibbs,test_topics[1],test_topics[2],F)
 
 # ==================================================================
 # run LDA model
 ntopics = filter(aic_values,aic==min(aic)) %>% select(k) %>% as.numeric()
-ldamodel = LDA(dat,ntopics, control = list(seed = SEED),method='VEM')
+ldamodel = gibbs.samp(dat.agg=dat,ngibbs=ngibbs,ncommun=ntopics,a.betas=1,a.theta=1)
 
 # ==================================================================
 # change point model -- Not working today.  Not sure why.
