@@ -2,7 +2,7 @@
 
 library(ggplot2)
 
-
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
 
 
@@ -21,8 +21,6 @@ library(ggplot2)
 #' @example plot_component_communities(ldamodel,ntopics,period_dates$date)
 
 plot_component_communities = function(ldamodel,ntopics,xticks) {
-  
-  cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
   
   z = posterior(ldamodel)
   ldaplot = data.frame(date=c(),relabund = c(), community = c())
@@ -62,8 +60,6 @@ plot_component_communities = function(ldamodel,ntopics,xticks) {
 #' @example plot_component_communities_smooth(ldamodel,ntopics,period_dates$date,5)
 
 plot_component_communities_smooth = function(ldamodel,ntopics,xticks,smooth_factor) {
-  
-  cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
   
   z = posterior(ldamodel)
   ldaplot = data.frame(date=c(),relabund = c(), community = c())
@@ -109,7 +105,7 @@ community_composition = function(ldamodel) {
 #' 
 #' @param composition matrix of species composition of topics; as in output of community_composition()
 #' 
-#' @return None
+#' @return barplots of the n component communities
 #'
 #' @example plot_community_composition(community_composition(ldamodel))
 
@@ -117,9 +113,11 @@ plot_community_composition = function(composition) {
   nspecies = dim(composition)[2]
   topics = dim(composition)[1]
   ylimits = c(0,round(max(composition),1)+.1)
-  par(mfrow=c(topics,1))
-  for (i in 1:topics) {plot(1:nspecies,composition[i,],type='l',xlab='',ylim=ylimits,col=i,lwd=2,xaxt='n',ylab='')
-    axis(1,at=1:nspecies,labels=colnames(composition))}
+  par(mfrow=c(1,topics))
+  for (i in 1:topics) {
+    barplot(composition[i,],ylim=ylimits,col=cbPalette[i])
+  }
+  par(mfrow=c(1,1))
 }
 
 
@@ -136,8 +134,6 @@ plot_community_composition = function(composition) {
 #' @example plot_component_communities_gibbs(ldamodel,ntopics,period_dates$date)
 
 plot_component_communities_gibbs = function(results,ntopics,xticks) {
-  
-  cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
   
   theta1=matrix(apply(results$theta,2,mean),ntopics,length(xticks))
   ldaplot = data.frame(date=c(),relabund = c(), community = c())

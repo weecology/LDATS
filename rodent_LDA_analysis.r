@@ -35,15 +35,15 @@ dates = period_dates$date
 
 # ===================================
 # model parameters:
-SEED = 2010
+SEED = 113052032
 topic_min = 2
 topic_max = 9
-
+nspp=length(dat)
 # ==================================================================
 # select number of topics
 
 # choose number of topics -- model selection using AIC
-aic_values = aic_model(dat,SEED=2010,topic_min,topic_max)
+aic_values = aic_model(dat,SEED,topic_min,topic_max)
 ntopics = filter(aic_values,aic==min(aic)) %>% select(k) %>% as.numeric()
 
 # repeat aic calculation with a bunch of different seeds to test robustness of the analysis
@@ -71,7 +71,9 @@ ldamodel = LDA(dat,ntopics, control = list(seed = SEED),method='VEM')
 # =================================================================
 # figures
 
-beta1=matrix(apply(ldamodel$beta,2,mean),ntopics,nspp)
-plot_community_composition(beta1)
+beta1 = community_composition(ldamodel)
+# put columns in order of largest species to smallest
+composition = beta1[,c('NA','DS','SH','SF','SO','DO','DM','PB','PH','OL','OT','PL','PM','PE','PP','PI','RF','RM','RO','BA','PF')]
+plot_community_composition(composition)
 
-plot_component_communities_gibbs_credible(ldamodel,ntopics,dates)
+plot_component_communities(ldamodel,ntopics,dates)
