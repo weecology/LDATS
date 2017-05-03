@@ -18,12 +18,12 @@ library(dplyr)
 #' @example aic_values = aic_model(dat,2010,2,10)
 
 
-aic_model = function(dat,topic_min,topic_max) {
+aic_model = function(dat,SEED,topic_min,topic_max) {
   
   aic_values = data.frame()
   for (k in seq(topic_min,topic_max)) {
     #run LDA
-    VEM=LDA(dat,k,method='VEM')
+    VEM=LDA(dat,k,control=list(seed=SEED),method='VEM')
   
     #get parameter estimates
     z=posterior(VEM)
@@ -120,10 +120,12 @@ waic_model_gibbs = function(lda) {
 
 repeat_VEM = function(dat,ntimes,topic_min,topic_max) {
   best_ntopic = c()
+  s = .Random.seed
   for (n in seq(ntimes)) {
-    aic_values = aic_model(dat,topic_min,topic_max)
+    aic_values = aic_model(dat,SEED=s[n],topic_min,topic_max)
     ntopics = filter(aic_values,aic==min(aic)) %>% select(k) %>% as.numeric()
-    best_ntopic = rbind(best_ntopic,ntopics)
+    best_ntopic = rbind(best_ntopic,c(ntopics,s[n]))
+    print(n)
   }
   return(best_ntopic)
 }

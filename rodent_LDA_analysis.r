@@ -19,7 +19,9 @@ source('LDA_figure_scripts.R')
 
 # ===================================================================
 # prepare rodent data
-dat = create_rodent_table(1,436,c(2,4,8,11,12,14,17,22),
+dat = create_rodent_table(period_first = 1,
+                          period_last = 436,
+                          selected_plots = c(2,4,8,11,12,14,17,22),
                           selected_species = c('BA','DM','DO','DS','NA','OL','OT','PB','PE','PF','PH','PI','PL','PM','PP','RF','RM','RO','SF','SH','SO'))
 
 # dates to go with count data
@@ -42,10 +44,17 @@ topic_max = 9
 
 # choose number of topics -- model selection using AIC
 aic_values = aic_model(dat,SEED=2010,topic_min,topic_max)
+ntopics = filter(aic_values,aic==min(aic)) %>% select(k) %>% as.numeric()
+
+# repeat aic calculation with a bunch of different seeds to test robustness of the analysis
+best_ntopic = repeat_VEM(dat,
+                         ntimes=20,
+                         topic_min=2,
+                         topic_max=9)
 
 # ==================================================================
 # run LDA model
-ntopics = filter(aic_values,aic==min(aic)) %>% select(k) %>% as.numeric()
+
 ldamodel = LDA(dat,ntopics, control = list(seed = SEED),method='VEM')
 
 # ==================================================================
