@@ -12,7 +12,9 @@
 #  gamma = matrix of prevalence of topics through time
 #  assume even species composition and no overlap of species between topics
 
-setwd('C:/Users/EC/Desktop/git/Extreme-events-LDA')
+library(gridExtra)
+
+
 source('LDA_figure_scripts.R')
 source('AIC_model_selection.R')
 source('changepointmodel.r')
@@ -20,7 +22,7 @@ source('create_sim_data.R')
 
 source('gibbs_functions.r')
 
-
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 # ==================================================================================
 # create data
 N = 200   # total number of individuals
@@ -33,17 +35,17 @@ gamma_slow = as.matrix(as.data.frame(output[4]))
 
 # ==================================================================================
 # plot beta and gammas
-plot_community_composition(beta,c(0,.2))
+plot_community_composition(beta)
 
 plot_gammas = function(gamma_constant,gamma_fast,gamma_slow) {
   par(mfrow=c(1,3))
   topics = dim(gamma_constant)[2]
-  plot(gamma_constant[,1],type='l',xlab='time',ylab='topic',ylim=c(0,1),main='constant')
-  for (j in seq(2,topics)) {lines(gamma_constant[,j],col=j)}
-  plot(gamma_fast[,1],type='l',xlab='time',ylab='topic',ylim=c(0,1),main='fast')
-  for (j in seq(2,topics)) {lines(gamma_fast[,j],col=j)}
-  plot(gamma_slow[,1],type='l',xlab='time',ylab='topic',ylim=c(0,1),main='slow')
-  for (j in seq(2,topics)) {lines(gamma_slow[,j],col=j)}
+  plot(gamma_constant[,1],type='l',xlab='time',ylab='topic',ylim=c(0,1),main='constant',lwd=3)
+  for (j in seq(2,topics)) {lines(gamma_constant[,j],col=cbPalette[j],lwd=3)}
+  plot(gamma_fast[,1],type='l',xlab='time',ylab='topic',ylim=c(0,1),main='fast',lwd=3)
+  for (j in seq(2,topics)) {lines(gamma_fast[,j],col=cbPalette[j],lwd=3)}
+  plot(gamma_slow[,1],type='l',xlab='time',ylab='topic',ylim=c(0,1),main='slow',lwd=3)
+  for (j in seq(2,topics)) {lines(gamma_slow[,j],col=cbPalette[j],lwd=3)}
 }
 
 plot_gammas(gamma_constant,gamma_fast,gamma_slow)
@@ -63,15 +65,21 @@ dataset3 = round(as.data.frame(gamma_slow %*% beta) *N,digits=0)
 
 # =================================================================================
 # run LDA model -- VEM
-nstart = 20 # For the final analysis, maybe do 1000
-ldamodel = LDA(dataset2,2,control=list(estimate.alpha=F,alpha=.1, nstart = nstart),method="VEM")
+SEED  = 1
+topic_min = 2
+topic_max = 6
 
-plot_component_communities(ldamodel,2,seq(400))
+#nstart = 20 # For the final analysis, maybe do 1000
+ldamodel1 = LDA_analysis_VEM(dataset1,SEED,c(topic_min,topic_max))
+ldamodel2 = LDA_analysis_VEM(dataset2,SEED,c(topic_min,topic_max))
+ldamodel3 = LDA_analysis_VEM(dataset3,SEED,c(topic_min,topic_max))
 
-# # AIC model selection for number of topics
-# aic_values1 = aic_model(dataset1)
-# aic_values2 = aic_model(dataset2)
-# aic_values3 = aic_model(dataset3)
+dates = seq.Date(from=as.Date('1977-01-01'),by=30,length.out = 400) 
+par(mfrow=c(1,3))
+g1 = plot_component_communities(ldamodel1,2,dates)
+g2 = plot_component_communities(ldamodel2,2,dates)
+g3 = plot_component_communities(ldamodel3,2,dates)
+grid.arrange(g1,g2,g3,nrow=1)
 
 # =================================================================================
 # run LDA model -- Gibbs

@@ -27,7 +27,7 @@ plot_component_communities = function(ldamodel,ntopics,xticks) {
   for (t in seq(ntopics)) {
     ldaplot = rbind(ldaplot,data.frame(date=xticks,relabund=z$topics[,t],community = as.factor(rep(t,length(z$topics[,1])))))
   }
-  ggplot(ldaplot, aes(x=date,y=relabund,colour=community)) + 
+  g = ggplot(ldaplot, aes(x=date,y=relabund,colour=community)) + 
     geom_point() +
     geom_line(size=1) +
     scale_y_continuous(name='Relative Abundance',limits=c(0,1)) +
@@ -38,7 +38,7 @@ plot_component_communities = function(ldamodel,ntopics,xticks) {
                         breaks=as.character(seq(ntopics)),
                         values=cbPalette[1:ntopics],
                         guide=FALSE)
-  
+ return(g) 
 }
 
 
@@ -114,7 +114,7 @@ plot_community_composition = function(composition) {
   ylimits = c(0,round(max(composition),1)+.1)
   par(mfrow=c(1,topics))
   j=1
-  for (i in c(3,4,2,1)) {
+  for (i in seq(topics)) {
     barplot(composition[i,],ylim=ylimits,col=cbPalette[i],main=paste('Community',j))
     j=j+1
   }

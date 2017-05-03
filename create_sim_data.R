@@ -1,18 +1,22 @@
 
 
+#' create simulated data for demonstrating LDA analysis
+#'    2 topics
+#'     
+#' @param nspecies = number of species in all topic groups
+#' @param tsteps = number of [monthly] time steps
+#' @param N = total number of individuals of all species
+#' 
+#' @return 
+#'    beta = matrix of species composition of the groups
+#'    gamma = matrix of topic composition over time
+#'            3 simulations of gamma: uniform, slow transition, and fast transition
+
 create_sim_data_2topic = function(nspecies=24,tsteps=400) {
-  # create beta and gammas; 2 topics
-  #  Inputs:
-  #    nspecies = number of species in all topic groups
-  #    tsteps = number of [monthly] time steps
-  #    N = total number of individuals of all species
-  #  Outputs:
-  #    beta = matrix of species composition of the groups
-  #    gamma = matrix of topic composition over time
-  #            3 simulations of gamma: uniform, slow transition, and fast transition
-  
+
   topics = 2
   
+  # beta: species composition of topics
   beta = matrix(rep(0,topics*nspecies),nrow=topics,ncol=nspecies)
   beta[1,] = c(rep(.1,nspecies/2),rep(0,nspecies/2))
   beta[2,] = c(rep(0,nspecies/2),rep(.1,nspecies/2))
@@ -48,7 +52,7 @@ create_sim_data_2topic = function(nspecies=24,tsteps=400) {
 }
 
 
-create_sim_data_2topic = function(nspecies=24,tsteps=400) {
+create_sim_data_3topic = function(nspecies=24,tsteps=400) {
   # create beta and gammas; 3 topics
   #  Inputs:
   #    nspecies = number of species in all topic groups

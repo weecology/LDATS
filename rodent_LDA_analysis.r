@@ -55,7 +55,7 @@ best_ntopic = repeat_VEM(dat,
 # ==================================================================
 # run LDA model
 
-ldamodel = LDA(dat,ntopics, control = list(seed = SEED),method='VEM')
+ldamodel = LDA_analysis_VEM(dat,SEED,c(topic_min,topic_max))
 
 # ==================================================================
 # change point model -- Not working today.  Not sure why.
