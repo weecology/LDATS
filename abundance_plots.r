@@ -7,16 +7,26 @@
 
 dat = read.csv('Rodent_table_dat.csv',na.strings = '',as.is=T)
 rdat = read.csv('../PortalData/Rodents/Portal_rodent.csv',as.is=T)
-trappingdat = read.csv('Period_dates_single.csv',as.is=T,na.strings = '')
+trappingdat = read.csv('../PortalData/Rodents/Portal_rodent_trapping.csv',as.is=T,na.strings = '')
+trapdat = aggregate(trappingdat$Sampled,by=list(Period=trappingdat$Period),FUN=sum)
+fullcensus = trapdat[trapdat$x>20,]
+perioddates = read.csv('../PortalData/Rodents/moon_dates.csv',as.is=T,na.strings = '')
+perioddates$CensusDate = as.Date(perioddates$CensusDate)
+fullcensus = merge(fullcensus,perioddates)
 
 # data frame
-abund_dat = data.frame(Period = 1:436, date = as.Date(trappingdat$date[1:436],format='%m/%d/%Y'), n = rowSums(dat))
+abund_dat = data.frame(Period = 1:436, n = rowSums(dat))
+abund_dat = merge(abund_dat,fullcensus[,c('Period','CensusDate')])
 
 # plot
-plot(abund_dat$date,abund_dat$n,xlab='',ylab='raw abund per plot',pch=19)
-lines(abund_dat$date,abund_dat$n)
+plot(abund_dat$CensusDate,log(abund_dat$n),xlab='',ylab='Log Total Abundance',pch=19)
+lines(abund_dat$CensusDate,log(abund_dat$n))
+abline(h=log(mean(abund_dat$n)))
 
 
+plot(abund_dat$CensusDate,abund_dat$n,xlab='',ylab='Total Abundance',pch=19)
+lines(abund_dat$CensusDate,abund_dat$n)
+abline(h=mean(abund_dat$n))
 
 # ==================================================================================
 # histogram to show low abundances

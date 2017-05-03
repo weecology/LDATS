@@ -33,12 +33,11 @@ plot_component_communities = function(ldamodel,ntopics,xticks) {
     scale_y_continuous(name='Relative Abundance',limits=c(0,1)) +
     scale_x_date(name='') +
     theme(axis.text=element_text(size=18),
-          axis.title=element_text(size=18),
-          legend.text=element_text(size=18),
-          legend.title=element_text(size=18)) +
+          axis.title=element_text(size=18)) +
     scale_colour_manual(name="Component\nCommunity",
                         breaks=as.character(seq(ntopics)),
-                        values=cbPalette[1:ntopics])
+                        values=cbPalette[1:ntopics],
+                        guide=FALSE)
   
 }
 
@@ -114,8 +113,10 @@ plot_community_composition = function(composition) {
   topics = dim(composition)[1]
   ylimits = c(0,round(max(composition),1)+.1)
   par(mfrow=c(1,topics))
-  for (i in 1:topics) {
-    barplot(composition[i,],ylim=ylimits,col=cbPalette[i])
+  j=1
+  for (i in c(3,4,2,1)) {
+    barplot(composition[i,],ylim=ylimits,col=cbPalette[i],main=paste('Community',j))
+    j=j+1
   }
   par(mfrow=c(1,1))
 }
