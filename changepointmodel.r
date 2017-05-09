@@ -104,7 +104,7 @@ changepoint_model = function(ldamodel,
                              x,
                              n_changepoints,
                              N_temps = 6,
-                             maxit = 1E4,
+                             maxit = 1E3,
                              penultimate_temp = 2^6,
                              k = 0){
   

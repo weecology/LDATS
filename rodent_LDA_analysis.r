@@ -48,9 +48,10 @@ ntopics = filter(aic_values,aic==min(aic)) %>% select(k) %>% as.numeric()
 
 # repeat aic calculation with a bunch of different seeds to test robustness of the analysis
 best_ntopic = repeat_VEM(dat,
-                         ntimes=20,
+                         ntimes=200,
                          topic_min=2,
                          topic_max=9)
+#hist(best_ntopic[,1],breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='best # of topics')
 
 # ==================================================================
 # run LDA model
