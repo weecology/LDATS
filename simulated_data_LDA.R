@@ -19,8 +19,9 @@ source('LDA_figure_scripts.R')
 source('AIC_model_selection.R')
 source('changepointmodel.r')
 source('create_sim_data.R')
+source('LDA_analysis.R')
 
-source('gibbs_functions.r')
+#source('gibbs_functions.r')
 
 cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 # ==================================================================================
@@ -37,20 +38,23 @@ gamma_slow = as.matrix(as.data.frame(output[4]))
 # plot beta and gammas
 plot_community_composition(beta)
 
-plot_gammas = function(gamma_constant,gamma_fast,gamma_slow) {
-  par(mfrow=c(1,3))
-  topics = dim(gamma_constant)[2]
-  plot(gamma_constant[,1],type='l',xlab='time',ylab='topic',ylim=c(0,1),main='constant',lwd=3)
-  for (j in seq(2,topics)) {lines(gamma_constant[,j],col=cbPalette[j],lwd=3)}
-  plot(gamma_fast[,1],type='l',xlab='time',ylab='topic',ylim=c(0,1),main='fast',lwd=3)
-  for (j in seq(2,topics)) {lines(gamma_fast[,j],col=cbPalette[j],lwd=3)}
-  plot(gamma_slow[,1],type='l',xlab='time',ylab='topic',ylim=c(0,1),main='slow',lwd=3)
-  for (j in seq(2,topics)) {lines(gamma_slow[,j],col=cbPalette[j],lwd=3)}
-}
-
-plot_gammas(gamma_constant,gamma_fast,gamma_slow)
+sim_dates = seq.Date(from=as.Date('1977-01-01'),by=30,length.out = 400) 
 
 
+const = data.frame(date = rep(sim_dates,dim(gamma_constant)[2]),
+                   relabund = as.vector(gamma_constant),
+                   community = as.factor(c(rep(1,dim(gamma_constant)[1]),rep(2,dim(gamma_constant)[1]),rep(3,dim(gamma_constant)[1]))))
+slow = data.frame(date = rep(sim_dates,dim(gamma_slow)[2]),
+                   relabund = as.vector(gamma_slow),
+                   community = as.factor(c(rep(1,dim(gamma_slow)[1]),rep(2,dim(gamma_slow)[1]),rep(3,dim(gamma_slow)[1]))))
+fast = data.frame(date = rep(sim_dates,dim(gamma_fast)[2]),
+                   relabund = as.vector(gamma_fast),
+                   community = as.factor(c(rep(1,dim(gamma_fast)[1]),rep(2,dim(gamma_fast)[1]),rep(3,dim(gamma_fast)[1]))))
+
+g_1 = plot_gamma(const)
+g_2 = plot_gamma(fast)
+g_3 = plot_gamma(slow)
+grid.arrange(g_1,g_2,g_3,nrow=1)
 # =================================================================================
 # create data set from beta and gamma; data must be in integer form
 dataset1 = round(as.data.frame(gamma_constant %*% beta) *N,digits=0)
@@ -74,11 +78,10 @@ ldamodel1 = LDA_analysis_VEM(dataset1,SEED,c(topic_min,topic_max))
 ldamodel2 = LDA_analysis_VEM(dataset2,SEED,c(topic_min,topic_max))
 ldamodel3 = LDA_analysis_VEM(dataset3,SEED,c(topic_min,topic_max))
 
-dates = seq.Date(from=as.Date('1977-01-01'),by=30,length.out = 400) 
-par(mfrow=c(1,3))
-g1 = plot_component_communities(ldamodel1,2,dates)
-g2 = plot_component_communities(ldamodel2,2,dates)
-g3 = plot_component_communities(ldamodel3,2,dates)
+
+g1 = plot_component_communities(ldamodel1,2,sim_dates)
+g2 = plot_component_communities(ldamodel2,3,sim_dates)
+g3 = plot_component_communities(ldamodel3,3,sim_dates)
 grid.arrange(g1,g2,g3,nrow=1)
 
 # =================================================================================
@@ -118,15 +121,20 @@ grid.arrange(g1,g2,g3,nrow=1)
 # =================================================================================
 # changepoint model 
 year_continuous = seq(400)/12
+#year_continuous = sim_dates
 x = data.frame(
   year_continuous=year_continuous,
   sin_year = sin(year_continuous * 2 * pi),
   cos_year = cos(year_continuous * 2 * pi))
-dat = dataset2
+#dat = dataset2
 
-cp_results = changepoint_model(ldamodel, x, 2)
+cp_results1 = changepoint_model(ldamodel1, x, 1)
+cp_results2 = changepoint_model(ldamodel2, x, 1)
+cp_results3 = changepoint_model(ldamodel3, x, 1)
 
-save(cp_results,file='C:/Users/EC/Desktop/git/Extreme-events-LDA/changepoint results/chpoint_2topics_fastgamma_VEM')
+save(cp_results1,file='C:/Users/EC/Desktop/git/Extreme-events-LDA/changepoint results/chpoint_2topics_constgamma_VEM')
+save(cp_results2,file='C:/Users/EC/Desktop/git/Extreme-events-LDA/changepoint results/chpoint_2topics_fastgamma_VEM')
+save(cp_results3,file='C:/Users/EC/Desktop/git/Extreme-events-LDA/changepoint results/chpoint_2topics_slowgamma_VEM')
 # changepoint visualizations
 par(mfrow=c(1,1))
-annual_hist(cp_results,year_continuous)
+annual_hist(cp_results3,year_continuous)

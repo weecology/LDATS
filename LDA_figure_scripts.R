@@ -7,6 +7,33 @@ cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2",
 
 
 
+#' Plot gamma
+#' 
+#' This plotting function plots the component communities over time
+#' It's used by the plot_component_communities function, but can also take
+#' any data frame as input as long as it's the right form -- used by the simulations
+#' 
+#' @param gamma_frame a data frame containing columns for date, relabund, and community
+#' 
+#' @return a ggplot object
+
+plot_gamma = function(gamma_frame) {
+  g = ggplot(gamma_frame, aes(x=date,y=relabund,colour=community)) + 
+    geom_point() +
+    geom_line(size=1) +
+    scale_y_continuous(name='',limits=c(0,1)) +
+    scale_x_date(name='') +
+    theme(axis.text=element_text(size=18),
+          axis.title=element_text(size=18),
+          panel.background = element_blank(),
+          panel.border=element_rect(colour='black',fill=NA)) +
+    scale_colour_manual(name="Component\nCommunity",
+                        breaks=as.character(seq(ntopics)),
+                        values=cbPalette[1:ntopics],
+                        guide=FALSE)
+  return(g)
+}
+
 
 #' Plot component communities
 #' 
@@ -27,18 +54,8 @@ plot_component_communities = function(ldamodel,ntopics,xticks) {
   for (t in seq(ntopics)) {
     ldaplot = rbind(ldaplot,data.frame(date=xticks,relabund=z$topics[,t],community = as.factor(rep(t,length(z$topics[,1])))))
   }
-  g = ggplot(ldaplot, aes(x=date,y=relabund,colour=community)) + 
-    geom_point() +
-    geom_line(size=1) +
-    scale_y_continuous(name='Relative Abundance',limits=c(0,1)) +
-    scale_x_date(name='') +
-    theme(axis.text=element_text(size=18),
-          axis.title=element_text(size=18)) +
-    scale_colour_manual(name="Component\nCommunity",
-                        breaks=as.character(seq(ntopics)),
-                        values=cbPalette[1:ntopics],
-                        guide=FALSE)
- return(g) 
+  g = plot_gamma(ldaplot)
+  return(g) 
 }
 
 

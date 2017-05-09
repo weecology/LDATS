@@ -18,8 +18,8 @@ create_sim_data_2topic = function(nspecies=24,tsteps=400) {
   
   # beta: species composition of topics
   beta = matrix(rep(0,topics*nspecies),nrow=topics,ncol=nspecies)
-  beta[1,] = c(rep(.1,nspecies/2),rep(0,nspecies/2))
-  beta[2,] = c(rep(0,nspecies/2),rep(.1,nspecies/2))
+  beta[1,] = c(rep(1/(nspecies/2),nspecies/2),rep(0,nspecies/2))
+  beta[2,] = c(rep(0,nspecies/2),rep(1/(nspecies/2),nspecies/2))
   
   # gamma for a constant topic prevalence through time: topic1 at 90% and topic2 at 10%
   gamma_constant = matrix(rep(0,tsteps*topics),nrow=tsteps,ncol=topics)
