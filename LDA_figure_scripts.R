@@ -1,6 +1,7 @@
 # Scripts for making figures from LDA analyses
 
 library(ggplot2)
+library(gridExtra)
 
 cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
@@ -14,18 +15,20 @@ cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2",
 #' any data frame as input as long as it's the right form -- used by the simulations
 #' 
 #' @param gamma_frame a data frame containing columns for date, relabund, and community
+#' @param ntopics number of topics
+#' @param ylab label for y axis (optional)
 #' 
 #' @return a ggplot object
 
-plot_gamma = function(gamma_frame) {
+plot_gamma = function(gamma_frame,ntopics,ylab='') {
   g = ggplot(gamma_frame, aes(x=date,y=relabund,colour=community)) + 
     geom_point() +
     geom_line(size=1) +
-    scale_y_continuous(name='',limits=c(0,1)) +
+    scale_y_continuous(name=ylab,limits=c(0,1)) +
     scale_x_date(name='') +
-    theme(axis.text=element_text(size=18),
-          axis.title=element_text(size=18),
-          panel.background = element_blank(),
+    theme(axis.text=element_text(size=12),
+          axis.title=element_text(size=12),
+          #panel.background = element_blank(),
           panel.border=element_rect(colour='black',fill=NA)) +
     scale_colour_manual(name="Component\nCommunity",
                         breaks=as.character(seq(ntopics)),
@@ -42,19 +45,20 @@ plot_gamma = function(gamma_frame) {
 #' @param ldamodel object of class LDA_VEM created by the function LDA in topicmodels package
 #' @param ntopics number of topics used in ldamodel
 #' @param xticks vector of dates for x-axis labels
+#' @param ylab y axis label (optional)
 #' 
 #' @return None
 #' 
 #' @example plot_component_communities(ldamodel,ntopics,period_dates$date)
 
-plot_component_communities = function(ldamodel,ntopics,xticks) {
+plot_component_communities = function(ldamodel,ntopics,xticks,ylab='') {
   
   z = posterior(ldamodel)
   ldaplot = data.frame(date=c(),relabund = c(), community = c())
   for (t in seq(ntopics)) {
     ldaplot = rbind(ldaplot,data.frame(date=xticks,relabund=z$topics[,t],community = as.factor(rep(t,length(z$topics[,1])))))
   }
-  g = plot_gamma(ldaplot)
+  g = plot_gamma(ldaplot,ntopics,ylab)
   return(g) 
 }
 
@@ -120,23 +124,42 @@ community_composition = function(ldamodel) {
 #' Plot species composition of topics
 #' 
 #' @param composition matrix of species composition of topics; as in output of community_composition()
+#' @param topic_order order of topics -- for making this bar graph relate to the component community graph
 #' 
 #' @return barplots of the n component communities
 #'
 #' @example plot_community_composition(community_composition(ldamodel))
 
-plot_community_composition = function(composition) {
+plot_community_composition = function(composition,topic_order=1:dim(composition)[1]) {
   nspecies = dim(composition)[2]
   topics = dim(composition)[1]
   ylimits = c(0,round(max(composition),1)+.1)
   par(mfrow=c(1,topics))
   j=1
-  for (i in seq(topics)) {
-    barplot(composition[i,],ylim=ylimits,col=cbPalette[i],main=paste('Community',j))
+  for (i in topic_order) {
+    x = barplot(composition[i,],ylim=ylimits,col=cbPalette[i],main=paste('Community',j))
     j=j+1
   }
   par(mfrow=c(1,1))
 }
+# plot_community_composition = function(composition) {  
+#   topics = dim(composition)[1]
+#   community = c()
+#   for (j in 1:topics) {community=append(community,rep(j,length(composition[j,])))}
+#   relabund = c()
+#   for (j in 1:topics) {relabund=append(relabund,composition[j,])}
+#   species=c()
+#   for (j in 1:topics) {species=append(species,colnames(composition))}
+#   comp = data.frame(community = community,relabund=relabund,species=factor(species, levels = colnames(composition)))
+#   p = list()
+#   for (j in 1:topics) {
+#     x <- ggplot(data=comp[comp$community==j,], aes(x=species, y=relabund)) +
+#       geom_bar(stat='identity',fill=cbPalette[j])
+#     p[[j]] <- x
+#   }
+#   #grid.arrange(p[[1]],p[[2]],nrow=1)
+#   return(p)
+# }
 
 
 #' Plot component communities
