@@ -116,7 +116,7 @@ figure
  
 # =================================================================================
 # changepoint model 
-year_continuous = seq(400)/12
+year_continuous = (seq(400)/12) +1977
 #year_continuous = sim_dates
 x = data.frame(
   year_continuous=year_continuous,
@@ -132,5 +132,8 @@ save(cp_results1,file='C:/Users/EC/Desktop/git/Extreme-events-LDA/changepoint re
 save(cp_results2,file='C:/Users/EC/Desktop/git/Extreme-events-LDA/changepoint results/chpoint_2topics_fastgamma_VEM')
 save(cp_results3,file='C:/Users/EC/Desktop/git/Extreme-events-LDA/changepoint results/chpoint_2topics_slowgamma_VEM')
 # changepoint visualizations
+par(mfrow=c(1,3))
+hist(year_continuous[cp_results1$saved[,1,]],breaks=seq(1977,2016),xlab='',main='Changepoint Estimate',ylim=c(0,800))
+hist(year_continuous[cp_results2$saved[,1,]],breaks=seq(1977,2016),xlab='',main='Changepoint Estimate',ylim=c(0,800))
+hist(year_continuous[cp_results3$saved[,1,]],breaks=seq(1977,2016),xlab='',main='Changepoint Estimate',ylim=c(0,800))
 par(mfrow=c(1,1))
-annual_hist(cp_results3,year_continuous)
