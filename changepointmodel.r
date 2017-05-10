@@ -53,6 +53,11 @@ fit_chunk_non_memoized = function(ldamodel, x, start, end, make_plot = FALSE,
 # Get the log-likelihood associated with a set of breakpoints
 get_ll_non_memoized = function(ldamodel, x, changepoints, make_plot = FALSE, 
                                weights, ...){
+  # Saving the caches as hidden folders to prevent silly Mac computers
+  # (and RStudio) from wasting resources trying to index them
+  fit_chunk = memoise(fit_chunk_non_memoized, 
+                      cache = cache_filesystem(".cache_chunk"))
+  
   if (make_plot) {
     fit_chunk = fit_chunk_non_memoized
   }
@@ -106,8 +111,6 @@ changepoint_model = function(ldamodel,
   
   # Saving the caches as hidden folders to prevent silly Mac computers
   # (and RStudio) from wasting resources trying to index them
-  fit_chunk = memoise(fit_chunk_non_memoized, 
-                      cache = cache_filesystem(".cache_chunk"))
   get_ll = memoise(get_ll_non_memoized, 
                    cache = cache_filesystem(".cache_ll"))
   
@@ -118,7 +121,6 @@ changepoint_model = function(ldamodel,
   temps = 2^(log_temps)
   temps = c(temps, 1E10) # Highest temperature
   betas = 1/temps # "inverse temperature"
-  
   # Initialize randomly, with the best starting values in the coldest chain
   changepoints = matrix(
     replicate(N_temps, sort(sample.int(length(x$year_continuous), n_changepoints))),
