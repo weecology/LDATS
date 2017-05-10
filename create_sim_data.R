@@ -23,30 +23,30 @@ create_sim_data_2topic = function(nspecies=24,tsteps=400) {
   
   # gamma for a constant topic prevalence through time: topic1 at 90% and topic2 at 10%
   gamma_constant = matrix(rep(0,tsteps*topics),nrow=tsteps,ncol=topics)
-  gamma_constant[,1] = rep(.9,tsteps)
-  gamma_constant[,2] = rep(.1,tsteps)
+  gamma_constant[,1] = rep(1,tsteps)
+  gamma_constant[,2] = rep(0,tsteps)
   
   # gamma for a fast transition from topic1 to topic2 (one year/12 time steps)
   gamma_fast = matrix(rep(0,tsteps*topics),nrow=tsteps,ncol=topics)
   # proportions are constant for first 200 time steps
-  gamma_fast[1:200,1] = rep(.9)
-  gamma_fast[1:200,2] = rep(.1)
+  gamma_fast[1:200,1] = rep(1)
+  gamma_fast[1:200,2] = rep(0)
   # fast transition from tstep 201-212
-  gamma_fast[201:212,1] = seq(12)*(-.8/12)+.9
-  gamma_fast[201:212,2] = seq(12)*(.8/12)+.1
+  gamma_fast[201:212,1] = seq(12)*(-1/12)+1
+  gamma_fast[201:212,2] = seq(12)*(1/12)+0
   # proportions are constant for rest of time series
-  gamma_fast[213:tsteps,1] = rep(.1)
-  gamma_fast[213:tsteps,2] = rep(.9) 
+  gamma_fast[213:tsteps,1] = rep(0)
+  gamma_fast[213:tsteps,2] = rep(1) 
   
   # gamma for a slow transition from topic1 to topic2
   gamma_slow = matrix(rep(0,tsteps*topics),nrow=tsteps,ncol=topics)
   # brief period of constant values at beginning and end of series
-  gamma_slow[1:50,1] = rep(.9)
-  gamma_slow[1:50,2] = rep(.1)
-  gamma_slow[351:400,1] = rep(.1)
-  gamma_slow[351:400,2] = rep(.9)
-  gamma_slow[51:350,1] = seq(300)*(-.8/(tsteps-100))+.9
-  gamma_slow[51:350,2] = seq(300)*(.8/(tsteps-100))+.1
+  gamma_slow[1:50,1] = rep(1)
+  gamma_slow[1:50,2] = rep(0)
+  gamma_slow[351:400,1] = rep(0)
+  gamma_slow[351:400,2] = rep(1)
+  gamma_slow[51:350,1] = seq(300)*(-1/(tsteps-100))+1
+  gamma_slow[51:350,2] = seq(300)*(1/(tsteps-100))+0
   
   return(list(beta,gamma_constant,gamma_fast,gamma_slow))
 }
