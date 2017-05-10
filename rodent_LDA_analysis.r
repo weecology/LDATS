@@ -59,15 +59,20 @@ best_ntopic = repeat_VEM(dat,
 ldamodel = LDA_analysis_VEM(dat,SEED,c(topic_min,topic_max))
 
 # ==================================================================
-# change point model -- Not working today.  Not sure why.
+# change point model 
 
-# year_continuous = 1970 + as.integer(julian(dates)) / 365.25
-# x = data.frame(
-#   year_continuous = year_continuous,
-#   sin_year = sin(year_continuous * 2 * pi),
-#   cos_year = cos(year_continuous * 2 * pi)
-# )
-# cp_results = changepoint_model(ldamodel, x, n_chpoints, maxit)
+ year_continuous = 1970 + as.integer(julian(dates)) / 365.25
+ x = data.frame(
+   year_continuous = year_continuous,
+   sin_year = sin(year_continuous * 2 * pi),
+   cos_year = cos(year_continuous * 2 * pi)
+ )
+par(mfrow=c(1,1))
+cp_results_rodent = changepoint_model(ldamodel, x, 1, weights = rep(1,length(year_continuous)))
+cp_results_rodent2 = changepoint_model(ldamodel, x, 2, weights = rep(1,length(year_continuous)))
+cp_results_rodent3 = changepoint_model(ldamodel, x, 3, weights = rep(1,length(year_continuous)))
+cp_results_rodent4 = changepoint_model(ldamodel, x, 4, weights = rep(1,length(year_continuous)))
+hist(year_continuous[cp_results_rodent$saved[,1,]],breaks = seq(1977,2016),xlab='',main='Changepoint Estimate')
 
 # =================================================================
 # figures
