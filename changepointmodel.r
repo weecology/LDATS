@@ -22,7 +22,7 @@ fit_chunk_non_memoized = function(ldamodel, x, start, end, make_plot = FALSE,
                                   weights, ...) {
   # Weights average to 1, & are proportional to total rodents caught that month
   m = multinom(
-    ldamodel@gamma ~ year_continuous + sin_year + cos_year, 
+    ldamodel@gamma ~ sin_year + cos_year, 
     data = x,
     maxit = 1E5,
     weights = weights,
