@@ -43,29 +43,23 @@ sim_dates = seq.Date(from=as.Date('1977-01-01'),by=30,length.out = 400)
 
 const = data.frame(date = rep(sim_dates,dim(gamma_constant)[2]),
                    relabund = as.vector(gamma_constant),
-                   community = as.factor(c(rep(1,dim(gamma_constant)[1]),rep(2,dim(gamma_constant)[1]),rep(3,dim(gamma_constant)[1]))))
+                   community = as.factor(c(rep(1,dim(gamma_constant)[1]),rep(2,dim(gamma_constant)[1]))))#,rep(3,dim(gamma_constant)[1]))))
 slow = data.frame(date = rep(sim_dates,dim(gamma_slow)[2]),
                    relabund = as.vector(gamma_slow),
-                   community = as.factor(c(rep(1,dim(gamma_slow)[1]),rep(2,dim(gamma_slow)[1]),rep(3,dim(gamma_slow)[1]))))
+                   community = as.factor(c(rep(1,dim(gamma_slow)[1]),rep(2,dim(gamma_slow)[1]))))#,rep(3,dim(gamma_slow)[1]))))
 fast = data.frame(date = rep(sim_dates,dim(gamma_fast)[2]),
                    relabund = as.vector(gamma_fast),
-                   community = as.factor(c(rep(1,dim(gamma_fast)[1]),rep(2,dim(gamma_fast)[1]),rep(3,dim(gamma_fast)[1]))))
+                   community = as.factor(c(rep(1,dim(gamma_fast)[1]),rep(2,dim(gamma_fast)[1]))))#,rep(3,dim(gamma_fast)[1]))))
 
-g_1 = plot_gamma(const)
-g_2 = plot_gamma(fast)
-g_3 = plot_gamma(slow)
+g_1 = plot_gamma(const,2,ylab='Model Input')
+g_2 = plot_gamma(fast,2)
+g_3 = plot_gamma(slow,2)
 grid.arrange(g_1,g_2,g_3,nrow=1)
 # =================================================================================
 # create data set from beta and gamma; data must be in integer form
 dataset1 = round(as.data.frame(gamma_constant %*% beta) *N,digits=0)
 dataset2 = ceiling(as.data.frame(gamma_fast %*% beta) *N)
 dataset3 = round(as.data.frame(gamma_slow %*% beta) *N,digits=0)
-
-# ================================================================================
-# option to add noise to datasets
-#gamma_fast_noise = gamma_fast + rnorm(n=length(gamma_fast),mean=0,sd=.05)
-
-
 
 # =================================================================================
 # run LDA model -- VEM
@@ -79,45 +73,47 @@ ldamodel2 = LDA_analysis_VEM(dataset2,SEED,c(topic_min,topic_max))
 ldamodel3 = LDA_analysis_VEM(dataset3,SEED,c(topic_min,topic_max))
 
 
-g1 = plot_component_communities(ldamodel1,2,sim_dates)
-g2 = plot_component_communities(ldamodel2,3,sim_dates)
-g3 = plot_component_communities(ldamodel3,3,sim_dates)
+g1 = plot_component_communities(ldamodel1,2,sim_dates,ylab='LDA model output')
+g2 = plot_component_communities(ldamodel2,2,sim_dates)
+g3 = plot_component_communities(ldamodel3,2,sim_dates)
 grid.arrange(g1,g2,g3,nrow=1)
 
-# =================================================================================
-# run LDA model -- Gibbs
-# nstart = 20 # For the final analysis, maybe do 1000
-# ldamodel = LDA(dataset2,2,control=list(iter=10000,delta=1),method="Gibbs")
-# ldamodel = LDA(dataset3,3,control=list(iter=10000,alpha=.1),method="Gibbs")
-# 
-# plot_component_communities(ldamodel,3,seq(400))
-# 
-# plot_community_composition(community_composition(ldamodel2),c(0,.2))
-# 
-# 
-# # AIC model selection for number of topics
-# aic_values1 = aic_model(dataset1)
-# aic_values2 = aic_model(dataset2)
-# aic_values3 = aic_model(dataset3)
-# 
-# # =================================================================================
-# # run LDA model -- Denis Valle's version of Gibbs
-# 
-# ngibbs=1000 #has to be greater than 200
-# ncommun=2
-# results=gibbs.samp(dat.agg=dataset3,ngibbs=ngibbs,ncommun=ncommun,a.betas=1,a.theta=25)
-# 
-# # plots
-# beta1=matrix(apply(results$beta,2,mean),ncommun,nspecies)
-# plot_community_composition(beta1,c(0,.2))
-# 
-# plot_component_communities_gibbs(results,ncommun,seq(400))
-# 
-# # AIC
-# aic_values1 = aic_model_gibbs(dataset1,nspecies,tsteps)
-# aic_values2 = aic_model_gibbs(dataset2,nspecies,tsteps)
-# aic_values3 = aic_model_gibbs(dataset3,nspecies,tsteps)
+# =======================
+# panel of figures: simulation data
 
+c = capture_base_plot(plot_community_composition(beta))
+(figure <- multi_panel_figure(
+  width = c(40,40,40,40,40,40),
+  height = c(40,50,50),
+  panel_label_type = "upper-roman"))
+figure %<>% fill_panel(
+  c,
+  row = 1, column = 2:5)
+figure %<>% fill_panel(
+  g_1,
+  row = 2, column = 1:2)
+figure %<>% fill_panel(
+  g_2,
+  row = 2, column = 3:4)
+figure %<>% fill_panel(
+  g_3,
+  row = 2, column = 5:6)
+figure %<>% fill_panel(
+  g1,
+  row = 3, column = 1:2)
+figure %<>% fill_panel(
+  g2,
+  row = 3, column = 3:4)
+figure %<>% fill_panel(
+  g3,
+  row = 3, column = 5:6)
+
+figure
+
+
+#grid.arrange(g_1,g_2,g_3,g1,g2,g3,nrow=2)
+
+ 
 # =================================================================================
 # changepoint model 
 year_continuous = seq(400)/12
