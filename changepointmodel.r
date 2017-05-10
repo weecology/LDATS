@@ -18,13 +18,14 @@ library(RColorBrewer)
 # Fit a model to dates in (start,end] and return the log likelihood.
 # Memoization is a trick that lets us save the output for a given chunk and
 # avoid finding the answer more than once.
-fit_chunk_non_memoized = function(ldamodel, x, start, end, make_plot = FALSE, ...) {
+fit_chunk_non_memoized = function(ldamodel, x, start, end, make_plot = FALSE, 
+                                  weights, ...) {
   # Weights average to 1, & are proportional to total rodents caught that month
   m = multinom(
     ldamodel@gamma ~ year_continuous + sin_year + cos_year, 
     data = x,
     maxit = 1E5,
-    weights = rowMeans(dat) / mean(as.matrix(dat)),
+    weights = weights,
     subset = x$year_continuous > start & x$year_continuous <= end,
     trace = FALSE
   )
@@ -50,7 +51,8 @@ fit_chunk_non_memoized = function(ldamodel, x, start, end, make_plot = FALSE, ..
 
 
 # Get the log-likelihood associated with a set of breakpoints
-get_ll_non_memoized = function(ldamodel, x, changepoints, make_plot = FALSE, ...){
+get_ll_non_memoized = function(ldamodel, x, changepoints, make_plot = FALSE, 
+                               weights, ...){
   if (make_plot) {
     fit_chunk = fit_chunk_non_memoized
   }
@@ -66,22 +68,12 @@ get_ll_non_memoized = function(ldamodel, x, changepoints, make_plot = FALSE, ...
     sapply(
       seq_len(length(changedates) - 1),
       function(i){
-        fit_chunk(ldamodel, x, changedates[i], changedates[i + 1], make_plot = make_plot, ...)
+        fit_chunk(ldamodel, x, changedates[i], changedates[i + 1], 
+                  make_plot = make_plot, weights = weights, ...)
       }
     )
   )
 }
-
-
-# Saving the caches as hidden folders to prevent silly Mac computers
-# (and RStudio) from wasting resources trying to index them
-fit_chunk = memoise(fit_chunk_non_memoized, 
-                    cache = cache_filesystem(".cache_chunk"))
-get_ll = memoise(get_ll_non_memoized, 
-                 cache = cache_filesystem(".cache_ll"))
-
-
-
 
 
 
@@ -106,7 +98,19 @@ changepoint_model = function(ldamodel,
                              N_temps = 6,
                              maxit = 1E3,
                              penultimate_temp = 2^6,
-                             k = 0){
+                             k = 0,
+                             weights){
+  
+  file.remove(dir(".cache_chunk/", full.names = TRUE))
+  file.remove(dir(".cache_ll/", full.names = TRUE))
+  
+  # Saving the caches as hidden folders to prevent silly Mac computers
+  # (and RStudio) from wasting resources trying to index them
+  fit_chunk = memoise(fit_chunk_non_memoized, 
+                      cache = cache_filesystem(".cache_chunk"))
+  get_ll = memoise(get_ll_non_memoized, 
+                   cache = cache_filesystem(".cache_ll"))
+  
   
   # Temperature sequence
   sequence = seq(0, log2(penultimate_temp), length.out = N_temps - 1)
@@ -116,9 +120,14 @@ changepoint_model = function(ldamodel,
   betas = 1/temps # "inverse temperature"
   
   # Initialize randomly, with the best starting values in the coldest chain
-  changepoints = replicate(N_temps, sort(sample.int(length(x$year_continuous), n_changepoints)))
-  lls = sapply(1:N_temps, function(j){get_ll(ldamodel, x, changepoints[ , j])})
-  changepoints = changepoints[ , order(lls, decreasing = TRUE)]
+  changepoints = matrix(
+    replicate(N_temps, sort(sample.int(length(x$year_continuous), n_changepoints))),
+    ncol = N_temps
+  )
+  lls = sapply(1:N_temps, 
+               function(j){get_ll(ldamodel, x, changepoints[ , j], 
+                                  weights = weights)})
+  changepoints = changepoints[ , order(lls, decreasing = TRUE), drop = FALSE]
   lls = sort(lls, decreasing = TRUE)
   
   saved = array(NA, c(n_changepoints, N_temps, maxit))
@@ -146,7 +155,8 @@ changepoint_model = function(ldamodel,
     proposed_changepoints = changepoints
     proposed_changepoints[cbind(which_kicked[i, ], 1:N_temps)] = 
       changepoints[cbind(which_kicked[i, ], 1:N_temps)] + kicks[i, ]
-    proposed_lls = sapply(1:N_temps, function(j){get_ll(ldamodel, x, proposed_changepoints[ , j])})
+    proposed_lls = sapply(1:N_temps, function(j){get_ll(ldamodel, x, proposed_changepoints[ , j],
+                                                        weights = weights)})
     
     # Accept some proposals via Metropolis rule; update the changepoints
     # and the associated log-likelihoods
