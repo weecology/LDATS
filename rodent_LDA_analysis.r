@@ -75,6 +75,24 @@ ldamodel = LDA_analysis_VEM(dat,SEED,c(topic_min,topic_max))
 beta1 = community_composition(ldamodel)
 # put columns in order of largest species to smallest
 composition = beta1[,c('NA','DS','SH','SF','SO','DO','DM','PB','PH','OL','OT','PL','PM','PE','PP','PI','RF','RM','RO','BA','PF')]
-plot_community_composition(composition)
+plot_community_composition(composition,c(3,4,2,1))
 
 plot_component_communities(ldamodel,ntopics,dates)
+
+# ===================================================================
+# appendix: LDA with 3 and 5 topics
+
+# 3 topics
+ldamodel3topic = LDA(dat,3, control = list(seed = SEED),method='VEM')
+plot_component_communities(ldamodel3topic,3,dates)
+beta13topic = community_composition(ldamodel3topic)
+composition3 = beta13topic[,c('NA','DS','SH','SF','SO','DO','DM','PB','PH','OL','OT','PL','PM','PE','PP','PI','RF','RM','RO','BA','PF')]
+plot_community_composition(composition3,c(3,2,1))
+
+# 5 topics
+ldamodel5topic = LDA(dat,5, control = list(seed = SEED),method='VEM')
+plot_component_communities(ldamodel5topic,5,dates) # 800 x 300
+beta15topic = community_composition(ldamodel5topic)
+composition5 = beta15topic[,c('NA','DS','SH','SF','SO','DO','DM','PB','PH','OL','OT','PL','PM','PE','PP','PI','RF','RM','RO','BA','PF')]
+plot_community_composition(composition5,c(3,4,1,2,5))
+
