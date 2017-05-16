@@ -20,13 +20,14 @@ abund_dat = merge(abund_dat,fullcensus[,c('Period','CensusDate')])
 
 # plot
 plot(abund_dat$CensusDate,log(abund_dat$n),xlab='',ylab='Log Total Abundance',pch=19)
+rect(xleft = as.Date('1999-07-01'),xright = as.Date('1999-10-01'),ytop = 250,ybottom=0,col='gray',border=NA)
+rect(xleft = as.Date('1983-08-01'),xright = as.Date('1983-11-01'),ytop = 250,ybottom=0,col='gray',border=NA)
+rect(xleft = as.Date('1993-09-01'),xright = as.Date('1994-10-01'),ytop = 250,ybottom=0,col='gray',border=NA)
+rect(xleft = as.Date('2009-03-01'),xright = as.Date('2010-01-01'),ytop = 250,ybottom=0,col='gray',border=NA)
 lines(abund_dat$CensusDate,log(abund_dat$n))
+points(abund_dat$CensusDate,log(abund_dat$n),pch=16)
 abline(h=log(mean(abund_dat$n)))
-
-
-plot(abund_dat$CensusDate,abund_dat$n,xlab='',ylab='Total Abundance',pch=19)
-lines(abund_dat$CensusDate,abund_dat$n)
-abline(h=mean(abund_dat$n))
+box(which='plot')
 
 # ==================================================================================
 # histogram to show low abundances
