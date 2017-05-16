@@ -12,7 +12,8 @@
 #  gamma = matrix of prevalence of topics through time
 #  assume even species composition and no overlap of species between topics
 
-library(gridExtra)
+library(multipanelfigure)
+#library(gridExtra)
 
 
 source('LDA_figure_scripts.R')
@@ -128,7 +129,7 @@ cp_results3 = changepoint_model(ldamodel3, x, 1, weights = rep(1,length(year_con
 
 # changepoint visualizations
 par(mfrow=c(1,3))
-hist(year_continuous[cp_results1$saved[,1,]],breaks=seq(1977,2016),xlab='',main='Changepoint Estimate',ylim=c(0,800))
-hist(year_continuous[cp_results2$saved[,1,]],breaks=seq(1977,2016),xlab='',main='Changepoint Estimate',ylim=c(0,800))
-hist(year_continuous[cp_results3$saved[,1,]],breaks=seq(1977,2016),xlab='',main='Changepoint Estimate',ylim=c(0,800))
+annual_hist(cp_results1,year_continuous)
+annual_hist(cp_results2,year_continuous)
+annual_hist(cp_results3,year_continuous)
 par(mfrow=c(1,1))

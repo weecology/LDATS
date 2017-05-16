@@ -15,7 +15,8 @@ library(RCurl)
 source('rodent_data_for_LDA.R')
 source('AIC_model_selection.R')
 source('LDA_figure_scripts.R')
-
+source('changepointmodel.r')
+source('LDA_analysis.R')
 
 # ===================================================================
 # prepare rodent data
@@ -56,7 +57,9 @@ best_ntopic = repeat_VEM(dat,
 # ==================================================================
 # run LDA model
 
-ldamodel = LDA_analysis_VEM(dat,SEED,c(topic_min,topic_max))
+#ldamodel = LDA_analysis_VEM(dat,SEED,c(topic_min,topic_max))
+ntopics = 4
+ldamodel = LDA(dat,ntopics, control = list(seed = SEED),method='VEM')
 
 # ==================================================================
 # change point model 
@@ -71,8 +74,9 @@ par(mfrow=c(1,1))
 cp_results_rodent = changepoint_model(ldamodel, x, 1, weights = rep(1,length(year_continuous)))
 cp_results_rodent2 = changepoint_model(ldamodel, x, 2, weights = rep(1,length(year_continuous)))
 cp_results_rodent3 = changepoint_model(ldamodel, x, 3, weights = rep(1,length(year_continuous)))
+save
 cp_results_rodent4 = changepoint_model(ldamodel, x, 4, weights = rep(1,length(year_continuous)))
-hist(year_continuous[cp_results_rodent$saved[,1,]],breaks = seq(1977,2016),xlab='',main='Changepoint Estimate')
+hist(year_continuous[cp_results_rodent3$saved[,1,]],breaks = seq(1977,2016,.25),xlab='',main='Changepoint Estimate')
 
 # =================================================================
 # figures

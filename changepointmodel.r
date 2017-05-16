@@ -101,7 +101,7 @@ changepoint_model = function(ldamodel,
                              x,
                              n_changepoints,
                              N_temps = 6,
-                             maxit = 1E3,
+                             maxit = 1E5,
                              penultimate_temp = 2^6,
                              k = 0,
                              weights){
@@ -244,7 +244,7 @@ annual_hist = function(results, year_continuous){
   }
   hist(year_continuous[results$saved[,1,]], 
        breaks = seq(0, 3000), xlim = range(year_continuous), 
-       axes = FALSE, yaxs = "i", ylim = c(0, 1.04 * length(results$saved[1,1,])))
+       axes = FALSE, yaxs = "i", ylim = c(0, 1.04 * length(results$saved[1,1,])),main='',xlab='')
   axis(2, seq(0, 1, 0.25) * length(results$saved[1,1,]), 
        seq(0, 1, .25))
   axis(1)
