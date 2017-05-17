@@ -19,7 +19,7 @@ abund_dat = data.frame(Period = 1:436, n = rowSums(dat))
 abund_dat = merge(abund_dat,fullcensus[,c('Period','CensusDate')])
 
 # plot
-plot(abund_dat$CensusDate,log(abund_dat$n),xlab='',ylab='Log Total Abundance',pch=19)
+plot(abund_dat$CensusDate,log(abund_dat$n),xlab='',ylab='Log Total Abundance',pch=19,ylim=c(2,6))
 rect(xleft = as.Date('1999-07-01'),xright = as.Date('1999-10-01'),ytop = 250,ybottom=0,col='gray',border=NA)
 rect(xleft = as.Date('1983-08-01'),xright = as.Date('1983-11-01'),ytop = 250,ybottom=0,col='gray',border=NA)
 rect(xleft = as.Date('1993-09-01'),xright = as.Date('1994-10-01'),ytop = 250,ybottom=0,col='gray',border=NA)
@@ -28,6 +28,14 @@ lines(abund_dat$CensusDate,log(abund_dat$n))
 points(abund_dat$CensusDate,log(abund_dat$n),pch=16)
 abline(h=log(mean(abund_dat$n)))
 box(which='plot')
+
+# line segments showing changepoint 95% intervals
+segments(as.Date('1983-12-01'),5.8 , as.Date('1988-05-01'), 5.8, col='red', lwd=3, xpd = FALSE)
+segments(as.Date('1997-07-01'),5.8 , as.Date('1999-10-01'), 5.8, col='red', lwd=3, xpd = FALSE)
+segments(as.Date('2007-07-01'),5.8 , as.Date('2010-11-01'), 5.8, col='red', lwd=3, xpd = FALSE)
+
+
+par(xpd=F)
 
 # ==================================================================================
 # histogram to show low abundances
