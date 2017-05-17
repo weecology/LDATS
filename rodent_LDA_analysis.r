@@ -78,7 +78,7 @@ cp_results_rodent3 = changepoint_model(ldamodel, x, 3, weights = rep(1,length(ye
 save
 cp_results_rodent4 = changepoint_model(ldamodel, x, 4, weights = rep(1,length(year_continuous)))
 hist(year_continuous[cp_results_rodent3$saved[,1,]],breaks = seq(1977,2016,.25),xlab='',main='Changepoint Estimate')
-annual_hist(cp_results_rodent2,year_continuous)
+annual_hist(cp_results_rodent4,year_continuous)
 
 # =================================================================
 # figures
@@ -112,6 +112,13 @@ H = ggplot(data = df, aes(x=value)) +
   
 H
 
+# 95% confidence intervals on changepoints:
+quantile(df1$value,probs=c(.025,.975))
+quantile(df2$value,probs=c(.025,.975))
+quantile(df3$value,probs=c(.025,.975))
+format(date_decimal(1983.933), "%d-%m-%Y")
+
+
 (figure <- multi_panel_figure(
   width = c(120,120),
   height = c(80,80),
@@ -123,10 +130,27 @@ figure %<>% fill_panel(
   cc,
   row = 1, column = 1:2)
 figure %<>% fill_panel(
-  H,
+  H_4,
   row = 2, column = 1:2)
 figure
 
+
+df_4 = as.data.frame(t(cp_results_rodent4$saved[,1,]))
+df1_4 = data.frame(value = year_continuous[df_4$V1])
+df2_4 = data.frame(value = year_continuous[df_4$V2])
+df3_4 = data.frame(value = year_continuous[df_4$V3])
+df4_4 = data.frame(value = year_continuous[df_4$V4])
+H_4 = ggplot(data = df_4, aes(x=value)) +
+  geom_histogram(data=df1_4,aes(y=..count../sum(..count..)),binwidth = .25,fill='gray1',alpha=.3) +
+  geom_histogram(data=df2_4,aes(y=..count../sum(..count..)),binwidth = .25,fill='gray2',alpha=.5) +
+  geom_histogram(data=df3_4,aes(y=..count../sum(..count..)),binwidth = .25,fill='gray3',alpha=.7) +
+  geom_histogram(data=df4_4,aes(y=..count../sum(..count..)),binwidth = .25,fill='gray',alpha=.9) +
+  labs(x='',y='') +
+  xlim(range(year_continuous)) +
+  theme(axis.text=element_text(size=12),
+        panel.border=element_rect(colour='black',fill=NA))
+
+H_4
 # changepoint model plot
 get_ll_non_memoized(ldamodel,x,c(76,250,387),make_plot=T,weights=rep(1,length(year_continuous)))
 
