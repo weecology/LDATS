@@ -10,6 +10,7 @@
 
 library(topicmodels)
 library(RCurl)
+library(multipanelfigure)
 
 
 source('rodent_data_for_LDA.R')
@@ -77,16 +78,57 @@ cp_results_rodent3 = changepoint_model(ldamodel, x, 3, weights = rep(1,length(ye
 save
 cp_results_rodent4 = changepoint_model(ldamodel, x, 4, weights = rep(1,length(year_continuous)))
 hist(year_continuous[cp_results_rodent3$saved[,1,]],breaks = seq(1977,2016,.25),xlab='',main='Changepoint Estimate')
+annual_hist(cp_results_rodent2,year_continuous)
 
 # =================================================================
 # figures
 
 beta1 = community_composition(ldamodel)
+
 # put columns in order of largest species to smallest
 composition = beta1[,c('NA','DS','SH','SF','SO','DO','DM','PB','PH','OL','OT','PL','PM','PE','PP','PI','RF','RM','RO','BA','PF')]
 plot_community_composition(composition,c(3,4,2,1))
 
-plot_component_communities(ldamodel,ntopics,dates)
+cc = plot_component_communities(ldamodel,ntopics,dates)
+
+D = capture_base_plot(plot_community_composition(composition,c(3,4,2,1)))
+
+H = capture_base_plot(annual_hist(cp_results_rodent4,year_continuous))
+
+
+# Hot mess -- fix this!!
+df = as.data.frame(t(cp_results_rodent3$saved[,1,]))
+df1 = data.frame(value = year_continuous[df$V1])
+df2 = data.frame(value = year_continuous[df$V2])
+df3 = data.frame(value = year_continuous[df$V3])
+H = ggplot(data = df, aes(x=value)) +
+  geom_histogram(data=df1,aes(y=..count../sum(..count..)),binwidth = .25,fill='gray1',alpha=.3) +
+  geom_histogram(data=df2,aes(y=..count../sum(..count..)),binwidth = .25,fill='gray2',alpha=.5) +
+  geom_histogram(data=df3,aes(y=..count../sum(..count..)),binwidth = .25,fill='gray3',alpha=1) +
+  labs(x='',y='') +
+  xlim(range(year_continuous)) +
+  theme(axis.text=element_text(size=12),
+      panel.border=element_rect(colour='black',fill=NA))
+  
+H
+
+(figure <- multi_panel_figure(
+  width = c(120,120),
+  height = c(80,80),
+  panel_label_type = "upper-roman"))
+#figure %<>% fill_panel(
+#  D,
+#  row = 1, column = 1:2)
+figure %<>% fill_panel(
+  cc,
+  row = 1, column = 1:2)
+figure %<>% fill_panel(
+  H,
+  row = 2, column = 1:2)
+figure
+
+# changepoint model plot
+get_ll_non_memoized(ldamodel,x,c(76,250,387),make_plot=T,weights=rep(1,length(year_continuous)))
 
 # ===================================================================
 # appendix: LDA with 3 and 5 topics
