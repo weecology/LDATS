@@ -89,6 +89,27 @@ beta1 = community_composition(ldamodel)
 composition = beta1[,c('NA','DS','SH','SF','SO','DO','DM','PB','PH','OL','OT','PL','PM','PE','PP','PI','RF','RM','RO','BA','PF')]
 plot_community_composition(composition,c(3,4,2,1))
 
+
+# with grassland communities highlighted
+P = plot_community_composition_gg(composition,c(3,4,2,1))
+(figure <- multi_panel_figure(
+  width = c(65,65,65,65),
+  height = c(65,10),
+  panel_label_type = "none"))
+figure %<>% fill_panel(
+  P[[3]],
+  row = 1, column = 1)
+figure %<>% fill_panel(
+  P[[4]],
+  row = 1, column = 2)
+figure %<>% fill_panel(
+  P[[2]],
+  row = 1, column = 3)
+figure %<>% fill_panel(
+  P[[1]],
+  row = 1, column = 4)
+figure
+
 cc = plot_component_communities(ldamodel,ntopics,dates)
 
 D = capture_base_plot(plot_community_composition(composition,c(3,4,2,1)))

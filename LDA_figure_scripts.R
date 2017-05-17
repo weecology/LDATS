@@ -168,24 +168,34 @@ plot_community_composition = function(composition,topic_order=1:dim(composition)
   }
   par(mfrow=c(1,1))
 }
-# plot_community_composition = function(composition) {  
-#   topics = dim(composition)[1]
-#   community = c()
-#   for (j in 1:topics) {community=append(community,rep(j,length(composition[j,])))}
-#   relabund = c()
-#   for (j in 1:topics) {relabund=append(relabund,composition[j,])}
-#   species=c()
-#   for (j in 1:topics) {species=append(species,colnames(composition))}
-#   comp = data.frame(community = community,relabund=relabund,species=factor(species, levels = colnames(composition)))
-#   p = list()
-#   for (j in 1:topics) {
-#     x <- ggplot(data=comp[comp$community==j,], aes(x=species, y=relabund)) +
-#       geom_bar(stat='identity',fill=cbPalette[j])
-#     p[[j]] <- x
-#   }
-#   #grid.arrange(p[[1]],p[[2]],nrow=1)
-#   return(p)
-# }
+
+
+plot_community_composition_gg = function(composition,topic_order) {
+  topics = dim(composition)[1]
+  community = c()
+  for (j in 1:topics) {community=append(community,rep(j,length(composition[j,])))}
+  relabund = c()
+  for (j in 1:topics) {relabund=append(relabund,composition[j,])}
+  species=c()
+  for (j in 1:topics) {species=append(species,colnames(composition))}
+  comp = data.frame(community = community,relabund=relabund,species=factor(species, levels = colnames(composition)))
+  grass = filter(comp,species %in% c('BA','PH','DO','DS','PF','PL','PM','RF','RO','RM','SH','SF','SO'))
+  p = list()
+  for (j in topic_order) {
+    x <- ggplot(data=comp[comp$community==j,], aes(x=species, y=relabund)) +
+      geom_bar(stat='identity',fill=cbPalette[j])  +
+      geom_bar(data=grass[grass$community==j,],aes(x=species,y=relabund),fill=cbPalette[j],stat='identity',alpha=0,size=1,color='black') +
+        theme(axis.text=element_text(size=9),
+              panel.background = element_blank(),
+              panel.border=element_rect(colour='black',fill=NA),
+              axis.text.x = element_text(angle = 90, hjust = 1)) +
+      scale_x_discrete(name='') +
+      scale_y_continuous(name='',limits = c(0,.8))
+    p[[j]] <- x
+  }
+  #grid.arrange(p[[1]],p[[2]],nrow=1)
+  return(p)
+}
 
 
 #' Plot component communities
