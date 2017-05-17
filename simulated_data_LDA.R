@@ -79,13 +79,60 @@ g2 = plot_component_communities(ldamodel2,2,sim_dates)
 g3 = plot_component_communities(ldamodel3,2,sim_dates)
 grid.arrange(g1,g2,g3,nrow=1)
 
+
+
+ 
+# =================================================================================
+# changepoint model 
+year_continuous = (seq(400)/12) +1977
+x = data.frame(
+  year_continuous=year_continuous,
+  sin_year = sin(year_continuous * 2 * pi),
+  cos_year = cos(year_continuous * 2 * pi))
+
+cp_results1 = changepoint_model(ldamodel1, x, 1, weights = rep(1,length(year_continuous)))
+cp_results2 = changepoint_model(ldamodel2, x, 1, weights = rep(1,length(year_continuous)))
+cp_results3 = changepoint_model(ldamodel3, x, 1, weights = rep(1,length(year_continuous)))
+
+# changepoint visualizations
+par(mfrow=c(1,3))
+annual_hist(cp_results1,year_continuous)
+annual_hist(cp_results2,year_continuous)
+annual_hist(cp_results3,year_continuous)
+par(mfrow=c(1,1))
+
+dfsim1 = data.frame(value = year_continuous[cp_results1$saved[,1,]])
+H_sim1 = ggplot(data = dfsim1, aes(x=value)) +
+  geom_histogram(data=dfsim1,aes(y=..count../sum(..count..)),binwidth = 1,fill='gray1',alpha=.3) +
+  labs(x='',y='') +
+  ylim(c(0,1)) +
+  xlim(range(year_continuous)) +
+  theme(axis.text=element_text(size=12),
+        panel.border=element_rect(colour='black',fill=NA))
+dfsim2 = data.frame(value = year_continuous[cp_results2$saved[,1,]])
+H_sim2 = ggplot(data = dfsim2, aes(x=value)) +
+  geom_histogram(data=dfsim2,aes(y=..count../sum(..count..)),binwidth = 1,fill='gray1',alpha=.3) +
+  labs(x='',y='') +
+  ylim(c(0,1)) +
+  xlim(range(year_continuous)) +
+  theme(axis.text=element_text(size=12),
+        panel.border=element_rect(colour='black',fill=NA))
+dfsim3 = data.frame(value = year_continuous[cp_results3$saved[,1,]])
+H_sim3 = ggplot(data = dfsim3, aes(x=value)) +
+  geom_histogram(data=dfsim3,aes(y=..count../sum(..count..)),binwidth = 1,fill='gray1',alpha=.3) +
+  labs(x='',y='') +
+  ylim(c(0,1)) +
+  xlim(range(year_continuous)) +
+  theme(axis.text=element_text(size=12),
+        panel.border=element_rect(colour='black',fill=NA))
+
 # =======================
 # panel of figures: simulation data
 
 c = capture_base_plot(plot_community_composition(beta))
 (figure <- multi_panel_figure(
   width = c(40,40,40,40,40,40),
-  height = c(40,50,50),
+  height = c(30,40,40,40),
   panel_label_type = "upper-roman"))
 figure %<>% fill_panel(
   c,
@@ -108,28 +155,17 @@ figure %<>% fill_panel(
 figure %<>% fill_panel(
   g3,
   row = 3, column = 5:6)
+figure %<>% fill_panel(
+  H_sim1,
+  row = 4, column = 1:2)
+figure %<>% fill_panel(
+  H_sim2,
+  row = 4, column = 3:4)
+figure %<>% fill_panel(
+  H_sim3,
+  row = 4, column = 5:6)
 
 figure
 
 
 #grid.arrange(g_1,g_2,g_3,g1,g2,g3,nrow=2)
-
- 
-# =================================================================================
-# changepoint model 
-year_continuous = (seq(400)/12) +1977
-x = data.frame(
-  year_continuous=year_continuous,
-  sin_year = sin(year_continuous * 2 * pi),
-  cos_year = cos(year_continuous * 2 * pi))
-
-cp_results1 = changepoint_model(ldamodel1, x, 1, weights = rep(1,length(year_continuous)))
-cp_results2 = changepoint_model(ldamodel2, x, 1, weights = rep(1,length(year_continuous)))
-cp_results3 = changepoint_model(ldamodel3, x, 1, weights = rep(1,length(year_continuous)))
-
-# changepoint visualizations
-par(mfrow=c(1,3))
-annual_hist(cp_results1,year_continuous)
-annual_hist(cp_results2,year_continuous)
-annual_hist(cp_results3,year_continuous)
-par(mfrow=c(1,1))
