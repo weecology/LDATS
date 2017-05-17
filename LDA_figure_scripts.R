@@ -2,6 +2,7 @@
 
 library(ggplot2)
 library(gridExtra)
+library(dplyr)
 
 cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
@@ -188,9 +189,12 @@ plot_community_composition_gg = function(composition,topic_order) {
         theme(axis.text=element_text(size=9),
               panel.background = element_blank(),
               panel.border=element_rect(colour='black',fill=NA),
-              axis.text.x = element_text(angle = 90, hjust = 1)) +
+              axis.text.x = element_text(angle = 90,hjust=0,vjust=.5),
+              plot.margin = unit(c(1,1,.5,.5),"mm")) +
       scale_x_discrete(name='') +
-      scale_y_continuous(name='',limits = c(0,.8))
+      scale_y_continuous(name='',limits = c(0,.8)) +
+      geom_hline(yintercept = 0)
+
     p[[j]] <- x
   }
   #grid.arrange(p[[1]],p[[2]],nrow=1)

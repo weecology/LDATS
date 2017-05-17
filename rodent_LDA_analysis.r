@@ -93,9 +93,10 @@ plot_community_composition(composition,c(3,4,2,1))
 # with grassland communities highlighted
 P = plot_community_composition_gg(composition,c(3,4,2,1))
 (figure <- multi_panel_figure(
-  width = c(65,65,65,65),
-  height = c(65,10),
-  panel_label_type = "none"))
+  width = c(70,70,70,70),
+  height = c(70,10),
+  panel_label_type = "none",
+  column_spacing = 0))
 figure %<>% fill_panel(
   P[[3]],
   row = 1, column = 1)
