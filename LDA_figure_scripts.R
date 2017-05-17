@@ -47,7 +47,7 @@ plot_gamma = function(gamma_frame,ntopics,ylab='') {
 #' @param xticks vector of dates for x-axis labels
 #' @param ylab y axis label (optional)
 #' 
-#' @return None
+#' @return ggplot object
 #' 
 #' @example plot_component_communities(ldamodel,ntopics,period_dates$date)
 
@@ -60,6 +60,32 @@ plot_component_communities = function(ldamodel,ntopics,xticks,ylab='') {
   }
   g = plot_gamma(ldaplot,ntopics,ylab)
   return(g) 
+}
+
+
+#' Plot histogram of changepoint locations -- WIP
+#' 
+#' @param results results object from changepoint_model function
+#' @param year_continuous vector of dates/xaxis units
+#' 
+#' @return ggplot object
+
+chpoint_histogram = function(results,year_continuous) {
+  npts = dim(results$saved)[1]
+  nrep = dim(results$saved)[3]
+  df = as.data.frame(t(results$saved[,1,]))
+
+  ggplot(data = df, aes(x=value)) +
+    for (n in seq(npts)) {
+      geom_histogram(data=data.frame(value=results$saved[n,1,]))
+    }
+    geom_histogram(aes(y=..count../sum(..count..),col=color),
+                   binwidth = .25) +
+    labs(x='') +
+    xlim(range(year_continuous))
+    theme(axis.text=element_text(size=12),
+          panel.border=element_rect(colour='black',fill=NA))
+  return(h)
 }
 
 
@@ -137,7 +163,7 @@ plot_community_composition = function(composition,topic_order=1:dim(composition)
   par(mfrow=c(1,topics))
   j=1
   for (i in topic_order) {
-    x = barplot(composition[i,],ylim=ylimits,col=cbPalette[i],main=paste('Community',j))
+    x = barplot(composition[i,],ylim=ylimits,col=cbPalette[i],main=paste('Community',j),las=2)
     j=j+1
   }
   par(mfrow=c(1,1))
