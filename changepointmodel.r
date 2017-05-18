@@ -41,6 +41,8 @@ fit_chunk_non_memoized = function(ldamodel, x, start, end, make_plot = FALSE,
       type = "l",
       lty = 1,
       col = my_colors,
+      xlab='',
+      ylab='',
       ...
     )
     abline(v = start)
@@ -249,6 +251,26 @@ annual_hist = function(results, year_continuous){
        seq(0, 1, .25))
   axis(1)
 }
+
+
+
+#' Find changepoint locations
+#' 
+#' @param results results object output from changepoint_model
+#' 
+#' @param return vector of changepoint locations
+#' 
+find_changepoint_location = function(results) {
+  cpts = c()
+  for (n in seq(dim(results$saved)[1])) {
+    cp = results$saved[n,1,]
+    x = unique(cp)[which.max(tabulate(match(cp, unique(cp))))]
+    cpts = append(cpts,x)
+  }
+  return(cpts)
+}
+
+
 
 # # =========================================================================
 # # Run the model
