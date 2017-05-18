@@ -98,16 +98,16 @@ P = plot_community_composition_gg(composition,c(3,4,2,1))
   panel_label_type = "none",
   column_spacing = 0))
 figure %<>% fill_panel(
-  P[[3]],
+  P[[1]],
   row = 1, column = 1)
 figure %<>% fill_panel(
-  P[[4]],
+  P[[2]],
   row = 1, column = 2)
 figure %<>% fill_panel(
-  P[[2]],
+  P[[3]],
   row = 1, column = 3)
 figure %<>% fill_panel(
-  P[[1]],
+  P[[4]],
   row = 1, column = 4)
 figure
 
