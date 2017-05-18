@@ -10,11 +10,15 @@ k = 4
 ldas = purrr::map(2 * seq(N_seeds), 
                   ~LDA(dat, k = 4, method = "VEM", control = list(seed = .x)))
 
-# Topic allocations to each species (probabilities sum to 1)
-ps = purrr::map(ldas, ~exp(.x@beta))
-
 # Log-likelihoods
 lls = purrr:::map_dbl(ldas, logLik)
+
+# Discard models whose log-likelihood is much lower than the "best" model
+ldas = ldas[lls > max(lls) - 100]
+
+# Topic allocations to each species (probabilities that sum to 1 in each row)
+ps = purrr::map(ldas, ~exp(.x@beta))
+
 
 # Hellinger distance is Euclidean distance between square roots, divided by
 # sqrt(2)
@@ -43,40 +47,22 @@ min_H = function(p1, p2) {
   )
 }
 
-
-dists = matrix(0, N_seeds, N_seeds)
-
-# Fill in the upper triangle of the distance matrix with the minimum
-# distance
-for (i in 1:(N_seeds - 1)) {
-  for (j in (i+1):N_seeds) {
-    result = min_H(ps[[i]], ps[[j]])
-    dists[i, j] = result$min_cost
-  }
-}
-dists = dists + t(dists) # Fill in the lower triangle
-
-
-# We can probably ignore the models with poor likelihoods
-include = lls > max(lls) - 50
-dists = dists[include, include]
-
 # Pick the LDA model with the highest log-likelihood, as is done in the main
 # analysis.
-best_lda = which.max(lls[include])
+best_lda = which.max(lls)
 
-# Pick the LDA model that is farthest from the best model, among our "included"
-# models.
-farthest_lda = which.max(dists[best_lda, ])
+# Calculate Hellinger distances from this model and find the farthest one
+minimum_distances = lapply(
+  1:length(ps),
+  function(i){min_H(ps[[best_lda]], ps[[i]])})
+farthest_lda = which.max(purrr::map_dbl(minimum_distances, "min_cost"))
 
 # Find the species allocations of each topic for these two models
-best_ps = ps[include][[best_lda]]
-farthest_ps = ps[include][[farthest_lda]]
+best_ps = ps[[best_lda]]
+farthest_ps = ps[[farthest_lda]][minimum_distances[[farthest_lda]]$assignment, ]
 
 # Re-order the rows of the "farthest" model so it matches the "best" model
 assignment = min_H(best_ps, farthest_ps)$assignment
-
-
 
 # "best" is in black, "farthest" is in red
 par(mfrow = c(2, 2))
