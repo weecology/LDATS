@@ -31,7 +31,7 @@ fit_chunk_non_memoized = function(ldamodel, x, start, end, make_plot = FALSE,
   )
   
   if (make_plot) {
-    my_colors = brewer.pal(5, name = "Set2")
+    cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
     plotfun = ifelse(start == -Inf, matplot, matlines)
     plotfun(
       x$year_continuous[x$year_continuous > start & x$year_continuous <= end], 
@@ -40,7 +40,8 @@ fit_chunk_non_memoized = function(ldamodel, x, start, end, make_plot = FALSE,
       xlim = range(x$year_continuous),
       type = "l",
       lty = 1,
-      col = my_colors,
+      lwd = 2,
+      col = cbPalette,
       xlab='',
       ylab='',
       ...
@@ -259,6 +260,8 @@ annual_hist = function(results, year_continuous){
 #' @param results results object output from changepoint_model
 #' 
 #' @param return vector of changepoint locations
+#' 
+#' @author Erica Christensen
 #' 
 find_changepoint_location = function(results) {
   cpts = c()

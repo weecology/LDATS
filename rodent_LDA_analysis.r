@@ -173,8 +173,12 @@ H_4 = ggplot(data = df_4, aes(x=value)) +
         panel.border=element_rect(colour='black',fill=NA))
 
 H_4
+
+
 # changepoint model plot
-get_ll_non_memoized(ldamodel,x,c(76,250,387),make_plot=T,weights=rep(1,length(year_continuous)))
+cpts = find_changepoint_location(cp_results_rodent4)
+
+get_ll_non_memoized(ldamodel,x,cpts,make_plot=T,weights=rep(1,length(year_continuous)))
 
 # ===================================================================
 # appendix: LDA with 3 and 5 topics
