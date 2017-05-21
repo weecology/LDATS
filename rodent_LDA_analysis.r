@@ -37,7 +37,7 @@ dates = period_dates$date
 
 # ===================================
 # model parameters:
-SEED = 113052032
+#SEED = 113052032
 topic_min = 2
 topic_max = 9
 nspp=length(dat)
@@ -52,15 +52,25 @@ ntopics = filter(aic_values,aic==min(aic)) %>% select(k) %>% as.numeric()
 best_ntopic = repeat_VEM(dat,
                          ntimes=200,
                          topic_min=2,
-                         topic_max=9)
-#hist(best_ntopic[,1],breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='best # of topics')
+                         topic_max=6)
+# plot histogram of how many seeds chose how many topics
+hist(best_ntopic[,1],breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='best # of topics')
 
 # ==================================================================
 # run LDA model
 
-#ldamodel = LDA_analysis_VEM(dat,SEED,c(topic_min,topic_max))
 ntopics = 4
 ldamodel = LDA(dat,ntopics, control = list(seed = SEED),method='VEM')
+
+# ==================================================================
+# how different is species composition of 4 community-types when LDA is run with different seeds?
+
+# get list of 100 seeds where 4 topics was the best LDA model
+seedlist = data.frame(best_ntopic) %>% filter(X1 == 4) %>% select(X2) %>% head(100) %>% unlist() %>% as.numeric()
+# add the seed for the model we're working with to the top of the list
+seedlist = c(SEED,seedlist)
+
+calculate_LDA_distance(dat,seedlist)
 
 # ==================================================================
 # change point model 
