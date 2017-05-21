@@ -2,6 +2,43 @@
 
 library(topicmodels)
 
+
+#' Compute hellinger distance
+#' 
+#' Hellinger distance is Euclidean distance between square roots, divided by
+#' sqrt(2)
+#' 
+#' @param a,b numeric vectors
+#' 
+Hellinger = function(a, b){
+  diff = sqrt(a) - sqrt(b)
+  sqrt(sum(diff^2) / 2)
+}
+
+#' Find the configuration with the minimum Hellinger distance between two
+#' probability matrices like those from `ps`.
+#' 
+#' @param p1,p2 numeric vectors: species composition
+#' 
+min_H = function(p1, p2) {
+  # Find the cost associated with each pairwise topic assignment
+  costs = matrix(0, k, k)
+  for (i in 1:k) {
+    for (j in 1:k) {
+      costs[i, j] = Hellinger(p1[i, ], p2[j, ])
+    }
+  }
+  # Minimize the sum of the pairwise costs.
+  # Adding a constant doesn't change the results, but all costs must be strictly
+  # positive.
+  assignment = clue::solve_LSAP(1 + costs)
+  list(
+    min_cost = mean(costs[cbind(1:k, assignment)]),
+    assignment = assignment
+  )
+}
+
+
 N_seeds = 100
 k = 4
 
@@ -20,32 +57,6 @@ ldas = ldas[lls > max(lls) - 100]
 ps = purrr::map(ldas, ~exp(.x@beta))
 
 
-# Hellinger distance is Euclidean distance between square roots, divided by
-# sqrt(2)
-Hellinger = function(a, b){
-  diff = sqrt(a) - sqrt(b)
-  sqrt(sum(diff^2) / 2)
-}
-
-# Find the configuration with the minimum Hellinger distance between two
-# probability matrices like those from `ps`.
-min_H = function(p1, p2) {
-  # Find the cost associated with each pairwise topic assignment
-  costs = matrix(0, k, k)
-  for (i in 1:k) {
-    for (j in 1:k) {
-      costs[i, j] = Hellinger(p1[i, ], p2[j, ])
-    }
-  }
-  # Minimize the sum of the pairwise costs.
-  # Adding a constant doesn't change the results, but all costs must be strictly
-  # positive.
-  assignment = clue::solve_LSAP(1 + costs)
-  list(
-    min_cost = mean(costs[cbind(1:k, assignment)]),
-    assignment = assignment
-  )
-}
 
 # Pick the LDA model with the highest log-likelihood, as is done in the main
 # analysis.
