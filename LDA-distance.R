@@ -22,7 +22,7 @@ ps = purrr::map(ldas, ~exp(.x@beta))
 
 # Hellinger distance is Euclidean distance between square roots, divided by
 # sqrt(2)
-H = function(a, b){
+Hellinger = function(a, b){
   diff = sqrt(a) - sqrt(b)
   sqrt(sum(diff^2) / 2)
 }
@@ -34,7 +34,7 @@ min_H = function(p1, p2) {
   costs = matrix(0, k, k)
   for (i in 1:k) {
     for (j in 1:k) {
-      costs[i, j] = H(p1[i, ], p2[j, ])
+      costs[i, j] = Hellinger(p1[i, ], p2[j, ])
     }
   }
   # Minimize the sum of the pairwise costs.
