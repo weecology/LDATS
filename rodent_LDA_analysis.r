@@ -37,7 +37,6 @@ dates = period_dates$date
 
 # ===================================
 # model parameters:
-#SEED = 113052032
 topic_min = 2
 topic_max = 9
 nspp=length(dat)
@@ -70,7 +69,8 @@ best_seed = calculate_LDA_distance(dat,seeds_4topics)
 # run LDA model
 
 ntopics = 4
-SEED = 113052032
+#SEED = 113052032
+SEED = best_seed
 ldamodel = LDA(dat,ntopics, control = list(seed = SEED),method='VEM')
 
 
@@ -99,11 +99,11 @@ beta1 = community_composition(ldamodel)
 
 # put columns in order of largest species to smallest
 composition = beta1[,c('NA','DS','SH','SF','SO','DO','DM','PB','PH','OL','OT','PL','PM','PE','PP','PI','RF','RM','RO','BA','PF')]
-plot_community_composition(composition,c(3,4,2,1))
+plot_community_composition(composition,c(3,4,1,2))
 
 
 # with grassland communities highlighted
-P = plot_community_composition_gg(composition,c(3,4,2,1))
+P = plot_community_composition_gg(composition,c(3,4,1,2))
 (figure <- multi_panel_figure(
   width = c(70,70,70,70),
   height = c(70,10),

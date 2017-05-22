@@ -40,9 +40,6 @@ min_H = function(p1, p2, k) {
 }
 
 
-# seed used to make the figures in rodent_LDA_analysis.R
-SEED = 113052032
- #SEED = 28 has a lower loglik
 
 #'
 #'
