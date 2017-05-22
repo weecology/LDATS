@@ -62,11 +62,8 @@ calculate_LDA_distance = function(ldas,seeds) {
   # Pick the LDA model with the highest log-likelihood
   best_lda = which.max(lls)
   
-  # Discard models whose log-likelihood is much lower than the "best" model
-  ldas_better = ldas[lls > max(lls) - 100]
-  
   # Topic allocations to each species (probabilities that sum to 1 in each row)
-  ps = purrr::map(ldas_better, ~exp(.x@beta))
+  ps = purrr::map(ldas, ~exp(.x@beta))
   best_ps = exp(ldas[[best_lda]]@beta)
   
   # Calculate Hellinger distances from this model and find the farthest one
@@ -74,6 +71,8 @@ calculate_LDA_distance = function(ldas,seeds) {
     1:length(ps),
     function(i){min_H(best_ps, ps[[i]],k)})
   farthest_lda = which.max(purrr::map_dbl(minimum_distances, "min_cost"))
+  
+  hist(unlist(lapply(minimum_distances,'[[','min_cost')))
   
   # Find the species allocations of each topic for these two models
   farthest_ps = ps[[farthest_lda]][minimum_distances[[farthest_lda]]$assignment, ]
@@ -98,6 +97,14 @@ calculate_LDA_distance = function(ldas,seeds) {
   
   # average distance between "best" model and others
   mean_distance = mean(unlist(lapply(minimum_distances,'[[','min_cost')))
+  
+  # between community distance
+  comm_dist = c()
+  for (i in 1:3) {
+    for (j in (i+1):4) {
+      comm_dist = append(comm_dist,Hellinger(best_ps[i,],best_ps[j,]))
+    }
+  }
   
   return(seeds[best_lda])
 

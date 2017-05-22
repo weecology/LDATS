@@ -87,7 +87,6 @@ par(mfrow=c(1,1))
 cp_results_rodent = changepoint_model(ldamodel, x, 1, weights = rep(1,length(year_continuous)))
 cp_results_rodent2 = changepoint_model(ldamodel, x, 2, weights = rep(1,length(year_continuous)))
 cp_results_rodent3 = changepoint_model(ldamodel, x, 3, weights = rep(1,length(year_continuous)))
-save
 cp_results_rodent4 = changepoint_model(ldamodel, x, 4, weights = rep(1,length(year_continuous)))
 hist(year_continuous[cp_results_rodent3$saved[,1,]],breaks = seq(1977,2016,.25),xlab='',main='Changepoint Estimate')
 annual_hist(cp_results_rodent4,year_continuous)
@@ -130,7 +129,7 @@ D = capture_base_plot(plot_community_composition(composition,c(3,4,2,1)))
 H = capture_base_plot(annual_hist(cp_results_rodent4,year_continuous))
 
 
-# Hot mess -- fix this!!
+# Hot mess -- fix this!! (changepoint histogram)
 df = as.data.frame(t(cp_results_rodent3$saved[,1,]))
 df1 = data.frame(value = year_continuous[df$V1])
 df2 = data.frame(value = year_continuous[df$V2])
@@ -153,22 +152,9 @@ quantile(df3$value,probs=c(.025,.975))
 format(date_decimal(1983.933), "%d-%m-%Y")
 
 
-(figure <- multi_panel_figure(
-  width = c(120,120),
-  height = c(80,80),
-  panel_label_type = "upper-roman"))
-#figure %<>% fill_panel(
-#  D,
-#  row = 1, column = 1:2)
-figure %<>% fill_panel(
-  cc,
-  row = 1, column = 1:2)
-figure %<>% fill_panel(
-  H_4,
-  row = 2, column = 1:2)
-figure
 
 
+# changepoint histogram w 4 cpts
 df_4 = as.data.frame(t(cp_results_rodent4$saved[,1,]))
 df1_4 = data.frame(value = year_continuous[df_4$V1])
 df2_4 = data.frame(value = year_continuous[df_4$V2])
@@ -191,6 +177,20 @@ H_4
 cpts = find_changepoint_location(cp_results_rodent4)
 
 get_ll_non_memoized(ldamodel,x,cpts,make_plot=T,weights=rep(1,length(year_continuous)))
+
+
+# Figure 3 -- LDA model, changepoint histogram, changepoint timeseries
+(figure <- multi_panel_figure(
+  width = c(120,120),
+  height = c(80,80),
+  panel_label_type = "upper-roman"))
+figure %<>% fill_panel(
+  cc,
+  row = 1, column = 1:2)
+figure %<>% fill_panel(
+  H_4,
+  row = 2, column = 1:2)
+figure
 
 # ===================================================================
 # appendix: LDA with 3 and 5 topics
