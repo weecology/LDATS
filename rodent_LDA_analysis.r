@@ -50,6 +50,8 @@ seedlist = 2*seq(200)
 ldas = purrr::map(seedlist, 
                   ~LDA(dat, k = 4, method = "VEM", control = list(seed = .x)))
 
+
+
 # choose number of topics -- model selection using AIC
 aic_values = aic_model(dat,SEED,topic_min,topic_max)
 ntopics = filter(aic_values,aic==min(aic)) %>% select(k) %>% as.numeric()
@@ -73,11 +75,11 @@ ldamodel = LDA(dat,ntopics, control = list(seed = SEED),method='VEM')
 # how different is species composition of 4 community-types when LDA is run with different seeds?
 
 # get list of 100 seeds where 4 topics was the best LDA model
-seedlist = data.frame(best_ntopic) %>% filter(X1 == 4) %>% select(X2) %>% head(100) %>% unlist() %>% as.numeric()
+seeds = data.frame(best_ntopic) %>% filter(X1 == 4) %>% select(X2) %>% head(100) %>% unlist() %>% as.numeric()
 # add the seed for the model we're working with to the top of the list
-seedlist = c(SEED,seedlist)
+seeds = c(SEED,seeds)
 
-calculate_LDA_distance(dat,seedlist)
+calculate_LDA_distance(dat,seeds)
 
 # ==================================================================
 # change point model 

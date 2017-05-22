@@ -86,19 +86,18 @@ aic_model_gibbs = function(dat,ngibbs=1000,topic_min,topic_max,save_runs=T) {
 #' 
 #' 
 #' @param dat
-#' @param ntimes how many times to repeat the AIC analysis
+#' @param seeds vector of seeds to use for analysis
 #' @param topic_min lowest number of topics; must be >=2
 #' @param topic_max highest number of topics
 #' 
-#' @examplt best_ntopic = repeat_VEM(dat,500,2,6)
+#' @example best_ntopic = repeat_VEM(dat,1:500,2,6)
 
-repeat_VEM = function(dat,ntimes,topic_min,topic_max) {
+repeat_VEM = function(dat,seeds,topic_min,topic_max) {
   best_ntopic = c()
-  s = .Random.seed
-  for (n in seq(ntimes)) {
-    aic_values = aic_model(dat,SEED=s[n],topic_min,topic_max)
+  for (n in seq(length(seeds))) {
+    aic_values = aic_model(dat,SEED=seeds[n],topic_min,topic_max)
     ntopics = filter(aic_values,aic==min(aic)) %>% select(k) %>% as.numeric()
-    best_ntopic = rbind(best_ntopic,c(ntopics,s[n]))
+    best_ntopic = rbind(best_ntopic,c(ntopics,seeds[n]))
     print(n)
   }
   return(best_ntopic)
