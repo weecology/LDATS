@@ -49,6 +49,8 @@ SEED = 113052032
 #'
 #' @param ldas list of results from LDA model
 #' @param seeds vector of seeds for which LDA models will be fit and results compared
+#' 
+#' @return seed associated with highest log likelihood
 #'
 calculate_LDA_distance = function(ldas,seeds) {
   
@@ -96,6 +98,11 @@ calculate_LDA_distance = function(ldas,seeds) {
     axis(1, 1:ncol(dat), colnames(dat), las = 2)
   }
   par(mfrow = c(1, 1))
+  
+  # average distance between "best" model and others
+  mean_distance = mean(unlist(lapply(minimum_distances,'[[','min_cost')))
+  
+  return(seeds[best_lda])
 
 }
 

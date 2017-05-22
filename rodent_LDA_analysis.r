@@ -63,7 +63,7 @@ hist(best_ntopic[,1],breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='bes
 # get list of 100 seeds where 4 topics was the best LDA model
 seeds_4topics = data.frame(best_ntopic) %>% filter(X1 == 4) %>% select(X2) %>% head(100) %>% unlist() %>% as.numeric()
 
-calculate_LDA_distance(dat,seeds_4topics)
+best_seed = calculate_LDA_distance(dat,seeds_4topics)
 
 
 # ==================================================================
