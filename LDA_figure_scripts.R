@@ -192,11 +192,13 @@ plot_community_composition_gg = function(composition,topic_order) {
               panel.border=element_rect(colour='black',fill=NA),
               axis.text.x = element_text(angle = 90,hjust=0,vjust=.5),
               plot.margin = unit(c(0,1,0,0),"mm"),
-              axis.text.y = element_blank()) +
-              #axis.text.y = element_text(angle=90,size=9,vjust=.5)) +
+              #axis.text.y = element_blank() +
+              axis.text.y = element_text(angle=90,size=9,vjust=.5),
+              plot.title = element_text(hjust = 0.5)) +
       scale_x_discrete(name='') +
       scale_y_continuous(name='',limits = c(0,.8)) +
-      geom_hline(yintercept = 0) 
+      geom_hline(yintercept = 0)  +
+      ggtitle(paste('Community',j))
 
     p[[j]] <- x
     j=j+1
