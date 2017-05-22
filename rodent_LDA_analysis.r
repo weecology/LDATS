@@ -55,7 +55,7 @@ best_ntopic = repeat_VEM(dat,
                          topic_max=6)
 
 # plot histogram of how many seeds chose how many topics
-hist(best_ntopic[,1],breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='best # of topics')
+hist(best_ntopic[,1],breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='best # of topics', main='')
 
 # ==================================================================
 # how different is species composition of 4 community-types when LDA is run with different seeds?
@@ -64,10 +64,6 @@ hist(best_ntopic[,1],breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='bes
 seeds_4topics = data.frame(best_ntopic) %>% filter(X1 == 4) %>% select(X2) %>% head(100) %>% unlist() %>% as.numeric()
 
 calculate_LDA_distance(dat,seeds_4topics)
-
-
-
-
 
 
 # ==================================================================

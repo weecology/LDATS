@@ -19,8 +19,9 @@ Hellinger = function(a, b){
 #' probability matrices like those from `ps`.
 #' 
 #' @param p1,p2 numeric vectors: species composition
+#' @param k number of topics
 #' 
-min_H = function(p1, p2) {
+min_H = function(p1, p2, k) {
   # Find the cost associated with each pairwise topic assignment
   costs = matrix(0, k, k)
   for (i in 1:k) {
@@ -52,8 +53,9 @@ SEED = 113052032
 calculate_LDA_distance = function(ldas,seeds) {
   
   # Calculate a bunch of LDAs with 4 topics
+  k = 4
   ldas = purrr::map(seeds, 
-                    ~LDA(dat, k = 4, method = "VEM", control = list(seed = .x)))
+                    ~LDA(dat, k = k, method = "VEM", control = list(seed = .x)))
   
   # Log-likelihoods for each lda
   lls = purrr:::map_dbl(ldas, logLik)
@@ -66,31 +68,22 @@ calculate_LDA_distance = function(ldas,seeds) {
   
   # Topic allocations to each species (probabilities that sum to 1 in each row)
   ps = purrr::map(ldas_better, ~exp(.x@beta))
-  ps_best = exp(ldas[best_lda]$beta)
+  best_ps = exp(ldas[[best_lda]]@beta)
   
   # Calculate Hellinger distances from this model and find the farthest one
   minimum_distances = lapply(
     1:length(ps),
-    function(i){min_H(ps_best, ps[[i]])})
+    function(i){min_H(best_ps, ps[[i]],k)})
   farthest_lda = which.max(purrr::map_dbl(minimum_distances, "min_cost"))
   
   # Find the species allocations of each topic for these two models
-  best_ps = ps[[best_lda]]
   farthest_ps = ps[[farthest_lda]][minimum_distances[[farthest_lda]]$assignment, ]
   
   # Re-order the rows of the "farthest" model so it matches the "best" model
-  assignment = min_H(best_ps, farthest_ps)$assignment
+  assignment = min_H(best_ps, farthest_ps, k)$assignment
   
-
-}
-
-
-
-
-#' plot results
-#' "best" is in black, "farthest" is in red
-#' 
-plot_spcomp_distance = function(dat,best_ps,farthest_ps) {
+  # plot results
+  # "best" is in black, "farthest" is in red
   par(mfrow = c(2, 2))
   for (row in 1:k) {
     plot(NULL, xlim = c(1, 21), ylim = c(0, 1),
@@ -103,6 +96,7 @@ plot_spcomp_distance = function(dat,best_ps,farthest_ps) {
     axis(1, 1:ncol(dat), colnames(dat), las = 2)
   }
   par(mfrow = c(1, 1))
-  
+
 }
+
 
