@@ -44,6 +44,12 @@ nspp=length(dat)
 # ==================================================================
 # select number of topics
 
+# Fit a bunch of LDA models with different seeds
+# Only use every other seed because consecutive seeds give identical results (!?)
+seedlist = 2*seq(200)
+ldas = purrr::map(seedlist, 
+                  ~LDA(dat, k = 4, method = "VEM", control = list(seed = .x)))
+
 # choose number of topics -- model selection using AIC
 aic_values = aic_model(dat,SEED,topic_min,topic_max)
 ntopics = filter(aic_values,aic==min(aic)) %>% select(k) %>% as.numeric()
@@ -60,6 +66,7 @@ hist(best_ntopic[,1],breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='bes
 # run LDA model
 
 ntopics = 4
+SEED = 113052032
 ldamodel = LDA(dat,ntopics, control = list(seed = SEED),method='VEM')
 
 # ==================================================================

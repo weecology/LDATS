@@ -46,16 +46,10 @@ SEED = 113052032
 #'
 #'
 #'
-#' @param dat table of species/time rodent counts, same as input for LDA
+#' @param ldas list of results from LDA model
 #' @param seedlist vector of seeds for which LDA models will be fit and results compared
 #'
-calculate_LDA_distance = function(dat,seedlist) {
-  
-  # Fit a bunch of LDA models with different seeds
-  # Only use every other seed because consecutive seeds give identical results (!?)
-  #seedlist = 2*seq(100)
-  ldas = purrr::map(seedlist, 
-                    ~LDA(dat, k = 4, method = "VEM", control = list(seed = .x)))
+calculate_LDA_distance = function(ldas) {
   
   # Log-likelihoods for each lda
   lls = purrr:::map_dbl(ldas, logLik)
