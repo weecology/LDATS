@@ -47,28 +47,31 @@ SEED = 113052032
 #'
 #'
 #' @param ldas list of results from LDA model
-#' @param seedlist vector of seeds for which LDA models will be fit and results compared
+#' @param seeds vector of seeds for which LDA models will be fit and results compared
 #'
-calculate_LDA_distance = function(ldas) {
+calculate_LDA_distance = function(ldas,seeds) {
+  
+  # Calculate a bunch of LDAs with 4 topics
+  ldas = purrr::map(seeds, 
+                    ~LDA(dat, k = 4, method = "VEM", control = list(seed = .x)))
   
   # Log-likelihoods for each lda
   lls = purrr:::map_dbl(ldas, logLik)
   
-  # Pick the LDA model with the highest log-likelihood, as is done in the main
-  # analysis.
-  best_seed = seedlist[which.max(lls)]
+  # Pick the LDA model with the highest log-likelihood
+  best_lda = which.max(lls)
   
   # Discard models whose log-likelihood is much lower than the "best" model
-  #ldas = ldas[lls > max(lls) - 100]
+  ldas_better = ldas[lls > max(lls) - 100]
   
   # Topic allocations to each species (probabilities that sum to 1 in each row)
-  ps = purrr::map(ldas, ~exp(.x@beta))
-  ps_best = exp(ldas[1]$beta)
+  ps = purrr::map(ldas_better, ~exp(.x@beta))
+  ps_best = exp(ldas[best_lda]$beta)
   
   # Calculate Hellinger distances from this model and find the farthest one
   minimum_distances = lapply(
     1:length(ps),
-    function(i){min_H(ps[[best_lda]], ps[[i]])})
+    function(i){min_H(ps_best, ps[[i]])})
   farthest_lda = which.max(purrr::map_dbl(minimum_distances, "min_cost"))
   
   # Find the species allocations of each topic for these two models

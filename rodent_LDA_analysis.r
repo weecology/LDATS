@@ -46,23 +46,29 @@ nspp=length(dat)
 
 # Fit a bunch of LDA models with different seeds
 # Only use every other seed because consecutive seeds give identical results (!?)
-seedlist = 2*seq(200)
-ldas = purrr::map(seedlist, 
-                  ~LDA(dat, k = 4, method = "VEM", control = list(seed = .x)))
-
-
-
-# choose number of topics -- model selection using AIC
-aic_values = aic_model(dat,SEED,topic_min,topic_max)
-ntopics = filter(aic_values,aic==min(aic)) %>% select(k) %>% as.numeric()
+seeds = 2*seq(200)
 
 # repeat aic calculation with a bunch of different seeds to test robustness of the analysis
 best_ntopic = repeat_VEM(dat,
-                         ntimes=200,
+                         seeds,
                          topic_min=2,
                          topic_max=6)
+
 # plot histogram of how many seeds chose how many topics
 hist(best_ntopic[,1],breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='best # of topics')
+
+# ==================================================================
+# how different is species composition of 4 community-types when LDA is run with different seeds?
+
+# get list of 100 seeds where 4 topics was the best LDA model
+seeds_4topics = data.frame(best_ntopic) %>% filter(X1 == 4) %>% select(X2) %>% head(100) %>% unlist() %>% as.numeric()
+
+calculate_LDA_distance(dat,seeds_4topics)
+
+
+
+
+
 
 # ==================================================================
 # run LDA model
@@ -71,15 +77,6 @@ ntopics = 4
 SEED = 113052032
 ldamodel = LDA(dat,ntopics, control = list(seed = SEED),method='VEM')
 
-# ==================================================================
-# how different is species composition of 4 community-types when LDA is run with different seeds?
-
-# get list of 100 seeds where 4 topics was the best LDA model
-seeds = data.frame(best_ntopic) %>% filter(X1 == 4) %>% select(X2) %>% head(100) %>% unlist() %>% as.numeric()
-# add the seed for the model we're working with to the top of the list
-seeds = c(SEED,seeds)
-
-calculate_LDA_distance(dat,seeds)
 
 # ==================================================================
 # change point model 
