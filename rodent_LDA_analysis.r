@@ -13,11 +13,12 @@ library(RCurl)
 library(multipanelfigure)
 
 
-source('rodent_data_for_LDA.R')
+source('rodent_data_for_LDA.r')
 source('AIC_model_selection.R')
 source('LDA_figure_scripts.R')
 source('changepointmodel.r')
 source('LDA_analysis.R')
+source('LDA-distance.R')
 
 # ===================================================================
 # prepare rodent data
