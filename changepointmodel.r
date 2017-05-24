@@ -136,7 +136,7 @@ fit_section = function(ldamodel, x, start, end, weights, ...) {
 #'
 #'
 plot_sections = function(all_sections,x,changepoints) {
-  cbPalette <- c("#E69F00","#999999","#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+  cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
   datevec =  format(date_decimal(x$year_continuous), '%Y-%m-%d') %>% as.Date()
   cpt_dates = datevec[changepoints]
   
