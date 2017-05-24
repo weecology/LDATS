@@ -159,13 +159,13 @@ format(date_decimal(1996.07), "%d-%m-%Y")
 # changepoint model plot
 cpts = find_changepoint_location(cp_results_rodent4)
 
-get_ll_non_memoized_plot(ldamodel,x,cpts,make_plot=T,weights=rep(1,length(year_continuous)))
+cpt_plot = get_ll_non_memoized_plot(ldamodel,x,cpts,make_plot=T,weights=rep(1,length(year_continuous)))
 
 
 # Figure 3 -- community composition, LDA model, changepoint histogram, changepoint timeseries
 (figure <- multi_panel_figure(
   width = c(70,70,70,70),
-  height = c(60,60,60),
+  height = c(60,60,60,60),
   panel_label_type = "none",
   column_spacing = 0))
 figure %<>% fill_panel(
@@ -186,6 +186,9 @@ figure %<>% fill_panel(
 figure %<>% fill_panel(
   H_4,
   row = 3, column = 1:4)
+figure %<>% fill_panel(
+  cpt_plot,
+  row = 4, column = 1:4)
 figure
 
 # ===================================================================

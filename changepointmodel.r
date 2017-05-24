@@ -152,7 +152,7 @@ plot_sections = function(all_sections,x,changepoints) {
                         values=cbPalette[1:ntopics],
                         guide=FALSE) +
     geom_vline(xintercept = as.numeric(cpt_dates),size=2)
-  section_plot
+  return(section_plot)
 }
 
 
