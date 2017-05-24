@@ -83,7 +83,77 @@ get_ll_non_memoized = function(ldamodel, x, changepoints, make_plot = FALSE,
   )
 }
 
+#' adapted get_ll_non_memoized for plotting purposes
+#' 
+#' @param ldamodel output object from LDA()
+#' @param x same x used in changepoint_model()
+#' @param changepoints vector of locations of changepoints found by changepoint_model()
+#' @param weights same weights used in changepoint_model()
+#' 
+#' 
+get_ll_non_memoized_plot = function(ldamodel, x, changepoints, weights, ...){
+  
+  changedates = c(-Inf, x$year_continuous[changepoints], Inf)
+  all_sections = data.frame()
+  for (i in seq(length(changedates)-1)) {
+    section = fit_section(ldamodel, x, changedates[i], changedates[i+1], weights = weights)
+    all_sections = rbind(all_sections,section)
+  }
+  plot_sections(all_sections,x,changepoints)
+}
 
+#' Fit a model to dates in (start,end] and return data frame for plotting
+#' 
+#' @param ldamodel output of LDA()
+#' @param x same x used in changepoint_model()
+#' @param start value: start of the section to be fit
+#' @param end value: end of the section to be fit
+#' @param weights same weights used in changepoint_model()
+#' 
+fit_section = function(ldamodel, x, start, end, weights, ...) {
+  m = multinom(
+    ldamodel@gamma ~ sin_year + cos_year, 
+    data = x,
+    maxit = 1E5,
+    weights = weights,
+    subset = x$year_continuous > start & x$year_continuous <= end,
+    trace = FALSE
+  )
+  
+  section_df = as.data.frame(fitted(m))
+  section_df$date = format(date_decimal(x$year_continuous[x$year_continuous > start & x$year_continuous <= end]), '%Y-%m-%d') %>% as.Date()
+  section = melt(section_df,id.var='date')
+  return(section)
+}
+
+
+#' plot all the fit sections
+#' 
+#' @param all_sections data frame containing plotting info for all sections
+#' @param x same x as used in changepoint_model()
+#' @param changepoints vector of changepoints
+#'
+#'
+#'
+plot_sections = function(all_sections,x,changepoints) {
+  cbPalette <- c("#E69F00","#999999","#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+  datevec =  format(date_decimal(x$year_continuous), '%Y-%m-%d') %>% as.Date()
+  cpt_dates = datevec[changepoints]
+  
+  section_plot = ggplot(all_sections,aes=c(x=date,y=value,colour=variable)) +
+    geom_line(aes(x=date,y=value,colour=variable,group=variable),size=1) +
+    scale_y_continuous(name = '', limits = c(0,1)) +
+    scale_x_date(name = '', limits = c(min(datevec),max(datevec))) +
+    theme(axis.text=element_text(size=12),
+          axis.title=element_text(size=12),
+          panel.border=element_rect(colour='black',fill=NA)) +
+    scale_colour_manual(name="Component\nCommunity",
+                        breaks=as.character(seq(ntopics)),
+                        values=cbPalette[1:ntopics],
+                        guide=FALSE) +
+    geom_vline(xintercept = as.numeric(cpt_dates),size=2)
+  section_plot
+}
 
 
 #' Model to locate given number of change points in an LDA model output

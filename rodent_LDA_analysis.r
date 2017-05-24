@@ -104,6 +104,7 @@ plot_community_composition(composition,c(3,4,1,2))
 
 # with grassland communities highlighted
 P = plot_community_composition_gg(composition,c(3,4,1,2))
+
 (figure <- multi_panel_figure(
   width = c(70,70,70,70),
   height = c(70,10),
@@ -123,35 +124,8 @@ figure %<>% fill_panel(
   row = 1, column = 4)
 figure
 
+# plot of component communities over time
 cc = plot_component_communities(ldamodel,ntopics,dates)
-
-D = capture_base_plot(plot_community_composition(composition,c(3,4,2,1)))
-
-H = capture_base_plot(annual_hist(cp_results_rodent4,year_continuous))
-
-
-# Hot mess -- fix this!! (changepoint histogram)
-df = as.data.frame(t(cp_results_rodent3$saved[,1,]))
-df1 = data.frame(value = year_continuous[df$V1])
-df2 = data.frame(value = year_continuous[df$V2])
-df3 = data.frame(value = year_continuous[df$V3])
-H = ggplot(data = df, aes(x=value)) +
-  geom_histogram(data=df1,aes(y=..count../sum(..count..)),binwidth = .25,fill='gray1',alpha=.3) +
-  geom_histogram(data=df2,aes(y=..count../sum(..count..)),binwidth = .25,fill='gray2',alpha=.5) +
-  geom_histogram(data=df3,aes(y=..count../sum(..count..)),binwidth = .25,fill='gray3',alpha=1) +
-  labs(x='',y='') +
-  xlim(range(year_continuous)) +
-  theme(axis.text=element_text(size=12),
-      panel.border=element_rect(colour='black',fill=NA))
-  
-H
-
-# 95% confidence intervals on changepoints:
-quantile(df1$value,probs=c(.025,.975))
-quantile(df2$value,probs=c(.025,.975))
-quantile(df3$value,probs=c(.025,.975))
-format(date_decimal(1983.933), "%d-%m-%Y")
-
 
 
 
@@ -169,9 +143,17 @@ H_4 = ggplot(data = df_4, aes(x=value)) +
   labs(x='',y='') +
   xlim(range(year_continuous)) +
   theme(axis.text=element_text(size=12),
-        panel.border=element_rect(colour='black',fill=NA))
-
+        panel.border=element_rect(colour='black',fill=NA)) +
+  scale_y_continuous(labels=c('0.00','0.10','0.20','0.30','0.40'),breaks = c(0,.1,.2,.3,.4))
 H_4
+
+
+# find 95% confidence intervals on changepoints:
+quantile(df1_4$value,probs=c(.025,.975))
+quantile(df2_4$value,probs=c(.025,.975))
+quantile(df3_4$value,probs=c(.025,.975))
+quantile(df4_4$value,probs=c(.025,.975))
+format(date_decimal(1996.07), "%d-%m-%Y")
 
 
 # changepoint model plot
@@ -180,17 +162,30 @@ cpts = find_changepoint_location(cp_results_rodent4)
 get_ll_non_memoized(ldamodel,x,cpts,make_plot=T,weights=rep(1,length(year_continuous)))
 
 
-# Figure 3 -- LDA model, changepoint histogram, changepoint timeseries
+# Figure 3 -- community composition, LDA model, changepoint histogram, changepoint timeseries
 (figure <- multi_panel_figure(
-  width = c(120,120),
-  height = c(80,80),
-  panel_label_type = "upper-roman"))
+  width = c(70,70,70,70),
+  height = c(60,60,60),
+  panel_label_type = "none",
+  column_spacing = 0))
+figure %<>% fill_panel(
+  P[[1]],
+  row = 1, column = 1)
+figure %<>% fill_panel(
+  P[[2]],
+  row = 1, column = 2)
+figure %<>% fill_panel(
+  P[[3]],
+  row = 1, column = 3)
+figure %<>% fill_panel(
+  P[[4]],
+  row = 1, column = 4)
 figure %<>% fill_panel(
   cc,
-  row = 1, column = 1:2)
+  row = 2, column = 1:4)
 figure %<>% fill_panel(
   H_4,
-  row = 2, column = 1:2)
+  row = 3, column = 1:4)
 figure
 
 # ===================================================================
