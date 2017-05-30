@@ -103,26 +103,26 @@ plot_community_composition(composition,c(3,4,1,2))
 
 
 # with grassland communities highlighted
-P = plot_community_composition_gg(composition,c(3,4,1,2))
+P = plot_community_composition_gg(composition,c(3,4,2,1))
 
-(figure <- multi_panel_figure(
+(figure_spcomp <- multi_panel_figure(
   width = c(70,70,70,70),
   height = c(70,10),
   panel_label_type = "none",
   column_spacing = 0))
-figure %<>% fill_panel(
+figure_spcomp %<>% fill_panel(
   P[[1]],
   row = 1, column = 1)
-figure %<>% fill_panel(
+figure_spcomp %<>% fill_panel(
   P[[2]],
   row = 1, column = 2)
-figure %<>% fill_panel(
+figure_spcomp %<>% fill_panel(
   P[[3]],
   row = 1, column = 3)
-figure %<>% fill_panel(
+figure_spcomp %<>% fill_panel(
   P[[4]],
   row = 1, column = 4)
-figure
+figure_spcomp
 
 # plot of component communities over time
 cc = plot_component_communities(ldamodel,ntopics,dates)
@@ -166,20 +166,10 @@ cpt_plot = get_ll_non_memoized_plot(ldamodel,x,cpts,make_plot=T,weights=rep(1,le
 (figure <- multi_panel_figure(
   width = c(70,70,70,70),
   height = c(60,60,60,60),
-  panel_label_type = "none",
   column_spacing = 0))
 figure %<>% fill_panel(
-  P[[1]],
-  row = 1, column = 1)
-figure %<>% fill_panel(
-  P[[2]],
-  row = 1, column = 2)
-figure %<>% fill_panel(
-  P[[3]],
-  row = 1, column = 3)
-figure %<>% fill_panel(
-  P[[4]],
-  row = 1, column = 4)
+  figure_spcomp,
+  row = 1, column = 1:4)
 figure %<>% fill_panel(
   cc,
   row = 2, column = 1:4)
