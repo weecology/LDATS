@@ -136,15 +136,15 @@ df2_4 = data.frame(value = year_continuous[df_4$V2])
 df3_4 = data.frame(value = year_continuous[df_4$V3])
 df4_4 = data.frame(value = year_continuous[df_4$V4])
 H_4 = ggplot(data = df_4, aes(x=value)) +
-  geom_histogram(data=df1_4,aes(y=..count../sum(..count..)),binwidth = .25,fill='gray1',alpha=.3) +
-  geom_histogram(data=df2_4,aes(y=..count../sum(..count..)),binwidth = .25,fill='gray2',alpha=.5) +
-  geom_histogram(data=df3_4,aes(y=..count../sum(..count..)),binwidth = .25,fill='gray3',alpha=.7) +
-  geom_histogram(data=df4_4,aes(y=..count../sum(..count..)),binwidth = .25,fill='gray',alpha=.9) +
+  geom_histogram(data=df1_4,aes(y=..count../sum(..count..)),binwidth = .5,fill='gray1',alpha=.3) +
+  geom_histogram(data=df2_4,aes(y=..count../sum(..count..)),binwidth = .5,fill='gray2',alpha=.5) +
+  geom_histogram(data=df3_4,aes(y=..count../sum(..count..)),binwidth = .5,fill='gray3',alpha=.7) +
+  geom_histogram(data=df4_4,aes(y=..count../sum(..count..)),binwidth = .5,fill='gray',alpha=.9) +
   labs(x='',y='') +
   xlim(range(year_continuous)) +
   theme(axis.text=element_text(size=12),
         panel.border=element_rect(colour='black',fill=NA)) +
-  scale_y_continuous(labels=c('0.00','0.10','0.20','0.30','0.40'),breaks = c(0,.1,.2,.3,.4))
+  scale_y_continuous(labels=c('0.00','0.20','0.40','0.06','0.08'),breaks = c(0,.2,.4,.6,.8))
 H_4
 
 

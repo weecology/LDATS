@@ -10,6 +10,7 @@ library(ggplot2)
 library(viridis)
 library(nnet)        # For multinomial model (part of changepoint analysis)
 library(RColorBrewer)
+library(reshape2)
 
 
 # Begin changepoint model -------------------------------------------------
