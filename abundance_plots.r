@@ -30,9 +30,10 @@ abline(h=log(mean(abund_dat$n)))
 box(which='plot')
 
 # line segments showing changepoint 95% intervals
-segments(as.Date('1983-12-01'),5.8 , as.Date('1988-05-01'), 5.8, col='red', lwd=3, xpd = FALSE)
-segments(as.Date('1997-07-01'),5.8 , as.Date('1999-10-01'), 5.8, col='red', lwd=3, xpd = FALSE)
-segments(as.Date('2007-07-01'),5.8 , as.Date('2010-11-01'), 5.8, col='red', lwd=3, xpd = FALSE)
+segments(as.Date('1983-12-01'),5.8 , as.Date('1984-07-01'), 5.8, col='red', lwd=3, xpd = FALSE)
+segments(as.Date('1988-10-01'),5.8 , as.Date('1996-01-01'), 5.8, col='red', lwd=3, xpd = FALSE)
+segments(as.Date('1998-09-01'),5.8 , as.Date('1999-12-01'), 5.8, col='red', lwd=3, xpd = FALSE)
+segments(as.Date('2009-06-01'),5.8 , as.Date('2010-09-01'), 5.8, col='red', lwd=3, xpd = FALSE)
 
 
 par(xpd=F)
