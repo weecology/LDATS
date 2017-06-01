@@ -132,7 +132,7 @@ H_sim3 = ggplot(data = dfsim3, aes(x=value)) +
 c = capture_base_plot(plot_community_composition(beta))
 (figure <- multi_panel_figure(
   width = c(40,40,40,40,40,40),
-  height = c(30,40,40,40),
+  height = c(25,40,40,40),
   panel_label_type = "upper-roman"))
 figure %<>% fill_panel(
   c,

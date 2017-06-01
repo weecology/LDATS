@@ -27,7 +27,7 @@ plot_gamma = function(gamma_frame,ntopics,ylab='') {
     geom_line(size=1) +
     scale_y_continuous(name=ylab,limits=c(0,1)) +
     scale_x_date(name='') +
-    theme(axis.text=element_text(size=12),
+    theme(axis.text=element_text(size=10),
           axis.title=element_text(size=12),
           #panel.background = element_blank(),
           panel.border=element_rect(colour='black',fill=NA)) +
