@@ -4,7 +4,7 @@ library(ggplot2)
 library(gridExtra)
 library(dplyr)
 
-cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#0072B2", "#D55E00", "#F0E442", "#009E73", "#CC79A7")
 
 
 
@@ -47,16 +47,17 @@ plot_gamma = function(gamma_frame,ntopics,ylab='') {
 #' @param ntopics number of topics used in ldamodel
 #' @param xticks vector of dates for x-axis labels
 #' @param ylab y axis label (optional)
+#' @param topic_order order of topics (for color control)
 #' 
 #' @return ggplot object
 #' 
 #' @example plot_component_communities(ldamodel,ntopics,period_dates$date)
 
-plot_component_communities = function(ldamodel,ntopics,xticks,ylab='') {
+plot_component_communities = function(ldamodel,ntopics,xticks,ylab='',topic_order = seq(ntopics)) {
   
   z = posterior(ldamodel)
   ldaplot = data.frame(date=c(),relabund = c(), community = c())
-  for (t in seq(ntopics)) {
+  for (t in topic_order) {
     ldaplot = rbind(ldaplot,data.frame(date=xticks,relabund=z$topics[,t],community = as.factor(rep(t,length(z$topics[,1])))))
   }
   g = plot_gamma(ldaplot,ntopics,ylab)
@@ -170,7 +171,7 @@ plot_community_composition = function(composition,topic_order=1:dim(composition)
   par(mfrow=c(1,1))
 }
 
-
+# ggplot version of plot_community_composition
 plot_community_composition_gg = function(composition,topic_order) {
   topics = dim(composition)[1]
   community = c()

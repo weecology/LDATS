@@ -181,20 +181,96 @@ figure %<>% fill_panel(
   row = 4, column = 1:4)
 figure
 
+
 # ===================================================================
 # appendix: LDA with 3 and 5 topics
 
 # 3 topics
-ldamodel3topic = LDA(dat,3, control = list(seed = SEED),method='VEM')
-plot_component_communities(ldamodel3topic,3,dates)
+ldamodel3topic = LDA(dat,3, control = list(seed = 46),method='VEM')
+cc3 = plot_component_communities(ldamodel3topic,3,dates)
 beta13topic = community_composition(ldamodel3topic)
 composition3 = beta13topic[,c('NA','DS','SH','SF','SO','DO','DM','PB','PH','OL','OT','PL','PM','PE','PP','PI','RF','RM','RO','BA','PF')]
-plot_community_composition(composition3,c(3,2,1))
+P3topic = plot_community_composition_gg(composition3,c(3,2,1))
+
+(figure_spcomp3 <- multi_panel_figure(
+  width = c(70,70,70),
+  height = c(70,10),
+  panel_label_type = "none",
+  column_spacing = 0))
+figure_spcomp3 %<>% fill_panel(
+  P3topic[[1]],
+  row = 1, column = 1)
+figure_spcomp3 %<>% fill_panel(
+  P3topic[[2]],
+  row = 1, column = 2)
+figure_spcomp3 %<>% fill_panel(
+  P3topic[[3]],
+  row = 1, column = 3)
+figure_spcomp3
+
+(figure_s2 <- multi_panel_figure(
+  width = c(70,70,70,70),
+  height = c(60,60),
+  column_spacing = 0))
+figure_s2 %<>% fill_panel(
+  figure_spcomp3,
+  row = 1, column = 1:4)
+figure_s2 %<>% fill_panel(
+  cc3,
+  row = 2, column = 1:4)
+figure_s2
+
+# 4 topics
+(figure_s3 <- multi_panel_figure(
+  width = c(70,70,70,70),
+  height = c(60,60),
+  column_spacing = 0))
+figure_s3 %<>% fill_panel(
+  figure_spcomp,
+  row = 1, column = 1:4)
+figure_s3 %<>% fill_panel(
+  cc,
+  row = 2, column = 1:4)
+figure_s3
 
 # 5 topics
-ldamodel5topic = LDA(dat,5, control = list(seed = SEED),method='VEM')
-plot_component_communities(ldamodel5topic,5,dates) # 800 x 300
+ldamodel5topic = LDA(dat,5, control = list(seed = 110),method='VEM')
+cc5 = plot_component_communities(ldamodel5topic,5,dates,'',c(1,5,3,4,2)) # 800 x 300
 beta15topic = community_composition(ldamodel5topic)
-composition5 = beta15topic[,c('NA','DS','SH','SF','SO','DO','DM','PB','PH','OL','OT','PL','PM','PE','PP','PI','RF','RM','RO','BA','PF')]
-plot_community_composition(composition5,c(3,4,1,2,5))
+composition5 = beta15topic[c(1,5,3,4,2),c('NA','DS','SH','SF','SO','DO','DM','PB','PH','OL','OT','PL','PM','PE','PP','PI','RF','RM','RO','BA','PF')]
+P5topic = plot_community_composition_gg(composition5,c(3,4,5,2,1))
+
+(figure_spcomp5 <- multi_panel_figure(
+  width = c(60,60,60,60,60),
+  height = c(60,10),
+  panel_label_type = "none",
+  column_spacing = 0))
+figure_spcomp5 %<>% fill_panel(
+  P5topic[[1]],
+  row = 1, column = 1)
+figure_spcomp5 %<>% fill_panel(
+  P5topic[[2]],
+  row = 1, column = 2)
+figure_spcomp5 %<>% fill_panel(
+  P5topic[[3]],
+  row = 1, column = 3)
+figure_spcomp5 %<>% fill_panel(
+  P5topic[[4]],
+  row = 1, column = 4)
+figure_spcomp5 %<>% fill_panel(
+  P5topic[[5]],
+  row = 1, column = 5)
+figure_spcomp5
+
+(figure_s4 <- multi_panel_figure(
+  width = c(70,70,70,70),
+  height = c(60,60),
+  column_spacing = 0))
+figure_s4 %<>% fill_panel(
+  figure_spcomp5,
+  row = 1, column = 1:4)
+figure_s4 %<>% fill_panel(
+  cc5,
+  row = 2, column = 1:4)
+figure_s4
 
