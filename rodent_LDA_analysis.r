@@ -274,3 +274,45 @@ figure_s4 %<>% fill_panel(
   row = 2, column = 1:4)
 figure_s4
 
+
+# three changepoints
+# changepoint model plot
+cpts_3 = find_changepoint_location(cp_results_rodent3)
+
+cpt_plot_3pts = get_ll_non_memoized_plot(ldamodel,x,cpts_3,make_plot=T,weights=rep(1,length(year_continuous)))
+
+# changepoint histogram w 4 cpts
+df_3 = as.data.frame(t(cp_results_rodent3$saved[,1,]))
+df1_3 = data.frame(value = year_continuous[df_3$V1])
+df2_3 = data.frame(value = year_continuous[df_3$V2])
+df3_3 = data.frame(value = year_continuous[df_3$V3])
+H_3 = ggplot(data = df_3, aes(x=value)) +
+  geom_histogram(data=df1_3,aes(y=..count../sum(..count..)),binwidth = .5,fill='gray1',alpha=.3) +
+  geom_histogram(data=df2_3,aes(y=..count../sum(..count..)),binwidth = .5,fill='gray2',alpha=.6) +
+  geom_histogram(data=df3_3,aes(y=..count../sum(..count..)),binwidth = .5,fill='gray3',alpha=.9) +
+  labs(x='',y='') +
+  xlim(range(year_continuous)) +
+  theme(axis.text=element_text(size=12),
+        panel.border=element_rect(colour='black',fill=NA)) +
+  scale_y_continuous(labels=c('0.00','0.20','0.40','0.06','0.08'),breaks = c(0,.2,.4,.6,.8))
+H_3
+
+# Figure 3 -- community composition, LDA model, changepoint histogram, changepoint timeseries
+(figure_s6 <- multi_panel_figure(
+  width = c(70,70,70,70),
+  height = c(60,60,60,60),
+  column_spacing = 0))
+figure_s6 %<>% fill_panel(
+  figure_spcomp,
+  row = 1, column = 1:4)
+figure_s6 %<>% fill_panel(
+  cc,
+  row = 2, column = 1:4)
+figure_s6 %<>% fill_panel(
+  H_3,
+  row = 3, column = 1:4)
+figure_s6 %<>% fill_panel(
+  cpt_plot_3pts,
+  row = 4, column = 1:4)
+figure_s6
+
