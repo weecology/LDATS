@@ -89,8 +89,19 @@ cp_results_rodent = changepoint_model(ldamodel, x, 1, weights = rep(1,length(yea
 cp_results_rodent2 = changepoint_model(ldamodel, x, 2, weights = rep(1,length(year_continuous)))
 cp_results_rodent3 = changepoint_model(ldamodel, x, 3, weights = rep(1,length(year_continuous)))
 cp_results_rodent4 = changepoint_model(ldamodel, x, 4, weights = rep(1,length(year_continuous)))
+cp_results_rodent5 = changepoint_model(ldamodel, x, 5, weights = rep(1,length(year_continuous)))
+
 hist(year_continuous[cp_results_rodent3$saved[,1,]],breaks = seq(1977,2016,.25),xlab='',main='Changepoint Estimate')
 annual_hist(cp_results_rodent4,year_continuous)
+
+# change point model selection
+
+# mean deviance ( -2 * log likelihood) + 2*(#parameters)
+mean(cp_results_rodent$saved_lls * -2) + 2*(3*(n_topics-1)*(1+1)+(1))
+mean(cp_results_rodent2$saved_lls * -2)+ 2*(3*(n_topics-1)*(2+1)+(2))
+mean(cp_results_rodent3$saved_lls * -2)+ 2*(3*(n_topics-1)*(3+1)+(3))
+mean(cp_results_rodent4$saved_lls * -2)+ 2*(3*(n_topics-1)*(4+1)+(4))
+mean(cp_results_rodent5$saved_lls * -2)+ 2*(3*(n_topics-1)*(5+1)+(5))
 
 # =================================================================
 # figures
