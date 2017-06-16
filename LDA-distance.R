@@ -41,13 +41,15 @@ min_H = function(p1, p2, k) {
 
 
 
-#'
+#' Calculates multiple LDA models using different seeds
 #'
 #'
 #' @param ldas list of results from LDA model
 #' @param seeds vector of seeds for which LDA models will be fit and results compared
 #' 
-#' @return seed associated with highest log likelihood
+#' @return list including: seed associated with highest log likelihood
+#'                         mean distance between best model and all others
+#'                         max distuance between best model and worst
 #'
 calculate_LDA_distance = function(ldas,seeds) {
   
@@ -72,7 +74,7 @@ calculate_LDA_distance = function(ldas,seeds) {
     function(i){min_H(best_ps, ps[[i]],k)})
   farthest_lda = which.max(purrr::map_dbl(minimum_distances, "min_cost"))
   
-  hist(unlist(lapply(minimum_distances,'[[','min_cost')))
+  #hist(unlist(lapply(minimum_distances,'[[','min_cost')))
   
   # Find the species allocations of each topic for these two models
   farthest_ps = ps[[farthest_lda]][minimum_distances[[farthest_lda]]$assignment, ]
@@ -97,6 +99,8 @@ calculate_LDA_distance = function(ldas,seeds) {
   
   # average distance between "best" model and others
   mean_distance = mean(unlist(lapply(minimum_distances,'[[','min_cost')))
+  # maximum distance; between best model and worst
+  max_distance = max(unlist(lapply(minimum_distances,'[[','min_cost')))
   
   # between community distance
   comm_dist = c()
@@ -106,7 +110,7 @@ calculate_LDA_distance = function(ldas,seeds) {
     }
   }
   
-  return(seeds[best_lda])
+  return(list(seeds[best_lda],mean_distance,max_distance))
 
 }
 
