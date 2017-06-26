@@ -37,18 +37,6 @@ LDA_analysis_VEM = function(dat,SEED,test_topics) {
   ntopics = filter(aic_values,aic==min(aic)) %>% select(k) %>% as.numeric()
   ldamodel = LDA(dat,ntopics, control = list(seed = SEED),method='VEM')
 
-  # run change point model  
-  #year_continuous = 1970 + as.integer(julian(dates)) / 365.25
-  #x = data.frame(
-  #  year_continuous = year_continuous,
-  #  sin_year = sin(year_continuous * 2 * pi),
-  #  cos_year = cos(year_continuous * 2 * pi)
-  #)
-
-  #cp_results = changepoint_model(ldamodel, x, n_chpoints, maxit)
-  # par(mfrow=c(1,1))
-  # annual_hist(results,year_continuous)
-  # 
   return(ldamodel)
 }
 
