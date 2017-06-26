@@ -7,73 +7,102 @@
 # Started EMC 3/2017
 
 # ====================================================================================
-# Create simulated data:
-#  beta = matrix of species composition of the topics
-#  gamma = matrix of prevalence of topics through time
-#  assume even species composition and no overlap of species between topics
-
 library(multipanelfigure)
-#library(gridExtra)
-
 
 source('LDA_figure_scripts.R')
 source('AIC_model_selection.R')
 source('changepointmodel.r')
 source('create_sim_data.R')
-source('LDA_analysis.R')
-
-#source('gibbs_functions.r')
 
 cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
 # ==================================================================================
-# create data
+# Create simulated data
+# ==================================================================================
+#  beta = matrix of species composition of the topics
+#  gamma = matrix of prevalence of topics through time
+#  even species composition and no overlap of species between topics
+
 N = 200   # total number of individuals
 output = create_sim_data_2topic()
 
 beta = as.matrix(as.data.frame(output[1]))
+colnames(beta) <- list('S1','S2','S3','S4','S5','S6','S7','S8','S9','S10','S11','S12','S13','S14','S15','S16','S17','S18','S19','S20','S21','S22','S23','S24')
 gamma_constant = as.matrix(as.data.frame(output[2]))
 gamma_fast = as.matrix(as.data.frame(output[3]))
 gamma_slow = as.matrix(as.data.frame(output[4]))
 
-# ==================================================================================
+
 # plot beta and gammas
-plot_community_composition(beta)
+P = plot_community_composition_gg(beta,c(1,2))
+(figure_spcomp <- multi_panel_figure(
+  width = c(80,80),
+  height = c(50,10),
+  panel_label_type = "none",
+  column_spacing = 0))
+figure_spcomp %<>% fill_panel(
+  P[[1]],
+  row = 1, column = 1)
+figure_spcomp %<>% fill_panel(
+  P[[2]],
+  row = 1, column = 2)
+figure_spcomp
 
 sim_dates = seq.Date(from=as.Date('1977-01-01'),by=30,length.out = 400) 
 
-
+fast = data.frame(date = rep(sim_dates,dim(gamma_fast)[2]),
+                  relabund = as.vector(gamma_fast),
+                  community = as.factor(c(rep(1,dim(gamma_fast)[1]),rep(2,dim(gamma_fast)[1]))))
+slow = data.frame(date = rep(sim_dates,dim(gamma_slow)[2]),
+                  relabund = as.vector(gamma_slow),
+                  community = as.factor(c(rep(1,dim(gamma_slow)[1]),rep(2,dim(gamma_slow)[1]))))
 const = data.frame(date = rep(sim_dates,dim(gamma_constant)[2]),
                    relabund = as.vector(gamma_constant),
-                   community = as.factor(c(rep(1,dim(gamma_constant)[1]),rep(2,dim(gamma_constant)[1]))))#,rep(3,dim(gamma_constant)[1]))))
-slow = data.frame(date = rep(sim_dates,dim(gamma_slow)[2]),
-                   relabund = as.vector(gamma_slow),
-                   community = as.factor(c(rep(1,dim(gamma_slow)[1]),rep(2,dim(gamma_slow)[1]))))#,rep(3,dim(gamma_slow)[1]))))
-fast = data.frame(date = rep(sim_dates,dim(gamma_fast)[2]),
-                   relabund = as.vector(gamma_fast),
-                   community = as.factor(c(rep(1,dim(gamma_fast)[1]),rep(2,dim(gamma_fast)[1]))))#,rep(3,dim(gamma_fast)[1]))))
+                   community = as.factor(c(rep(1,dim(gamma_constant)[1]),rep(2,dim(gamma_constant)[1]))))
 
-g_1 = plot_gamma(const,2,ylab='Model Input')
-g_2 = plot_gamma(fast,2)
-g_3 = plot_gamma(slow,2)
+
+g_1 = plot_gamma(fast,2,ylab='Model Input')
+g_2 = plot_gamma(slow,2)
+g_3 = plot_gamma(const,2)
 grid.arrange(g_1,g_2,g_3,nrow=1)
-# =================================================================================
-# create data set from beta and gamma; data must be in integer form
-dataset1 = round(as.data.frame(gamma_constant %*% beta) *N,digits=0)
-dataset2 = ceiling(as.data.frame(gamma_fast %*% beta) *N)
-dataset3 = round(as.data.frame(gamma_slow %*% beta) *N,digits=0)
 
-# =================================================================================
-# run LDA model -- VEM
+
+# create data sets from beta and gamma; data must be in integer form (simulating species counts)
+dataset1 = round(as.data.frame(gamma_fast %*% beta) *N,digits=0)
+dataset2 = round(as.data.frame(gamma_slow %*% beta) *N,digits=0)
+dataset3 = round(as.data.frame(gamma_constant %*% beta) *N,digits=0)
+
+# ==================================================================
+# select number of topics
+# ==================================================================
+
+# Fit a bunch of LDA models with different seeds
+# Only use even numbers for seeds because consecutive seeds give identical results
+seeds = 2*seq(200)
+
+# repeat LDA model fit and AIC calculation with a bunch of different seeds to test robustness of the analysis
+best_ntopic_ds1 = repeat_VEM(dataset1,seeds,topic_min=2,topic_max=6)
+best_ntopic_ds2 = repeat_VEM(dataset2,seeds,topic_min=2,topic_max=6)
+best_ntopic_ds3 = repeat_VEM(dataset3,seeds,topic_min=2,topic_max=6)
+
+
+# histogram of how many seeds chose how many topics
+hist(best_ntopic_ds1[,1],breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='best # of topics', main='')
+hist(best_ntopic_ds2[,1],breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='best # of topics', main='')
+hist(best_ntopic_ds3[,1],breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='best # of topics', main='')
+
+# in all three datasets, 2 is the best number of topics
+
+# ==================================================================
+# run LDA model
+# ==================================================================
 SEED  = 1
-topic_min = 2
-topic_max = 6
 
-#nstart = 20 # For the final analysis, maybe do 1000
-ldamodel1 = LDA_analysis_VEM(dataset1,SEED,c(topic_min,topic_max))
-ldamodel2 = LDA_analysis_VEM(dataset2,SEED,c(topic_min,topic_max))
-ldamodel3 = LDA_analysis_VEM(dataset3,SEED,c(topic_min,topic_max))
+ldamodel1 = LDA(dataset1,k=2, control = list(seed = SEED),method='VEM')
+ldamodel2 = LDA(dataset2,k=2, control = list(seed = SEED),method='VEM')
+ldamodel3 = LDA(dataset3,k=2, control = list(seed = SEED),method='VEM')
 
-
+# plot results
 g1 = plot_component_communities(ldamodel1,2,sim_dates,ylab='LDA model output')
 g2 = plot_component_communities(ldamodel2,2,sim_dates)
 g3 = plot_component_communities(ldamodel3,2,sim_dates)
@@ -82,8 +111,9 @@ grid.arrange(g1,g2,g3,nrow=1)
 
 
  
-# =================================================================================
+# ==================================================================
 # changepoint model 
+# ==================================================================
 year_continuous_sim = (seq(400)/12) +1977
 x_sim = data.frame(
   year_continuous=year_continuous_sim,
@@ -126,16 +156,16 @@ H_sim3 = ggplot(data = dfsim3, aes(x=value)) +
   theme(axis.text=element_text(size=12),
         panel.border=element_rect(colour='black',fill=NA))
 
-# =======================
-# panel of figures: simulation data
+# ===============================================================
+# Create Figure 2
+# ===============================================================
 
-c = capture_base_plot(plot_community_composition(beta))
+
 (figure <- multi_panel_figure(
   width = c(40,40,40,40,40,40),
-  height = c(25,40,40,40),
-  panel_label_type = "upper-roman"))
+  height = c(35,40,40,40)))
 figure %<>% fill_panel(
-  c,
+  figure_spcomp,
   row = 1, column = 2:5)
 figure %<>% fill_panel(
   g_1,
@@ -167,5 +197,3 @@ figure %<>% fill_panel(
 
 figure
 
-
-#grid.arrange(g_1,g_2,g_3,g1,g2,g3,nrow=2)
