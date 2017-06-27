@@ -85,7 +85,7 @@ chpoint_histogram = function(results,year_continuous) {
                    binwidth = .25) +
     labs(x='') +
     xlim(range(year_continuous))
-    theme(axis.text=element_text(size=12),
+    theme(axis.text=element_text(size=10),
           panel.border=element_rect(colour='black',fill=NA))
   return(h)
 }
@@ -185,6 +185,7 @@ plot_community_composition_gg = function(composition,topic_order) {
   p = list()
   j = 1
   for (i in topic_order) {
+    if (i == 1) {ylabel='% Composition'} else {ylabel=''}
     x <- ggplot(data=comp[comp$community==i,], aes(x=species, y=relabund)) +
       geom_bar(stat='identity',fill=cbPalette[i])  +
       geom_bar(data=grass[grass$community==i,],aes(x=species,y=relabund),fill=cbPalette[i],stat='identity',alpha=0,size=1,color='black') +
@@ -196,7 +197,7 @@ plot_community_composition_gg = function(composition,topic_order) {
               axis.text.y = element_text(angle=90,size=9,vjust=.5,hjust=.5),
               plot.title = element_text(hjust = 0.5)) +
       scale_x_discrete(name='') +
-      scale_y_continuous(name='',limits = c(0,.8)) +
+      scale_y_continuous(name=ylabel,limits = c(0,.8)) +
       geom_hline(yintercept = 0)  +
       ggtitle(paste('Community',j))
 
