@@ -61,7 +61,7 @@ const = data.frame(date = rep(sim_dates,dim(gamma_constant)[2]),
                    community = as.factor(c(rep(1,dim(gamma_constant)[1]),rep(2,dim(gamma_constant)[1]))))
 
 
-g_1 = plot_gamma(fast,2,ylab='Model Input')
+g_1 = plot_gamma(fast,2,ylab='Simulated Dynamics')
 g_2 = plot_gamma(slow,2)
 g_3 = plot_gamma(const,2)
 grid.arrange(g_1,g_2,g_3,nrow=1)
@@ -134,10 +134,10 @@ par(mfrow=c(1,1))
 dfsim1 = data.frame(value = year_continuous_sim[cp_results1$saved[,1,]])
 H_sim1 = ggplot(data = dfsim1, aes(x=value)) +
   geom_histogram(data=dfsim1,aes(y=..count../sum(..count..)),binwidth = .5,fill='gray1',alpha=.3) +
-  labs(x='',y='') +
+  labs(x='',y='Changepoint Model') +
   ylim(c(0,1)) +
   xlim(range(year_continuous_sim)) +
-  theme(axis.text=element_text(size=12),
+  theme(axis.text=element_text(size=10),
         panel.border=element_rect(colour='black',fill=NA))
 dfsim2 = data.frame(value = year_continuous_sim[cp_results2$saved[,1,]])
 H_sim2 = ggplot(data = dfsim2, aes(x=value)) +
@@ -145,7 +145,7 @@ H_sim2 = ggplot(data = dfsim2, aes(x=value)) +
   labs(x='',y='') +
   ylim(c(0,1)) +
   xlim(range(year_continuous_sim)) +
-  theme(axis.text=element_text(size=12),
+  theme(axis.text=element_text(size=10),
         panel.border=element_rect(colour='black',fill=NA))
 dfsim3 = data.frame(value = year_continuous_sim[cp_results3$saved[,1,]])
 H_sim3 = ggplot(data = dfsim3, aes(x=value)) +
@@ -153,7 +153,7 @@ H_sim3 = ggplot(data = dfsim3, aes(x=value)) +
   labs(x='',y='') +
   ylim(c(0,1)) +
   xlim(range(year_continuous_sim)) +
-  theme(axis.text=element_text(size=12),
+  theme(axis.text=element_text(size=10),
         panel.border=element_rect(colour='black',fill=NA))
 
 # ===============================================================
