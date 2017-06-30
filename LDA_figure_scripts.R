@@ -185,7 +185,7 @@ plot_community_composition_gg = function(composition,topic_order) {
   p = list()
   j = 1
   for (i in topic_order) {
-    if (i == 1) {ylabel='% Composition'} else {ylabel=''}
+    if (j == 1) {ylabel='% Composition'} else {ylabel=''}
     x <- ggplot(data=comp[comp$community==i,], aes(x=species, y=relabund)) +
       geom_bar(stat='identity',fill=cbPalette[i])  +
       geom_bar(data=grass[grass$community==i,],aes(x=species,y=relabund),fill=cbPalette[i],stat='identity',alpha=0,size=1,color='black') +
