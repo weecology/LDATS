@@ -34,7 +34,7 @@ gamma_slow = as.matrix(as.data.frame(output[4]))
 
 
 # plot beta and gammas
-P = plot_community_composition_gg(beta,c(1,2))
+P = plot_community_composition_gg(beta,c(1,2),ylim=c(0,.3))
 (figure_spcomp <- multi_panel_figure(
   width = c(80,80),
   height = c(50,10),
@@ -133,27 +133,27 @@ par(mfrow=c(1,1))
 
 dfsim1 = data.frame(value = year_continuous_sim[cp_results1$saved[,1,]])
 H_sim1 = ggplot(data = dfsim1, aes(x=value)) +
-  geom_histogram(data=dfsim1,aes(y=..count../sum(..count..)),binwidth = .5,fill='gray1',alpha=.3) +
+  geom_histogram(data=dfsim1,aes(y=..count../sum(..count..)),binwidth = .5,fill='black') +
   labs(x='',y='Changepoint Model') +
   ylim(c(0,1)) +
   xlim(range(year_continuous_sim)) +
-  theme(axis.text=element_text(size=10),
+  theme(axis.text=element_text(size=9),
         panel.border=element_rect(colour='black',fill=NA))
 dfsim2 = data.frame(value = year_continuous_sim[cp_results2$saved[,1,]])
 H_sim2 = ggplot(data = dfsim2, aes(x=value)) +
-  geom_histogram(data=dfsim2,aes(y=..count../sum(..count..)),binwidth = .5,fill='gray1',alpha=.3) +
+  geom_histogram(data=dfsim2,aes(y=..count../sum(..count..)),binwidth = .5,fill='black') +
   labs(x='',y='') +
   ylim(c(0,1)) +
   xlim(range(year_continuous_sim)) +
-  theme(axis.text=element_text(size=10),
+  theme(axis.text=element_text(size=9),
         panel.border=element_rect(colour='black',fill=NA))
 dfsim3 = data.frame(value = year_continuous_sim[cp_results3$saved[,1,]])
 H_sim3 = ggplot(data = dfsim3, aes(x=value)) +
-  geom_histogram(data=dfsim3,aes(y=..count../sum(..count..)),binwidth = .5,fill='gray1',alpha=.3) +
+  geom_histogram(data=dfsim3,aes(y=..count../sum(..count..)),binwidth = .5,fill='black') +
   labs(x='',y='') +
   ylim(c(0,1)) +
   xlim(range(year_continuous_sim)) +
-  theme(axis.text=element_text(size=10),
+  theme(axis.text=element_text(size=9),
         panel.border=element_rect(colour='black',fill=NA))
 
 # ===============================================================

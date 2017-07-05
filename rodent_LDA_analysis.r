@@ -127,7 +127,7 @@ plot_community_composition(composition,c(3,4,1,2))
 
 
 # community composition with grassland communities highlighted
-P = plot_community_composition_gg(composition,c(3,4,2,1))
+P = plot_community_composition_gg(composition,c(3,4,2,1),ylim=c(0,.8))
 
 (figure_spcomp <- multi_panel_figure(
   width = c(70,70,70,70),

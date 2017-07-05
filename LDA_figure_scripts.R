@@ -171,8 +171,17 @@ plot_community_composition = function(composition,topic_order=1:dim(composition)
   par(mfrow=c(1,1))
 }
 
-# ggplot version of plot_community_composition
-plot_community_composition_gg = function(composition,topic_order) {
+#' ggplot version of plot_community_composition
+#' 
+#' @param composition matrix of species composition of topics; as in output of community_composition()
+#' @param topic_order order of topics -- for making this bar graph relate to the component community graph
+#' @param ylim vector of limits for yaxis
+#' 
+#' @return barplots of the n component communities
+#' 
+#' 
+#' 
+plot_community_composition_gg = function(composition,topic_order,ylim) {
   topics = dim(composition)[1]
   community = c()
   for (j in 1:topics) {community=append(community,rep(j,length(composition[j,])))}
@@ -197,14 +206,14 @@ plot_community_composition_gg = function(composition,topic_order) {
               axis.text.y = element_text(angle=90,size=9,vjust=.5,hjust=.5),
               plot.title = element_text(hjust = 0.5)) +
       scale_x_discrete(name='') +
-      scale_y_continuous(name=ylabel,limits = c(0,.8)) +
+      scale_y_continuous(name=ylabel,limits = ylim) +
       geom_hline(yintercept = 0)  +
       ggtitle(paste('Community',j))
 
     p[[j]] <- x
     j=j+1
   }
-  #grid.arrange(p[[1]],p[[2]],nrow=1)
+ 
   return(p)
 }
 
