@@ -155,15 +155,16 @@ cc = plot_component_communities(ldamodel,ntopics,dates)
 
 # changepoint histogram w 4 cpts
 H_4 = ggplot(data = df_4, aes(x=value)) +
-  geom_histogram(data=subset(df_4,variable=='V1'),aes(y=..count../sum(..count..)),binwidth = .5,fill='gray1',alpha=.3) +
-  geom_histogram(data=subset(df_4,variable=='V2'),aes(y=..count../sum(..count..)),binwidth = .5,fill='gray2',alpha=.5) +
-  geom_histogram(data=subset(df_4,variable=='V3'),aes(y=..count../sum(..count..)),binwidth = .5,fill='gray3',alpha=.7) +
-  geom_histogram(data=subset(df_4,variable=='V4'),aes(y=..count../sum(..count..)),binwidth = .5,fill='gray',alpha=.9) +
+  geom_histogram(data=subset(df_4,variable=='V1'),aes(y=..count../sum(..count..)),binwidth = .5,fill='black',alpha=.2) +
+  geom_histogram(data=subset(df_4,variable=='V2'),aes(y=..count../sum(..count..)),binwidth = .5,fill='black',alpha=.4) +
+  geom_histogram(data=subset(df_4,variable=='V3'),aes(y=..count../sum(..count..)),binwidth = .5,fill='black',alpha=.6) +
+  geom_histogram(data=subset(df_4,variable=='V4'),aes(y=..count../sum(..count..)),binwidth = .5,fill='black',alpha=1) +
   labs(x='',y='') +
   xlim(range(year_continuous)) +
   theme(axis.text=element_text(size=12),
         panel.border=element_rect(colour='black',fill=NA)) +
-  scale_y_continuous(labels=c('0.00','0.20','0.40','0.06','0.08'),breaks = c(0,.2,.4,.6,.8))
+  scale_y_continuous(labels=c('0.00','0.20','0.40','0.06','0.08'),breaks = c(0,.2,.4,.6,.8)) +
+  theme_bw()
 H_4
 
  
@@ -201,7 +202,7 @@ ldamodel3topic = LDA(dat,3, control = list(seed = 46),method='VEM')
 cc3 = plot_component_communities(ldamodel3topic,3,dates)
 beta13topic = community_composition(ldamodel3topic)
 composition3 = beta13topic[,c('NA','DS','SH','SF','SO','DO','DM','PB','PH','OL','OT','PL','PM','PE','PP','PI','RF','RM','RO','BA','PF')]
-P3topic = plot_community_composition_gg(composition3,c(3,2,1))
+P3topic = plot_community_composition_gg(composition3,c(3,2,1),c(0,.8))
 
 (figure_spcomp3 <- multi_panel_figure(
   width = c(70,70,70),
@@ -249,7 +250,7 @@ ldamodel5topic = LDA(dat,5, control = list(seed = 110),method='VEM')
 cc5 = plot_component_communities(ldamodel5topic,5,dates,'',c(1,5,3,4,2))
 beta15topic = community_composition(ldamodel5topic)
 composition5 = beta15topic[c(1,5,3,4,2),c('NA','DS','SH','SF','SO','DO','DM','PB','PH','OL','OT','PL','PM','PE','PP','PI','RF','RM','RO','BA','PF')]
-P5topic = plot_community_composition_gg(composition5,c(3,4,5,2,1))
+P5topic = plot_community_composition_gg(composition5,c(3,4,5,2,1),c(0,.8))
 
 (figure_spcomp5 <- multi_panel_figure(
   width = c(60,60,60,60,60),
