@@ -2,6 +2,7 @@
 library(vegan)
 library(dplyr)
 library(ggplot2)
+library(multipanelfigure)
 
 # read in latest Rodent data, make a table of species/time
 rdat = read.csv('C:/Users/EC/Desktop/git/PortalData/Rodents/Portal_rodent.csv',stringsAsFactors = F,na.strings = '')
@@ -40,9 +41,25 @@ for (n in 1:37) {
 }
 
 df = data.frame(bylag)
-ggplot(data.frame(bylag),aes(x=X2,y=X1,group=X2)) +
+boxfigure = ggplot(data.frame(bylag),aes(x=X2,y=X1,group=X2)) +
   geom_boxplot() +
   scale_y_continuous(name='Euclidean Distance') +
   scale_x_continuous(name='Lag Years')
 
 #boxplot(bylag[,1]~bylag[,2],xlab='lag years',ylab='Euclidean dist', main='by lag time')
+
+
+# =======================================
+# multi panel figure
+(figure1 <- multi_panel_figure(
+  width = c(150,10),
+  height = c(70,70),
+  column_spacing = 0))
+figure1 %<>% fill_panel(
+  boxfigure,
+  row = 1, column = 1)
+figure1 %<>% fill_panel(
+  'C:/Users/EC/Desktop/Plot1beforeafter.tif',
+  row = 2, column = 1:2)
+
+figure1
