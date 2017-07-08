@@ -127,7 +127,7 @@ plot_community_composition(composition,c(3,4,1,2))
 
 
 # community composition with grassland communities highlighted
-P = plot_community_composition_gg(composition,c(3,4,2,1),ylim=c(0,.8))
+P = plot_community_composition_gg(composition,c(3,4,1,2),ylim=c(0,.8))
 
 (figure_spcomp <- multi_panel_figure(
   width = c(70,70,70,70),
@@ -160,11 +160,14 @@ H_4 = ggplot(data = df_4, aes(x=value)) +
   geom_histogram(data=subset(df_4,variable=='V3'),aes(y=..count../sum(..count..)),binwidth = .5,fill='black',alpha=.6) +
   geom_histogram(data=subset(df_4,variable=='V4'),aes(y=..count../sum(..count..)),binwidth = .5,fill='black',alpha=1) +
   labs(x='',y='') +
-  xlim(range(year_continuous)) +
+  #xlim(range(year_continuous)) +
+  scale_y_continuous(labels=c('0.00','0.20','0.40','0.60','0.80'),breaks = c(0,.2,.4,.6,.8)) +
   theme(axis.text=element_text(size=12),
-        panel.border=element_rect(colour='black',fill=NA)) +
-  scale_y_continuous(labels=c('0.00','0.20','0.40','0.06','0.08'),breaks = c(0,.2,.4,.6,.8)) +
-  theme_bw()
+        panel.border=element_rect(colour='black',fill=NA),
+        panel.background = element_blank(),
+        panel.grid.major = element_line(colour='grey90'),
+        panel.grid.minor = element_line(colour='grey90')) 
+  #theme_bw()
 H_4
 
  

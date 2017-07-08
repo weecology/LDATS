@@ -4,7 +4,9 @@ library(ggplot2)
 library(gridExtra)
 library(dplyr)
 
-cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#0072B2", "#D55E00", "#F0E442", "#009E73", "#CC79A7")
+
+#cbPalette <- c( "#E69F00","#999999", "#56B4E9", "#0072B2", "#D55E00", "#F0E442", "#009E73", "#CC79A7")
+cbPalette <- c( "#e19c02","#999999", "#56B4E9", "#0072B2", "#D55E00", "#F0E442", "#009E73", "#CC79A7")
 
 
 
@@ -21,16 +23,21 @@ cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#0072B2", "#D55E00", "#F0E442",
 #' 
 #' @return a ggplot object
 
+ltypes = c('solid','longdash','longdash','solid','solid')
+
+
 plot_gamma = function(gamma_frame,ntopics,ylab='') {
   g = ggplot(gamma_frame, aes(x=date,y=relabund,colour=community)) + 
     geom_point() +
-    geom_line(size=1) +
+    geom_line(aes(size=community)) +
+    scale_size_manual(values=c(1,1,1.5,1.5), guide=FALSE) +
     scale_y_continuous(name=ylab,limits=c(0,1)) +
     scale_x_date(name='') +
-    theme(axis.text=element_text(size=10),
+    theme(axis.text=element_text(size=12),
           axis.title=element_text(size=12),
           #panel.background = element_blank(),
-          panel.border=element_rect(colour='black',fill=NA)) +
+          panel.border=element_rect(colour='black',fill=NA),
+          legend.position='none') +
     scale_colour_manual(name="Component\nCommunity",
                         breaks=as.character(seq(ntopics)),
                         values=cbPalette[1:ntopics],
@@ -85,7 +92,7 @@ chpoint_histogram = function(results,year_continuous) {
                    binwidth = .25) +
     labs(x='') +
     xlim(range(year_continuous))
-    theme(axis.text=element_text(size=10),
+    theme(axis.text=element_text(size=12),
           panel.border=element_rect(colour='black',fill=NA))
   return(h)
 }
@@ -198,7 +205,7 @@ plot_community_composition_gg = function(composition,topic_order,ylim) {
     x <- ggplot(data=comp[comp$community==i,], aes(x=species, y=relabund)) +
       geom_bar(stat='identity',fill=cbPalette[i])  +
       geom_bar(data=grass[grass$community==i,],aes(x=species,y=relabund),fill=cbPalette[i],stat='identity',alpha=0,size=1,color='black') +
-        theme(axis.text=element_text(size=9),
+        theme(axis.text=element_text(size=10),
               panel.background = element_blank(),
               panel.border=element_rect(colour='black',fill=NA),
               axis.text.x = element_text(angle = 90,hjust=0,vjust=.5),
