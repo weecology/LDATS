@@ -52,13 +52,17 @@ best_ntopic = repeat_VEM(dat,
                          topic_max=6)
 
 # histogram of how many seeds chose how many topics
-hist(best_ntopic[,1],breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='best # of topics', main='')
+hist(best_ntopic$k,breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='best # of topics', main='')
 
 # ==================================================================
 # 2b. how different is species composition of 4 community-types when LDA is run with different seeds?
 # ==================================================================
-# get list of 100 seeds where 4 topics was the best LDA model
-seeds_4topics = data.frame(best_ntopic) %>% filter(X1 == 4) %>% select(X2) %>% head(100) %>% unlist() %>% as.numeric()
+# get the best 100 seeds where 4 topics was the best LDA model
+seeds_4topics = best_ntopic %>% 
+  filter(k == 4) %>% 
+  arrange(aic) %>% 
+  head(100) %>% 
+  pull(SEED)
 
 # choose seed with highest log likelihood for all following analyses
 #    (also produces plot of community composition for 'best' run compared to 'worst')

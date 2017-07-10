@@ -19,8 +19,7 @@ library(dplyr)
 
 
 aic_model = function(dat,SEED,topic_min,topic_max) {
-  
-  aic_values = data.frame()
+  aic_values = data.frame(seed = integer(), k = integer(), aic = numeric())
   for (k in seq(topic_min,topic_max)) {
     #run LDA
     VEM=LDA(dat,k,control=list(seed=SEED),method='VEM')
@@ -34,9 +33,8 @@ aic_model = function(dat,SEED,topic_min,topic_max) {
     max.logl=sum(VEM@loglikelihood) #extract estimate of maximum loglikelihood
     nparam=(nrow(commun.plot)-1)*(ncol(commun.plot))+nrow(commun.spp)*(ncol(commun.spp)-1) #number of parameters
     aic=2*nparam-2*max.logl   #aic calculation
-    aic_values = rbind(aic_values,c(k,aic))
+    aic_values = rbind(aic_values,data.frame(SEED, k,aic))
   }
-  names(aic_values) = c('k','aic')
   return(aic_values)
 }
 
@@ -76,7 +74,6 @@ aic_model_gibbs = function(dat,ngibbs=1000,topic_min,topic_max,save_runs=T) {
     aic=2*nparam-2*max.logl   #aic calculation
     aic_values = rbind(aic_values,c(k,aic))
   }
-  names(aic_values) = c('k','aic')
   return(aic_values)
 }
 
@@ -93,12 +90,8 @@ aic_model_gibbs = function(dat,ngibbs=1000,topic_min,topic_max,save_runs=T) {
 #' @example best_ntopic = repeat_VEM(dat,1:500,2,6)
 
 repeat_VEM = function(dat,seeds,topic_min,topic_max) {
-  best_ntopic = c()
-  for (n in seq(length(seeds))) {
-    aic_values = aic_model(dat,SEED=seeds[n],topic_min,topic_max)
-    ntopics = filter(aic_values,aic==min(aic)) %>% select(k) %>% as.numeric()
-    best_ntopic = rbind(best_ntopic,c(ntopics,seeds[n]))
-    print(n)
-  }
-  return(best_ntopic)
+  map_df(seeds, 
+         ~ aic_model(dat,SEED=.x,topic_min,topic_max) %>% 
+           filter(aic == min(aic))) %>% 
+    return()
 }
