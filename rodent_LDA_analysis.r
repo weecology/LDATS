@@ -164,7 +164,7 @@ H_4 = ggplot(data = df_4, aes(x=value)) +
   geom_histogram(data=subset(df_4,variable=='V3'),aes(y=..count../sum(..count..)),binwidth = .5,fill='black',alpha=.6) +
   geom_histogram(data=subset(df_4,variable=='V4'),aes(y=..count../sum(..count..)),binwidth = .5,fill='black',alpha=1) +
   labs(x='',y='') +
-  #xlim(range(year_continuous)) +
+  xlim(range(year_continuous)) +
   scale_y_continuous(labels=c('0.00','0.20','0.40','0.60','0.80'),breaks = c(0,.2,.4,.6,.8)) +
   theme(axis.text=element_text(size=12),
         panel.border=element_rect(colour='black',fill=NA),
@@ -293,27 +293,85 @@ figure_s4 %<>% fill_panel(
   row = 2, column = 1:4)
 figure_s4
 
+# =======================================================
+# two, three, and five changepoints
 
-# three changepoints
-# changepoint model plot
-cpts_3 = find_changepoint_location(cp_results_rodent3)
-cpt_plot_3pts = get_ll_non_memoized_plot(ldamodel,x,cpts_3,make_plot=T,weights=rep(1,length(year_continuous)))
-
-
-
-# changepoint histogram
+# create dataframes from model outputs
+df_2 = as.data.frame(t(cp_results_rodent2$saved[,1,])) %>% melt()
+df_2$value = year_continuous[df_2$value]
 df_3 = as.data.frame(t(cp_results_rodent3$saved[,1,])) %>% melt()
 df_3$value = year_continuous[df_3$value]
+df_5 = as.data.frame(t(cp_results_rodent5$saved[,1,])) %>% melt()
+df_5$value = year_continuous[df_5$value]
+
+# changepoint histogram
+H_2 = ggplot(data = df_2, aes(x=value)) +
+  geom_histogram(data=subset(df_2,variable=='V1'),aes(y=..count../sum(..count..)),binwidth = .5,fill='gray1',alpha=.3) +
+  geom_histogram(data=subset(df_2,variable=='V2'),aes(y=..count../sum(..count..)),binwidth = .5,fill='gray2',alpha=.6) +
+  labs(x='',y='') +
+  scale_y_continuous(labels=c('0.00','0.20','0.40','0.60','0.80'),breaks = c(0,.2,.4,.6,.8)) +
+  theme(axis.text=element_text(size=12),
+        panel.border=element_rect(colour='black',fill=NA),
+        panel.background = element_blank(),
+        panel.grid.major = element_line(colour='grey90'),
+        panel.grid.minor = element_line(colour='grey90')) +
+  xlim(range(year_continuous))
+H_2
+
 H_3 = ggplot(data = df_3, aes(x=value)) +
   geom_histogram(data=subset(df_3,variable=='V1'),aes(y=..count../sum(..count..)),binwidth = .5,fill='gray1',alpha=.3) +
   geom_histogram(data=subset(df_3,variable=='V2'),aes(y=..count../sum(..count..)),binwidth = .5,fill='gray2',alpha=.6) +
   geom_histogram(data=subset(df_3,variable=='V3'),aes(y=..count../sum(..count..)),binwidth = .5,fill='gray3',alpha=.9) +
   labs(x='',y='') +
-  xlim(range(year_continuous)) +
+  scale_y_continuous(labels=c('0.00','0.20','0.40','0.60','0.80'),breaks = c(0,.2,.4,.6,.8)) +
   theme(axis.text=element_text(size=12),
-        panel.border=element_rect(colour='black',fill=NA)) +
-  scale_y_continuous(labels=c('0.00','0.20','0.40','0.06','0.08'),breaks = c(0,.2,.4,.6,.8))
+        panel.border=element_rect(colour='black',fill=NA),
+        panel.background = element_blank(),
+        panel.grid.major = element_line(colour='grey90'),
+        panel.grid.minor = element_line(colour='grey90')) +
+  xlim(range(year_continuous))
 H_3
+
+H_5 = ggplot(data = df_5, aes(x=value)) +
+  geom_histogram(data=subset(df_5,variable=='V1'),aes(y=..count../sum(..count..)),binwidth = .5,fill='black',alpha=.1) +
+  geom_histogram(data=subset(df_5,variable=='V2'),aes(y=..count../sum(..count..)),binwidth = .5,fill='black',alpha=.3) +
+  geom_histogram(data=subset(df_5,variable=='V3'),aes(y=..count../sum(..count..)),binwidth = .5,fill='black',alpha=.5) +
+  geom_histogram(data=subset(df_5,variable=='V4'),aes(y=..count../sum(..count..)),binwidth = .5,fill='black',alpha=.7) +
+  geom_histogram(data=subset(df_5,variable=='V5'),aes(y=..count../sum(..count..)),binwidth = .5,fill='black',alpha=1) +
+  labs(x='',y='') +
+  scale_y_continuous(labels=c('0.00','0.20','0.40','0.60','0.80'),breaks = c(0,.2,.4,.6,.8)) +
+  theme(axis.text=element_text(size=12),
+        panel.border=element_rect(colour='black',fill=NA),
+        panel.background = element_blank(),
+        panel.grid.major = element_line(colour='grey90'),
+        panel.grid.minor = element_line(colour='grey90')) +
+  xlim(range(year_continuous))
+H_5
+
+(figure_s6 <- multi_panel_figure(
+  width = c(60,60,60,60),
+  height = c(60,60,60,60),
+  column_spacing = 0))
+figure_s6 %<>% fill_panel(
+  H_2,
+  row = 1, column = 1:4)
+figure_s6 %<>% fill_panel(
+  H_3,
+  row = 2, column = 1:4)
+figure_s6 %<>% fill_panel(
+  H_4,
+  row = 3, column = 1:4)
+figure_s6 %<>% fill_panel(
+  H_5,
+  row = 4, column = 1:4)
+figure_s6
+
+
+# ============================================================
+# figures not in manuscript
+# changepoint model plot
+cpts_3 = find_changepoint_location(cp_results_rodent3)
+cpt_plot_3pts = get_ll_non_memoized_plot(ldamodel,x,cpts_3,make_plot=T,weights=rep(1,length(year_continuous)))
 
 # Figure 3 -- community composition, LDA model, changepoint histogram, changepoint timeseries
 (figure_s6 <- multi_panel_figure(
@@ -333,4 +391,3 @@ figure_s6 %<>% fill_panel(
   cpt_plot_3pts,
   row = 4, column = 1:4)
 figure_s6
-
