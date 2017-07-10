@@ -295,6 +295,7 @@ figure_s4
 
 # =======================================================
 # two, three, and five changepoints
+cols = viridis_pal()(5)
 
 # create dataframes from model outputs
 df_2 = as.data.frame(t(cp_results_rodent2$saved[,1,])) %>% melt()
@@ -306,8 +307,8 @@ df_5$value = year_continuous[df_5$value]
 
 # changepoint histogram
 H_2 = ggplot(data = df_2, aes(x=value)) +
-  geom_histogram(data=subset(df_2,variable=='V1'),aes(y=..count../sum(..count..)),binwidth = .5,fill='gray1',alpha=.3) +
-  geom_histogram(data=subset(df_2,variable=='V2'),aes(y=..count../sum(..count..)),binwidth = .5,fill='gray2',alpha=.6) +
+  geom_histogram(data=subset(df_2,variable=='V1'),aes(y=..count../sum(..count..)),binwidth = .5,fill=cols[1],alpha=.5) +
+  geom_histogram(data=subset(df_2,variable=='V2'),aes(y=..count../sum(..count..)),binwidth = .5,fill=cols[2],alpha=.5) +
   labs(x='',y='') +
   scale_y_continuous(labels=c('0.00','0.20','0.40','0.60','0.80'),breaks = c(0,.2,.4,.6,.8)) +
   theme(axis.text=element_text(size=12),
@@ -319,9 +320,9 @@ H_2 = ggplot(data = df_2, aes(x=value)) +
 H_2
 
 H_3 = ggplot(data = df_3, aes(x=value)) +
-  geom_histogram(data=subset(df_3,variable=='V1'),aes(y=..count../sum(..count..)),binwidth = .5,fill='gray1',alpha=.3) +
-  geom_histogram(data=subset(df_3,variable=='V2'),aes(y=..count../sum(..count..)),binwidth = .5,fill='gray2',alpha=.6) +
-  geom_histogram(data=subset(df_3,variable=='V3'),aes(y=..count../sum(..count..)),binwidth = .5,fill='gray3',alpha=.9) +
+  geom_histogram(data=subset(df_3,variable=='V1'),aes(y=..count../sum(..count..)),binwidth = .5,fill=cols[1],alpha=.5) +
+  geom_histogram(data=subset(df_3,variable=='V2'),aes(y=..count../sum(..count..)),binwidth = .5,fill=cols[2],alpha=.5) +
+  geom_histogram(data=subset(df_3,variable=='V3'),aes(y=..count../sum(..count..)),binwidth = .5,fill=cols[3],alpha=.5) +
   labs(x='',y='') +
   scale_y_continuous(labels=c('0.00','0.20','0.40','0.60','0.80'),breaks = c(0,.2,.4,.6,.8)) +
   theme(axis.text=element_text(size=12),
@@ -332,12 +333,27 @@ H_3 = ggplot(data = df_3, aes(x=value)) +
   xlim(range(year_continuous))
 H_3
 
+H_4b = ggplot(data = df_4, aes(x=value)) +
+  geom_histogram(data=subset(df_4,variable=='V1'),aes(y=..count../sum(..count..)),binwidth = .5,fill=cols[1],alpha=.5) +
+  geom_histogram(data=subset(df_4,variable=='V3'),aes(y=..count../sum(..count..)),binwidth = .5,fill=cols[2],alpha=.5) +
+  geom_histogram(data=subset(df_4,variable=='V4'),aes(y=..count../sum(..count..)),binwidth = .5,fill=cols[3],alpha=.5) +
+  geom_histogram(data=subset(df_4,variable=='V2'),aes(y=..count../sum(..count..)),binwidth = .5,fill=cols[4],alpha=.5) +
+  labs(x='',y='') +
+  xlim(range(year_continuous)) +
+  scale_y_continuous(labels=c('0.00','0.20','0.40','0.60','0.80'),breaks = c(0,.2,.4,.6,.8)) +
+  theme(axis.text=element_text(size=12),
+        panel.border=element_rect(colour='black',fill=NA),
+        panel.background = element_blank(),
+        panel.grid.major = element_line(colour='grey90'),
+        panel.grid.minor = element_line(colour='grey90')) 
+H_4b
+
 H_5 = ggplot(data = df_5, aes(x=value)) +
-  geom_histogram(data=subset(df_5,variable=='V1'),aes(y=..count../sum(..count..)),binwidth = .5,fill='black',alpha=.1) +
-  geom_histogram(data=subset(df_5,variable=='V2'),aes(y=..count../sum(..count..)),binwidth = .5,fill='black',alpha=.3) +
-  geom_histogram(data=subset(df_5,variable=='V3'),aes(y=..count../sum(..count..)),binwidth = .5,fill='black',alpha=.5) +
-  geom_histogram(data=subset(df_5,variable=='V4'),aes(y=..count../sum(..count..)),binwidth = .5,fill='black',alpha=.7) +
-  geom_histogram(data=subset(df_5,variable=='V5'),aes(y=..count../sum(..count..)),binwidth = .5,fill='black',alpha=1) +
+  geom_histogram(data=subset(df_5,variable=='V1'),aes(y=..count../sum(..count..)),binwidth = .5,fill=cols[1],alpha=.5) +
+  geom_histogram(data=subset(df_5,variable=='V4'),aes(y=..count../sum(..count..)),binwidth = .5,fill=cols[2],alpha=.5) +
+  geom_histogram(data=subset(df_5,variable=='V5'),aes(y=..count../sum(..count..)),binwidth = .5,fill=cols[3],alpha=.5) +
+  geom_histogram(data=subset(df_5,variable=='V2'),aes(y=..count../sum(..count..)),binwidth = .5,fill=cols[4],alpha=.5) +
+  geom_histogram(data=subset(df_5,variable=='V3'),aes(y=..count../sum(..count..)),binwidth = .5,fill=cols[5],alpha=.5) +
   labs(x='',y='') +
   scale_y_continuous(labels=c('0.00','0.20','0.40','0.60','0.80'),breaks = c(0,.2,.4,.6,.8)) +
   theme(axis.text=element_text(size=12),
@@ -347,6 +363,61 @@ H_5 = ggplot(data = df_5, aes(x=value)) +
         panel.grid.minor = element_line(colour='grey90')) +
   xlim(range(year_continuous))
 H_5
+
+
+
+# ======================
+# stacked histograms
+H_2 = ggplot(data = df_2, aes(x=value)) +
+  geom_histogram(data=df_2,aes(y=..count../sum(..count..),fill=variable),binwidth = .5,color='black') +
+  labs(x='',y='') +
+  scale_y_continuous(labels=c('0.00','0.20','0.40','0.60','0.80'),breaks = c(0,.2,.4,.6,.8)) +
+  theme(axis.text=element_text(size=12),
+        panel.border=element_rect(colour='black',fill=NA),
+        panel.background = element_blank(),
+        panel.grid.major = element_line(colour='grey90'),
+        panel.grid.minor = element_line(colour='grey90'),
+        legend.position = 'none') +
+  xlim(range(year_continuous))
+H_2
+H_3 = ggplot(data = df_3, aes(x=value)) +
+  geom_histogram(data=df_3,aes(y=..count../sum(..count..),fill=variable),binwidth = .5,color='black') +
+  labs(x='',y='') +
+  scale_y_continuous(labels=c('0.00','0.20','0.40','0.60','0.80'),breaks = c(0,.2,.4,.6,.8)) +
+  theme(axis.text=element_text(size=12),
+        panel.border=element_rect(colour='black',fill=NA),
+        panel.background = element_blank(),
+        panel.grid.major = element_line(colour='grey90'),
+        panel.grid.minor = element_line(colour='grey90'),
+        legend.position = 'none') +
+  xlim(range(year_continuous))
+H_3
+H_4b = ggplot(data = df_4, aes(x=value)) +
+  geom_histogram(data=df_4,aes(y=..count../sum(..count..),fill=variable),binwidth = .5,color='black') +
+  labs(x='',y='') +
+  scale_y_continuous(labels=c('0.00','0.20','0.40','0.60','0.80'),breaks = c(0,.2,.4,.6,.8)) +
+  theme(axis.text=element_text(size=12),
+        panel.border=element_rect(colour='black',fill=NA),
+        panel.background = element_blank(),
+        panel.grid.major = element_line(colour='grey90'),
+        panel.grid.minor = element_line(colour='grey90'),
+        legend.position = 'none') +
+  xlim(range(year_continuous))
+H_4b
+H_5 = ggplot(data = df_5, aes(x=value)) +
+  geom_histogram(data=df_5,aes(y=..count../sum(..count..),fill=variable),binwidth = .5,color='black') +
+  labs(x='',y='') +
+  scale_y_continuous(labels=c('0.00','0.20','0.40','0.60','0.80','1.00','1.20'),breaks = c(0,.2,.4,.6,.8,1,1.2)) +
+  theme(axis.text=element_text(size=12),
+        panel.border=element_rect(colour='black',fill=NA),
+        panel.background = element_blank(),
+        panel.grid.major = element_line(colour='grey90'),
+        panel.grid.minor = element_line(colour='grey90'),
+        legend.position = 'none') +
+  xlim(range(year_continuous))
+H_5
+
+
 
 (figure_s6 <- multi_panel_figure(
   width = c(60,60,60,60),
@@ -359,7 +430,7 @@ figure_s6 %<>% fill_panel(
   H_3,
   row = 2, column = 1:4)
 figure_s6 %<>% fill_panel(
-  H_4,
+  H_4b,
   row = 3, column = 1:4)
 figure_s6 %<>% fill_panel(
   H_5,
