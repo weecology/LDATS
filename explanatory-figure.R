@@ -87,13 +87,13 @@ arrows = data_frame(
   size = 1
 )
 
-
-
 counts = output %>% 
   group_by(doc, word) %>% 
   summarize(n = n()) %>% 
   group_by(doc) %>% 
   summarize(counts = paste0(n, collapse = "\n"))
+
+composition_x = sqrt(N) * seq(0.5, N_docs - .5) + seq_len(N_docs)
 
 left_labels = tribble(
   ~label,                  ~y,
@@ -102,7 +102,7 @@ left_labels = tribble(
   "Assemblages",           sqrt(N)/2 + 1,
   "Species\ncomposition",   -1.5
 )
-
+point_size = 3.4
 
 basic_plot = ggplot() +
   geom_segment(data = arrows, 
@@ -121,8 +121,15 @@ basic_plot = ggplot() +
                  y = y, 
                  color = factor(z), 
                  shape = factor(word)), 
-             size = 3.4)
-basic_plot
+             size = point_size) + 
+  geom_point(aes(x = rep(composition_x, each = N_species),
+                 shape = rep(factor(1:N_species), N_docs), 
+                 y = rep(0.25 - 1.6 * (1:N_species), N_docs)),
+             size = point_size) + 
+  geom_point(aes(x = rep(unique(arrows$x) + 1.4, each = N_topics), 
+                 y = rep(max(arrows$y) + 4.2 - 1.6 * (1:N_species), N_topics),
+                 shape = rep(factor(1:N_species), N_topics)),
+             size = point_size)
 
 styled_plot = basic_plot + 
   scale_shape_discrete("Species", labels = LETTERS[1:N_species]) + 
@@ -144,10 +151,10 @@ final_plot = styled_plot +
             size = 4.5) + 
   geom_text(data = left_labels, aes(x = 0, y = y, label = label), 
             size = 4.5, hjust = "right", vjust = "top") + 
-  geom_text(aes(x = sqrt(N) * seq(0.5, N_docs - .5) + seq_len(N_docs) - 1, 
+  geom_text(aes(x = composition_x - 1, 
                 y = -1, label = counts$counts), 
             size = 4.5, vjust = 1, hjust = 1)
 
 
 final_plot
-ggsave("explanatory.pdf", width = 7, height = 7)
+ggsave("explanatory.pdf", width = 7, height = 6)
