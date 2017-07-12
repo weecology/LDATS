@@ -97,8 +97,8 @@ composition_x = sqrt(N) * seq(0.5, N_docs - .5) + seq_len(N_docs)
 
 left_labels = tribble(
   ~label,                  ~y,
-  "Topic\ndefinitions",    max(arrows$y) + 2,
-  "Topic\nproportions",    min(arrows$yend) + 0.5,
+  "Community type\ndefinitions",    max(arrows$y) + 2,
+  "Community type\nproportions",    min(arrows$yend) + 0.5,
   "Assemblages",           sqrt(N)/2 + 1,
   "Species\ncomposition",   -1.5
 )
@@ -132,13 +132,13 @@ basic_plot = ggplot() +
              size = point_size)
 
 styled_plot = basic_plot + 
-  scale_shape_discrete("Species", labels = LETTERS[1:N_species]) + 
+  scale_shape_discrete("Species", labels = paste("Sp.", 1:N_species)) + 
   scale_color_manual(values = colors, guide = FALSE) +
   scale_alpha_continuous(range = c(0, 1), guide = FALSE) +
   scale_fill_manual("Community type", values = colors) +
   theme(axis.text = element_blank(), axis.ticks = element_blank(), 
         panel.background = element_blank()) +
-  coord_equal(xlim = c(-6, (sqrt(N) + 1) * N_docs),
+  coord_equal(xlim = c(-7, (sqrt(N) + 1) * N_docs),
               ylim = c(-4, max(arrows$y) + sqrt(N) / 2)) + 
   xlab("") +
   ylab("") +
