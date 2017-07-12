@@ -8,6 +8,10 @@ N_species = 3
 alpha = 2
 alpha_beta = .2
 
+# From the 4-class PuOr palette on Colorbrewer2.org
+colors = c('#e66101','#fdb863','#b2abd2','#5e3c99')[c(3, 1, 2)]
+colors = viridis::viridis(12)[c(7, 11, 9)]
+
 
 set.seed(21)
 beta = matrix(c(0.64, 0.36, 0, 
@@ -51,22 +55,36 @@ output = transpose(.l = list(doc = 1:N_docs,
          y = rep(sqrt(N):1, each = sqrt(N)))
 
 rects = data_frame(
-  xmin = rep(get_xmin(seq_len(N_docs)) + .5, 2),
-  xmax = rep(get_xmin(seq_len(N_docs)) + sqrt(N) + .5, 2),
-  ymin = rep(c(.5, 1 + sqrt(N)), each = 2),
-  ymax = rep(c(.5 + sqrt(N), 3 + sqrt(N)), each = 2)
-)
+  xmin = get_xmin(seq_len(N_docs)) + .5,
+  xmax = get_xmin(seq_len(N_docs)) + sqrt(N) + .5,
+  ymin = rep(.5, 2),
+  ymax = rep(.5 + sqrt(N), 2),
+  fill = factor(1, levels = 1:N_topics),
+  alpha = 0)
 
-topic_positions = seq(min(rects), max(rects), length = N_topics + 2)
+proportion_rects = lapply(1:N_docs,
+                          function(i) {
+                            data_frame(xmin = rects$xmin[i] + 
+                                         c(0, thetas[[i]][-N_topics]) * sqrt(N),
+                                       xmax = c(xmin[-1], rects$xmax[[i]]),
+                                       ymin = sqrt(N) + 1.5,
+                                       ymax = sqrt(N) + 2.5,
+                                       fill = factor(1:N_topics),
+                                       alpha = 1)
+                          }) %>% 
+  bind_rows()
+
+
+topic_positions = seq(min(rects$xmin), max(rects$xmax), length = N_topics + 2)
 topic_positions = topic_positions[-c(1, length(topic_positions))]
+
 
 arrows = data_frame(
   x = rep(topic_positions, times = N_docs),
-  y = sqrt(N) + 9,
-  xend = rep(unique(rects$xmin + rects$xmax), each = N_topics) / 2 + 
-    1:N_topics - mean(1:N_topics),
-  yend = .25 + max(rects$ymax),
-  size = 5 * flatten_dbl(thetas)
+  y = max(proportion_rects$ymax) + 7,
+  xend = (proportion_rects$xmin + proportion_rects$xmax) / 2,
+  yend = .1 + max(proportion_rects$ymax),
+  size = 1
 )
 
 counts = output %>% 
@@ -75,46 +93,68 @@ counts = output %>%
   group_by(doc) %>% 
   summarize(counts = paste0(n, collapse = "\n"))
 
+composition_x = sqrt(N) * seq(0.5, N_docs - .5) + seq_len(N_docs)
+
 left_labels = tribble(
   ~label,                  ~y,
   "Topic\ndefinitions",    max(arrows$y) + 2,
-  "Topic\nproportions",    min(arrows$yend),
+  "Topic\nproportions",    min(arrows$yend) + 0.5,
   "Assemblages",           sqrt(N)/2 + 1,
   "Species\ncomposition",   -1.5
 )
-  
+point_size = 3.4
 
-ggplot() +
-  geom_rect(data = rects, aes(xmin = xmin, xmax = xmax, 
-                              ymin = ymin, ymax = ymax),
-            color = "black", fill = NA) + 
-  geom_point(data = output, aes(x = x,
-                                y = y, 
-                                color = factor(z), 
-                                shape = factor(word)), 
-             size = 6) + 
+basic_plot = ggplot() +
+  geom_segment(data = arrows, 
+               aes(x = x, y = y, xend = xend, yend = yend), 
+               arrow = arrow(type = "closed", length = unit(.1, "inches")),
+               size = 1) + 
+  geom_rect(data = bind_rows(rects, proportion_rects), 
+            aes(xmin = xmin, xmax = xmax, 
+                ymin = ymin, ymax = ymax, fill = fill, alpha = alpha),
+            color = "black") + 
+  geom_tile(data = arrows[1:N_topics, ], 
+            aes(x = x, y = y + 1, height = sqrt(N) / 2, width = sqrt(N) / 2, 
+                fill = factor(1:N_topics))) +
+  geom_point(data = output, 
+             aes(x = x,
+                 y = y, 
+                 color = factor(z), 
+                 shape = factor(word)), 
+             size = point_size) + 
+  geom_point(aes(x = rep(composition_x, each = N_species),
+                 shape = rep(factor(1:N_species), N_docs), 
+                 y = rep(0.25 - 1.6 * (1:N_species), N_docs)),
+             size = point_size) + 
+  geom_point(aes(x = rep(unique(arrows$x) + 1.4, each = N_topics), 
+                 y = rep(max(arrows$y) + 4.2 - 1.6 * (1:N_species), N_topics),
+                 shape = rep(factor(1:N_species), N_topics)),
+             size = point_size)
+
+styled_plot = basic_plot + 
   scale_shape_discrete("Species", labels = LETTERS[1:N_species]) + 
-  scale_color_brewer(palette = "Dark2", guide = FALSE) +
-  scale_fill_brewer("Community type", palette = "Dark2") +
+  scale_color_manual(values = colors, guide = FALSE) +
+  scale_alpha_continuous(range = c(0, 1), guide = FALSE) +
+  scale_fill_manual("Community type", values = colors) +
   theme(axis.text = element_blank(), axis.ticks = element_blank(), 
-        panel.background = element_blank(), panel.spacing = unit(2, "line")) +
+        panel.background = element_blank()) +
   coord_equal(xlim = c(-6, (sqrt(N) + 1) * N_docs),
               ylim = c(-4, max(arrows$y) + sqrt(N) / 2)) + 
   xlab("") +
   ylab("") +
-  geom_segment(data = arrows, aes(x = x, y = y, xend = xend, yend = yend,
-                                  size = size), 
-               arrow = arrow(type = "closed"),
-               size = arrows$size) +
-  geom_tile(data = arrows[1:N_topics, ], 
-            aes(x = x, y = y + 1, height = sqrt(N) / 2, width = sqrt(N) / 2, 
-                fill = factor(1:N_topics))) +
-  geom_text(data = arrows[1:N_topics, ], 
-             aes(x = x, y = y + 1, label = labels),
-             size = 8) + 
-  geom_text(data = left_labels, aes(x = 0, y = y, label = label), 
-            size = 8, hjust = "right", vjust = "top") + 
-  geom_text(aes(x = sqrt(N) * seq(0.5, N_docs - .5) + seq_len(N_docs), 
-                y = -1, label = counts$counts), 
-            size = 8, vjust = 1, hjust = 0)
+  theme(legend.title = element_text(size = 12), 
+        legend.text = element_text(size = 12))
 
+final_plot = styled_plot + 
+  geom_text(data = arrows[1:N_topics, ], 
+            aes(x = x, y = y + 1, label = labels),
+            size = 4.5) + 
+  geom_text(data = left_labels, aes(x = 0, y = y, label = label), 
+            size = 4.5, hjust = "right", vjust = "top") + 
+  geom_text(aes(x = composition_x - 1, 
+                y = -1, label = counts$counts), 
+            size = 4.5, vjust = 1, hjust = 1)
+
+
+final_plot
+ggsave("explanatory.pdf", width = 7, height = 6)
