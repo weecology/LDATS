@@ -97,8 +97,8 @@ composition_x = sqrt(N) * seq(0.5, N_docs - .5) + seq_len(N_docs)
 
 left_labels = tribble(
   ~label,                  ~y,
-  "Community type\ndefinitions",    max(arrows$y) + 2,
-  "Community type\nproportions",    min(arrows$yend) + 0.5,
+  "Community-type\ndefinitions",    max(arrows$y) + 2,
+  "Community-type\nproportions",    min(arrows$yend) + 0.5,
   "Assemblages",           sqrt(N)/2 + 1,
   "Species\ncomposition",   -1.5
 )
