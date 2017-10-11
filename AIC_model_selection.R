@@ -90,7 +90,7 @@ aic_model_gibbs = function(dat,ngibbs=1000,topic_min,topic_max,save_runs=T) {
 #' @example best_ntopic = repeat_VEM(dat,1:500,2,6)
 
 repeat_VEM = function(dat,seeds,topic_min,topic_max) {
-  map_df(seeds, 
+  purrr::map_df(seeds, 
          ~ aic_model(dat,SEED=.x,topic_min,topic_max) %>% 
            filter(aic == min(aic))) %>% 
     return()
