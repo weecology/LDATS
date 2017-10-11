@@ -35,8 +35,8 @@ create_rodent_table = function(period_first,period_last,selected_plots,selected_
   
   # retrieve data on number of plots trapped per month
   trap_table = read.csv('https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent_trapping.csv')
-  trap_table_controls = filter(trap_table, Plot %in% selected_plots)
-  nplots_controls = aggregate(trap_table_controls$Sampled,by=list(Period = trap_table_controls$Period),FUN=sum)
+  trap_table_controls = filter(trap_table, plot %in% selected_plots)
+  nplots_controls = aggregate(trap_table_controls$sampled,by=list(period = trap_table_controls$period),FUN=sum)
   
   # adjust species counts by number of plots trapped that month
   r_table_adjusted = as.data.frame.matrix(r_table)
