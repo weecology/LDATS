@@ -21,20 +21,25 @@ cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2",
 # ==================================================================================
 #  beta = matrix of species composition of the topics
 #  gamma = matrix of prevalence of topics through time
-#  even species composition and no overlap of species between topics
+
 
 N = 200   # total number of individuals
-output = create_sim_data_2topic()
+output = create_sim_data_2topic_nonuniform()
 
+# distribution of species in the sample communities follows a species abundance distribution derived from Portal data (average of sampling periods 1:436)
+# the distribution of species in the second sample community is a simple permutation of the first
+# the two communities both contain 9 out of 12 species
 beta = as.matrix(as.data.frame(output[1]))
-colnames(beta) <- list('S1','S2','S3','S4','S5','S6','S7','S8','S9','S10','S11','S12','S13','S14','S15','S16','S17','S18','S19','S20','S21','S22','S23','S24')
+colnames(beta) <- list('S1','S2','S3','S4','S5','S6','S7','S8','S9','S10','S11','S12')
+
+# plot three types of simulated dynamics for the 2 sample communities
 gamma_constant = as.matrix(as.data.frame(output[2]))
 gamma_fast = as.matrix(as.data.frame(output[3]))
 gamma_slow = as.matrix(as.data.frame(output[4]))
 
 
 # plot beta and gammas
-P = plot_community_composition_gg(beta,c(1,2),ylim=c(0,.3))
+P = plot_community_composition_gg(beta,c(1,2),ylim=c(0,.5))
 (figure_spcomp <- multi_panel_figure(
   width = c(80,80),
   height = c(50,10),
@@ -86,10 +91,10 @@ best_ntopic_ds2 = repeat_VEM(dataset2,seeds,topic_min=2,topic_max=6)
 best_ntopic_ds3 = repeat_VEM(dataset3,seeds,topic_min=2,topic_max=6)
 
 
-# histogram of how many seeds chose how many topics
-hist(best_ntopic_ds1[,1],breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='best # of topics', main='')
-hist(best_ntopic_ds2[,1],breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='best # of topics', main='')
-hist(best_ntopic_ds3[,1],breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='best # of topics', main='')
+ # histogram of how many seeds chose how many topics
+hist(best_ntopic_ds1[,2],breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='best # of topics', main='')
+hist(best_ntopic_ds2[,2],breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='best # of topics', main='')
+hist(best_ntopic_ds3[,2],breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='best # of topics', main='')
 
 # in all three datasets, 2 is the best number of topics
 
@@ -108,8 +113,13 @@ g2 = plot_component_communities(ldamodel2,2,sim_dates)
 g3 = plot_component_communities(ldamodel3,2,sim_dates)
 grid.arrange(g1,g2,g3,nrow=1)
 
-
-
+# plot community compositions
+beta1 = community_composition(ldamodel1)
+plot_community_composition(beta1,c(2,1))
+beta2 = community_composition(ldamodel2)
+plot_community_composition(beta2)
+beta3 = community_composition(ldamodel3)
+plot_community_composition(beta3)
  
 # ==================================================================
 # changepoint model 
