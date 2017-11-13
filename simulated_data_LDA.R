@@ -14,7 +14,7 @@ source('AIC_model_selection.R')
 source('changepointmodel.r')
 source('create_sim_data.R')
 
-cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+cbPalette <- c( "#e19c02","#999999", "#56B4E9", "#0072B2", "#D55E00", "#F0E442", "#009E73", "#CC79A7")
 
 # ==================================================================================
 # Create simulated data
@@ -39,7 +39,7 @@ gamma_slow = as.matrix(as.data.frame(output[4]))
 
 
 # plot beta and gammas
-P = plot_community_composition_gg(beta,c(1,2),ylim=c(0,.5))
+P = plot_community_composition_gg(beta,c(1,2),ylim=c(0,.5),colors=cbPalette[c(2,4)])
 (figure_spcomp <- multi_panel_figure(
   width = c(80,80),
   height = c(50,10),
@@ -66,9 +66,9 @@ const = data.frame(date = rep(sim_dates,dim(gamma_constant)[2]),
                    community = as.factor(c(rep(1,dim(gamma_constant)[1]),rep(2,dim(gamma_constant)[1]))))
 
 
-g_1 = plot_gamma(fast,2,ylab='Simulated Dynamics')
-g_2 = plot_gamma(slow,2)
-g_3 = plot_gamma(const,2)
+g_1 = plot_gamma(fast,2,ylab='Simulated Dynamics',colors=cbPalette[c(2,4)])
+g_2 = plot_gamma(slow,2,colors=cbPalette[c(2,4)])
+g_3 = plot_gamma(const,2,colors=cbPalette[c(2,4)])
 grid.arrange(g_1,g_2,g_3,nrow=1)
 
 
@@ -107,19 +107,59 @@ ldamodel1 = LDA(dataset1,k=2, control = list(seed = SEED),method='VEM')
 ldamodel2 = LDA(dataset2,k=2, control = list(seed = SEED),method='VEM')
 ldamodel3 = LDA(dataset3,k=2, control = list(seed = SEED),method='VEM')
 
-# plot results
-g1 = plot_component_communities(ldamodel1,2,sim_dates,ylab='LDA model output')
-g2 = plot_component_communities(ldamodel2,2,sim_dates)
-g3 = plot_component_communities(ldamodel3,2,sim_dates)
+# plot results - gammas
+g1 = plot_component_communities(ldamodel1,2,sim_dates,ylab='LDA model output',colors=cbPalette[c(1,3)])
+g2 = plot_component_communities(ldamodel2,2,sim_dates,colors=cbPalette[c(1,3)])
+g3 = plot_component_communities(ldamodel3,2,sim_dates,colors=cbPalette[c(1,3)])
 grid.arrange(g1,g2,g3,nrow=1)
 
-# plot community compositions
+# plot community compositions (betas)
 beta1 = community_composition(ldamodel1)
-plot_community_composition(beta1,c(2,1))
+spcomp_1 = plot_community_composition_gg(beta1,c(2,1),ylim=c(0,.5),colors=cbPalette[c(1,3)])
+(figure_spcomp_s1 <- multi_panel_figure(
+  width = c(40,40),
+  height = c(40,10),
+  panel_label_type = "none",
+  column_spacing = 0))
+figure_spcomp_s1 %<>% fill_panel(
+  spcomp_1[[1]],
+  row = 1, column = 1)
+figure_spcomp_s1 %<>% fill_panel(
+  spcomp_1[[2]],
+  row = 1, column = 2)
+figure_spcomp_s1
+plot_community_composition(beta1)
+
+
 beta2 = community_composition(ldamodel2)
-plot_community_composition(beta2)
+spcomp_2 = plot_community_composition_gg(beta2,c(2,1),ylim=c(0,.5),colors=cbPalette[c(1,3)])
+(figure_spcomp_s2 <- multi_panel_figure(
+  width = c(40,40),
+  height = c(40,10),
+  panel_label_type = "none",
+  column_spacing = 0))
+figure_spcomp_s2 %<>% fill_panel(
+  spcomp_2[[1]],
+  row = 1, column = 1)
+figure_spcomp_s2 %<>% fill_panel(
+  spcomp_2[[2]],
+  row = 1, column = 2)
+#figure_spcomp_s2
+
 beta3 = community_composition(ldamodel3)
-plot_community_composition(beta3)
+spcomp_3 = plot_community_composition_gg(beta3,c(2,1),ylim=c(0,.5),colors=cbPalette[c(1,3)])
+(figure_spcomp_s3 <- multi_panel_figure(
+  width = c(40,40),
+  height = c(40,10),
+  panel_label_type = "none",
+  column_spacing = 0))
+figure_spcomp_s3 %<>% fill_panel(
+  spcomp_3[[1]],
+  row = 1, column = 1)
+figure_spcomp_s3 %<>% fill_panel(
+  spcomp_3[[2]],
+  row = 1, column = 2)
+#figure_spcomp_s3
  
 # ==================================================================
 # changepoint model 
@@ -167,13 +207,13 @@ H_sim3 = ggplot(data = dfsim3, aes(x=value)) +
         panel.border=element_rect(colour='black',fill=NA))
 
 # ===============================================================
-# Create Figure 2
+# Create Figure
 # ===============================================================
 
-
+# all in one big multipart figure
 (figure <- multi_panel_figure(
   width = c(40,40,40,40,40,40),
-  height = c(35,40,40,40)))
+  height = c(35,40,40,40,40)))
 figure %<>% fill_panel(
   figure_spcomp,
   row = 1, column = 2:5)
@@ -187,23 +227,49 @@ figure %<>% fill_panel(
   g_3,
   row = 2, column = 5:6)
 figure %<>% fill_panel(
-  g1,
+  figure_spcomp_s1,
   row = 3, column = 1:2)
 figure %<>% fill_panel(
-  g2,
+  figure_spcomp_s2,
   row = 3, column = 3:4)
 figure %<>% fill_panel(
-  g3,
+  figure_spcomp_s3,
   row = 3, column = 5:6)
 figure %<>% fill_panel(
-  H_sim1,
+  g1,
   row = 4, column = 1:2)
 figure %<>% fill_panel(
-  H_sim2,
+  g2,
   row = 4, column = 3:4)
 figure %<>% fill_panel(
-  H_sim3,
+  g3,
   row = 4, column = 5:6)
+figure %<>% fill_panel(
+  H_sim1,
+  row = 5, column = 1:2)
+figure %<>% fill_panel(
+  H_sim2,
+  row = 5, column = 3:4)
+figure %<>% fill_panel(
+  H_sim3,
+  row = 5, column = 5:6)
 
 figure
 
+# separate figures for model inputs and model outputs
+(figure_inputs <- multi_panel_figure(
+  width = c(40,40,40,40,40,40),
+  height = c(35,10,40)))
+figure_inputs %<>% fill_panel(
+  figure_spcomp,
+  row = 1, column = 2:5)
+figure_inputs %<>% fill_panel(
+  g_1,
+  row = 3, column = 1:2)
+figure_inputs %<>% fill_panel(
+  g_2,
+  row = 3, column = 3:4)
+figure_inputs %<>% fill_panel(
+  g_3,
+  row = 3, column = 5:6)
+figure_inputs

@@ -26,7 +26,7 @@ cbPalette <- c( "#e19c02","#999999", "#56B4E9", "#0072B2", "#D55E00", "#F0E442",
 ltypes = c('solid','longdash','longdash','solid','solid')
 
 
-plot_gamma = function(gamma_frame,ntopics,ylab='') {
+plot_gamma = function(gamma_frame,ntopics,ylab='',colors=cbPalette) {
   g = ggplot(gamma_frame, aes(x=date,y=relabund,colour=community)) + 
     geom_point() +
     geom_line(aes(size=community)) +
@@ -40,7 +40,7 @@ plot_gamma = function(gamma_frame,ntopics,ylab='') {
           legend.position='none') +
     scale_colour_manual(name="Component\nCommunity",
                         breaks=as.character(seq(ntopics)),
-                        values=cbPalette[1:ntopics],
+                        values=colors[1:ntopics],
                         guide=FALSE)
   return(g)
 }
@@ -60,14 +60,14 @@ plot_gamma = function(gamma_frame,ntopics,ylab='') {
 #' 
 #' @example plot_component_communities(ldamodel,ntopics,period_dates$date)
 
-plot_component_communities = function(ldamodel,ntopics,xticks,ylab='',topic_order = seq(ntopics)) {
+plot_component_communities = function(ldamodel,ntopics,xticks,ylab='',topic_order = seq(ntopics),colors = cbPalette) {
   
   z = posterior(ldamodel)
   ldaplot = data.frame(date=c(),relabund = c(), community = c())
   for (t in topic_order) {
     ldaplot = rbind(ldaplot,data.frame(date=xticks,relabund=z$topics[,t],community = as.factor(rep(t,length(z$topics[,1])))))
   }
-  g = plot_gamma(ldaplot,ntopics,ylab)
+  g = plot_gamma(ldaplot,ntopics,ylab,colors)
   return(g) 
 }
 
@@ -165,14 +165,14 @@ community_composition = function(ldamodel) {
 #'
 #' @example plot_community_composition(community_composition(ldamodel))
 
-plot_community_composition = function(composition,topic_order=1:dim(composition)[1]) {
+plot_community_composition = function(composition,topic_order=1:dim(composition)[1],colors = cbPalette) {
   nspecies = dim(composition)[2]
   topics = dim(composition)[1]
   ylimits = c(0,round(max(composition),1)+.1)
   par(mfrow=c(1,topics))
   j=1
   for (i in topic_order) {
-    x = barplot(composition[i,],ylim=ylimits,col=cbPalette[i],main=paste('Community',j),las=2)
+    x = barplot(composition[i,],ylim=ylimits,col=colors[i],main=paste('Community',j),las=2)
     j=j+1
   }
   par(mfrow=c(1,1))
@@ -188,7 +188,7 @@ plot_community_composition = function(composition,topic_order=1:dim(composition)
 #' 
 #' 
 #' 
-plot_community_composition_gg = function(composition,topic_order,ylim) {
+plot_community_composition_gg = function(composition,topic_order,ylim,colors=cbPalette) {
   topics = dim(composition)[1]
   community = c()
   for (j in 1:topics) {community=append(community,rep(j,length(composition[j,])))}
@@ -203,14 +203,14 @@ plot_community_composition_gg = function(composition,topic_order,ylim) {
   for (i in topic_order) {
     if (j == 1) {ylabel='% Composition'} else {ylabel=''}
     x <- ggplot(data=comp[comp$community==i,], aes(x=species, y=relabund)) +
-      geom_bar(stat='identity',fill=cbPalette[i])  +
-      geom_bar(data=grass[grass$community==i,],aes(x=species,y=relabund),fill=cbPalette[i],stat='identity',alpha=0,size=1,color='black') +
+      geom_bar(stat='identity',fill=colors[i])  +
+      geom_bar(data=grass[grass$community==i,],aes(x=species,y=relabund),fill=colors[i],stat='identity',alpha=0,size=1,color='black') +
         theme(axis.text=element_text(size=10),
               panel.background = element_blank(),
               panel.border=element_rect(colour='black',fill=NA),
               axis.text.x = element_text(angle = 90,hjust=0,vjust=.5),
               plot.margin = unit(c(0,1,0,0),"mm"),
-              axis.text.y = element_text(angle=90,size=9,vjust=.5,hjust=.5),
+              axis.text.y = element_text(angle=0,size=9,vjust=.5,hjust=.5),
               plot.title = element_text(hjust = 0.5)) +
       scale_x_discrete(name='') +
       scale_y_continuous(name=ylabel,limits = ylim) +
