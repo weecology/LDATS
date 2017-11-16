@@ -1,8 +1,6 @@
 # Scripts for making figures from LDA analyses
-
-library(ggplot2)
+library(tidyverse)
 library(gridExtra)
-library(dplyr)
 
 
 #cbPalette <- c( "#E69F00","#999999", "#56B4E9", "#0072B2", "#D55E00", "#F0E442", "#009E73", "#CC79A7")
@@ -12,22 +10,22 @@ cbPalette <- c( "#e19c02","#999999", "#56B4E9", "#0072B2", "#D55E00", "#F0E442",
 
 
 #' Plot gamma
-#' 
+#'
 #' This plotting function plots the component communities over time
 #' It's used by the plot_component_communities function, but can also take
 #' any data frame as input as long as it's the right form -- used by the simulations
-#' 
+#'
 #' @param gamma_frame a data frame containing columns for date, relabund, and community
 #' @param ntopics number of topics
 #' @param ylab label for y axis (optional)
-#' 
+#'
 #' @return a ggplot object
 
 ltypes = c('solid','longdash','longdash','solid','solid')
 
 
 plot_gamma = function(gamma_frame,ntopics,ylab='',colors=cbPalette) {
-  g = ggplot(gamma_frame, aes(x=date,y=relabund,colour=community)) + 
+  g = ggplot(gamma_frame, aes(x=date,y=relabund,colour=community)) +
     geom_point() +
     geom_line(aes(size=community)) +
     scale_size_manual(values=c(1,1,1.5,1.5), guide=FALSE) +
@@ -47,36 +45,36 @@ plot_gamma = function(gamma_frame,ntopics,ylab='',colors=cbPalette) {
 
 
 #' Plot component communities
-#' 
+#'
 #' Plots timeseries of component communities (topics)
-#' 
+#'
 #' @param ldamodel object of class LDA_VEM created by the function LDA in topicmodels package
 #' @param ntopics number of topics used in ldamodel
 #' @param xticks vector of dates for x-axis labels
 #' @param ylab y axis label (optional)
 #' @param topic_order order of topics (for color control)
-#' 
+#'
 #' @return ggplot object
-#' 
+#'
 #' @example plot_component_communities(ldamodel,ntopics,period_dates$date)
 
 plot_component_communities = function(ldamodel,ntopics,xticks,ylab='',topic_order = seq(ntopics),colors = cbPalette) {
-  
+
   z = posterior(ldamodel)
   ldaplot = data.frame(date=c(),relabund = c(), community = c())
   for (t in topic_order) {
     ldaplot = rbind(ldaplot,data.frame(date=xticks,relabund=z$topics[,t],community = as.factor(rep(t,length(z$topics[,1])))))
   }
   g = plot_gamma(ldaplot,ntopics,ylab,colors)
-  return(g) 
+  return(g)
 }
 
 
 #' Plot histogram of changepoint locations -- WIP
-#' 
+#'
 #' @param results results object from changepoint_model function
 #' @param year_continuous vector of dates/xaxis units
-#' 
+#'
 #' @return ggplot object
 
 chpoint_histogram = function(results,year_continuous) {
@@ -100,22 +98,22 @@ chpoint_histogram = function(results,year_continuous) {
 
 
 #' Plot component communities -- smoothed
-#' 
+#'
 #' Plots timeseries of component communities (topics)
 #' Smooths using a simple moving window average
 #' Plots raw data as dots, smoothed as lines
-#' 
+#'
 #' @param ldamodel object of class LDA_VEM created by the function LDA in topicmodels package
 #' @param ntopics number of topics used in ldamodel
 #' @param xticks vector of dates for x-axis labels
 #' @param smooth_factor size of moving window average -- higher value is smoother
-#' 
+#'
 #' @return None
-#' 
+#'
 #' @example plot_component_communities_smooth(ldamodel,ntopics,period_dates$date,5)
 
 plot_component_communities_smooth = function(ldamodel,ntopics,xticks,smooth_factor) {
-  
+
   z = posterior(ldamodel)
   ldaplot = data.frame(date=c(),relabund = c(), community = c())
   for (t in seq(ntopics)) {
@@ -126,8 +124,8 @@ plot_component_communities_smooth = function(ldamodel,ntopics,xticks,smooth_fact
     }
     ldaplot = rbind(ldaplot,ldacomm)
   }
-  
-  ggplot(ldaplot, aes(x=date,y=relabund,colour=community)) + 
+
+  ggplot(ldaplot, aes(x=date,y=relabund,colour=community)) +
     geom_point() +
     geom_line(size=1,aes(y=smooth)) +
     scale_y_continuous(name='Relative Abundance') +
@@ -139,16 +137,16 @@ plot_component_communities_smooth = function(ldamodel,ntopics,xticks,smooth_fact
     scale_colour_manual(name="Component \nCommunity",
                         breaks=as.character(seq(ntopics)),
                         values=cbPalette[1:ntopics])
-  
+
 }
 
 
 #' Make table of species composition of topics
-#' 
+#'
 #' @param ldamodel  object of class LDA_VEM created by the function LDA in topicmodels package
-#' 
+#'
 #' @return table of species composition of the topics in ldamodel, 3 decimal places
-#' 
+#'
 #' @example community_composition(ldamodel)
 
 community_composition = function(ldamodel) {
@@ -157,10 +155,10 @@ community_composition = function(ldamodel) {
 
 
 #' Plot species composition of topics
-#' 
+#'
 #' @param composition matrix of species composition of topics; as in output of community_composition()
 #' @param topic_order order of topics -- for making this bar graph relate to the component community graph
-#' 
+#'
 #' @return barplots of the n component communities
 #'
 #' @example plot_community_composition(community_composition(ldamodel))
@@ -179,15 +177,15 @@ plot_community_composition = function(composition,topic_order=1:dim(composition)
 }
 
 #' ggplot version of plot_community_composition
-#' 
+#'
 #' @param composition matrix of species composition of topics; as in output of community_composition()
 #' @param topic_order order of topics -- for making this bar graph relate to the component community graph
 #' @param ylim vector of limits for yaxis
-#' 
+#'
 #' @return barplots of the n component communities
-#' 
-#' 
-#' 
+#'
+#'
+#'
 plot_community_composition_gg = function(composition,topic_order,ylim,colors=cbPalette) {
   topics = dim(composition)[1]
   community = c()
@@ -220,32 +218,32 @@ plot_community_composition_gg = function(composition,topic_order,ylim,colors=cbP
     p[[j]] <- x
     j=j+1
   }
- 
+
   return(p)
 }
 
 
 #' Plot component communities
-#' 
+#'
 #' Plots timeseries of component communities (topics) from LDA using Gibbs sampler
-#' 
+#'
 #' @param ldamodel model output of LDA model using Gibbs
 #' @param ntopics number of topics used in ldamodel
 #' @param xticks vector of dates for x-axis labels
-#' 
+#'
 #' @return None
-#' 
+#'
 #' @example plot_component_communities_gibbs(ldamodel,ntopics,period_dates$date)
 
 plot_component_communities_gibbs = function(results,ntopics,xticks) {
-  
+
   theta1=matrix(apply(results$theta,2,mean),ntopics,length(xticks))
   ldaplot = data.frame(date=c(),relabund = c(), community = c())
   for (t in seq(ntopics)) {
     ldaplot = rbind(ldaplot,data.frame(date=xticks,relabund=theta1[t,],community = as.factor(rep(t,length(xticks)))))
   }
-  
-  ggplot(ldaplot, aes(x=date,y=relabund,colour=community)) + 
+
+  ggplot(ldaplot, aes(x=date,y=relabund,colour=community)) +
     geom_point() +
     geom_line(size=1) +
     scale_y_continuous(name='Relative Abundance',limits=c(0,1)) +
@@ -264,15 +262,15 @@ plot_component_communities_gibbs = function(results,ntopics,xticks) {
 
 #' Plot component communities including credible intervals --- WIP!
 #' so far only works with 3 topics -- need to make more general
-#' 
+#'
 #' Plots timeseries of component communities (topics) from LDA using Gibbs sampler
-#' 
+#'
 #' @param ldamodel model output of LDA model using Gibbs
 #' @param ntopics number of topics used in ldamodel
 #' @param xticks vector of dates for x-axis labels
-#' 
+#'
 #' @return None
-#' 
+#'
 #' @example plot_component_communities_gibbs_credible(ldamodel,ntopics,period_dates$date)
 
 
@@ -280,7 +278,7 @@ plot_component_communities_gibbs_credible = function(ldamodel,ntopics,xticks) {
   nsteps = length(xticks)
   theta1=matrix(apply(ldamodel$theta,2,mean),ntopics,nsteps)
   thetasd = matrix(apply(ldamodel$theta,2,sd),ntopics,nsteps)
-  
+
   thetadf = data.frame(grp1 = theta1[1,],grp2 = theta1[2,],sd1=thetasd[1,],sd2=thetasd[2,],grp3=theta1[3,],sd3=thetasd[3,])
   ggplot(thetadf) +
     geom_ribbon(data = thetadf, mapping = aes_string(x = xticks, ymin = thetadf$grp1-1.96*thetadf$sd1, ymax = thetadf$grp1+1.96*thetadf$sd1,alpha=.4), fill = "grey") +

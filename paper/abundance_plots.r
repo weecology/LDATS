@@ -5,12 +5,12 @@
 # ==============================================
 # total abundance
 
-dat = read.csv('Rodent_table_dat.csv',na.strings = '',as.is=T)
-rdat = read.csv('../PortalData/Rodents/Portal_rodent.csv',as.is=T)
-trappingdat = read.csv('../PortalData/Rodents/Portal_rodent_trapping.csv',as.is=T,na.strings = '')
+dat = read.csv('inst/extdata/Rodent_table_dat.csv',na.strings = '',as.is=T)
+rdat = read.csv('~/PortalData/Rodents/Portal_rodent.csv',as.is=T)
+trappingdat = read.csv('~/PortalData/Rodents/Portal_rodent_trapping.csv',as.is=T,na.strings = '')
 trapdat = aggregate(trappingdat$sampled,by=list(period=trappingdat$period),FUN=sum)
 fullcensus = trapdat[trapdat$x>20,]
-perioddates = read.csv('../PortalData/Rodents/moon_dates.csv',as.is=T,na.strings = '')
+perioddates = read.csv('~/PortalData/Rodents/moon_dates.csv',as.is=T,na.strings = '')
 perioddates$censusdate = as.Date(perioddates$censusdate)
 fullcensus = merge(fullcensus,perioddates)
 

@@ -19,8 +19,7 @@ source('LDA_figure_scripts.R')
 
 # ===================================================================
 # prepare rodent data
-dat = create_rodent_table(1,436,c(2,4,8,11,12,14,17,22),
-                          selected_species = c('BA','DM','DO','DS','NA','OL','OT','PB','PE','PF','PH','PI','PL','PM','PP','RF','RM','RO','SF','SH','SO'))
+dat = create_rodent_table()
 
 # dates to go with count data
 moondat = read.csv(text=getURL("https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/moon_dates.csv"),stringsAsFactors = F)
