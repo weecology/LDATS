@@ -213,7 +213,8 @@ H_sim3 = ggplot(data = dfsim3, aes(x=value)) +
 # all in one big multipart figure
 (figure <- multi_panel_figure(
   width = c(40,40,40,40,40,40),
-  height = c(35,40,40,40,40)))
+  height = c(35,40,40,40,40),
+  panel_label_type = "lower-alpha"))
 figure %<>% fill_panel(
   figure_spcomp,
   row = 1, column = 2:5)
