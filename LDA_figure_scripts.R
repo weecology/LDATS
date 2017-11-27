@@ -30,7 +30,7 @@ plot_gamma = function(gamma_frame,ntopics,ylab='',colors=cbPalette) {
   g = ggplot(gamma_frame, aes(x=date,y=relabund,colour=community)) + 
     geom_point() +
     geom_line(aes(size=community)) +
-    scale_size_manual(values=c(1,1,1.5,1.5), guide=FALSE) +
+    scale_size_manual(values=c(1,1,1.5,1.5,1), guide=FALSE) +
     scale_y_continuous(name=ylab,limits=c(0,1)) +
     scale_x_date(name='') +
     theme(axis.text=element_text(size=12),

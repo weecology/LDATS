@@ -184,7 +184,8 @@ cpt_plot = get_ll_non_memoized_plot(ldamodel,x,cpts,make_plot=T,weights=rep(1,le
 (figure <- multi_panel_figure(
   width = c(70,70,70,70),
   height = c(60,60,60,60),
-  column_spacing = 0))
+  column_spacing = 0,
+  panel_label_type = "lower-alpha"))
 figure %<>% fill_panel(
   figure_spcomp,
   row = 1, column = 1:4)
@@ -204,7 +205,7 @@ figure
 # 6. appendix: LDA with 3 and 5 topics
 # ===================================================================
 
-# 3 topics
+# 3 topics  size = 1100x650
 ldamodel3topic = LDA(dat,3, control = list(seed = 46),method='VEM')
 cc3 = plot_component_communities(ldamodel3topic,3,dates)
 beta13topic = community_composition(ldamodel3topic)
@@ -230,7 +231,8 @@ figure_spcomp3
 (figure_s2 <- multi_panel_figure(
   width = c(70,70,70,70),
   height = c(60,60),
-  column_spacing = 0))
+  column_spacing = 0,
+  panel_label_type = "lower-alpha"))
 figure_s2 %<>% fill_panel(
   figure_spcomp3,
   row = 1, column = 1:4)
@@ -243,7 +245,8 @@ figure_s2
 (figure_s3 <- multi_panel_figure(
   width = c(70,70,70,70),
   height = c(60,60),
-  column_spacing = 0))
+  column_spacing = 0,
+  panel_label_type = "lower-alpha"))
 figure_s3 %<>% fill_panel(
   figure_spcomp,
   row = 1, column = 1:4)
@@ -284,7 +287,8 @@ figure_spcomp5
 (figure_s4 <- multi_panel_figure(
   width = c(70,70,70,70),
   height = c(60,60),
-  column_spacing = 0))
+  column_spacing = 0,
+  panel_label_type = "lower-alpha"))
 figure_s4 %<>% fill_panel(
   figure_spcomp5,
   row = 1, column = 1:4)
@@ -422,7 +426,8 @@ H_5
 (figure_s6 <- multi_panel_figure(
   width = c(60,60,60,60),
   height = c(60,60,60,60),
-  column_spacing = 0))
+  column_spacing = 0,
+  panel_label_type = "lower-alpha"))
 figure_s6 %<>% fill_panel(
   H_2,
   row = 1, column = 1:4)
