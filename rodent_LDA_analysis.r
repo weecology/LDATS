@@ -74,7 +74,7 @@ max_dist = unlist(best_seed)[3]
 # 3. run LDA model
 # ==================================================================
 ntopics = 4
-SEED = unlist(best_seed)[1]
+SEED = unlist(best_seed)[1]  # For the paper, I use seed 206
 ldamodel = LDA(dat,ntopics, control = list(seed = SEED),method='VEM')
 
 
