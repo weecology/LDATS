@@ -273,3 +273,36 @@ figure_inputs %<>% fill_panel(
   g_3,
   row = 3, column = 5:6)
 figure_inputs
+
+(figure_outputs <- multi_panel_figure(
+  width = c(40,40,40,40,40,40),
+  height = c(40,40,40)))
+figure_outputs %<>% fill_panel(
+  figure_spcomp_s1,
+  row = 1, column = 1:2)
+figure_outputs %<>% fill_panel(
+  figure_spcomp_s2,
+  row = 1, column = 3:4)
+figure_outputs %<>% fill_panel(
+  figure_spcomp_s3,
+  row = 1, column = 5:6)
+figure_outputs %<>% fill_panel(
+  g1,
+  row = 2, column = 1:2)
+figure_outputs %<>% fill_panel(
+  g2,
+  row = 2, column = 3:4)
+figure_outputs %<>% fill_panel(
+  g3,
+  row = 2, column = 5:6)
+figure_outputs %<>% fill_panel(
+  H_sim1,
+  row = 3, column = 1:2)
+figure_outputs %<>% fill_panel(
+  H_sim2,
+  row = 3, column = 3:4)
+figure_outputs %<>% fill_panel(
+  H_sim3,
+  row = 3, column = 5:6)
+
+figure_outputs
