@@ -1,29 +1,17 @@
-if (packageVersion("memoise") <= "1.0.0") {
-  devtools::install_github("hadley/memoise")
-}
-
-library(memoise)     # For avoiding redundante computations
-library(lubridate)   # For dates
-library(progress)    # For progress bar
-library(topicmodels) # For LDA
-library(ggplot2)
-library(viridis)
-library(nnet)        # For multinomial model (part of changepoint analysis)
-library(RColorBrewer)
-library(reshape2)
-
-cbPalette <- c( "#e19c02","#999999", "#56B4E9", "#0072B2", "#D55E00", "#F0E442", "#009E73", "#CC79A7")
-
-# Begin changepoint model -------------------------------------------------
-
-
-# Fit a model to dates in (start,end] and return the log likelihood.
-# Memoization is a trick that lets us save the output for a given chunk and
-# avoid finding the answer more than once.
+#' Fit a model to dates in (start,end] and return the log likelihood.
+#' 
+#' @param ldamodel ldamodel
+#' @param x x
+#' @param start start
+#' @param end end 
+#' @param make_plot make_plot
+#' @param weights weights
+#' @examples
+#' NA
 fit_chunk_non_memoized = function(ldamodel, x, start, end, make_plot = FALSE, 
                                   weights, ...) {
   # Weights average to 1, & are proportional to total rodents caught that month
-  m = multinom(
+  m = nnet::multinom(
     ldamodel@gamma ~ sin_year + cos_year, 
     data = x,
     maxit = 1E5,
@@ -33,7 +21,7 @@ fit_chunk_non_memoized = function(ldamodel, x, start, end, make_plot = FALSE,
   )
   
   if (make_plot) {
-    
+    cbPalette <- c( "#e19c02","#999999", "#56B4E9", "#0072B2", "#D55E00", "#F0E442", "#009E73", "#CC79A7")
     plotfun = ifelse(start == -Inf, matplot, matlines)
     plotfun(
       x$year_continuous[x$year_continuous > start & x$year_continuous <= end], 
@@ -55,13 +43,19 @@ fit_chunk_non_memoized = function(ldamodel, x, start, end, make_plot = FALSE,
 }
 
 
-# Get the log-likelihood associated with a set of breakpoints
+#' Get the log-likelihood associated with a set of breakpoints
+#' @param ldamodel ldamodel
+#' @param x x
+#' @param changepoints changepoints
+#' @param make_plot make_plot
+#' @param weights weights
+
 get_ll_non_memoized = function(ldamodel, x, changepoints, make_plot = FALSE, 
                                weights, ...){
   # Saving the caches as hidden folders to prevent silly Mac computers
   # (and RStudio) from wasting resources trying to index them
-  fit_chunk = memoise(fit_chunk_non_memoized, 
-                      cache = cache_filesystem(".cache_chunk"))
+  fit_chunk = memoise::memoise(fit_chunk_non_memoized, 
+                      cache = memoise::cache_filesystem(".cache_chunk"))
   
   if (make_plot) {
     fit_chunk = fit_chunk_non_memoized
@@ -113,7 +107,7 @@ get_ll_non_memoized_plot = function(ldamodel, x, changepoints, weights, ...){
 #' @param weights same weights used in changepoint_model()
 #' 
 fit_section = function(ldamodel, x, start, end, weights, ...) {
-  m = multinom(
+  m = nnet::multinom(
     ldamodel@gamma ~ sin_year + cos_year, 
     data = x,
     maxit = 1E5,
@@ -138,7 +132,7 @@ fit_section = function(ldamodel, x, start, end, weights, ...) {
 #'
 #'
 plot_sections = function(all_sections,x,changepoints) {
-  #cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#0072B2", "#009E73", "#F0E442", "#D55E00", "#CC79A7")
+  cbPalette <- c( "#e19c02","#999999", "#56B4E9", "#0072B2", "#D55E00", "#F0E442", "#009E73", "#CC79A7")
   datevec =  format(date_decimal(x$year_continuous), '%Y-%m-%d') %>% as.Date()
   cpt_dates = datevec[changepoints]
   
@@ -161,10 +155,10 @@ plot_sections = function(all_sections,x,changepoints) {
 #' Model to locate given number of change points in an LDA model output
 #' 
 #' @param ldamodel output object from LDA model using VEM
-#' @param x
+#' @param x x
 #' @param n_changepoints integer number of changepoints to look for
 #' @param maxit maximum iterations
-#' @param penultimate_temp
+#' @param penultimate_temp penultimate_temp
 #' @param k the exponent controlling the temperature sequence: 0 implies geometric sequence, 
 #'          1 implies squaring before exponentiating. Use larger values if the cooler chains aren't swapping enough.
 #'          
@@ -186,8 +180,8 @@ changepoint_model = function(ldamodel,
   
   # Saving the caches as hidden folders to prevent silly Mac computers
   # (and RStudio) from wasting resources trying to index them
-  get_ll = memoise(get_ll_non_memoized, 
-                   cache = cache_filesystem(".cache_ll"))
+  get_ll = memoise::memoise(get_ll_non_memoized, 
+                   cache = memoise::cache_filesystem(".cache_ll"))
   
   
   # Temperature sequence
@@ -224,7 +218,7 @@ changepoint_model = function(ldamodel,
     nrow = maxit
   )
   
-  pb = progress_bar$new(format = "  [:bar] :percent eta: :eta",
+  pb = progress::progress_bar$new(format = "  [:bar] :percent eta: :eta",
                         total = maxit, clear = FALSE, width = 60)
   for (i in 1:maxit) {
     pb$tick()
@@ -282,9 +276,10 @@ changepoint_model = function(ldamodel,
 
 # Functions for viewing/diagnosing the changepoints -----------------------
 
-# Number of times the particle went from hottest chain to the coldest one,
-# indicating good mixing.  Should probably be in the mid-hundreds or low
-# thousands if we want to be really confident about the results.
+#' Number of times the particle went from hottest chain to the coldest one,
+#' indicating good mixing.  Should probably be in the mid-hundreds or low
+#' thousands if we want to be really confident about the results.
+#' @param results results
 count_trips = function(results){
   N_temps = length(results$accept_rate)
   maxit = ncol(results$saved_lls)
@@ -311,8 +306,10 @@ count_trips = function(results){
 }
 
 
-# Histogram showing percentage of MCMC samples that contained
-# a changepoint in a given year.
+#' Histogram showing percentage of MCMC samples that contained
+#' a changepoint in a given year.
+#' @param results results
+#' @param year_continuous year_continuous
 annual_hist = function(results, year_continuous){
   if (missing(year_continuous)) {
     year_continuous = 1:max(results$saved) / 12
@@ -346,13 +343,3 @@ find_changepoint_location = function(results) {
 }
 
 
-
-# # =========================================================================
-# # Run the model
-# 
-# nstart = 20 # For the final analysis, maybe do 1000
-# ldamodel2 = LDA(dat,2,control=list(estimate.alpha=F,alpha=1, nstart = nstart),method="VEM")
-# 
-#results3_3 = changepoint_model(ldamodel3, x, 3)
-#annual_hist(results,year_continuous)
-#get_ll_non_memoized(ldamodel3,x,2,)

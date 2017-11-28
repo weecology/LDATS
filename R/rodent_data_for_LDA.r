@@ -1,5 +1,4 @@
-library(RCurl)
-library(dplyr)
+
 
 
 #' Create rodent species table
@@ -14,7 +13,7 @@ library(dplyr)
 #'
 #' @return Table of species counts per period
 #'
-#' @example
+#' @examples
 #' r_table = create_rodent_table())
 #'
 
@@ -24,11 +23,11 @@ create_rodent_table = function(period_first = 1,
                                selected_species = c('BA','DM','DO','DS','NA','OL','OT','PB','PE','PF','PH','PI','PL','PM','PP','RF','RM','RO','SF','SH','SO')) {
 
     # retrieve current version of rodent data
-    rodents = read.csv(text=getURL("https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent.csv"),
+    rodents = read.csv(text=RCurl::getURL("https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent.csv"),
                        na.strings=c(""), colClasses=c('tag'='character'), stringsAsFactors = FALSE)
 
     # extract desired data by period, plot, and species
-    rod = filter(rodents, period>=period_first, period<=period_last,
+    rod = dplyr::filter(rodents, period>=period_first, period<=period_last,
                  plot %in% selected_plots,
                  species %in% selected_species)
 
@@ -37,7 +36,7 @@ create_rodent_table = function(period_first = 1,
 
     # retrieve data on number of plots trapped per month
     trap_table = read.csv('https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent_trapping.csv')
-    trap_table_controls = filter(trap_table, plot %in% selected_plots)
+    trap_table_controls = dplyr::filter(trap_table, plot %in% selected_plots)
     nplots_controls = aggregate(trap_table_controls$sampled,by=list(period = trap_table_controls$period),FUN=sum)
 
     # adjust species counts by number of plots trapped that month

@@ -1,8 +1,3 @@
-# This script assumes that `dat` is defined
-
-library(topicmodels)
-
-
 #' Compute hellinger distance
 #' 
 #' Hellinger distance is Euclidean distance between square roots, divided by
@@ -56,10 +51,10 @@ calculate_LDA_distance = function(ldas,seeds) {
   # Calculate a bunch of LDAs with 4 topics
   k = 4
   ldas = purrr::map(seeds, 
-                    ~LDA(dat, k = k, method = "VEM", control = list(seed = .x)))
+                    ~ topicmodels::LDA(dat, k = k, method = "VEM", control = list(seed = .x)))
   
   # Log-likelihoods for each lda
-  lls = purrr:::map_dbl(ldas, logLik)
+  lls = purrr:::map_dbl(ldas, topicmodels::logLik)
   
   # Pick the LDA model with the highest log-likelihood
   best_lda = which.max(lls)

@@ -1,4 +1,3 @@
-library(Rcpp)
 
 gibbs.samp=function(dat.agg,ngibbs,ncommun,a.betas,a.theta){
   
@@ -94,7 +93,7 @@ gibbs.samp=function(dat.agg,ngibbs,ncommun,a.betas,a.theta){
   list('logL'=logL.new,'beta'=store.beta,'theta'=store.theta)
 }
 
-cppFunction('
+Rcpp::cppFunction('
   Rcpp::List lda(IntegerVector seq1, IntegerMatrix z, IntegerVector nj, IntegerMatrix dat, IntegerMatrix nji, IntegerMatrix ndj, IntegerMatrix auxplot, double abetas, double atheta, int nspp, int ncommun, int thin) {
     int n = seq1.size();
     IntegerMatrix z1 = z;

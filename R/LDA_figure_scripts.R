@@ -1,13 +1,3 @@
-# Scripts for making figures from LDA analyses
-library(tidyverse)
-library(gridExtra)
-
-
-#cbPalette <- c( "#E69F00","#999999", "#56B4E9", "#0072B2", "#D55E00", "#F0E442", "#009E73", "#CC79A7")
-cbPalette <- c( "#e19c02","#999999", "#56B4E9", "#0072B2", "#D55E00", "#F0E442", "#009E73", "#CC79A7")
-
-
-
 
 #' Plot gamma
 #'
@@ -20,8 +10,6 @@ cbPalette <- c( "#e19c02","#999999", "#56B4E9", "#0072B2", "#D55E00", "#F0E442",
 #' @param ylab label for y axis (optional)
 #'
 #' @return a ggplot object
-
-ltypes = c('solid','longdash','longdash','solid','solid')
 
 
 plot_gamma = function(gamma_frame,ntopics,ylab='',colors=cbPalette) {
@@ -56,7 +44,7 @@ plot_gamma = function(gamma_frame,ntopics,ylab='',colors=cbPalette) {
 #'
 #' @return ggplot object
 #'
-#' @example plot_component_communities(ldamodel,ntopics,period_dates$date)
+#' @examples plot_component_communities(ldamodel,ntopics,period_dates$date)
 
 plot_component_communities = function(ldamodel,ntopics,xticks,ylab='',topic_order = seq(ntopics),colors = cbPalette) {
 
@@ -110,7 +98,7 @@ chpoint_histogram = function(results,year_continuous) {
 #'
 #' @return None
 #'
-#' @example plot_component_communities_smooth(ldamodel,ntopics,period_dates$date,5)
+#' @examples plot_component_communities_smooth(ldamodel,ntopics,period_dates$date,5)
 
 plot_component_communities_smooth = function(ldamodel,ntopics,xticks,smooth_factor) {
 
@@ -147,7 +135,7 @@ plot_component_communities_smooth = function(ldamodel,ntopics,xticks,smooth_fact
 #'
 #' @return table of species composition of the topics in ldamodel, 3 decimal places
 #'
-#' @example community_composition(ldamodel)
+#' @examples community_composition(ldamodel)
 
 community_composition = function(ldamodel) {
   return(structure(round(exp(ldamodel@beta), 3), dimnames = list(NULL, ldamodel@terms)))
@@ -161,7 +149,7 @@ community_composition = function(ldamodel) {
 #'
 #' @return barplots of the n component communities
 #'
-#' @example plot_community_composition(community_composition(ldamodel))
+#' @examples plot_community_composition(community_composition(ldamodel))
 
 plot_community_composition = function(composition,topic_order=1:dim(composition)[1],colors = cbPalette) {
   nspecies = dim(composition)[2]
@@ -233,7 +221,7 @@ plot_community_composition_gg = function(composition,topic_order,ylim,colors=cbP
 #'
 #' @return None
 #'
-#' @example plot_component_communities_gibbs(ldamodel,ntopics,period_dates$date)
+#' @examples plot_component_communities_gibbs(ldamodel,ntopics,period_dates$date)
 
 plot_component_communities_gibbs = function(results,ntopics,xticks) {
 
@@ -271,7 +259,7 @@ plot_component_communities_gibbs = function(results,ntopics,xticks) {
 #'
 #' @return None
 #'
-#' @example plot_component_communities_gibbs_credible(ldamodel,ntopics,period_dates$date)
+#' @examples plot_component_communities_gibbs_credible(ldamodel,ntopics,period_dates$date)
 
 
 plot_component_communities_gibbs_credible = function(ldamodel,ntopics,xticks) {

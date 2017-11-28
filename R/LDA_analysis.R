@@ -1,12 +1,4 @@
 
-#  1. prepare data
-#      - specific script for each data set
-#  2a. run LDA with different number of topics and use AIC to select best model
-#  2b. run LDA with best number of topics (determined by 2a)
-#  3. run changepoint model
-#  4. produce figures
-
-
 
 # =======================================================================================
 
@@ -21,11 +13,8 @@
 #' @param n_chpoints number of change points the changepoint model should look for
 #' @param maxit max iterations for changepoint model (more=slower)
 #' 
-#' @example LDA_analysis(dat,2010,c(2,3),dates,2)
+#' @examples LDA_analysis(dat,2010,c(2,3),dates,2)
 
-source('AIC_model_selection.R')
-source('gibbs_functions.R')
-source('changepointmodel.r')
 
 
 LDA_analysis_VEM = function(dat,SEED,test_topics) {
@@ -51,12 +40,9 @@ LDA_analysis_VEM = function(dat,SEED,test_topics) {
 #' @param test_topics numbers of topics to test, of the form (topic_min,topic_max)
 #' @param dates vector of dates that correspond to time steps from 'dat' -- for plotting purposes
 #' 
-#' @example LDA_analysis_gibbs(dat,200,c(2,3),dates)
+#' @examples LDA_analysis_gibbs(dat,200,c(2,3),dates)
 
-source('AIC_model_selection.R')
-source('gibbs_functions.R')
-source('changepointmodel.r')
-source('LDA_figure_scripts.R')
+
 
 
 
