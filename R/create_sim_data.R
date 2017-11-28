@@ -10,6 +10,8 @@
 #'    beta = matrix of species composition of the groups
 #'    gamma = matrix of topic composition over time
 #'            3 simulations of gamma: uniform, slow transition, and fast transition
+#' @export 
+
 create_sim_data_2topic = function(nspecies=24,tsteps=400) {
 
   topics = 2
@@ -58,6 +60,8 @@ create_sim_data_2topic = function(nspecies=24,tsteps=400) {
 #'    beta = matrix of species composition of the groups
 #'    gamma = matrix of topic composition over time
 #'            3 simulations of gamma: uniform, slow transition, and fast transition
+#' @export 
+
 create_sim_data_2topic_nonuniform = function(tsteps=400) {
   
   topics = 2
@@ -109,6 +113,8 @@ create_sim_data_2topic_nonuniform = function(tsteps=400) {
 #' @param nspecies = number of species in all topic groups
 #' @param tsteps = number of [monthly] time steps
 #' 
+#' @export 
+
 create_sim_data_3topic = function(nspecies=24,tsteps=400) {
 
   topics = 3

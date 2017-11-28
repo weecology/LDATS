@@ -16,6 +16,7 @@
 #' @examples
 #' r_table = create_rodent_table())
 #'
+#' @export 
 
 create_rodent_table = function(period_first = 1,
                                period_last = 436,

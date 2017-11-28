@@ -5,6 +5,7 @@
 #' 
 #' @param a,b numeric vectors
 #' 
+#' @export 
 Hellinger = function(a, b){
   diff = sqrt(a) - sqrt(b)
   sqrt(sum(diff^2) / 2)
@@ -16,6 +17,7 @@ Hellinger = function(a, b){
 #' @param p1,p2 numeric vectors: species composition
 #' @param k number of topics
 #' 
+#' @export 
 min_H = function(p1, p2, k) {
   # Find the cost associated with each pairwise topic assignment
   costs = matrix(0, k, k)
@@ -46,6 +48,7 @@ min_H = function(p1, p2, k) {
 #'                         mean distance between best model and all others
 #'                         max distuance between best model and worst
 #'
+#' @export 
 calculate_LDA_distance = function(ldas,seeds) {
   
   # Calculate a bunch of LDAs with 4 topics

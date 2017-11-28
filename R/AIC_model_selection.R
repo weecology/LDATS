@@ -10,7 +10,7 @@
 #' @return data frame of number of topics (k) and aic value (aic)
 #' 
 #' @examples aic_values = aic_model(dat,2010,2,10)
-
+#' @export 
 
 aic_model = function(dat,SEED,topic_min,topic_max) {
   aic_values = data.frame(seed = integer(), k = integer(), aic = numeric())
@@ -50,7 +50,7 @@ aic_model = function(dat,SEED,topic_min,topic_max) {
 #' 
 #' @examples aic_values = aic_model_gibbs(dat,500,2,3,T)
 #' 
-#' 
+#' @export 
 
 aic_model_gibbs = function(dat,ngibbs=1000,topic_min,topic_max,save_runs=T) {
   source('gibbs_functions.R')
@@ -82,6 +82,7 @@ aic_model_gibbs = function(dat,ngibbs=1000,topic_min,topic_max,save_runs=T) {
 #' @param topic_max highest number of topics
 #' 
 #' @examples best_ntopic = repeat_VEM(dat,1:500,2,6)
+#' @export 
 
 repeat_VEM = function(dat,seeds,topic_min,topic_max) {
   purrr::map_df(seeds, 

@@ -8,6 +8,8 @@
 #' @param weights weights
 #' @examples
 #' NA
+#' @export 
+
 fit_chunk_non_memoized = function(ldamodel, x, start, end, make_plot = FALSE, 
                                   weights, ...) {
   # Weights average to 1, & are proportional to total rodents caught that month
@@ -49,6 +51,7 @@ fit_chunk_non_memoized = function(ldamodel, x, start, end, make_plot = FALSE,
 #' @param changepoints changepoints
 #' @param make_plot make_plot
 #' @param weights weights
+#' @export 
 
 get_ll_non_memoized = function(ldamodel, x, changepoints, make_plot = FALSE, 
                                weights, ...){
@@ -86,7 +89,8 @@ get_ll_non_memoized = function(ldamodel, x, changepoints, make_plot = FALSE,
 #' @param changepoints vector of locations of changepoints found by changepoint_model()
 #' @param weights same weights used in changepoint_model()
 #' 
-#' 
+#' @export 
+
 get_ll_non_memoized_plot = function(ldamodel, x, changepoints, weights, ...){
   
   changedates = c(-Inf, x$year_continuous[changepoints], Inf)
@@ -105,7 +109,8 @@ get_ll_non_memoized_plot = function(ldamodel, x, changepoints, weights, ...){
 #' @param start value: start of the section to be fit
 #' @param end value: end of the section to be fit
 #' @param weights same weights used in changepoint_model()
-#' 
+#' @export 
+
 fit_section = function(ldamodel, x, start, end, weights, ...) {
   m = nnet::multinom(
     ldamodel@gamma ~ sin_year + cos_year, 
@@ -130,7 +135,8 @@ fit_section = function(ldamodel, x, start, end, weights, ...) {
 #' @param changepoints vector of changepoints
 #'
 #'
-#'
+#' @export 
+
 plot_sections = function(all_sections,x,changepoints) {
   cbPalette <- c( "#e19c02","#999999", "#56B4E9", "#0072B2", "#D55E00", "#F0E442", "#009E73", "#CC79A7")
   datevec =  format(date_decimal(x$year_continuous), '%Y-%m-%d') %>% as.Date()
@@ -165,6 +171,7 @@ plot_sections = function(all_sections,x,changepoints) {
 #' @return 
 #' 
 #' @author Dave Harris
+#' @export 
 
 changepoint_model = function(ldamodel,
                              x,
@@ -280,6 +287,8 @@ changepoint_model = function(ldamodel,
 #' indicating good mixing.  Should probably be in the mid-hundreds or low
 #' thousands if we want to be really confident about the results.
 #' @param results results
+#' @export 
+
 count_trips = function(results){
   N_temps = length(results$accept_rate)
   maxit = ncol(results$saved_lls)
@@ -310,6 +319,7 @@ count_trips = function(results){
 #' a changepoint in a given year.
 #' @param results results
 #' @param year_continuous year_continuous
+#' @export 
 annual_hist = function(results, year_continuous){
   if (missing(year_continuous)) {
     year_continuous = 1:max(results$saved) / 12
@@ -332,6 +342,7 @@ annual_hist = function(results, year_continuous){
 #' 
 #' @author Erica Christensen
 #' 
+#' @export 
 find_changepoint_location = function(results) {
   cpts = c()
   for (n in seq(dim(results$saved)[1])) {

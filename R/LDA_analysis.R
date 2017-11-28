@@ -14,7 +14,7 @@
 #' @param maxit max iterations for changepoint model (more=slower)
 #' 
 #' @examples LDA_analysis(dat,2010,c(2,3),dates,2)
-
+#' @export 
 
 
 LDA_analysis_VEM = function(dat,SEED,test_topics) {
@@ -41,7 +41,7 @@ LDA_analysis_VEM = function(dat,SEED,test_topics) {
 #' @param dates vector of dates that correspond to time steps from 'dat' -- for plotting purposes
 #' 
 #' @examples LDA_analysis_gibbs(dat,200,c(2,3),dates)
-
+#' @export 
 
 
 
