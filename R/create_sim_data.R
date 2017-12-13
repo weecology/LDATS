@@ -5,12 +5,13 @@
 #'     
 #' @param nspecies = number of species in all topic groups
 #' @param tsteps = number of [monthly] time steps
-#' @param N = total number of individuals of all species
 #' 
 #' @return 
 #'    beta = matrix of species composition of the groups
 #'    gamma = matrix of topic composition over time
 #'            3 simulations of gamma: uniform, slow transition, and fast transition
+#' @export 
+
 create_sim_data_2topic = function(nspecies=24,tsteps=400) {
 
   topics = 2
@@ -59,6 +60,8 @@ create_sim_data_2topic = function(nspecies=24,tsteps=400) {
 #'    beta = matrix of species composition of the groups
 #'    gamma = matrix of topic composition over time
 #'            3 simulations of gamma: uniform, slow transition, and fast transition
+#' @export 
+
 create_sim_data_2topic_nonuniform = function(tsteps=400) {
   
   topics = 2
@@ -104,16 +107,15 @@ create_sim_data_2topic_nonuniform = function(tsteps=400) {
   return(list(beta,gamma_constant,gamma_fast,gamma_slow))
 }
 
+#' create simulated data for demonstrating LDA analysis
+#'    3 topics
+#'     
+#' @param nspecies = number of species in all topic groups
+#' @param tsteps = number of [monthly] time steps
+#' 
+#' @export 
+
 create_sim_data_3topic = function(nspecies=24,tsteps=400) {
-  # create beta and gammas; 3 topics
-  #  Inputs:
-  #    nspecies = number of species in all topic groups
-  #    tsteps = number of [monthly] time steps
-  #    N = total number of individuals of all species
-  #  Outputs:
-  #    beta = matrix of species composition of the groups
-  #    gamma = matrix of topic composition over time
-  #            3 simulations of gamma: uniform, slow transition, and fast transition
 
   topics = 3
   

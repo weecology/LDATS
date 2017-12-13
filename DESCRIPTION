@@ -1,0 +1,36 @@
+Package: LDA.pointbreak
+Title: Detect Community-Types from Data and Identify Break Points
+Version: 0.0.1
+Authors@R: c(
+    person("Erica", "Christensen", email = "erica.christensen@weecology.org",
+	role = c("aut", "cre")),
+    person("Dave", "Harris", email = "dave.harris@weecology.org", 
+	role = c("aut")),
+    person("Hao", "Ye", email = "hao.ye@weecology.org", role = c("ctb")),
+	person("Juniper", "Simonis", email = "juniper.simonis@weecology.org",
+	role = c("ctb"))
+    )
+Description: Uses Latent Dirichlet Allocation to identify "community-types" 
+	then applies a changepoint model to identify like break points in the 
+	community-type-level time series. 
+Depends: R (>= 3.4.1)
+License: MIT
+Encoding: UTF-8
+LazyData: true
+Suggests: tidyverse, viridis, gridExtra
+Imports: topicmodels,
+    RCurl,
+    multipanelfigure,
+    reshape2,
+    dplyr,
+    memoise,
+    lubridate,
+    progress,
+    ggplot2,
+    viridis,
+    nnet,
+    RColorBrewer,
+    Rcpp,
+    tidyverse,
+    gridExtra
+RoxygenNote: 6.0.1
