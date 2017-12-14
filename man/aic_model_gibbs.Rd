@@ -26,5 +26,4 @@ Runs LDA using different numbers of topics and Gibbs method, calculates AIC valu
 \examples{
 aic_values = aic_model_gibbs(dat,500,2,3,T)
 
-
 }

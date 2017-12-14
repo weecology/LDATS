@@ -42,7 +42,7 @@
 
     pkgdpns <- c("topicmodels", "RCurl", "multipanelfigure", "reshape2",  
                  "dplyr", "memoise", "lubridate", "progress", "ggplot2",  
-                 "viridis", "nnet", "RColorBrewer", "Rcpp",  
+                 "viridis", "nnet", "RColorBrewer", "Rcpp", "bindrcpp", 
                  "tidyverse", "gridExtra", "topicmodels")
 
     for(i in 1:length(pkgdpns)){
@@ -92,6 +92,9 @@
     period_dates <- dplyr::filter(moondat, period %in% rownames(dat)) %>% 
                     dplyr::select(period, date)
     dates <- period_dates$date
+
+
+
 
 
 
