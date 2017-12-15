@@ -127,7 +127,7 @@ aic_model_gibbs = function(dat, ngibbs = 1000, topic_min, topic_max,
 
 repeat_VEM = function(dat, seeds, topic_min, topic_max){
   purrr::map_df(seeds, 
-         ~ aic_model(dat, SEED=.x, topic_min, topic_max) %>% 
+         ~ aic_model(dat, SEED = .x, topic_min, topic_max) %>% 
            dplyr::filter(aic == min(aic))) %>% 
   return()
 }
