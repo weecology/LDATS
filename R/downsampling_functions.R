@@ -138,3 +138,24 @@ downsample <- function(data = NULL, frequency = NULL, span = NULL,
   return(output)
 
 }
+
+
+
+#' Save out a histogram of the topics for a dataset
+#'
+#'
+#' @param dd data
+#' @param nn name
+#'
+#' @return Figure saved out
+#'
+#'
+#' @export 
+
+ntopic_hist_file <- function(dd = NULL, nn = NULL){
+      jpeg(paste("n_topics_", nn, ".jpeg", sep = ""), width = 4, height = 4, 
+           unit = "in", res = 200)
+      hist(dd$k, breaks= seq(0.5, 9.5, 1), main = nn, 
+           xlab = "Topics")
+      dev.off()
+}

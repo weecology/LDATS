@@ -321,7 +321,7 @@ cp_models <- function(data = NULL, ntopics = NULL, SEED = NULL,
       for(i in 1:maxcps){
   
         print(paste("Running model with ", i, " changepoint(s).", sep = ""))
-        cpm <- changepoint_model(bl_lda, x, 1, maxit = maxit, 
+        cpm <- changepoint_model(bl_lda, x, i, maxit = maxit, 
                                  weights = weights)
         output[[i]] <- cpm
         names(output)[i] <- paste(i, " changepoints", sep = "")

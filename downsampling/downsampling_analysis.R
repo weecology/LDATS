@@ -368,3 +368,37 @@
 
     save(list = topackage3, 
          file = "changepoint_models_semi_and_yearly.RData")
+
+
+
+
+  # output figures
+
+    # ntopics
+
+      ntopic_hist_file(dd = full_n_topics, nn = "Full_Data_Set")
+
+      ntopic_hist_file(dd = quarterly_first_n_topics, nn = "Quarterly_1st")
+      ntopic_hist_file(dd = quarterly_second_n_topics, nn = "Quarterly_2nd")
+      ntopic_hist_file(dd = quarterly_r1_n_topics, nn = "Quarterly_R1")
+      ntopic_hist_file(dd = quarterly_r2_n_topics, nn = "Quarterly_R2")
+      ntopic_hist_file(dd = quarterly_r3_n_topics, nn = "Quarterly_R3")
+
+      ntopic_hist_file(dd = semi_first_n_topics, nn = "Semi_1st")
+      ntopic_hist_file(dd = semi_third_n_topics, nn = "Semi_3rd")
+      ntopic_hist_file(dd = semi_r1_n_topics, nn = "Semi_R1")
+      ntopic_hist_file(dd = semi_r2_n_topics, nn = "Semi_R2")
+      ntopic_hist_file(dd = semi_r3_n_topics, nn = "Semi_R3")
+
+      ntopic_hist_file(dd = yearly_first_n_topics, nn = "Yearly_1st")
+      ntopic_hist_file(dd = yearly_sixth_n_topics, nn = "Yearly_6th")
+      ntopic_hist_file(dd = yearly_r1_n_topics, nn = "Yearly_R1")
+      ntopic_hist_file(dd = yearly_r2_n_topics, nn = "Yearly_R2")
+      ntopic_hist_file(dd = yearly_r3_n_topics, nn = "Yearly_R3")
+
+    # change points
+
+      cp_hists_file(dd = data_full, cpms = full_cp, 
+                    ntopics = 4, nn = "Full_Data_Set")
+
+
