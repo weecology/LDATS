@@ -199,7 +199,7 @@ changepoint_model = function(ldamodel,
   betas = 1/temps # "inverse temperature"
   # Initialize randomly, with the best starting values in the coldest chain
   changepoints = matrix(
-    replicate(N_temps, sort(sample.int(length(x$year_continuous), n_changepoints))),
+    replicate(N_temps, sort(sample.int(length(x$year_continuous), n_changepoints, replace = FALSE))),
     ncol = N_temps
   )
   lls = sapply(1:N_temps, 
@@ -280,6 +280,55 @@ changepoint_model = function(ldamodel,
 }
 
 
+
+#' Run a suite of changepoint models for the same data set
+#' 
+#' @param data data set to use
+#' @param ntopics number of topics to use in the baseline LDA
+#' @param SEED seed to use in the baseline LDA
+#' @param weights weights to use through time for the data points
+#' @param maxit maximum iterations
+#' @param maxcp maximum number of change points to use in the models
+#'          
+#' @return list of change point model results
+#' 
+#' @author Juniper Simonis
+#' @export 
+
+cp_models <- function(data = NULL, ntopics = NULL, SEED = NULL, 
+                      weights = NULL, maxit = NULL, maxcps = NULL){
+
+  # run baseline lda model 
+
+    bl_lda <- topicmodels::LDA(data[ , -1], ntopics, 
+                               control = list(seed = SEED), method = 'VEM')
+
+  # Change point model
+
+    # set up time for model
+
+      cds <- as.Date(as.character(data[, 1]))
+      year_continuous <- 1970 + as.integer(julian(cds)) / 365.25
+      x <- data.frame(year_continuous = year_continuous,
+                               sin_year = sin(year_continuous * 2 * pi),
+                               cos_year = cos(year_continuous * 2 * pi))
+
+
+    # run models with 1:maxcps changepoints
+
+      output <- vector("list", maxcps)
+
+      for(i in 1:maxcps){
+  
+        print(paste("Running model with ", i, " changepoint(s).", sep = ""))
+        cpm <- changepoint_model(bl_lda, x, 1, maxit = maxit, 
+                                 weights = weights)
+        output[[i]] <- cpm
+        names(output)[i] <- paste(i, " changepoints", sep = "")
+      }
+
+  return(output)
+}
 
 # Functions for viewing/diagnosing the changepoints -----------------------
 
