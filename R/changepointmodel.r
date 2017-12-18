@@ -199,7 +199,8 @@ changepoint_model = function(ldamodel,
   betas = 1/temps # "inverse temperature"
   # Initialize randomly, with the best starting values in the coldest chain
   changepoints = matrix(
-    replicate(N_temps, sort(sample.int(length(x$year_continuous), n_changepoints, replace = FALSE))),
+    replicate(N_temps, sort(sample.int(length(x$year_continuous) - 1, 
+                                       n_changepoints, replace = FALSE))),
     ncol = N_temps
   )
   lls = sapply(1:N_temps, 
