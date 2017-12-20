@@ -2,7 +2,8 @@
 % Please edit documentation in R/AIC_model_selection.R
 \name{repeat_VEM}
 \alias{repeat_VEM}
-\title{repeat VEM a bunch of times with different seeds and calculate AICs to find distribution of "best" ntopics}
+\title{repeat VEM a bunch of times with different seeds and calculate AICs to 
+  find distribution of "best" number of topics}
 \usage{
 repeat_VEM(dat, seeds, topic_min, topic_max)
 }
@@ -16,8 +17,9 @@ repeat_VEM(dat, seeds, topic_min, topic_max)
 \item{topic_max}{highest number of topics}
 }
 \description{
-repeat VEM a bunch of times with different seeds and calculate AICs to find distribution of "best" ntopics
+repeat VEM a bunch of times with different seeds and calculate AICs to 
+  find distribution of "best" number of topics
 }
 \examples{
-best_ntopic = repeat_VEM(dat,1:500,2,6)
+best_ntopic = repeat_VEM(dat, 1:500, 2, 6)
 }

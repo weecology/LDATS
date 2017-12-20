@@ -32,5 +32,6 @@ Imports: topicmodels,
     RColorBrewer,
     Rcpp,
     tidyverse,
-    gridExtra
+    gridExtra,
+    bindrcpp
 RoxygenNote: 6.0.1

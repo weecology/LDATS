@@ -9,22 +9,25 @@ aic_model_gibbs(dat, ngibbs = 1000, topic_min, topic_max, save_runs = T)
 \arguments{
 \item{dat}{Table of integer data (species counts by period)}
 
-\item{ngibbs}{number of iterations for gibbs sampler -- must be greater than 200 (default 1000)}
+\item{ngibbs}{number of iterations for gibbs sampler -- must be greater 
+than 200 (default 1000)}
 
 \item{topic_min}{lowest number of topics; must be >=2}
 
 \item{topic_max}{highest number of topics}
 
-\item{save_runs}{T/F whether to save each run of LDA for later retrieval (these take a long time to run)}
+\item{save_runs}{T/F whether to save each run of LDA for later retrieval 
+(these take a long time to run)}
 }
 \value{
-data frame containing column for number of topics (k) and aic values (aic)
+data frame containing column for number of topics (k) and aic 
+  values (aic)
 }
 \description{
-Runs LDA using different numbers of topics and Gibbs method, calculates AIC values for comparison
+Runs LDA using different numbers of topics and Gibbs method, calculates 
+  AIC values for comparison
 }
 \examples{
-aic_values = aic_model_gibbs(dat,500,2,3,T)
-
+aic_values = aic_model_gibbs(dat, 500, 2, 3, T)
 
 }

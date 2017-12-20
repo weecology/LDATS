@@ -19,7 +19,8 @@ aic_model(dat, SEED, topic_min, topic_max)
 data frame of number of topics (k) and aic value (aic)
 }
 \description{
-Runs LDA using different numbers of topics and VEM method, calculates AIC values for comparison
+Runs LDA using different numbers of topics and VEM method, calculates AIC 
+  values for comparison
 }
 \examples{
 aic_values = aic_model(dat,2010,2,10)
