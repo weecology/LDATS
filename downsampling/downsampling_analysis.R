@@ -292,6 +292,12 @@
                                      weights = rep(1, nrow(data_full)), 
                                      maxit = 1e4, maxcps = 5)
 
+      # save the change point models
+
+        topackage <- c("full_cp")
+
+        save(list = topackage, file = "changepoint_models_full.RData")
+
     # quarterly (frequency = 4)
 
       # first sample of the quarter
@@ -319,6 +325,16 @@
         quarterly_r3_cp <- cp_models(data = quarterly_random_3, ntopics = 4,  
                                      weights = rep(1, nrow(quarterly_first)), 
                                      SEED = 214, maxit = 1e4, maxcps = 5)
+
+      # save the change point models
+
+        topackage <- c("quarterly_first_cp", "quarterly_second_cp", 
+                       "quarterly_r1_cp", "quarterly_r2_cp", 
+                       "quarterly_r3_cp")
+
+        save(list = topackage, 
+             file = "changepoint_models_quarterly.RData")
+
 
     # semi-yearly (frequency = 2)
 
@@ -348,6 +364,16 @@
                                 weights = rep(1, nrow(semi_random_3)), 
                                 SEED = 324, maxit = 1e4, maxcps = 5)
 
+      # save
+
+        topackage <- c("semi_first_cp", "semi_third_cp", "semi_r1_cp",  
+                       "semi_r2_cp", "semi_r3_cp")
+
+
+        save(list = topackage, 
+             file = "changepoint_models_semi.RData")
+
+
     # yearly (frequency = 1)
 
       # first sample of the year
@@ -376,27 +402,13 @@
                                   weights = rep(1, nrow(yearly_random_3)), 
                                   SEED = 92, maxit = 1e4, maxcps = 5)
 
+      # save
 
+        topackage <- c("yearly_first_cp", "yearly_sixth_cp", "yearly_r1_cp", 
+                       "yearly_r2_cp", "yearly_r3_cp")
 
-  # save the data and LDA ntopic and change point models
-
-    topackage2 <- c("full_cp", "quarterly_first_cp", "quarterly_second_cp", 
-                    "quarterly_r1_cp", "quarterly_r2_cp", "quarterly_r3_cp")
-
-
-    save(list = topackage2, 
-         file = "changepoint_models_full_and_quarterly.RData")
-
-
-    topackage3 <- c("semi_first_cp", "semi_third_cp", "semi_r1_cp",  
-                   "semi_r2_cp","semi_r3_cp", "yearly_first_cp",  
-                   "yearly_sixth_cp", "yearly_r1_cp", "yearly_r2_cp", 
-                   "yearly_r3_cp")
-
-
-    save(list = topackage3, 
-         file = "changepoint_models_semi_and_yearly.RData")
-
+        save(list = topackage, 
+           file = "changepoint_models_yearly.RData")
 
 
 
@@ -426,7 +438,59 @@
 
     # change points
 
-      cp_hists_file(dd = data_full, cpms = full_cp, 
+      cp_hists_file(dd = data_full, cpms = full_cp, niter = 1e4,  
                     ntopics = 4, nn = "Full_Data_Set")
 
+      cp_hists_file(dd = quarterly_first, cpms = quarterly_first_cp, 
+                    niter = 1e4, ntopics = 4, nn = "Quarterly_Data_Set_1st")
 
+      cp_hists_file(dd = quarterly_second, cpms = quarterly_second_cp, 
+                    niter = 1e4, ntopics = 4, nn = "Quarterly_Data_Set_2nd")
+
+      cp_hists_file(dd = quarterly_random_1, cpms = quarterly_r1_cp, 
+                    niter = 1e4, ntopics = 4,
+                    nn = "Quarterly_Data_Set_Random1")
+
+      cp_hists_file(dd = quarterly_random_2, cpms = quarterly_r2_cp, 
+                    niter = 1e4, ntopics = 4, 
+                    nn = "Quarterly_Data_Set_Random2")
+
+      cp_hists_file(dd = quarterly_random_3, cpms = quarterly_r3_cp, 
+                    niter = 1e4, ntopics = 4, 
+                    nn = "Quarterly_Data_Set_Random3")
+
+      cp_hists_file(dd = semi_first, cpms = semi_first_cp, 
+                    niter = 1e4, ntopics = 4, nn = "SemiYear_Data_Set_1st")
+
+      cp_hists_file(dd = semi_third, cpms = semi_third_cp, 
+                    niter = 1e4, ntopics = 4, nn = "SemiYear_Data_Set_3rd")
+
+      cp_hists_file(dd = semi_random_1, cpms = semi_r1_cp, 
+                    niter = 1e4, ntopics = 4,
+                    nn = "SemiYear_Data_Set_Random1")
+
+      cp_hists_file(dd = semi_random_2, cpms = semi_r2_cp, 
+                    niter = 1e4, ntopics = 3, 
+                    nn = "SemiYear_Data_Set_Random2")
+
+      cp_hists_file(dd = semi_random_3, cpms = semi_r3_cp, 
+                    niter = 1e4, ntopics = 4, 
+                    nn = "SemiYear_Data_Set_Random3")
+
+      cp_hists_file(dd = yearly_first, cpms = yearly_first_cp, 
+                    niter = 1e4, ntopics = 3, nn = "Yearly_Data_Set_1st")
+
+      cp_hists_file(dd = yearly_sixth, cpms = yearly_sixth_cp, 
+                    niter = 1e4, ntopics = 3, nn = "Yearly_Data_Set_6th")
+
+      cp_hists_file(dd = yearly_random_1, cpms = yearly_r1_cp, 
+                    niter = 1e4, ntopics = 3,
+                    nn = "Yearly_Data_Set_Random1")
+
+      cp_hists_file(dd = yearly_random_2, cpms = yearly_r2_cp, 
+                    niter = 1e4, ntopics = 3, 
+                    nn = "Yearly_Data_Set_Random2")
+
+      cp_hists_file(dd = yearly_random_3, cpms = yearly_r3_cp, 
+                    niter = 1e4, ntopics = 4, 
+                    nn = "Yearly_Data_Set_Random3")

@@ -159,3 +159,46 @@ ntopic_hist_file <- function(dd = NULL, nn = NULL){
            xlab = "Topics")
       dev.off()
 }
+
+
+
+#' Save out a multi-panel histogram of the change points for a dataset
+#'
+#'
+#' @param dd data
+#' @param cpms change point models
+#' @param ntopics number of topics in the LDA used
+#' @param niter number of iterations in the model
+#' @param nn name
+#'
+#' @return Figure saved out
+#'
+#'
+#' @export 
+
+
+cp_hists_file <- function(dd = NULL, cpms = NULL, ntopics = NULL, 
+                          niter = NULL, nn = NULL){
+
+
+        ncpms <- length(cpms)
+        cds <- as.Date(as.character(dd[, 1]))
+        year_continuous <- 1970 + as.integer(julian(cds)) / 365.25
+        jpeg(paste("cp_", nn, ".jpeg", sep = ""), height = 10, width = 6, 
+             unit = "in", res = 200)
+        par(mfrow = c(ncpms,1))
+ 
+        for(i in 1:ncpms){
+          annual_hist(cpms[[i]], year_continuous)
+          text(1973, 1.1 * niter, cex = 1.25, adj = -1, xpd = T,
+           paste("AIC = ", 
+                 round(mean(cpms[[i]]$saved_lls * -2) + 
+                       2 * (3 * (ntopics - 1) * (i + 1) + (i)), 2),
+                 sep = ""))
+          if(i == 1){
+            mtext(side = 3, nn, line = 1)
+          }
+        }
+
+        dev.off()
+}
