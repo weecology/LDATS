@@ -1,10 +1,10 @@
 ##############################################################################
-#
+# 
 # package development code for LDA.pointbreak
 #
 # Latent Dirichlet Allocation with Break Point Analysis
 #
-# version 0.0.1 December 2017
+# version 0.0.1 January 2018
 #
 # held under MIT
 #

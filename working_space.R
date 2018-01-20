@@ -31,6 +31,10 @@
     
       data_full <- data.frame(dates, dat)
 
+  # run an ldats
+
+
+
   # run the LDA model
 
       # set the seeds to use
@@ -50,6 +54,8 @@
         full_cp <- cp_models(data = data_full, ntopics = 4, SEED = 206, 
                                      weights = rep(1, nrow(data_full)), 
                                      maxit = 1e4, maxcps = 5)
+
+
 
 
 data = data_full
