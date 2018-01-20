@@ -315,18 +315,29 @@ cp_models <- function(data = NULL, ntopics = NULL, SEED = NULL,
                                cos_year = cos(year_continuous * 2 * pi))
 
 
-    # run models with 1:maxcps changepoints
+    # run models with 0:maxcps changepoints
 
-      output <- vector("list", maxcps)
+      output <- vector("list", 1 + maxcps)
 
-      for(i in 1:maxcps){
+      # 0 change points
+
+        m <- nnet::multinom(bl_lda@gamma ~ sin_year + cos_year, 
+                            data = x, maxit = maxit, weights = weights,
+                            trace = FALSE) 
+        output[[1]] <- m
+        names(output)[1] <- "0 changepoints"
+
+      # 1:maxcps changepoints
+
+        for(i in 1:maxcps){
   
-        print(paste("Running model with ", i, " changepoint(s).", sep = ""))
-        cpm <- changepoint_model(bl_lda, x, i, maxit = maxit, 
-                                 weights = weights)
-        output[[i]] <- cpm
-        names(output)[i] <- paste(i, " changepoints", sep = "")
-      }
+          print(paste("Running model with ", i, " changepoint(s).", sep = ""))
+          cpm <- changepoint_model(bl_lda, x, i, maxit = maxit, 
+                                   weights = weights)
+          output[[i + 1]] <- cpm
+          names(output)[i + 1] <- paste(i, " changepoints", sep = "")
+        }
+
 
   return(output)
 }
