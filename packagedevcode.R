@@ -27,7 +27,7 @@
     pkgdpns <- c("topicmodels", "RCurl", "multipanelfigure", "reshape2",  
                  "dplyr", "memoise", "lubridate", "progress", "ggplot2",  
                  "viridis", "nnet", "RColorBrewer", "Rcpp", "bindrcpp", 
-                 "tidyverse", "gridExtra", "topicmodels")
+                 "tidyverse", "gridExtra", "topicmodels", "doParallel")
 
     for(i in 1:length(pkgdpns)){
       devtools::use_package(pkgdpns[i], "Imports", pkgloc)
@@ -41,7 +41,8 @@
 
     devtools::document(devtools::as.package(pkgloc))
 
-  # define the pipe operator 
+  # define the pipe operator, period function, and dopar operator 
 
     `%>%` <- dplyr::`%>%`
     `period` <- lubridate::`period`
+    `%dopar%` <- foreach::`%dopar%`
