@@ -1,4 +1,4 @@
-# for code dev
+# for code dev: working through an example based on the rodent data
 
   # prep the data
 
@@ -31,33 +31,27 @@
     
       data_full <- data.frame(dates, dat)
 
-  # run the LDA model
+  # run the LDA 
 
-      # set the seeds to use
-
-        seeds <- 2 * seq(200)
-
-      # define topic range
-
-        mint <- 2
-        maxt <- 8
-
-        full_n_topics <- repeat_VEM(dat, seeds,
-                                    topic_min = mint, topic_max = maxt)
-
-  # use the best LDA model to run the change point model
-
-        full_cp <- cp_models(data = data_full, ntopics = 4, SEED = 206, 
-                                     weights = rep(1, nrow(data_full)), 
-                                     maxit = 1e4, maxcps = 5)
+    rodent_LDA <- batch_LDA(data = dat, ntopics = 2:6, nseeds = 1000, 
+                            method = "VEM", sort = TRUE, sortby = "aicc",
+                            parallel = TRUE, ncores = 8)
 
 
-data = data_full
-ntopics = 4
-SEED = 206
-weights = rep(1, nrow(data_full))
-maxit = 1e4
-maxcps = 5
+  # looking at model weights for considering how best to progress
+
+    MS <- rodent_LDA$ModelSummaries
+    minAICc <- min(MS[, "aicc"])
+    deltAICc <- MS[, "aicc"] - minAICc
+    expnhdaic <- exp(-0.5 * deltAICc)
+    sumexpnhdaic <- sum(expnhdaic)
+
+    mw <- expnhdaic / sumexpnhdaic 
+    plot(mw)
+ 
+    length(which(mw > 0.001)) / length(mw)
+
+
 
 
 

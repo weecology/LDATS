@@ -11,11 +11,14 @@ LDA_analysis_VEM(dat, SEED, test_topics)
 
 \item{SEED}{set seed to keep LDA model runs consistent (default 2010)}
 
-\item{test_topics}{numbers of topics to test, of the form (topic_min,topic_max)}
+\item{test_topics}{numbers of topics to test, of the form (topic_min, 
+topic_max)}
 
-\item{dates}{vector of dates that correspond to time steps from 'dat' -- for plotting purposes}
+\item{dates}{vector of dates that correspond to time steps from 'dat' -- 
+for plotting purposes}
 
-\item{n_chpoints}{number of change points the changepoint model should look for}
+\item{n_chpoints}{number of change points the changepoint model should 
+look for}
 
 \item{maxit}{max iterations for changepoint model (more=slower)}
 }
@@ -23,5 +26,5 @@ LDA_analysis_VEM(dat, SEED, test_topics)
 Run through whole pipeline of LDA analysis, VEM method
 }
 \examples{
-LDA_analysis(dat,2010,c(2,3),dates,2)
+LDA_analysis(dat, 2010, c(2, 3), dates, 2)
 }
