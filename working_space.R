@@ -33,7 +33,7 @@
 
   # run the LDA 
 
-    rodent_LDA <- batch_LDA(data = dat, ntopics = 2:6, nseeds = 1000, 
+    rodent_LDA <- batch_LDA(data = dat, ntopics = 2:3, nseeds = 10, 
                             method = "VEM", sort = TRUE, sortby = "aicc",
                             parallel = TRUE, ncores = 8)
 

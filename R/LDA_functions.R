@@ -36,9 +36,14 @@ batch_LDA <- function(data, ntopics, nseeds, method, sort, sortby,
 
     if(parallel == TRUE){
 
-      # register the parallel cores
+      if(length(ncores) == 0){
+        ncores <- floor(0.75 * detectCores(logical = FALSE))
+      }
 
-        doParallel::registerDoParallel(ncores)
+      # register the parallel cluster
+
+        cl <- parallel::makeCluster(ncores)
+        doParallel::registerDoParallel(cl)
 
       # run the models
 
@@ -97,9 +102,7 @@ batch_LDA <- function(data, ntopics, nseeds, method, sort, sortby,
 
         }  
 
-      # stop parallel cluster
-
-        doParallel::stopImplicitCluster()
+      parallel::stopCluster(cl)
 
     }else{
 
@@ -167,6 +170,7 @@ batch_LDA <- function(data, ntopics, nseeds, method, sort, sortby,
         }  
 
     }
+
 
   # prep output 
 
