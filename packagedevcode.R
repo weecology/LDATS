@@ -1,47 +1,29 @@
 ##############################################################################
 # 
-# package development code for LDA.pointbreak
+# package development code for LDATS
 #
-# Latent Dirichlet Allocation with Break Point Analysis
+# Two Stage Analysis: Latent Dirichlet Allocation - Time Series 
 #
-# version 0.0.1 January 2018
-#
-# held under MIT
-#
-# #RequisiteJohnnyUtahReference
-#
-# Erica Christensen, David Harris, Hao Ye, and Juniper Simonis
-#
-##############################################################################
 
-  # load devtools
+  library(devtools)
 
-    library(devtools)
+  pkg_loc <- getwd()
 
-  # set the package location
+  pkg_depends <- c("topicmodels", "RCurl", "multipanelfigure", "reshape2",  
+                   "dplyr", "memoise", "lubridate", "progress", "ggplot2",  
+                   "viridis", "nnet", "RColorBrewer", "Rcpp", "bindrcpp", 
+                   "tidyverse", "gridExtra", "topicmodels", "doParallel")
+  n_pkgs <- length(pkg_depends)
 
-    pkgloc <- getwd()
+  for(i in 1:n_pkgs){
+    devtools::use_package(pkg_depends[i], "Imports", pkg_loc)
+  }
 
-  # add dependencies to the description and load them here 
+  devtools::load_all(devtools::as.package(pkg_loc))
 
-    pkgdpns <- c("topicmodels", "RCurl", "multipanelfigure", "reshape2",  
-                 "dplyr", "memoise", "lubridate", "progress", "ggplot2",  
-                 "viridis", "nnet", "RColorBrewer", "Rcpp", "bindrcpp", 
-                 "tidyverse", "gridExtra", "topicmodels", "doParallel")
+  devtools::document(devtools::as.package(pkg_loc))
 
-    for(i in 1:length(pkgdpns)){
-      devtools::use_package(pkgdpns[i], "Imports", pkgloc)
-    }
-
-  # load the package
-
-    devtools::load_all(devtools::as.package(pkgloc))
-
-  # populate the documentation
-
-    devtools::document(devtools::as.package(pkgloc))
-
-  # define the pipe operator, period function, and dopar operator 
+  # special definitions
 
     `%>%` <- dplyr::`%>%`
     `period` <- lubridate::`period`
