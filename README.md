@@ -9,7 +9,7 @@ analyses.
 
 ## Status
 
-Package development. [See issues](https://github.com/weecology/LDATS/issues)
+Package development. See [issues](https://github.com/weecology/LDATS/issues)
 for specific pre-package tasks.
 
 ## Installation
