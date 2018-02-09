@@ -285,6 +285,7 @@ changepoint_model = function(ldamodel,
 #' Run a suite of changepoint models for the same data set
 #' 
 #' @param data data set to use
+#' @time time of each sample (row in data)
 #' @param ntopics number of topics to use in the baseline LDA
 #' @param SEED seed to use in the baseline LDA
 #' @param weights weights to use through time for the data points
@@ -296,19 +297,20 @@ changepoint_model = function(ldamodel,
 #' @author Juniper Simonis
 #' @export 
 
-cp_models <- function(data = NULL, ntopics = NULL, SEED = NULL, 
-                      weights = NULL, maxit = NULL, maxcps = NULL){
+cp_models <- function(data = NULL, dates = NULL, ntopics = NULL, 
+                      SEED = NULL, weights = NULL, maxit = NULL, 
+                      maxcps = NULL){
 
   # run baseline lda model 
 
-    bl_lda <- topicmodels::LDA(data[ , -1], ntopics, 
+    bl_lda <- topicmodels::LDA(data, ntopics, 
                                control = list(seed = SEED), method = 'VEM')
 
   # Change point model
 
     # set up time for model
 
-      cds <- as.Date(as.character(data[, 1]))
+      cds <- as.Date(as.character(dates))
       year_continuous <- 1970 + as.integer(julian(cds)) / 365.25
       x <- data.frame(year_continuous = year_continuous,
                                sin_year = sin(year_continuous * 2 * pi),

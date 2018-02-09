@@ -171,7 +171,6 @@ batch_LDA <- function(data, ntopics, nseeds, method, sort, sortby,
 
     }
 
-
   # prep output 
 
     output <- list(models, modelsummaries)
