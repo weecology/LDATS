@@ -1,4 +1,4 @@
-# Two-stage LDA - Time Series analyses
+# Two-Stage LDA - Time Series Analyses
 
 ## Overview
 
@@ -22,5 +22,5 @@ devtools::install_github("weecology/portalr")
 ## More Information 
 
 Based on inital work using [LDA to analyze time-series data at Portal by Erica
-Christensen, Dave Harris, and Morgan Ernest]
-(https://github.com/emchristensen/Extreme-events-LDA).
+Christensen, Dave Harris, and Morgan 
+Ernest](https://github.com/emchristensen/Extreme-events-LDA).
