@@ -9,8 +9,8 @@ analyses.
 
 ## Status
 
-The package is currently in development by the [Weecology Team]
-(https://www.weecology.org) 
+The package is currently in development by the [Weecology 
+Team](https://www.weecology.org) 
 See [issues](https://github.com/weecology/LDATS/issues)
 for specific pre-package tasks.
 
