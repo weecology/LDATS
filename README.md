@@ -2,14 +2,16 @@
 
 ## Overview
 
-The `LDATS` package provides functionality for analyzing timer series of 
+The `LDATS` package provides functionality for analyzing time series of 
 multivariate data using a two-stage approach comprised of Latent Dirichlet
 Allocation (LDA) and Bayesian time series (change point and continuous change)
 analyses.
 
 ## Status
 
-Package development. See [issues](https://github.com/weecology/LDATS/issues)
+The package is currently in development by the [Weecology Team]
+(https://www.weecology.org) 
+See [issues](https://github.com/weecology/LDATS/issues)
 for specific pre-package tasks.
 
 ## Installation
