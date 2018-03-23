@@ -12,7 +12,8 @@
   pkg_depends <- c("topicmodels", "RCurl", "multipanelfigure", "reshape2",  
                    "dplyr", "memoise", "lubridate", "progress", "ggplot2",  
                    "viridis", "nnet", "RColorBrewer", "Rcpp", "bindrcpp", 
-                   "tidyverse", "gridExtra", "topicmodels", "doParallel")
+                   "tidyverse", "gridExtra", "topicmodels", "doParallel",
+                   "doRNG")
   n_pkgs <- length(pkg_depends)
 
   for(i in 1:n_pkgs){
@@ -28,3 +29,5 @@
     `%>%` <- dplyr::`%>%`
     `period` <- lubridate::`period`
     `%dopar%` <- foreach::`%dopar%`
+    `%dorng%` <- doRNG::`%dorng%`
+

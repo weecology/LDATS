@@ -33,7 +33,7 @@
 
   # run the LDA 
 
-    rodent_LDA <- batch_LDA(data = dat, ntopics = 2:6, nseeds = 1000, 
+    rodent_LDA <- batch_LDA(data = dat, ntopics = 2:6, nseeds = 100, 
                             method = "VEM", sort = TRUE, sortby = "aicc",
                             parallel = TRUE, ncores = 8)
 
@@ -43,6 +43,8 @@
     MS <- rodent_LDA$ModelSummaries
     minAICc <- min(MS[, "aicc"])
     deltAICc <- MS[, "aicc"] - minAICc
+
+
     expnhdaic <- exp(-0.5 * deltAICc)
     sumexpnhdaic <- sum(expnhdaic)
 
@@ -51,6 +53,14 @@
  
     length(which(mw > 0.001)) / length(mw)
 
+    plot(MS[,2], mw)
+
+  
+  # run a the cp model
+
+    rodent_cp <- cp_models(data = dat, dates = dates, ntopics = 3, SEED = 68, 
+                           weights = rep(1, nrow(dat)), 
+                           maxit = 1e4, maxcps = 4)
 
 
 
