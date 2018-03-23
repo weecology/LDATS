@@ -1,3 +1,11 @@
+  # special definitions
+
+    `%>%` <- dplyr::`%>%`
+    `period` <- lubridate::`period`
+    `%dopar%` <- foreach::`%dopar%`
+    `%dorng%` <- doRNG::`%dorng%`
+
+
 # for code dev: working through an example based on the rodent data
 
   # prep the data

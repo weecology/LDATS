@@ -4,8 +4,8 @@
 \alias{cp_models}
 \title{Run a suite of changepoint models for the same data set}
 \usage{
-cp_models(data = NULL, ntopics = NULL, SEED = NULL, weights = NULL,
-  maxit = NULL, maxcps = NULL)
+cp_models(data = NULL, dates = NULL, ntopics = NULL, SEED = NULL,
+  weights = NULL, maxit = NULL, maxcps = NULL)
 }
 \arguments{
 \item{data}{data set to use}
