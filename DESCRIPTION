@@ -35,5 +35,6 @@ Imports: topicmodels,
     gridExtra,
     bindrcpp,
     doParallel,
-    doRNG
+    doRNG,
+    rlang
 RoxygenNote: 6.0.1

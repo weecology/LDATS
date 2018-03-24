@@ -285,7 +285,7 @@ changepoint_model = function(ldamodel,
 #' Run a suite of changepoint models for the same data set
 #' 
 #' @param data data set to use
-#' @time time of each sample (row in data)
+#' @param time time of each sample (row in data)
 #' @param ntopics number of topics to use in the baseline LDA
 #' @param SEED seed to use in the baseline LDA
 #' @param weights weights to use through time for the data points
