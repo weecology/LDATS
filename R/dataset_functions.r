@@ -1,4 +1,3 @@
-
 #' Create rodent species table
 #'
 #' Processes rodent capture data so it can be used for LDA analysis
@@ -13,7 +12,7 @@
 #' create_rodent_table()
 #'
 #' @export 
-
+#'
 create_rodent_table <- function(periods = 1:436, 
                                 plots = c(2, 4, 8, 11, 12, 14, 17, 22),
                                 species = c("BA", "DM", "DO", "DS", "NA", 
@@ -62,4 +61,3 @@ create_rodent_table <- function(periods = 1:436,
 
   return(out)
 }
-

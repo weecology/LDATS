@@ -10,7 +10,7 @@ for(i in 1:n_pkgs){
 
 devtools::load_all()
 devtools::document()
-devtools::build()
+#devtools::build()
 
 
 
