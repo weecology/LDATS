@@ -37,7 +37,7 @@ multinom_chunk <- function(formula_RHS, data, start_date, end_date, weights,
 #' NA
 #' @export 
 #'
-mutilnom_ts <- function(formula_RHS, data, changepoints = NULL, weights, ...){
+multinom_ts <- function(formula_RHS, data, changepoints = NULL, weights, ...){
 
   chunk_memo <- memoise::memoise(LDATS::multinom_chunk)
 
@@ -59,23 +59,180 @@ mutilnom_ts <- function(formula_RHS, data, changepoints = NULL, weights, ...){
   return(output)
 }
 
-#' Bayesian Time Series analysis of a topic model classification
+#' Prepare the temperatures for the MTS algorithm
 #'
+#' @param ntemps number of temperatures
+#' @param penultimate_temp penultimate temperature
+#' @param k the exponent controlling the temperature sequence: 0 implies 
+#'   geometric sequence, 1 implies squaring before exponentiating. Use larger 
+#'   values if the cooler chains aren't swapping enough.
+#'  
+#' @return temperatures
 #'
-#' @param model fitted LDA model
-#' @param formula formula 
-#' @param data 
+#' @export
 #'
-#'
-#'
-#'
-BTS <- function(model, formula, data){
+prep_temps <- function(ntemps = 6, penultimate_temp = 2^6, k = 0, ...){
 
+  sequence <- seq(0, log2(penultimate_temp), length.out = ntemps - 1)
+  log_temps <- sequence^(1 + k) / log2(penultimate_temp)^k
+  temps <- 2^(log_temps)
+  temps <- c(temps, 1E10) 
+  return(temps)
+}  
+
+#' Prepare the changepoints for the MTS algorithm, with sorting by logLik
+#'
+#' @param formula formula for the continuous change
+#' @param ntemps number of temperatures
+#' @param data data frame including the predictor and response variables
+#' @param nchangepoints number of change points to include in the model
+#' @param ts_memo memoized multinomial_ts function
+#' @param weights weights 
+#'  
+#' @return list of [1] matrix of change points (rows) for each temperature 
+#'   (columns) and [2] vector of logLiks
+#'
+#' @export
+#'
+prep_changepts<- function(formula, data, ntemps, nchangepoints, ts_memo,
+                          weights){
+  min_date <- min(data$date)
+  max_date <- max(data$date)
+  dates <- seq(min_date, max_date, 1)
+  avail_dates <- dates[-length(dates)]
+  cps <- matrix(NA, nrow = nchangepoints, ncol = ntemps)
+  for (i in 1:ntemps){
+    cp_dates <- sort(sample(avail_dates, nchangepoints, replace = FALSE))
+    cps[ , i] <- as.character(cp_dates)
+  }
+  lls <- rep(NA, ntemps)
+  for (i in 1:ntemps){
+    lls[i] <- ts_memo(formula, data, as.Date(cps[ , i]), weights)$logLik
+  }  
+  cps <- cps[ , order(lls, decreasing = TRUE), drop = FALSE]
+  lls <- sort(lls, decreasing = TRUE)
+
+  out <- list(cps, lls)
+  names(out) <- c("changepts", "lls")
+  return(out)
 }
 
+#' Calculate the proposal distribution for the time series model
+#'
+#' @param nit number of iterations used
+#' @param ntemps number of temperatures used
+#' @param nchangepoints number of change points to include in the model
+#' @param magnitude the inverse of the probability used for the geometic 
+#'   distribution to generate the kick magnitudes
+#' @return list of two matrices: [1] kicks and [2] which_kicked
+#'
+#' @export
+#'
+proposal_dist <- function(nit, ntemps, nchangepoints, magnitude){
+  kick_signs <- sample(c(-1, 1), nit * ntemps, replace = TRUE)
+  kick_magnitudes <- 1 + rgeom(nit * ntemps, 1 / magnitude)
+  kicks <- matrix(kick_signs * kick_magnitudes, nrow = nit)
+  which_kicked <-  sample.int(nchangepoints, nit * ntemps, replace = TRUE)
+  which_kicked <- matrix(which_kicked, nrow = nit)
+  out <- list("kicks" = kicks, "which_kicked" = which_kicked)
+  return(out)
+}
 
+#' Multinomial Time Series analysis of a topic model classification
+#'
+#'
+#' @param formula formula for the continuous change
+#' @param data data frame including the predictor and response variables
+#' @param nchangepoints number of change points to include in the model
+#' @param weights weights 
+#' @param nit number of iterations used
+#' @param ... additional arguments to be passed to subfunctions
+#' @return 
+#'
+#' @export
+#'
+MTS <- function(formula, data, nchangepoints, weights, nit = 1e4, ...){
 
+  ts_memo <- memoise::memoise(LDATS::multinom_ts)
 
+  temps <- prep_temps(...)
+  betas <- 1 / temps
+  ntemps <- length(betas)
 
+  prep_cpts <- prep_changepts(formula, data, ntemps, nchangepoints, ts_memo,
+                 weights)
+  changepts <- prep_cpts$changepts
+  lls <- prep_cpts$lls
 
+  saved_cps <- matrix(NA, ntemps, nit)
+  saved_lls <- matrix(NA, ntemps, nit)
+  saved_ids <- matrix(NA, ntemps, nit)
+  accept_rate <- 0
+  temp_ids <- 1:ntemps
+  swap_accepted <- matrix(FALSE, nit, ntemps - 1)
+
+  pdist <- proposal_dist(nit, ntemps, nchangepoints, magnitude = 365)
+ 
+  pbform <- "  [:bar] :percent eta: :eta"
+  pb <- progress::progress_bar$new(pbform, nit, clear = FALSE, width = 60)
+
+  for (i in 1:nit){
+  
+    pb$tick()
+ 
+    selection <- cbind(pdist$which_kicked[i, ], 1:ntemps)
+    prop_changepts <- changepts
+    curr_changepts_s <- as.Date(changepts[selection])
+    prop_changepts_s <- as.character(curr_changepts_s + pdist$kicks[i, ])
+    prop_changepts[selection] <- prop_changepts_s
+    prop_lls <- lls
+
+    for (j in 1:ntemps){
+      mod <- ts_memo(formula, data, as.Date(prop_changepts[ , j]), weights)
+      prop_lls[j] <- mod$logLik
+    }
+
+    accepts <- runif(ntemps) < exp((prop_lls - lls) * betas)
+    accept_rate <- accept_rate + accepts / nit
+    changepts[ , accepts] <- prop_changepts[ , accepts]
+    lls[accepts] <- prop_lls[accepts]
+    
+    revtemps <- seq(ntemps - 1, 1)
+    for (j in revtemps){
+      cutoff <- exp((betas[j] - betas[j + 1]) * (lls[j + 1] - lls[j]))
+      accept_swap <- runif(1) < cutoff
+      if (accept_swap == TRUE) {
+
+        swap_accepted[i, j] <- TRUE
+        placeholder <- changepts[, j]
+        changepts[ , j] <- changepts[, j + 1]
+        changepts[ , j + 1] <- placeholder
+        
+        placeholder <- lls[j]
+        lls[j] <- lls[j + 1]
+        lls[j + 1] <- placeholder
+        
+        placeholder <- temp_ids[j]
+        temp_ids[j] <- temp_ids[j + 1]
+        temp_ids[j + 1] <- placeholder
+      }
+    }
+    saved_cps[ , i] <- apply(changepts, 2, paste, collapse = "; ")
+    saved_lls[ , i] <- temp_ids
+    saved_ids[ , i] <- lls
+  }
+  out_cps <- array(NA, c(nchangepoints, ntemps, nit))
+  for (i in 1:nit){
+    split_cps <- strsplit(saved_cps[ , i], "; ")
+    for (j in 1:ntemps){
+      out_cps[ , j, i] <- split_cps[[j]]
+    }
+  }
+
+  swap_rates <- colMeans(swap_accepted)
+  out <- list(temps, out_cps, saved_lls, saved_ids, swap_rates, accept_rate)
+  names(out) <- c("temps", "changepts", "lls", "ids", "swap_rates", 
+                  "accept_rate")
+  return(out)
+}
 

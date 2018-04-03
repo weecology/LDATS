@@ -19,16 +19,12 @@ ts_data$diffyrs <- round(as.numeric(diffyrs), 2)
 ts_data$gamma <- ldamodel@gamma
 
 preds <- "1"
-preds2 <- "diffyrs"
+preds2 <- "diffyrs + I(diffyrs^2)"
 sample_sizes <- apply(lda_data, 1, sum)
 wts <- sample_sizes/max(sample_sizes)
-wts2 <- rep(1, length(wts))
-cp <- NULL
-cp2 <- as.Date("2000-01-01")
-cp3 <- as.Date(c("1980-01-01", "2000-01-01"))
 
-LDATS::mutilnom_ts(preds2, ts_data, changepoints = cp2, wts)
-
+LDATS::MTS(formula = preds, data = ts_data, nchangepoints = 2, weights = wts, 
+  nit = 100)
 
 
 
