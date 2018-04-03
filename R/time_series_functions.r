@@ -5,8 +5,8 @@
 #' @param formula_RHS Right Hand Side of the continuous time formula as a 
 #'   character vector
 #' @param data data frame including the predictor and response variables
-#' @param start_date start date for the chunk 
-#' @param end_date end date for the chunk
+#' @param start_time start time for the chunk 
+#' @param end_time end time for the chunk
 #' @param weights weights 
 #' @param ... other arguments to be passed to the multinom function
 #' @return fitted model for the chunk
@@ -14,11 +14,11 @@
 #' NA
 #' @export 
 #'
-multinom_chunk <- function(formula_RHS, data, start_date, end_date, weights, 
+multinom_chunk <- function(formula_RHS, data, start_time, end_time, weights, 
                            ...) {
   formula <- as.formula(paste("gamma ~", formula_RHS))
   mod <- nnet::multinom(formula, data, weights, 
-           subset = date > start_date & date <= end_date, trace = FALSE, ...) 
+           subset = time > start_time & time <= end_time, trace = FALSE, ...) 
   return(mod)
 }
 
@@ -42,14 +42,14 @@ multinom_ts <- function(formula_RHS, data, changepoints = NULL, weights, ...){
   chunk_memo <- memoise::memoise(LDATS::multinom_chunk)
 
   nchunks <- length(changepoints) + 1
-  start_dates <- c(min(data$date) - 1, changepoints)
-  end_dates <- c(changepoints, max(data$date) + 1)
+  start_times <- c(min(data$time) - 1, changepoints)
+  end_times <- c(changepoints, max(data$time) + 1)
 
   mods <- vector("list", length = nchunks)
   ll <- rep(NA, nchunks)
   for (i in 1:nchunks){
-    mods[[i]] <- chunk_memo(formula_RHS, data, start_date = start_dates[i], 
-                   end_date = end_dates[i], weights)
+    mods[[i]] <- chunk_memo(formula_RHS, data, start_time = start_times[i], 
+                   end_time = end_times[i], weights)
     ll[i] <- logLik(mods[[i]])
   }
   total_ll <- sum(ll)
@@ -96,18 +96,18 @@ prep_temps <- function(ntemps = 6, penultimate_temp = 2^6, k = 0, ...){
 #'
 prep_changepts<- function(formula, data, ntemps, nchangepoints, ts_memo,
                           weights){
-  min_date <- min(data$date)
-  max_date <- max(data$date)
-  dates <- seq(min_date, max_date, 1)
-  avail_dates <- dates[-length(dates)]
+  min_time <- min(data$time)
+  max_time <- max(data$time)
+  times <- seq(min_time, max_time, 1)
+  avail_times <- times[-length(times)]
   cps <- matrix(NA, nrow = nchangepoints, ncol = ntemps)
   for (i in 1:ntemps){
-    cp_dates <- sort(sample(avail_dates, nchangepoints, replace = FALSE))
-    cps[ , i] <- as.character(cp_dates)
+    cp_times <- sort(sample(avail_times, nchangepoints, replace = FALSE))
+    cps[ , i] <- cp_times
   }
   lls <- rep(NA, ntemps)
   for (i in 1:ntemps){
-    lls[i] <- ts_memo(formula, data, as.Date(cps[ , i]), weights)$logLik
+    lls[i] <- ts_memo(formula, data, cps[ , i], weights)$logLik
   }  
   cps <- cps[ , order(lls, decreasing = TRUE), drop = FALSE]
   lls <- sort(lls, decreasing = TRUE)
@@ -159,8 +159,8 @@ MTS <- function(formula, data, nchangepoints, weights, nit = 1e4, ...){
   betas <- 1 / temps
   ntemps <- length(betas)
 
-  prep_cpts <- prep_changepts(formula, data, ntemps, nchangepoints, ts_memo,
-                 weights)
+  prep_cpts <- LDATS::prep_changepts(formula, data, ntemps, nchangepoints, 
+                 ts_memo, weights)
   changepts <- prep_cpts$changepts
   lls <- prep_cpts$lls
 
@@ -171,7 +171,7 @@ MTS <- function(formula, data, nchangepoints, weights, nit = 1e4, ...){
   temp_ids <- 1:ntemps
   swap_accepted <- matrix(FALSE, nit, ntemps - 1)
 
-  pdist <- proposal_dist(nit, ntemps, nchangepoints, magnitude = 365)
+  pdist <- proposal_dist(nit, ntemps, nchangepoints, magnitude = 12)
  
   pbform <- "  [:bar] :percent eta: :eta"
   pb <- progress::progress_bar$new(pbform, nit, clear = FALSE, width = 60)
@@ -182,13 +182,13 @@ MTS <- function(formula, data, nchangepoints, weights, nit = 1e4, ...){
  
     selection <- cbind(pdist$which_kicked[i, ], 1:ntemps)
     prop_changepts <- changepts
-    curr_changepts_s <- as.Date(changepts[selection])
-    prop_changepts_s <- as.character(curr_changepts_s + pdist$kicks[i, ])
+    curr_changepts_s <- changepts[selection]
+    prop_changepts_s <- curr_changepts_s + pdist$kicks[i, ]
     prop_changepts[selection] <- prop_changepts_s
     prop_lls <- lls
 
     for (j in 1:ntemps){
-      mod <- ts_memo(formula, data, as.Date(prop_changepts[ , j]), weights)
+      mod <- ts_memo(formula, data, prop_changepts[ , j], weights)
       prop_lls[j] <- mod$logLik
     }
 
@@ -225,7 +225,7 @@ MTS <- function(formula, data, nchangepoints, weights, nit = 1e4, ...){
   for (i in 1:nit){
     split_cps <- strsplit(saved_cps[ , i], "; ")
     for (j in 1:ntemps){
-      out_cps[ , j, i] <- split_cps[[j]]
+      out_cps[ , j, i] <- as.numeric(split_cps[[j]])
     }
   }
 
