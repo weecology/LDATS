@@ -1,19 +1,29 @@
-#' Fit a model to dates in (start,end] and return the log likelihood.
-#' 
-#' @param ldamodel ldamodel
-#' @param x x
-#' @param start start
-#' @param end end 
-#' @param make_plot make_plot
-#' @param weights weights
-#' @examples
-#' NA
-#' @export 
+if (packageVersion("memoise") <= "1.0.0") {
+  devtools::install_github("hadley/memoise")
+}
 
+library(memoise)     # For avoiding redundante computations
+library(lubridate)   # For dates
+library(progress)    # For progress bar
+library(topicmodels) # For LDA
+library(ggplot2)
+library(viridis)
+library(nnet)        # For multinomial model (part of changepoint analysis)
+library(RColorBrewer)
+library(reshape2)
+
+cbPalette <- c( "#e19c02","#999999", "#56B4E9", "#0072B2", "#D55E00", "#F0E442", "#009E73", "#CC79A7")
+
+# Begin changepoint model -------------------------------------------------
+
+
+# Fit a model to dates in (start,end] and return the log likelihood.
+# Memoization is a trick that lets us save the output for a given chunk and
+# avoid finding the answer more than once.
 fit_chunk_non_memoized = function(ldamodel, x, start, end, make_plot = FALSE, 
                                   weights, ...) {
   # Weights average to 1, & are proportional to total rodents caught that month
-  m = nnet::multinom(
+  m = multinom(
     ldamodel@gamma ~ sin_year + cos_year, 
     data = x,
     maxit = 1E5,
@@ -23,7 +33,7 @@ fit_chunk_non_memoized = function(ldamodel, x, start, end, make_plot = FALSE,
   )
   
   if (make_plot) {
-    cbPalette <- c( "#e19c02","#999999", "#56B4E9", "#0072B2", "#D55E00", "#F0E442", "#009E73", "#CC79A7")
+    
     plotfun = ifelse(start == -Inf, matplot, matlines)
     plotfun(
       x$year_continuous[x$year_continuous > start & x$year_continuous <= end], 
@@ -45,20 +55,13 @@ fit_chunk_non_memoized = function(ldamodel, x, start, end, make_plot = FALSE,
 }
 
 
-#' Get the log-likelihood associated with a set of breakpoints
-#' @param ldamodel ldamodel
-#' @param x x
-#' @param changepoints changepoints
-#' @param make_plot make_plot
-#' @param weights weights
-#' @export 
-
+# Get the log-likelihood associated with a set of breakpoints
 get_ll_non_memoized = function(ldamodel, x, changepoints, make_plot = FALSE, 
                                weights, ...){
   # Saving the caches as hidden folders to prevent silly Mac computers
   # (and RStudio) from wasting resources trying to index them
-  fit_chunk = memoise::memoise(fit_chunk_non_memoized, 
-                      cache = memoise::cache_filesystem(".cache_chunk"))
+  fit_chunk = memoise(fit_chunk_non_memoized, 
+                      cache = cache_filesystem(".cache_chunk"))
   
   if (make_plot) {
     fit_chunk = fit_chunk_non_memoized
@@ -89,8 +92,7 @@ get_ll_non_memoized = function(ldamodel, x, changepoints, make_plot = FALSE,
 #' @param changepoints vector of locations of changepoints found by changepoint_model()
 #' @param weights same weights used in changepoint_model()
 #' 
-#' @export 
-
+#' 
 get_ll_non_memoized_plot = function(ldamodel, x, changepoints, weights, ...){
   
   changedates = c(-Inf, x$year_continuous[changepoints], Inf)
@@ -109,10 +111,9 @@ get_ll_non_memoized_plot = function(ldamodel, x, changepoints, weights, ...){
 #' @param start value: start of the section to be fit
 #' @param end value: end of the section to be fit
 #' @param weights same weights used in changepoint_model()
-#' @export 
-
+#' 
 fit_section = function(ldamodel, x, start, end, weights, ...) {
-  m = nnet::multinom(
+  m = multinom(
     ldamodel@gamma ~ sin_year + cos_year, 
     data = x,
     maxit = 1E5,
@@ -135,10 +136,9 @@ fit_section = function(ldamodel, x, start, end, weights, ...) {
 #' @param changepoints vector of changepoints
 #'
 #'
-#' @export 
-
+#'
 plot_sections = function(all_sections,x,changepoints) {
-  cbPalette <- c( "#e19c02","#999999", "#56B4E9", "#0072B2", "#D55E00", "#F0E442", "#009E73", "#CC79A7")
+  #cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#0072B2", "#009E73", "#F0E442", "#D55E00", "#CC79A7")
   datevec =  format(date_decimal(x$year_continuous), '%Y-%m-%d') %>% as.Date()
   cpt_dates = datevec[changepoints]
   
@@ -161,17 +161,16 @@ plot_sections = function(all_sections,x,changepoints) {
 #' Model to locate given number of change points in an LDA model output
 #' 
 #' @param ldamodel output object from LDA model using VEM
-#' @param x x
+#' @param x
 #' @param n_changepoints integer number of changepoints to look for
 #' @param maxit maximum iterations
-#' @param penultimate_temp penultimate_temp
+#' @param penultimate_temp
 #' @param k the exponent controlling the temperature sequence: 0 implies geometric sequence, 
 #'          1 implies squaring before exponentiating. Use larger values if the cooler chains aren't swapping enough.
 #'          
 #' @return 
 #' 
 #' @author Dave Harris
-#' @export 
 
 changepoint_model = function(ldamodel,
                              x,
@@ -187,8 +186,8 @@ changepoint_model = function(ldamodel,
   
   # Saving the caches as hidden folders to prevent silly Mac computers
   # (and RStudio) from wasting resources trying to index them
-  get_ll = memoise::memoise(get_ll_non_memoized, 
-                   cache = memoise::cache_filesystem(".cache_ll"))
+  get_ll = memoise(get_ll_non_memoized, 
+                   cache = cache_filesystem(".cache_ll"))
   
   
   # Temperature sequence
@@ -199,8 +198,7 @@ changepoint_model = function(ldamodel,
   betas = 1/temps # "inverse temperature"
   # Initialize randomly, with the best starting values in the coldest chain
   changepoints = matrix(
-    replicate(N_temps, sort(sample.int(length(x$year_continuous) - 1, 
-                                       n_changepoints, replace = FALSE))),
+    replicate(N_temps, sort(sample.int(length(x$year_continuous), n_changepoints))),
     ncol = N_temps
   )
   lls = sapply(1:N_temps, 
@@ -226,7 +224,7 @@ changepoint_model = function(ldamodel,
     nrow = maxit
   )
   
-  pb = progress::progress_bar$new(format = "  [:bar] :percent eta: :eta",
+  pb = progress_bar$new(format = "  [:bar] :percent eta: :eta",
                         total = maxit, clear = FALSE, width = 60)
   for (i in 1:maxit) {
     pb$tick()
@@ -282,76 +280,11 @@ changepoint_model = function(ldamodel,
 
 
 
-#' Run a suite of changepoint models for the same data set
-#' 
-#' @param data data set to use
-#' @time time of each sample (row in data)
-#' @param ntopics number of topics to use in the baseline LDA
-#' @param SEED seed to use in the baseline LDA
-#' @param weights weights to use through time for the data points
-#' @param maxit maximum iterations
-#' @param maxcp maximum number of change points to use in the models
-#'          
-#' @return list of change point model results
-#' 
-#' @author Juniper Simonis
-#' @export 
-
-cp_models <- function(data = NULL, dates = NULL, ntopics = NULL, 
-                      SEED = NULL, weights = NULL, maxit = NULL, 
-                      maxcps = NULL){
-
-  # run baseline lda model 
-
-    bl_lda <- topicmodels::LDA(data, ntopics, 
-                               control = list(seed = SEED), method = 'VEM')
-
-  # Change point model
-
-    # set up time for model
-
-      cds <- as.Date(as.character(dates))
-      year_continuous <- 1970 + as.integer(julian(cds)) / 365.25
-      x <- data.frame(year_continuous = year_continuous,
-                               sin_year = sin(year_continuous * 2 * pi),
-                               cos_year = cos(year_continuous * 2 * pi))
-
-
-    # run models with 0:maxcps changepoints
-
-      output <- vector("list", 1 + maxcps)
-
-      # 0 change points
-
-        m <- nnet::multinom(bl_lda@gamma ~ sin_year + cos_year, 
-                            data = x, maxit = maxit, weights = weights,
-                            trace = FALSE) 
-        output[[1]] <- m
-        names(output)[1] <- "0 changepoints"
-
-      # 1:maxcps changepoints
-
-        for(i in 1:maxcps){
-  
-          print(paste("Running model with ", i, " changepoint(s).", sep = ""))
-          cpm <- changepoint_model(bl_lda, x, i, maxit = maxit, 
-                                   weights = weights)
-          output[[i + 1]] <- cpm
-          names(output)[i + 1] <- paste(i, " changepoints", sep = "")
-        }
-
-
-  return(output)
-}
-
 # Functions for viewing/diagnosing the changepoints -----------------------
 
-#' Number of times the particle went from hottest chain to the coldest one,
-#' indicating good mixing.  Should probably be in the mid-hundreds or low
-#' thousands if we want to be really confident about the results.
-#' @param results results
-#' @export 
-
+# Number of times the particle went from hottest chain to the coldest one,
+# indicating good mixing.  Should probably be in the mid-hundreds or low
+# thousands if we want to be really confident about the results.
 count_trips = function(results){
   N_temps = length(results$accept_rate)
   maxit = ncol(results$saved_lls)
@@ -378,11 +311,8 @@ count_trips = function(results){
 }
 
 
-#' Histogram showing percentage of MCMC samples that contained
-#' a changepoint in a given year.
-#' @param results results
-#' @param year_continuous year_continuous
-#' @export 
+# Histogram showing percentage of MCMC samples that contained
+# a changepoint in a given year.
 annual_hist = function(results, year_continuous){
   if (missing(year_continuous)) {
     year_continuous = 1:max(results$saved) / 12
@@ -405,7 +335,6 @@ annual_hist = function(results, year_continuous){
 #' 
 #' @author Erica Christensen
 #' 
-#' @export 
 find_changepoint_location = function(results) {
   cpts = c()
   for (n in seq(dim(results$saved)[1])) {
@@ -417,3 +346,13 @@ find_changepoint_location = function(results) {
 }
 
 
+
+# # =========================================================================
+# # Run the model
+# 
+# nstart = 20 # For the final analysis, maybe do 1000
+# ldamodel2 = LDA(dat,2,control=list(estimate.alpha=F,alpha=1, nstart = nstart),method="VEM")
+# 
+#results3_3 = changepoint_model(ldamodel3, x, 3)
+#annual_hist(results,year_continuous)
+#get_ll_non_memoized(ldamodel3,x,2,)
