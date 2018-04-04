@@ -38,8 +38,7 @@ multinom_chunk <- function(formula_RHS, data, start_time, end_time, weights,
 #' NA
 #' @export 
 #'
-multinom_ts <- function(formula_RHS, data, changepoints = NULL, weights, 
-                        ...){
+multinom_ts <- function(formula_RHS, data, changepoints = NULL, weights, ...){
 
   chunk_memo <- memoise::memoise(LDATS::multinom_chunk)
 
@@ -88,7 +87,6 @@ prep_temps <- function(ntemps = 6, penultimate_temp = 2^6, k = 0, ...){
 #' @param ntemps number of temperatures
 #' @param data data frame including the predictor and response variables
 #' @param nchangepoints number of change points to include in the model
-#' @param ts_memo memoized multinom_ts function
 #' @param weights weights 
 #'  
 #' @return list of [1] matrix of change points (rows) for each temperature 
@@ -148,7 +146,6 @@ proposal_dist <- function(nit, ntemps, nchangepoints, magnitude){
 #' @param nchangepoints number of change points to include in the model
 #' @param weights weights 
 #' @param nit number of iterations used
-#' @param ts_memo memoized multinom_ts function
 #' @param ... additional arguments to be passed to subfunctions
 #' @return 
 #'
@@ -157,13 +154,14 @@ proposal_dist <- function(nit, ntemps, nchangepoints, magnitude){
 MTS <- function(formula, data, nchangepoints, weights, nit = 1e4, ts_memo,
                 ...){
   
+  ts_memo <- memoise::memoise(LDATS::multinom_ts)
 
   temps <- prep_temps(...)
   betas <- 1 / temps
   ntemps <- length(betas)
 
   prep_cpts <- LDATS::prep_changepts(formula, data, ntemps, nchangepoints, 
-                 ts_memo, weights)
+                 weights)
   changepts <- prep_cpts$changepts
   lls <- prep_cpts$lls
 

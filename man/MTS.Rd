@@ -17,8 +17,6 @@ MTS(formula, data, nchangepoints, weights, nit = 10000, ts_memo, ...)
 
 \item{nit}{number of iterations used}
 
-\item{ts_memo}{memoized multinom_ts function}
-
 \item{...}{additional arguments to be passed to subfunctions}
 }
 \value{
