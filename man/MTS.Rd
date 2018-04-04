@@ -4,7 +4,7 @@
 \alias{MTS}
 \title{Multinomial Time Series analysis of a topic model classification}
 \usage{
-MTS(formula, data, nchangepoints, weights, nit = 10000, ...)
+MTS(formula, data, nchangepoints, weights, nit = 10000, ts_memo, ...)
 }
 \arguments{
 \item{formula}{formula for the continuous change}
@@ -16,6 +16,8 @@ MTS(formula, data, nchangepoints, weights, nit = 10000, ...)
 \item{weights}{weights}
 
 \item{nit}{number of iterations used}
+
+\item{ts_memo}{memoized multinom_ts function}
 
 \item{...}{additional arguments to be passed to subfunctions}
 }

@@ -15,7 +15,7 @@ prep_changepts(formula, data, ntemps, nchangepoints, ts_memo, weights)
 
 \item{nchangepoints}{number of change points to include in the model}
 
-\item{ts_memo}{memoized multinomial_ts function}
+\item{ts_memo}{memoized multinom_ts function}
 
 \item{weights}{weights}
 }

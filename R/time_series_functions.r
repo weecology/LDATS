@@ -18,7 +18,8 @@ multinom_chunk <- function(formula_RHS, data, start_time, end_time, weights,
                            ...) {
   formula <- as.formula(paste("gamma ~", formula_RHS))
   mod <- nnet::multinom(formula, data, weights, 
-           subset = time > start_time & time <= end_time, trace = FALSE, ...) 
+           subset = data$time > start_time & data$time <= end_time, 
+           trace = FALSE, ...) 
   return(mod)
 }
 
@@ -37,7 +38,8 @@ multinom_chunk <- function(formula_RHS, data, start_time, end_time, weights,
 #' NA
 #' @export 
 #'
-multinom_ts <- function(formula_RHS, data, changepoints = NULL, weights, ...){
+multinom_ts <- function(formula_RHS, data, changepoints = NULL, weights, 
+                        ...){
 
   chunk_memo <- memoise::memoise(LDATS::multinom_chunk)
 
@@ -86,7 +88,7 @@ prep_temps <- function(ntemps = 6, penultimate_temp = 2^6, k = 0, ...){
 #' @param ntemps number of temperatures
 #' @param data data frame including the predictor and response variables
 #' @param nchangepoints number of change points to include in the model
-#' @param ts_memo memoized multinomial_ts function
+#' @param ts_memo memoized multinom_ts function
 #' @param weights weights 
 #'  
 #' @return list of [1] matrix of change points (rows) for each temperature 
@@ -146,14 +148,15 @@ proposal_dist <- function(nit, ntemps, nchangepoints, magnitude){
 #' @param nchangepoints number of change points to include in the model
 #' @param weights weights 
 #' @param nit number of iterations used
+#' @param ts_memo memoized multinom_ts function
 #' @param ... additional arguments to be passed to subfunctions
 #' @return 
 #'
 #' @export
 #'
-MTS <- function(formula, data, nchangepoints, weights, nit = 1e4, ...){
-
-  ts_memo <- memoise::memoise(LDATS::multinom_ts)
+MTS <- function(formula, data, nchangepoints, weights, nit = 1e4, ts_memo,
+                ...){
+  
 
   temps <- prep_temps(...)
   betas <- 1 / temps
@@ -164,7 +167,7 @@ MTS <- function(formula, data, nchangepoints, weights, nit = 1e4, ...){
   changepts <- prep_cpts$changepts
   lls <- prep_cpts$lls
 
-  saved_cps <- matrix(NA, ntemps, nit)
+  saved_cps <- array(NA, c(nchangepoints, ntemps, nit))
   saved_lls <- matrix(NA, ntemps, nit)
   saved_ids <- matrix(NA, ntemps, nit)
   accept_rate <- 0
@@ -217,20 +220,13 @@ MTS <- function(formula, data, nchangepoints, weights, nit = 1e4, ...){
         temp_ids[j + 1] <- placeholder
       }
     }
-    saved_cps[ , i] <- apply(changepts, 2, paste, collapse = "; ")
+    saved_cps[ , , i] <- changepts
     saved_lls[ , i] <- temp_ids
     saved_ids[ , i] <- lls
   }
-  out_cps <- array(NA, c(nchangepoints, ntemps, nit))
-  for (i in 1:nit){
-    split_cps <- strsplit(saved_cps[ , i], "; ")
-    for (j in 1:ntemps){
-      out_cps[ , j, i] <- as.numeric(split_cps[[j]])
-    }
-  }
 
   swap_rates <- colMeans(swap_accepted)
-  out <- list(temps, out_cps, saved_lls, saved_ids, swap_rates, accept_rate)
+  out <- list(temps, saved_cps, saved_lls, saved_ids, swap_rates, accept_rate)
   names(out) <- c("temps", "changepts", "lls", "ids", "swap_rates", 
                   "accept_rate")
   return(out)
