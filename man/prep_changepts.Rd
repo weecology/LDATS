@@ -16,8 +16,6 @@ prep_changepts(formula, data, ntemps, nchangepoints, weights)
 \item{nchangepoints}{number of change points to include in the model}
 
 \item{weights}{weights}
-
-\item{ts_memo}{memoized multinom_ts function}
 }
 \value{
 list of [1] matrix of change points (rows) for each temperature 

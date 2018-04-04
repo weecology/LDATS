@@ -26,14 +26,5 @@ preds2 <- "time + I(time^2)"
 sample_sizes <- apply(lda_data, 1, sum)
 wts <- round(sample_sizes/max(sample_sizes), 3)
 
-
-
-ts_memo <- memoise::memoise(LDATS::multinom_ts)
-LDATS::MTS(formula = preds, data = ts_data, nchangepoints = 2, weights = wts, 
-  nit = 1000, ts_memo)
-system.time(
-for(W in 1:10){
-xx <- LDATS::MTS(formula = preds, data = ts_data, nchangepoints = 4, 
-        weights = wts, nit = 100, ts_memo)
-}
-)
+LDATS::MTS(formula = preds, data = ts_data, nchangepoints = 1, weights = wts, 
+  nit = 100)
