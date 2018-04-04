@@ -96,8 +96,8 @@ prep_temps <- function(ntemps = 6, penultimate_temp = 2^6, k = 0, ...){
 #'
 #' @export
 #'
-prep_changepts<- function(formula, data, ntemps, nchangepoints, ts_memo,
-                          weights){
+prep_changepts<- function(formula, data, ntemps, nchangepoints, weights){
+
   min_time <- min(data$time)
   max_time <- max(data$time)
   times <- seq(min_time, max_time, 1)
@@ -109,7 +109,7 @@ prep_changepts<- function(formula, data, ntemps, nchangepoints, ts_memo,
   }
   lls <- rep(NA, ntemps)
   for (i in 1:ntemps){
-    lls[i] <- ts_memo(formula, data, cps[ , i], weights)$logLik
+    lls[i] <- multinom_ts(formula, data, cps[ , i], weights)$logLik
   }  
   cps <- cps[ , order(lls, decreasing = TRUE), drop = FALSE]
   lls <- sort(lls, decreasing = TRUE)

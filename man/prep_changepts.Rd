@@ -4,7 +4,7 @@
 \alias{prep_changepts}
 \title{Prepare the changepoints for the MTS algorithm, with sorting by logLik}
 \usage{
-prep_changepts(formula, data, ntemps, nchangepoints, ts_memo, weights)
+prep_changepts(formula, data, ntemps, nchangepoints, weights)
 }
 \arguments{
 \item{formula}{formula for the continuous change}
@@ -15,9 +15,9 @@ prep_changepts(formula, data, ntemps, nchangepoints, ts_memo, weights)
 
 \item{nchangepoints}{number of change points to include in the model}
 
-\item{ts_memo}{memoized multinom_ts function}
-
 \item{weights}{weights}
+
+\item{ts_memo}{memoized multinom_ts function}
 }
 \value{
 list of [1] matrix of change points (rows) for each temperature 
