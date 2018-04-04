@@ -40,7 +40,7 @@ Guide](https://github.com/weecology/lab-wiki/wiki/Code-style-guide)
 Install the `devtools` package and then run:
 
 ```
-devtools::install_github("weecology/portalr")
+devtools::install_github("weecology/LDATS")
 ```
 
 ## Current Usage

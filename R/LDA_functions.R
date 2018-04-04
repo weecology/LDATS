@@ -35,12 +35,14 @@ LDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
 
     k <- k_in[i]
     seed <- seed_in[i]
-    topicmodels::LDA(data, k = k, control = list(seed = seed), ...)
-
+    mod <- topicmodels::LDA(data, k = k, control = list(seed = seed), ...)
+    #class(mod) <- c(class(mod)[1], "LDA")
+    mod
   }
 
   parallel::stopCluster(cl)
   names(mods) <- paste("k: ", k_in, ", seed: ", seed_in, sep = "")
+  class(mods) <- c("LDA_list", "list")
   return(mods)
 }
 
