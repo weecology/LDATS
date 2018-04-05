@@ -4,10 +4,12 @@
 \alias{plot.LDA_list}
 \title{Generalization of the plot function to work on a list of LDA topic models}
 \usage{
-plot.LDA_list(model_list)
+plot.LDA_list(model_list, cols = NULL)
 }
 \arguments{
 \item{model_list}{a list of LDA topic model outputs}
+
+\item{cols}{a vector of color codes to use, one for each of the max topics}
 }
 \value{
 model-by-model plots

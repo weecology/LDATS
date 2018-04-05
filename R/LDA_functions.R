@@ -78,15 +78,15 @@ AIC.LDA <- function(x, k = 2, correction = FALSE){
 #' Generalization of the plot function to work on a list of LDA topic models 
 #' 
 #' @param model_list a list of LDA topic model outputs
-#' 
+#' @param cols a vector of color codes to use, one for each of the max topics
 #' @return model-by-model plots
 #' 
 #' @examples NA
 #' @export 
 #'
-plot.LDA_list <- function(model_list){
+plot.LDA_list <- function(model_list, cols = NULL){
   devAskNewPage(TRUE)
-  lapply(model_list, plot)
+  lapply(model_list, plot, cols)
   devAskNewPage(FALSE)
 }
 
@@ -120,6 +120,9 @@ plot_LDA <- function(model, cols = NULL, ...){
        cols[i] <- rgb(ggg[i], ggg[i], ggg[i])
       }
     }
+  }
+  if (length(cols) > ntopics){
+    cols <- cols[1:ntopics]
   }
 
   counter <- 1

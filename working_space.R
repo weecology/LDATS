@@ -15,6 +15,7 @@ ldamodel <- r_LDA[[1]]
 plot(ldamodel)
 plot(r_LDA)
 
+plot(ldamodel, cols = c("green", "blue", "red"))
 
 
 ts_data <- data.frame(r_data[ , "censusdate"])
