@@ -51,13 +51,14 @@ create_rodent_table <- function(periods = 1:436,
               dplyr::summarise(nplots = sum(sampled), ntraps = sum(effort))
 
   moons <- moon_data %>%
-           dplyr::select(period, censusdate) %>%
+           dplyr::select(newmoonnumber, newmoondate, period) %>%
            na.omit() %>%
            tibble::as_tibble()
 
   out <- moons %>%
          dplyr::right_join(trapping, "period") %>%
-         dplyr::right_join(rodents, "period")
+         dplyr::right_join(rodents, "period") %>%
+         dplyr::select(-period)
 
   return(out)
 }
