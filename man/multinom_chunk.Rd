@@ -6,7 +6,7 @@
   a defined chunk of time (start_date, end_date] with covariate impacts 
   assuming no temporal autocorrelation by default}
 \usage{
-multinom_chunk(formula_RHS, data, start_date, end_date, weights, ...)
+multinom_chunk(formula_RHS, data, start_time, end_time, weights, ...)
 }
 \arguments{
 \item{formula_RHS}{Right Hand Side of the continuous time formula as a 
@@ -14,9 +14,9 @@ character vector}
 
 \item{data}{data frame including the predictor and response variables}
 
-\item{start_date}{start date for the chunk}
+\item{start_time}{start time for the chunk}
 
-\item{end_date}{end date for the chunk}
+\item{end_time}{end time for the chunk}
 
 \item{weights}{weights}
 
