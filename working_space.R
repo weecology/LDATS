@@ -11,6 +11,12 @@ lda_data <- r_data %>%
 r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2:5, nseeds = 2, ncores = 8)
 
 ldamodel <- r_LDA[[1]]
+
+plot(ldamodel)
+plot(r_LDA)
+
+
+
 ts_data <- data.frame(r_data[ , "censusdate"])
 colnames(ts_data) <- "date"
 ts_data[, 1] <- as.Date(ts_data[, 1])
