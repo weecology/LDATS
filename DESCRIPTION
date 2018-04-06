@@ -1,6 +1,6 @@
 Package: LDATS
 Title: Detect Community-Types from Data and Identify Break Points
-Version: 0.0.3
+Version: 0.0.4
 Authors@R: c(
 	person("Juniper", "Simonis", email = "juniper.simonis@weecology.org",
 	role = c("aut", "cre")),

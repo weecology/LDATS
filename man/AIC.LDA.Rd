@@ -25,8 +25,8 @@ Using the internal topicmodels calculations of likelihood and
   data(rodents)
   lda_data <- dplyr::select(rodents, 
                             -c(newmoonnumber, newmoondate, nplots, ntraps))
-  r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2:5, nseeds = 2, 
-                      ncores = 8)
+  r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2, nseeds = 2, 
+                      ncores = 4)
   AIC(r_LDA[[1]])
   AIC(r_LDA[[2]])
 }
