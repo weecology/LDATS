@@ -5,7 +5,7 @@
 \title{Generalization of the plot function to work on a list of LDA topic 
   models}
 \usage{
-plot.LDA_list(model_list, cols = NULL)
+\method{plot}{LDA_list}(model_list, cols = NULL)
 }
 \arguments{
 \item{model_list}{a list of LDA topic model outputs}
