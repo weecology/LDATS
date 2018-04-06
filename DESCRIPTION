@@ -13,9 +13,7 @@ Authors@R: c(
 Description: Combines Latent Dirichlet Allocation and Time Series methods
     in a two-stage analysis to identify temporal changes in multi-dimensional 
 	time series data.
-Depends: R (>= 3.4.1),
-    doParallel,
-    magrittr
+Depends: R (>= 3.4.1)
 License: MIT
 Encoding: UTF-8
 LazyData: true
@@ -24,5 +22,7 @@ Imports: topicmodels,
     dplyr,
     memoise,
     progress,
-    nnet
+    nnet,
+    doParallel,
+    magrittr
 RoxygenNote: 6.0.1

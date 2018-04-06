@@ -1,3 +1,4 @@
+
 #' @title Two-stage LDA-time series analysis
 #'
 #' @param data data set (currently just the data for the LDA)
@@ -8,8 +9,8 @@
 #'
 #' @export
 #'
-LDATS <- function(data = NULL, LDA_eval = quote(AIC), LDA_selector = quote(min), 
-                  ...){
+LDA_TS <- function(data = NULL, LDA_eval = quote(AIC),  
+                   LDA_selector = quote(min), ...){
   lda_mods <- LDATS::LDA(data, ...)
 
   lda_eval <- sapply(lda_mods, LDA_eval) %>%

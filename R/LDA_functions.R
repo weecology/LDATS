@@ -120,7 +120,7 @@ plot.LDA_list <- function(model_list, cols = NULL){
 #' 
 #' @export 
 #'
-plot_LDA <- function(model, cols = NULL, ...){
+plot.LDA <- function(model, cols = NULL, ...){
 
   gamma <- model@gamma
   beta <- exp(model@beta)
