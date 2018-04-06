@@ -18,6 +18,3 @@ LDATS(data = NULL, LDA_eval = quote(AIC), LDA_selector = quote(min), ...)
 \value{
 (currently) the output of the selected LDA model
 }
-\description{
-Two-stage LDA-time series analysis
-}

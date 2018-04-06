@@ -21,8 +21,13 @@ LDA(data, ntopics = 2, nseeds = 1, ncores = 1, ...)
 List of LDA models
 }
 \description{
-Runs each of the number of input topics for the number of seeds
+Runs each of the number of input topics for the number of 
+  seeds
 }
 \examples{
-NA
+  data(rodents)
+  lda_data <- dplyr::select(rodents, 
+                            -c(newmoonnumber, newmoondate, nplots, ntraps))
+  r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2:5, nseeds = 2, 
+                      ncores = 8)
 }

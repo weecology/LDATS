@@ -2,9 +2,7 @@
 % Please edit documentation in R/time_series_functions.r
 \name{multinom_chunk}
 \alias{multinom_chunk}
-\title{Fit a multinomial regression model to topic model data for dates within
-  a defined chunk of time (start_date, end_date] with covariate impacts 
-  assuming no temporal autocorrelation by default}
+\title{Fit multinomial time chunk model}
 \usage{
 multinom_chunk(formula_RHS, data, start_time, end_time, weights, ...)
 }
@@ -26,10 +24,7 @@ character vector}
 fitted model for the chunk
 }
 \description{
-Fit a multinomial regression model to topic model data for dates within
-  a defined chunk of time (start_date, end_date] with covariate impacts 
-  assuming no temporal autocorrelation by default
-}
-\examples{
-NA
+Fit a multinomial regression model to topic model data for
+  dates within a defined chunk of time (start_date, end_date] with  
+  covariate impacts assuming no temporal autocorrelation by default
 }

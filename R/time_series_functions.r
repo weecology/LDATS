@@ -1,6 +1,8 @@
-#' Fit a multinomial regression model to topic model data for dates within
-#'   a defined chunk of time (start_date, end_date] with covariate impacts 
-#'   assuming no temporal autocorrelation by default
+#' @title Fit multinomial time chunk model
+#'
+#' @description Fit a multinomial regression model to topic model data for
+#'   dates within a defined chunk of time (start_date, end_date] with  
+#'   covariate impacts assuming no temporal autocorrelation by default
 #'
 #' @param formula_RHS Right Hand Side of the continuous time formula as a 
 #'   character vector
@@ -10,8 +12,7 @@
 #' @param weights weights 
 #' @param ... other arguments to be passed to the multinom function
 #' @return fitted model for the chunk
-#' @examples
-#' NA
+#' 
 #' @export 
 #'
 multinom_chunk <- function(formula_RHS, data, start_time, end_time, weights, 
@@ -23,8 +24,10 @@ multinom_chunk <- function(formula_RHS, data, start_time, end_time, weights,
   return(mod)
 }
 
-#' Fit a multinomial regression model with covariate impacts assuming no
-#'   temporal autocorrelation 
+#' @title Fit multinomial time series model
+#'
+#' @description Fit a multinomial regression model with covariate impacts 
+#'   assuming no temporal autocorrelation 
 #'
 #' @param formula_RHS Right Hand Side of the continuous time formula as a 
 #'   character vector
@@ -60,7 +63,7 @@ multinom_ts <- function(formula_RHS, data, changepoints = NULL, weights, ...){
   return(output)
 }
 
-#' Prepare the temperatures for the MTS algorithm
+#' @title Prepare the temperatures for the MTS algorithm
 #'
 #' @param ntemps number of temperatures
 #' @param penultimate_temp penultimate temperature
@@ -81,7 +84,9 @@ prep_temps <- function(ntemps = 6, penultimate_temp = 2^6, k = 0, ...){
   return(temps)
 }  
 
-#' Prepare the changepoints for the MTS algorithm, with sorting by logLik
+#' @title Prepare the changepoints for the MTS algorithm
+#'
+#' @description includes sorting by logLik
 #'
 #' @param formula formula for the continuous change
 #' @param ntemps number of temperatures
@@ -117,7 +122,7 @@ prep_changepts<- function(formula, data, ntemps, nchangepoints, weights){
   return(out)
 }
 
-#' Calculate the proposal distribution for the time series model
+#' @title Calculate the proposal distribution for the time series model
 #'
 #' @param nit number of iterations used
 #' @param ntemps number of temperatures used
@@ -138,8 +143,7 @@ proposal_dist <- function(nit, ntemps, nchangepoints, magnitude){
   return(out)
 }
 
-#' Multinomial Time Series analysis of a topic model classification
-#'
+#' @title Multinomial Time Series analysis of a topic model classification
 #'
 #' @param formula formula for the continuous change
 #' @param data data frame including the predictor and response variables

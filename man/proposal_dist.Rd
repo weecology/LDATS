@@ -19,6 +19,3 @@ distribution to generate the kick magnitudes}
 \value{
 list of two matrices: [1] kicks and [2] which_kicked
 }
-\description{
-Calculate the proposal distribution for the time series model
-}

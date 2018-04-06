@@ -2,7 +2,8 @@
 % Please edit documentation in R/LDA_functions.R
 \name{plot_LDA}
 \alias{plot_LDA}
-\title{Function used to create an LDA summary plot, called using the plot method}
+\title{Function used to create an LDA summary plot, called using the plot 
+  method}
 \usage{
 plot_LDA(model, cols = NULL, ...)
 }
@@ -13,10 +14,4 @@ plot_LDA(model, cols = NULL, ...)
 }
 \value{
 model plots
-}
-\description{
-Function used to create an LDA summary plot, called using the plot method
-}
-\examples{
-NA
 }

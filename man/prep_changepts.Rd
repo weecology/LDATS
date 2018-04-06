@@ -2,7 +2,7 @@
 % Please edit documentation in R/time_series_functions.r
 \name{prep_changepts}
 \alias{prep_changepts}
-\title{Prepare the changepoints for the MTS algorithm, with sorting by logLik}
+\title{Prepare the changepoints for the MTS algorithm}
 \usage{
 prep_changepts(formula, data, ntemps, nchangepoints, weights)
 }
@@ -22,5 +22,5 @@ list of [1] matrix of change points (rows) for each temperature
   (columns) and [2] vector of logLiks
 }
 \description{
-Prepare the changepoints for the MTS algorithm, with sorting by logLik
+includes sorting by logLik
 }
