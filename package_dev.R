@@ -1,7 +1,3 @@
 devtools::load_all()
-devtools::document()
+#devtools::document()
 #devtools::build()
-
-
-
-

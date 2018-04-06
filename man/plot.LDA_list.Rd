@@ -2,7 +2,8 @@
 % Please edit documentation in R/LDA_functions.R
 \name{plot.LDA_list}
 \alias{plot.LDA_list}
-\title{Generalization of the plot function to work on a list of LDA topic models}
+\title{Generalization of the plot function to work on a list of LDA topic 
+  models}
 \usage{
 plot.LDA_list(model_list, cols = NULL)
 }
@@ -14,9 +15,11 @@ plot.LDA_list(model_list, cols = NULL)
 \value{
 model-by-model plots
 }
-\description{
-Generalization of the plot function to work on a list of LDA topic models
-}
 \examples{
-NA
+  data(rodents)
+  lda_data <- dplyr::select(rodents, 
+                            -c(newmoonnumber, newmoondate, nplots, ntraps))
+  r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2:5, nseeds = 2, 
+                      ncores = 8)
+  plot(r_LDA)
 }

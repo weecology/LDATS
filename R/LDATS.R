@@ -1,4 +1,4 @@
-#' Two-stage LDA-time series analysis
+#' @title Two-stage LDA-time series analysis
 #'
 #' @param data data set (currently just the data for the LDA)
 #' @param LDA_eval function name for evaluation of the LDA models

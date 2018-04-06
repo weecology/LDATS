@@ -2,8 +2,7 @@
 % Please edit documentation in R/time_series_functions.r
 \name{multinom_ts}
 \alias{multinom_ts}
-\title{Fit a multinomial regression model with covariate impacts assuming no
-  temporal autocorrelation}
+\title{Fit multinomial time series model}
 \usage{
 multinom_ts(formula_RHS, data, changepoints = NULL, weights, ...)
 }
@@ -24,8 +23,8 @@ list of chunk-level model fits and the total log likelihood
   combined across all the chunks
 }
 \description{
-Fit a multinomial regression model with covariate impacts assuming no
-  temporal autocorrelation
+Fit a multinomial regression model with covariate impacts 
+  assuming no temporal autocorrelation
 }
 \examples{
 NA

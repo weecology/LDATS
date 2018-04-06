@@ -1,6 +1,7 @@
-#' A simple parallel wrapper to the topicmodels LDA function 
+#' @title A simple parallel wrapper to the topicmodels LDA function 
 #' 
-#' Runs each of the number of input topics for the number of seeds
+#' @description Runs each of the number of input topics for the number of 
+#'   seeds
 #' 
 #' @param data Table of integer data (species counts by period)
 #' @param ntopics set of topics to evaluate
@@ -10,7 +11,12 @@
 #' 
 #' @return List of LDA models
 #' 
-#' @examples NA
+#' @examples 
+#'   data(rodents)
+#'   lda_data <- dplyr::select(rodents, 
+#'                             -c(newmoonnumber, newmoondate, nplots, ntraps))
+#'   r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2:5, nseeds = 2, 
+#'                       ncores = 8)
 #' @export 
 #'
 LDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
@@ -46,9 +52,10 @@ LDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
   return(mods)
 }
 
-#' Generalization of the AIC function to work on LDA topic models 
+#' @title Generalization of the AIC function to work on LDA topic models 
 #' 
-#' Using the internal topicmodels calculations of likelihood and df
+#' @description Using the internal topicmodels calculations of likelihood and 
+#'   df
 #' 
 #' @param x an LDA topic model
 #' @param k penalty per df
@@ -57,7 +64,14 @@ LDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
 #' 
 #' @return Named (AIC or AICc) value.
 #' 
-#' @examples NA
+#' @examples
+#'   data(rodents)
+#'   lda_data <- dplyr::select(rodents, 
+#'                             -c(newmoonnumber, newmoondate, nplots, ntraps))
+#'   r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2:5, nseeds = 2, 
+#'                       ncores = 8)
+#'   AIC(r_LDA[[1]])
+#'   AIC(r_LDA[[2]])
 #' @export 
 #'
 AIC.LDA <- function(x, k = 2, correction = FALSE){
@@ -75,13 +89,20 @@ AIC.LDA <- function(x, k = 2, correction = FALSE){
   return(out)
 }
 
-#' Generalization of the plot function to work on a list of LDA topic models 
+#' @title Generalization of the plot function to work on a list of LDA topic 
+#'   models 
 #' 
 #' @param model_list a list of LDA topic model outputs
 #' @param cols a vector of color codes to use, one for each of the max topics
 #' @return model-by-model plots
 #' 
-#' @examples NA
+#' @examples 
+#'   data(rodents)
+#'   lda_data <- dplyr::select(rodents, 
+#'                             -c(newmoonnumber, newmoondate, nplots, ntraps))
+#'   r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2:5, nseeds = 2, 
+#'                       ncores = 8)
+#'   plot(r_LDA)
 #' @export 
 #'
 plot.LDA_list <- function(model_list, cols = NULL){
@@ -90,13 +111,13 @@ plot.LDA_list <- function(model_list, cols = NULL){
   devAskNewPage(FALSE)
 }
 
-#' Function used to create an LDA summary plot, called using the plot method
+#' @title Function used to create an LDA summary plot, called using the plot 
+#'   method
 #' 
 #' @param model an LDA topic model output
 #' @param cols a vector of color codes, one for each topic
 #' @return model plots
 #' 
-#' @examples NA
 #' @export 
 #'
 plot_LDA <- function(model, cols = NULL, ...){

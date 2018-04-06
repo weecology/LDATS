@@ -22,6 +22,3 @@ MTS(formula, data, nchangepoints, weights, nit = 10000, ts_memo, ...)
 \value{
 
 }
-\description{
-Multinomial Time Series analysis of a topic model classification
-}

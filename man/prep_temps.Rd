@@ -18,6 +18,3 @@ values if the cooler chains aren't swapping enough.}
 \value{
 temperatures
 }
-\description{
-Prepare the temperatures for the MTS algorithm
-}

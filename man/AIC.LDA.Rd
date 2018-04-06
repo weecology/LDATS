@@ -18,8 +18,15 @@ correction (thus generating AICc)}
 Named (AIC or AICc) value.
 }
 \description{
-Using the internal topicmodels calculations of likelihood and df
+Using the internal topicmodels calculations of likelihood and 
+  df
 }
 \examples{
-NA
+  data(rodents)
+  lda_data <- dplyr::select(rodents, 
+                            -c(newmoonnumber, newmoondate, nplots, ntraps))
+  r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2:5, nseeds = 2, 
+                      ncores = 8)
+  AIC(r_LDA[[1]])
+  AIC(r_LDA[[2]])
 }
