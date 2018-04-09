@@ -4,18 +4,21 @@
 \alias{MTS}
 \title{Multinomial Time Series analysis of a topic model classification}
 \usage{
-MTS(formula, data, nchangepoints, weights, nit = 10000, ts_memo, ...)
+MTS(data, formula = "1", nchangepoints = 1, weights = NULL, nit = 10000,
+  magnitude = 12, ...)
 }
 \arguments{
-\item{formula}{formula for the continuous change}
-
 \item{data}{data frame including the predictor and response variables}
+
+\item{formula}{formula for the continuous change}
 
 \item{nchangepoints}{number of change points to include in the model}
 
 \item{weights}{weights}
 
 \item{nit}{number of iterations used}
+
+\item{magnitude}{scaling for the kick magnitude used in the proposal dist}
 
 \item{...}{additional arguments to be passed to subfunctions}
 }

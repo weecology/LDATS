@@ -4,13 +4,13 @@
 \alias{multinom_chunk}
 \title{Fit multinomial time chunk model}
 \usage{
-multinom_chunk(formula_RHS, data, start_time, end_time, weights, ...)
+multinom_chunk(data, formula_RHS, start_time, end_time, weights, ...)
 }
 \arguments{
+\item{data}{data frame including the predictor and response variables}
+
 \item{formula_RHS}{Right Hand Side of the continuous time formula as a 
 character vector}
-
-\item{data}{data frame including the predictor and response variables}
 
 \item{start_time}{start time for the chunk}
 

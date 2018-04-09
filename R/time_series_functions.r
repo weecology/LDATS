@@ -4,9 +4,9 @@
 #'   dates within a defined chunk of time (start_date, end_date] with  
 #'   covariate impacts assuming no temporal autocorrelation by default
 #'
+#' @param data data frame including the predictor and response variables
 #' @param formula_RHS Right Hand Side of the continuous time formula as a 
 #'   character vector
-#' @param data data frame including the predictor and response variables
 #' @param start_time start time for the chunk 
 #' @param end_time end time for the chunk
 #' @param weights weights 
@@ -15,7 +15,7 @@
 #' 
 #' @export 
 #'
-multinom_chunk <- function(formula_RHS, data, start_time, end_time, weights, 
+multinom_chunk <- function(data, formula_RHS, start_time, end_time, weights, 
                            ...) {
   formula <- as.formula(paste("gamma ~", formula_RHS))
   mod <- nnet::multinom(formula, data, weights, 
@@ -29,9 +29,9 @@ multinom_chunk <- function(formula_RHS, data, start_time, end_time, weights,
 #' @description Fit a multinomial regression model with covariate impacts 
 #'   assuming no temporal autocorrelation 
 #'
+#' @param data data frame including the predictor and response variables
 #' @param formula_RHS Right Hand Side of the continuous time formula as a 
 #'   character vector
-#' @param data data frame including the predictor and response variables
 #' @param changepoints selections of the change points
 #' @param weights weights 
 #' @param ... other arguments to be passed to subfunctions
@@ -41,7 +41,7 @@ multinom_chunk <- function(formula_RHS, data, start_time, end_time, weights,
 #' NA
 #' @export 
 #'
-multinom_ts <- function(formula_RHS, data, changepoints = NULL, weights, ...){
+multinom_ts <- function(data, formula_RHS, changepoints = NULL, weights, ...){
 
   chunk_memo <- memoise::memoise(LDATS::multinom_chunk)
 
@@ -52,7 +52,7 @@ multinom_ts <- function(formula_RHS, data, changepoints = NULL, weights, ...){
   mods <- vector("list", length = nchunks)
   ll <- rep(NA, nchunks)
   for (i in 1:nchunks){
-    mods[[i]] <- chunk_memo(formula_RHS, data, start_time = start_times[i], 
+    mods[[i]] <- chunk_memo(data, formula_RHS, start_time = start_times[i], 
                    end_time = end_times[i], weights)
     ll[i] <- logLik(mods[[i]])
   }
@@ -88,9 +88,9 @@ prep_temps <- function(ntemps = 6, penultimate_temp = 2^6, k = 0, ...){
 #'
 #' @description includes sorting by logLik
 #'
+#' @param data data frame including the predictor and response variables
 #' @param formula formula for the continuous change
 #' @param ntemps number of temperatures
-#' @param data data frame including the predictor and response variables
 #' @param nchangepoints number of change points to include in the model
 #' @param weights weights 
 #'  
@@ -99,7 +99,7 @@ prep_temps <- function(ntemps = 6, penultimate_temp = 2^6, k = 0, ...){
 #'
 #' @export
 #'
-prep_changepts<- function(formula, data, ntemps, nchangepoints, weights){
+prep_changepts<- function(data, formula, ntemps, nchangepoints, weights){
 
   min_time <- min(data$time)
   max_time <- max(data$time)
@@ -112,7 +112,7 @@ prep_changepts<- function(formula, data, ntemps, nchangepoints, weights){
   }
   lls <- rep(NA, ntemps)
   for (i in 1:ntemps){
-    lls[i] <- multinom_ts(formula, data, cps[ , i], weights)$logLik
+    lls[i] <- multinom_ts(data, formula, cps[ , i], weights)$logLik
   }  
   cps <- cps[ , order(lls, decreasing = TRUE), drop = FALSE]
   lls <- sort(lls, decreasing = TRUE)
@@ -137,34 +137,42 @@ proposal_dist <- function(nit, ntemps, nchangepoints, magnitude){
   kick_signs <- sample(c(-1, 1), nit * ntemps, replace = TRUE)
   kick_magnitudes <- 1 + rgeom(nit * ntemps, 1 / magnitude)
   kicks <- matrix(kick_signs * kick_magnitudes, nrow = nit)
-  which_kicked <-  sample.int(nchangepoints, nit * ntemps, replace = TRUE)
-  which_kicked <- matrix(which_kicked, nrow = nit)
+  if(nchangepoints == 0){
+    which_kicked <- matrix(numeric(0), nrow = nit, ncol = ntemps)
+  }else{
+    which_kicked <- sample.int(nchangepoints, nit * ntemps, replace = TRUE)
+    which_kicked <- matrix(which_kicked, nrow = nit)
+  }
   out <- list("kicks" = kicks, "which_kicked" = which_kicked)
   return(out)
 }
 
 #' @title Multinomial Time Series analysis of a topic model classification
 #'
-#' @param formula formula for the continuous change
 #' @param data data frame including the predictor and response variables
+#' @param formula formula for the continuous change
 #' @param nchangepoints number of change points to include in the model
 #' @param weights weights 
 #' @param nit number of iterations used
+#' @param magnitude scaling for the kick magnitude used in the proposal dist
 #' @param ... additional arguments to be passed to subfunctions
 #' @return 
 #'
 #' @export
 #'
-MTS <- function(formula, data, nchangepoints, weights, nit = 1e4, ts_memo,
-                ...){
+MTS <- function(data, formula = "1", nchangepoints = 1, 
+                weights = NULL, nit = 1e4, magnitude = 12, ...){
   
   ts_memo <- memoise::memoise(LDATS::multinom_ts)
 
+  if(nchangepoints == 0){
+    nit <- 1
+  }
   temps <- prep_temps(...)
   betas <- 1 / temps
   ntemps <- length(betas)
 
-  prep_cpts <- LDATS::prep_changepts(formula, data, ntemps, nchangepoints, 
+  prep_cpts <- LDATS::prep_changepts(data, formula, ntemps, nchangepoints, 
                  weights)
   changepts <- prep_cpts$changepts
   lls <- prep_cpts$lls
@@ -176,7 +184,7 @@ MTS <- function(formula, data, nchangepoints, weights, nit = 1e4, ts_memo,
   temp_ids <- 1:ntemps
   swap_accepted <- matrix(FALSE, nit, ntemps - 1)
 
-  pdist <- proposal_dist(nit, ntemps, nchangepoints, magnitude = 12)
+  pdist <- LDATS::proposal_dist(nit, ntemps, nchangepoints, magnitude)
  
   pbform <- "  [:bar] :percent eta: :eta"
   pb <- progress::progress_bar$new(pbform, nit, clear = FALSE, width = 60)
@@ -189,11 +197,14 @@ MTS <- function(formula, data, nchangepoints, weights, nit = 1e4, ts_memo,
     prop_changepts <- changepts
     curr_changepts_s <- changepts[selection]
     prop_changepts_s <- curr_changepts_s + pdist$kicks[i, ]
+    if(all(is.na(prop_changepts_s))){
+      prop_changepts_s <- NULL
+    }
     prop_changepts[selection] <- prop_changepts_s
     prop_lls <- lls
 
     for (j in 1:ntemps){
-      mod <- ts_memo(formula, data, prop_changepts[ , j], weights)
+      mod <- ts_memo(data, formula, prop_changepts[ , j], weights)
       prop_lls[j] <- mod$logLik
     }
 

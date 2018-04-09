@@ -4,12 +4,12 @@
 \alias{prep_changepts}
 \title{Prepare the changepoints for the MTS algorithm}
 \usage{
-prep_changepts(formula, data, ntemps, nchangepoints, weights)
+prep_changepts(data, formula, ntemps, nchangepoints, weights)
 }
 \arguments{
-\item{formula}{formula for the continuous change}
-
 \item{data}{data frame including the predictor and response variables}
+
+\item{formula}{formula for the continuous change}
 
 \item{ntemps}{number of temperatures}
 
