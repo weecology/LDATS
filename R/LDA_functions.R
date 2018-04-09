@@ -39,11 +39,8 @@ LDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
   mods <- foreach::foreach(i = 1:nruns, .packages = "topicmodels",
             .errorhandling = "pass") %dopar% {
 
-    k <- k_in[i]
-    seed <- seed_in[i]
-    mod <- topicmodels::LDA(data, k = k, control = list(seed = seed), ...)
-    #class(mod) <- c(class(mod)[1], "LDA")
-    mod
+    topicmodels::LDA(data, k = k_in[i], control = list(seed = seed_in[i]), 
+                     ...)
   }
 
   parallel::stopCluster(cl)

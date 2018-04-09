@@ -4,17 +4,22 @@
 \alias{LDA_TS}
 \title{Two-stage LDA-time series analysis}
 \usage{
-LDA_TS(data = NULL, LDA_eval = quote(AIC), LDA_selector = quote(min), ...)
+LDA_TS(document_term_matrix = NULL, document_covariate_matrix = NULL,
+  formula = "1", nchangepoints = 1, ...)
 }
 \arguments{
-\item{data}{data set (currently just the data for the LDA)}
+\item{document_term_matrix}{matrix of documents (rows) by terms (columns)}
 
-\item{LDA_eval}{function name for evaluation of the LDA models}
+\item{document_covariate_matrix}{matrix of documents (rows) by covariates
+(columns)}
 
-\item{LDA_selector}{function name for selecting the LDA models}
+\item{formula}{vector of formulas for the continuous change}
+
+\item{nchangepoints}{vector of the number of change points to include in 
+the model}
 
 \item{...}{additional arguments to be passed to subfunctions}
 }
 \value{
-(currently) the output of the selected LDA model
+(currently) the prepped data for the TS model
 }

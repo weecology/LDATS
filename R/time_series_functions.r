@@ -145,8 +145,8 @@ proposal_dist <- function(nit, ntemps, nchangepoints, magnitude){
 
 #' @title Multinomial Time Series analysis of a topic model classification
 #'
-#' @param formula formula for the continuous change
 #' @param data data frame including the predictor and response variables
+#' @param formula formula for the continuous change
 #' @param nchangepoints number of change points to include in the model
 #' @param weights weights 
 #' @param nit number of iterations used
@@ -155,8 +155,8 @@ proposal_dist <- function(nit, ntemps, nchangepoints, magnitude){
 #'
 #' @export
 #'
-MTS <- function(formula, data, nchangepoints, weights, nit = 1e4, ts_memo,
-                ...){
+MTS <- function(data, formula = "1", nchangepoints = 1, 
+                weights = NULL, nit = 1e4, ...){
   
   ts_memo <- memoise::memoise(LDATS::multinom_ts)
 
