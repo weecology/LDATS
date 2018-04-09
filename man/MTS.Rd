@@ -5,7 +5,7 @@
 \title{Multinomial Time Series analysis of a topic model classification}
 \usage{
 MTS(data, formula = "1", nchangepoints = 1, weights = NULL, nit = 10000,
-  ...)
+  magnitude = 12, ...)
 }
 \arguments{
 \item{data}{data frame including the predictor and response variables}
@@ -17,6 +17,8 @@ MTS(data, formula = "1", nchangepoints = 1, weights = NULL, nit = 10000,
 \item{weights}{weights}
 
 \item{nit}{number of iterations used}
+
+\item{magnitude}{scaling for the kick magnitude used in the proposal dist}
 
 \item{...}{additional arguments to be passed to subfunctions}
 }

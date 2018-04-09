@@ -22,15 +22,6 @@ Folks interested in contributing to development, should see
 [issues](https://github.com/weecology/LDATS/issues) for specific pre-package 
 development tasks.
 
-The current development code work flow includes two scripts in the highest 
-level of the repo: `package_dev.R` and `working_space.R`. `package_dev.R` 
-faciliates building an in-development local version of the package. Any 
-dependency packages should be included within the `pkg_depends` vector, 
-as this populates the `DESCRIPTION` file. `working_space.R` is a sandbox 
-script that walks through example implementations of the code for testing
-and development purposes. Once functions are complete and documented, they
-should be located in a script within `/R`. 
-
 ### Style
 For all code, please follow the [Weecology Code Style 
 Guide](https://github.com/weecology/lab-wiki/wiki/Code-style-guide)
@@ -45,7 +36,17 @@ devtools::install_github("weecology/LDATS")
 
 ## Current Usage
 
-To be added shortly. 
+Here is an example of an LDA and an LDATS using the Portal rodent data:
+
+```
+data(rodents)
+lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
+ts_data <- data.frame("time" = data.frame(rodents)[ , "newmoon"])
+
+r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2:5, nseeds = 2, ncores = 4)
+r_LDATS <- LDATS::LDA_TS(lda_data, ts_data, formula = c("1", "time"),
+                         ntopics = 2:5, nseeds = 2, ncores = 4, nit = 100)
+```
 
 ## More Information 
 

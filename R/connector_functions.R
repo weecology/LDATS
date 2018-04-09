@@ -50,22 +50,24 @@ MTS_prep <- function(lda_models = NULL, document_covariate_matrix = NULL){
 #' @param formula vector of formulas for the continuous change
 #' @param nchangepoints vector of the number of change points to include in 
 #'   the model
-#' @param weights weights 
+#' @param document_term_matrix matrix of documents (rows) by terms (columns)
 #' @param ... additional arguments to be passed to subfunctions
 #' @return 
 #'
 #' @export
 #'
 MTS_set <- function(prepped_data = NULL, formula, nchangepoints,  
-                    weights = NULL, ...){
+                    document_term_matrix, ...){
 
-  nmods <- length(prepped_data)
+  weights <- LDATS::doc_weights(document_term_matrix)
+  ldas <- 1:length(prepped_data)
+  mods <- expand.grid(lda = ldas, formula = formula, 
+                      nchangepoints = nchangepoints, stringsAsFactors = FALSE)
+  nmods <- nrow(mods)
   out <- vector("list", nmods)
   for(i in 1:nmods){
-    if(length(weights) == 0){
-      weights <- rep(1, nrow(prepped_data[[i]]))
-    }
-    out[[i]] <- LDATS::MTS(prepped_data[[i]], formula[i], nchangepoints[i], 
+    out[[i]] <- LDATS::MTS(prepped_data[[mods$lda[i]]], 
+                           mods$formula[i], mods$nchangepoints[i], 
                            weights, ...)
   }
   return(out)

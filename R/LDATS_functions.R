@@ -9,18 +9,23 @@
 #' @param ... additional arguments to be passed to subfunctions
 #' @return (currently) the prepped data for the TS model
 #'
+#' @examples 
+#'   data(rodents)
+#'   lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
+#'   ts_data <- data.frame("time" = data.frame(rodents)[ , "newmoon"])
+#'   r_LDATS <- LDATS::LDA(lda_data, ts_data, formula = c("1", "time"),
+#'                         ntopics = 2:5, nseeds = 2, ncores = 4, nit = 100) 
+#'
 #' @export
 #'
 LDA_TS <- function(document_term_matrix = NULL, 
                    document_covariate_matrix = NULL, 
                    formula = "1", nchangepoints = 1, ...){
 
-  wts <- doc_weights(document_term_matrix)
-
   out <- LDATS::LDA(data = document_term_matrix, ...) %>%
            LDATS::LDA_select(...) %>%
            LDATS::MTS_prep(document_covariate_matrix) %>%
-           LDATS::MTS_set(formula, nchangepoints, wts, ...) 
+           LDATS::MTS_set(formula, nchangepoints, document_term_matrix, ...) 
   return(out)
 }
 

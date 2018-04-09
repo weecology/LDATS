@@ -4,13 +4,13 @@
 \alias{multinom_ts}
 \title{Fit multinomial time series model}
 \usage{
-multinom_ts(formula_RHS, data, changepoints = NULL, weights, ...)
+multinom_ts(data, formula_RHS, changepoints = NULL, weights, ...)
 }
 \arguments{
+\item{data}{data frame including the predictor and response variables}
+
 \item{formula_RHS}{Right Hand Side of the continuous time formula as a 
 character vector}
-
-\item{data}{data frame including the predictor and response variables}
 
 \item{changepoints}{selections of the change points}
 

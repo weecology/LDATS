@@ -13,8 +13,7 @@
 #' 
 #' @examples 
 #'   data(rodents)
-#'   lda_data <- dplyr::select(rodents, 
-#'                             -c(newmoonnumber, newmoondate, nplots, ntraps))
+#'   lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
 #'   r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2, nseeds = 2, 
 #'                       ncores = 4)
 #' @export 
@@ -63,10 +62,8 @@ LDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
 #' 
 #' @examples
 #'   data(rodents)
-#'   lda_data <- dplyr::select(rodents, 
-#'                             -c(newmoonnumber, newmoondate, nplots, ntraps))
-#'   r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2, nseeds = 2, 
-#'                       ncores = 4)
+#'   lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
+#'   r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2, nseeds = 2)
 #'   AIC(r_LDA[[1]])
 #'   AIC(r_LDA[[2]])
 #' @export 
@@ -95,10 +92,8 @@ AIC.LDA <- function(x, k = 2, correction = FALSE){
 #' 
 #' @examples 
 #'   data(rodents)
-#'   lda_data <- dplyr::select(rodents, 
-#'                             -c(newmoonnumber, newmoondate, nplots, ntraps))
-#'   r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2, nseeds = 2, 
-#'                       ncores = 4)
+#'   lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
+#'   r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2, nseeds = 2)
 #'   plot(r_LDA)
 #' @export 
 #'

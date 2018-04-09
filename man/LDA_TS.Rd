@@ -23,3 +23,11 @@ the model}
 \value{
 (currently) the prepped data for the TS model
 }
+\examples{
+  data(rodents)
+  lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
+  ts_data <- data.frame("time" = data.frame(rodents)[ , "newmoon"])
+  r_LDATS <- LDATS::LDA(lda_data, ts_data, formula = c("1", "time"),
+                        ntopics = 2:5, nseeds = 2, ncores = 4, nit = 100) 
+
+}
