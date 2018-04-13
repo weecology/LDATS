@@ -13,8 +13,9 @@
 #'   data(rodents)
 #'   lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
 #'   ts_data <- data.frame("time" = data.frame(rodents)[ , "newmoon"])
-#'   r_LDATS <- LDATS::LDA(lda_data, ts_data, formula = c("1", "time"),
-#'                         ntopics = 2:5, nseeds = 2, ncores = 4, nit = 100) 
+#'   r_LDATS <- LDATS::LDA_TS(lda_data, ts_data, formula = "time", 
+#'                            ntopics = 2:5, nseeds = 2, ncores = 4, 
+#'                            nit = 100) 
 #'
 #' @export
 #'
@@ -22,11 +23,15 @@ LDA_TS <- function(document_term_matrix = NULL,
                    document_covariate_matrix = NULL, 
                    formula = "1", nchangepoints = 1, ...){
 
-  out <- LDATS::LDA(data = document_term_matrix, ...) %>%
-           LDATS::LDA_select(...) %>%
-           LDATS::MTS_prep(document_covariate_matrix) %>%
-           LDATS::MTS_set(formula, nchangepoints, document_term_matrix, ...) 
-  return(out)
+  weights <- LDATS::doc_weights(document_term_matrix)
+  ldas <- LDATS::LDA(data = document_term_matrix, ...) 
+  selected <- LDATS::LDA_select(ldas, ...) 
+  mtss <- selected %>%
+          LDATS::MTS_prep(document_covariate_matrix) %>%
+          LDATS::MTS_set(formula, nchangepoints, weights, ...) 
+
+  out <- list(ldas, selected, mtss)
+  names(out) <- c("LDA models", "Selected LDA model(s)", "MTS model(s)")
 }
 
 #' @title Calculate document weights (max value = 1)
@@ -42,9 +47,3 @@ doc_weights <- function(document_term_matrix){
   out <- round(sample_sizes/max(sample_sizes), 3)  
   return(out)
 }
-
-
-
-
-
-

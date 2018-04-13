@@ -3,11 +3,12 @@
 #' @description Runs each of the number of input topics for the number of 
 #'   seeds
 #' 
-#' @param data Table of integer data (species counts by period)
-#' @param ntopics set of topics to evaluate
-#' @param nseeds number of seeds to use
-#' @param ncores Integer number of cores to use
-#' @param ... additional arguments to be passed to the LDA function
+#' @param data matrix of integer data (species counts by period)
+#' @param ntopics vector of the topics to evaluate
+#' @param nseeds number of seeds (replicate starts) to use for each value of
+#'   ntopics
+#' @param ncores integer number of cores to use
+#' @param ... additional arguments to be passed to the topicmodel LDA function
 #' 
 #' @return List of LDA models
 #' 

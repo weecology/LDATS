@@ -4,20 +4,20 @@
 \alias{MTS_set}
 \title{Conduct a set of MTS analyses}
 \usage{
-MTS_set(prepped_data = NULL, formula, nchangepoints, document_term_matrix,
-  ...)
+MTS_set(data = NULL, formula, nchangepoints, weights = rep(1,
+  nrow(data[[1]])), ...)
 }
 \arguments{
-\item{prepped_data}{data prepped for each of the MTS analyses}
-
 \item{formula}{vector of formulas for the continuous change}
 
 \item{nchangepoints}{vector of the number of change points to include in 
 the model}
 
-\item{document_term_matrix}{matrix of documents (rows) by terms (columns)}
-
 \item{...}{additional arguments to be passed to subfunctions}
+
+\item{prepped_data}{data prepped for each of the MTS analyses}
+
+\item{vector}{of weights for each document}
 }
 \value{
 

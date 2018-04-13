@@ -2,9 +2,9 @@
 #'
 #' @param lda_models LDA model output
 #' @param LDA_eval function name for evaluation of the LDA models
-#' @param LDA_selector function name for selecting the LDA models 
+#' @param LDA_selector function name for selecting the LDA model(s) 
 #' @param ... additional arguments to be passed to subfunctions
-#' @return (currently) the output of the selected LDA model
+#' @return the output of the selected LDA model(s)
 #'
 #' @export
 #'
@@ -38,7 +38,7 @@ MTS_prep <- function(lda_models = NULL, document_covariate_matrix = NULL){
   }
   out <- vector("list", length = nmods)
   for(i in 1:nmods){
-    out[[i]] <- document_covariate_matrix
+    out[[i]] <- data.frame(document_covariate_matrix)
     out[[i]]$gamma <- lda_models[[i]]@gamma
   }
   return(out)
@@ -50,23 +50,22 @@ MTS_prep <- function(lda_models = NULL, document_covariate_matrix = NULL){
 #' @param formula vector of formulas for the continuous change
 #' @param nchangepoints vector of the number of change points to include in 
 #'   the model
-#' @param document_term_matrix matrix of documents (rows) by terms (columns)
+#' @param vector of weights for each document
 #' @param ... additional arguments to be passed to subfunctions
 #' @return 
 #'
 #' @export
 #'
-MTS_set <- function(prepped_data = NULL, formula, nchangepoints,  
-                    document_term_matrix, ...){
+MTS_set <- function(data = NULL, formula, nchangepoints,  
+                    weights = rep(1, nrow(data[[1]])), ...){
 
-  weights <- LDATS::doc_weights(document_term_matrix)
-  ldas <- 1:length(prepped_data)
+  ldas <- 1:length(data)
   mods <- expand.grid(lda = ldas, formula = formula, 
                       nchangepoints = nchangepoints, stringsAsFactors = FALSE)
   nmods <- nrow(mods)
   out <- vector("list", nmods)
   for(i in 1:nmods){
-    out[[i]] <- LDATS::MTS(prepped_data[[mods$lda[i]]], 
+    out[[i]] <- LDATS::MTS(data[[mods$lda[i]]], 
                            mods$formula[i], mods$nchangepoints[i], 
                            weights, ...)
   }
