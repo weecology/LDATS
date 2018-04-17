@@ -49,6 +49,15 @@ multinom_ts <- function(data, formula_RHS, changepoints = NULL, weights, ...){
   start_times <- c(min(data$time) - 1, changepoints)
   end_times <- c(changepoints, max(data$time) + 1)
 
+  nobs <- length(data$time)
+  time_check <- any(changepoints <=0) | any(changepoints >= nobs)
+  sort_check <- is.unsorted(changepoints, strictly = TRUE)
+
+  if (time_check | sort_check){
+    output <- list("chunk models" = NA, "logLik" = -Inf)
+    return(output)
+  }
+
   mods <- vector("list", length = nchunks)
   ll <- rep(NA, nchunks)
   for (i in 1:nchunks){
@@ -234,8 +243,8 @@ MTS <- function(data, formula = "1", nchangepoints = 1,
       }
     }
     saved_cps[ , , i] <- changepts
-    saved_lls[ , i] <- temp_ids
-    saved_ids[ , i] <- lls
+    saved_ids[ , i] <- temp_ids
+    saved_lls[ , i] <- lls
   }
 
   swap_rates <- colMeans(swap_accepted)

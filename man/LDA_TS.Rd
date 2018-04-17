@@ -21,13 +21,15 @@ the model}
 \item{...}{additional arguments to be passed to subfunctions}
 }
 \value{
-(currently) the prepped data for the TS model
+a list of [1] the LDA model(s), [2] the selected LDA model(s), and
+  [3] the time series model(s) on the selected LDA model(s)
 }
 \examples{
   data(rodents)
   lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
   ts_data <- data.frame("time" = data.frame(rodents)[ , "newmoon"])
-  r_LDATS <- LDATS::LDA(lda_data, ts_data, formula = c("1", "time"),
-                        ntopics = 2:5, nseeds = 2, ncores = 4, nit = 100) 
+  r_LDATS <- LDATS::LDA_TS(lda_data, ts_data, formula = "time", 
+                           ntopics = 2:5, nseeds = 2, ncores = 4, 
+                           nit = 100) 
 
 }
