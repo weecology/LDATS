@@ -27,7 +27,7 @@ Brown, J. H. 1998.
   \emph{Experimental Ecology}. 
   Oxford University Press, New York, New York, USA.
 
-  Christensen, E., D. J. Harris, and S. K. M. Ernest. \emph{in press}
+  Christensen, E., D. J. Harris, and S. K. M. Ernest. \emph{In press}.
   Long-term community change through multiple rapid transitions in a 
   desert rodent community. 
   \href{https://www.biorxiv.org/content/early/2017/12/15/163931}{Preprint}.

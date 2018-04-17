@@ -7,15 +7,16 @@
 LDA(data, ntopics = 2, nseeds = 1, ncores = 1, ...)
 }
 \arguments{
-\item{data}{Table of integer data (species counts by period)}
+\item{data}{matrix of integer data (species counts by period)}
 
-\item{ntopics}{set of topics to evaluate}
+\item{ntopics}{vector of the topics to evaluate}
 
-\item{nseeds}{number of seeds to use}
+\item{nseeds}{number of seeds (replicate starts) to use for each value of
+ntopics}
 
-\item{ncores}{Integer number of cores to use}
+\item{ncores}{integer number of cores to use}
 
-\item{...}{additional arguments to be passed to the LDA function}
+\item{...}{additional arguments to be passed to the topicmodel LDA function}
 }
 \value{
 List of LDA models

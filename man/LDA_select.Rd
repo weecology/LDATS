@@ -12,10 +12,10 @@ LDA_select(lda_models = NULL, LDA_eval = quote(AIC),
 
 \item{LDA_eval}{function name for evaluation of the LDA models}
 
-\item{LDA_selector}{function name for selecting the LDA models}
+\item{LDA_selector}{function name for selecting the LDA model(s)}
 
 \item{...}{additional arguments to be passed to subfunctions}
 }
 \value{
-(currently) the output of the selected LDA model
+the output of the selected LDA model(s)
 }

@@ -12,7 +12,13 @@ weights <- LDATS::doc_weights(lda_data)
 
 ldas <- LDATS::LDA(lda_data, ntopics = 2:3) 
 selected <- LDATS::LDA_select(ldas) 
+
+prepped <- selected %>% 
+        LDATS::MTS_prep(ts_data)
+
+
 mtss <- selected %>% 
         LDATS::MTS_prep(ts_data) %>%
-        LDATS::MTS_set(formula = "1", nchangepoints = 1, weights) 
+        LDATS::MTS_set(prepped, formula = "1", nchangepoints = 1, weights) 
 
+xx<-LDATS::MTS(data[[1]], formula, nchangepoints, weights, nit = 10)

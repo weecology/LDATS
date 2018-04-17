@@ -7,7 +7,8 @@
 #' @param nchangepoints vector of the number of change points to include in 
 #'   the model
 #' @param ... additional arguments to be passed to subfunctions
-#' @return (currently) the prepped data for the TS model
+#' @return a list of [1] the LDA model(s), [2] the selected LDA model(s), and
+#'   [3] the time series model(s) on the selected LDA model(s)
 #'
 #' @examples 
 #'   data(rodents)
@@ -31,7 +32,7 @@ LDA_TS <- function(document_term_matrix = NULL,
           LDATS::MTS_set(formula, nchangepoints, weights, ...) 
 
   out <- list(ldas, selected, mtss)
-  names(out) <- c("LDA models", "Selected LDA model(s)", "MTS model(s)")
+  names(out) <- c("LDA model(s)", "Selected LDA model(s)", "MTS model(s)")
 }
 
 #' @title Calculate document weights (max value = 1)
