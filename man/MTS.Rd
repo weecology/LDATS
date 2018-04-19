@@ -4,7 +4,7 @@
 \alias{MTS}
 \title{Multinomial Time Series analysis of a topic model classification}
 \usage{
-MTS(data, formula = "1", nchangepoints = 1, weights = NULL, nit = 10000,
+MTS(data, formula = ~1, nchangepoints = 1, weights = NULL, nit = 10000,
   magnitude = 12, ...)
 }
 \arguments{

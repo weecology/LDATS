@@ -17,7 +17,6 @@ Depends: R (>= 3.4.1)
 License: MIT
 Encoding: UTF-8
 LazyData: true
-Suggests: tidyverse, viridis, gridExtra
 Imports: topicmodels,
     dplyr,
     memoise,
@@ -27,5 +26,8 @@ Imports: topicmodels,
     magrittr
 Suggests:
 	testthat,
-	digest
+	digest,
+	tidyverse,
+	viridis,
+	gridExtra
 RoxygenNote: 6.0.1
