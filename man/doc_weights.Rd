@@ -2,7 +2,7 @@
 % Please edit documentation in R/LDATS_functions.R
 \name{doc_weights}
 \alias{doc_weights}
-\title{Calculate document weights (max value = 1)}
+\title{Calculate document weights}
 \usage{
 doc_weights(document_term_matrix)
 }
@@ -12,4 +12,7 @@ doc_weights(document_term_matrix)
 \value{
 vector of weights, one for each document, with the largest sample
   receiving a weight of 1.0
+}
+\description{
+Simple calculation based on the maximum (max value = 1)
 }

@@ -1,5 +1,7 @@
 #' @title Selection of best LDA model(s) for use in time series
 #'
+#' @description select the models of interest based on user-provided funciton
+#'
 #' @param lda_models LDA model output
 #' @param LDA_eval function name for evaluation of the LDA models
 #' @param LDA_selector function name for selecting the LDA model(s) 
@@ -21,6 +23,8 @@ LDA_select <- function(lda_models = NULL, LDA_eval = quote(AIC),
 }
 
 #' @title Prep the data inputs to the MTS function
+#'
+#' @description prepares the output from an LDA to work with MTS
 #'
 #' @param lda_models selected LDA model(s)
 #' @param document_covariate_matrix matrix of documents (rows) by covariates
@@ -46,13 +50,15 @@ MTS_prep <- function(lda_models = NULL, document_covariate_matrix = NULL){
 
 #' @title Conduct a set of MTS analyses
 #'
-#' @param prepped_data data prepped for each of the MTS analyses
+#' @description Expands across the data sets, formulae, and nchangepoints
+#'
+#' @param data data prepped for each of the MTS analyses
 #' @param formula vector of formulas for the continuous change
 #' @param nchangepoints vector of the number of change points to include in 
 #'   the model
-#' @param vector of weights for each document
+#' @param weights vector of weights for each document
 #' @param ... additional arguments to be passed to subfunctions
-#' @return 
+#' @return the set of results from MTS
 #'
 #' @export
 #'

@@ -19,3 +19,6 @@ LDA_select(lda_models = NULL, LDA_eval = quote(AIC),
 \value{
 the output of the selected LDA model(s)
 }
+\description{
+select the models of interest based on user-provided funciton
+}

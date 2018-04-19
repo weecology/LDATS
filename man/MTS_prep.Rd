@@ -15,3 +15,6 @@ MTS_prep(lda_models = NULL, document_covariate_matrix = NULL)
 \value{
 data matrix ready for MTS analyses
 }
+\description{
+prepares the output from an LDA to work with MTS
+}

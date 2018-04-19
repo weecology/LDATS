@@ -2,22 +2,27 @@
 % Please edit documentation in R/LDA_functions.R
 \name{plot.LDA_list}
 \alias{plot.LDA_list}
-\title{Generalization of the plot function to work on a list of LDA topic 
-  models}
+\title{Plot a set of LDA models}
 \usage{
-\method{plot}{LDA_list}(model_list, cols = NULL)
+\method{plot}{LDA_list}(x, ...)
 }
 \arguments{
-\item{model_list}{a list of LDA topic model outputs}
+\item{x}{a list of LDA topic model outputs}
 
-\item{cols}{a vector of color codes to use, one for each of the max topics}
+\item{...}{additional arguments to be passed to subfunctions}
 }
 \value{
 model-by-model plots
 }
+\description{
+Generalization of the plot function to work on a list of LDA 
+  topic models
+}
 \examples{
-  data(rodents)
-  lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
-  r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2, nseeds = 2)
-  plot(r_LDA)
+  \dontrun{
+    data(rodents)
+    lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
+    r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2, nseeds = 2)
+    plot(r_LDA)
+  }
 }

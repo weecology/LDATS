@@ -14,7 +14,12 @@ prep_temps(ntemps = 6, penultimate_temp = 2^6, k = 0, ...)
 \item{k}{the exponent controlling the temperature sequence: 0 implies 
 geometric sequence, 1 implies squaring before exponentiating. Use larger 
 values if the cooler chains aren't swapping enough.}
+
+\item{...}{additional arguments to be passed to subfunctions}
 }
 \value{
 temperatures
+}
+\description{
+based on general controls for parallel tempering
 }

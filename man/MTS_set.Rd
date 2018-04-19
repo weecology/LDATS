@@ -8,17 +8,20 @@ MTS_set(data = NULL, formula, nchangepoints, weights = rep(1,
   nrow(data[[1]])), ...)
 }
 \arguments{
+\item{data}{data prepped for each of the MTS analyses}
+
 \item{formula}{vector of formulas for the continuous change}
 
 \item{nchangepoints}{vector of the number of change points to include in 
 the model}
 
+\item{weights}{vector of weights for each document}
+
 \item{...}{additional arguments to be passed to subfunctions}
-
-\item{prepped_data}{data prepped for each of the MTS analyses}
-
-\item{vector}{of weights for each document}
 }
 \value{
-
+the set of results from MTS
+}
+\description{
+Expands across the data sets, formulae, and nchangepoints
 }

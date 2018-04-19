@@ -13,10 +13,12 @@
 #' @return List of LDA models
 #' 
 #' @examples 
-#'   data(rodents)
-#'   lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
-#'   r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2, nseeds = 2, 
-#'                       ncores = 4)
+#'   \dontrun{
+#'     data(rodents)
+#'     lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
+#'     r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2, nseeds = 2, 
+#'                         ncores = 4)
+#'   }
 #' @export 
 #'
 LDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
@@ -54,10 +56,9 @@ LDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
 #' @description Using the internal topicmodels calculations of likelihood and 
 #'   df
 #' 
-#' @param x an LDA topic model
+#' @param object an LDA topic model
+#' @param ... additional arguments to be passed to subfunctions
 #' @param k penalty per df
-#' @param correction whether or not to include the small sample size 
-#'   correction (thus generating AICc)
 #' 
 #' @return Named (AIC or AICc) value.
 #' 
@@ -69,13 +70,13 @@ LDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
 #'   AIC(r_LDA[[2]])
 #' @export 
 #'
-AIC.LDA <- function(x, k = 2, correction = FALSE){
+AIC.LDA <- function(object, ..., k = 2){
   val <- topicmodels::logLik(x)
   ll <- as.numeric(val)
   df <- attr(val, "df")
   out <- -2 * ll + k * df
   names(out) <- "AIC"
-  if (correction == TRUE){
+  if (exists("correction")){
     nobs <- attr(val, "nobs")
     corr <- ((2 * df^2) + (2 * df)) / (nobs - df - 1)
     out <- -2 * ll + k * df + corr
@@ -84,36 +85,42 @@ AIC.LDA <- function(x, k = 2, correction = FALSE){
   return(out)
 }
 
-#' @title Generalization of the plot function to work on a list of LDA topic 
-#'   models 
+#' @title Plot a set of LDA models
+#'
+#' @description Generalization of the plot function to work on a list of LDA 
+#'   topic models 
 #' 
-#' @param model_list a list of LDA topic model outputs
-#' @param cols a vector of color codes to use, one for each of the max topics
+#' @param x a list of LDA topic model outputs
+#' @param ... additional arguments to be passed to subfunctions
 #' @return model-by-model plots
 #' 
 #' @examples 
-#'   data(rodents)
-#'   lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
-#'   r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2, nseeds = 2)
-#'   plot(r_LDA)
+#'   \dontrun{
+#'     data(rodents)
+#'     lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
+#'     r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2, nseeds = 2)
+#'     plot(r_LDA)
+#'   }
 #' @export 
 #'
-plot.LDA_list <- function(model_list, cols = NULL){
+plot.LDA_list <- function(x, ...){
   devAskNewPage(TRUE)
-  lapply(model_list, plot, cols)
+  lapply(x, plot, ...)
   devAskNewPage(FALSE)
 }
 
-#' @title Function used to create an LDA summary plot, called using the plot 
-#'   method
+#' @title Plot an LDA model
+#'
+#' @description Function used to create an LDA summary plot, called using the 
+#'   plot method
 #' 
-#' @param model an LDA topic model output
-#' @param cols a vector of color codes, one for each topic
+#' @param x an LDA topic model output
+#' @param ... additional arguments to be passed to subfunctions
 #' @return model plots
 #' 
 #' @export 
 #'
-plot.LDA <- function(model, cols = NULL, ...){
+plot.LDA <- function(x, ...){
 
   gamma <- model@gamma
   beta <- exp(model@beta)
@@ -123,7 +130,7 @@ plot.LDA <- function(model, cols = NULL, ...){
   beta_order <- apply(beta, 2, order)
   beta_sorted <- apply(beta, 2, sort)
 
-  if (length(cols) == 0){
+  if (!exists("cols")){
     cols <- rgb(runif(ntopics), runif(ntopics), runif(ntopics))
   }
   if (length(cols) == 1){

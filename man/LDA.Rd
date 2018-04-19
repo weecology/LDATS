@@ -26,8 +26,10 @@ Runs each of the number of input topics for the number of
   seeds
 }
 \examples{
-  data(rodents)
-  lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
-  r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2, nseeds = 2, 
-                      ncores = 4)
+  \dontrun{
+    data(rodents)
+    lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
+    r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2, nseeds = 2, 
+                        ncores = 4)
+  }
 }

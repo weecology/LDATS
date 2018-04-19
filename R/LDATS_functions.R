@@ -1,5 +1,7 @@
 #' @title Two-stage LDA-time series analysis
 #'
+#' @description Run LDA, select LDA, run MTS; return all outputs
+#'
 #' @param document_term_matrix matrix of documents (rows) by terms (columns)
 #' @param document_covariate_matrix matrix of documents (rows) by covariates
 #'   (columns)
@@ -11,12 +13,14 @@
 #'   [3] the time series model(s) on the selected LDA model(s)
 #'
 #' @examples 
-#'   data(rodents)
-#'   lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
-#'   ts_data <- data.frame("time" = data.frame(rodents)[ , "newmoon"])
-#'   r_LDATS <- LDATS::LDA_TS(lda_data, ts_data, formula = "time", 
-#'                            ntopics = 2:5, nseeds = 2, ncores = 4, 
-#'                            nit = 100) 
+#'   \dontrun{
+#'     data(rodents)
+#'     lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
+#'     ts_data <- data.frame("time" = data.frame(rodents)[ , "newmoon"])
+#'     r_LDATS <- LDATS::LDA_TS(lda_data, ts_data, formula = "time", 
+#'                              ntopics = 2:5, nseeds = 2, ncores = 4, 
+#'                              nit = 100) 
+#'   }
 #'
 #' @export
 #'
@@ -35,7 +39,9 @@ LDA_TS <- function(document_term_matrix = NULL,
   names(out) <- c("LDA model(s)", "Selected LDA model(s)", "MTS model(s)")
 }
 
-#' @title Calculate document weights (max value = 1)
+#' @title Calculate document weights
+#'
+#' @description Simple calculation based on the maximum (max value = 1)
 #'
 #' @param document_term_matrix matrix of documents (rows) by terms (columns)
 #' @return vector of weights, one for each document, with the largest sample

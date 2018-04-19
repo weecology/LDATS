@@ -2,16 +2,19 @@
 % Please edit documentation in R/LDA_functions.R
 \name{plot.LDA}
 \alias{plot.LDA}
-\title{Function used to create an LDA summary plot, called using the plot 
-  method}
+\title{Plot an LDA model}
 \usage{
-\method{plot}{LDA}(model, cols = NULL, ...)
+\method{plot}{LDA}(x, ...)
 }
 \arguments{
-\item{model}{an LDA topic model output}
+\item{x}{an LDA topic model output}
 
-\item{cols}{a vector of color codes, one for each topic}
+\item{...}{additional arguments to be passed to subfunctions}
 }
 \value{
 model plots
+}
+\description{
+Function used to create an LDA summary plot, called using the 
+  plot method
 }

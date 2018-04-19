@@ -14,7 +14,7 @@ Description: Combines Latent Dirichlet Allocation and Time Series methods
     in a two-stage analysis to identify temporal changes in multi-dimensional 
 	time series data.
 Depends: R (>= 3.4.1)
-License: MIT
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: topicmodels,
@@ -24,7 +24,8 @@ Imports: topicmodels,
     nnet,
     doParallel,
     magrittr,
-    foreach
+    foreach,
+	methods
 Suggests:
 	testthat,
 	digest,

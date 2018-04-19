@@ -1,2 +1,4 @@
+previous_work
+.travis.yml
 ^.*\.Rproj$
 ^\.Rproj\.user$

@@ -10,7 +10,7 @@ MTS(data, formula = ~1, nchangepoints = 1, weights = NULL, nit = 10000,
 \arguments{
 \item{data}{data frame including the predictor and response variables}
 
-\item{formula}{formula for the continuous change}
+\item{formula}{formula for the continuous change equation}
 
 \item{nchangepoints}{number of change points to include in the model}
 
@@ -23,5 +23,8 @@ MTS(data, formula = ~1, nchangepoints = 1, weights = NULL, nit = 10000,
 \item{...}{additional arguments to be passed to subfunctions}
 }
 \value{
-
+a lot of stuff in a list. this needs to be tidied
+}
+\description{
+Full MTS analyses
 }

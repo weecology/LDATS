@@ -75,11 +75,14 @@ multinom_ts <- function(data, formula, changepoints = NULL, weights, ...){
 
 #' @title Prepare the temperatures for the MTS algorithm
 #'
+#' @description based on general controls for parallel tempering
+#'
 #' @param ntemps number of temperatures
 #' @param penultimate_temp penultimate temperature
 #' @param k the exponent controlling the temperature sequence: 0 implies 
 #'   geometric sequence, 1 implies squaring before exponentiating. Use larger 
 #'   values if the cooler chains aren't swapping enough.
+#' @param ... additional arguments to be passed to subfunctions
 #'  
 #' @return temperatures
 #'
@@ -134,6 +137,8 @@ prep_changepts<- function(data, formula, ntemps, nchangepoints, weights){
 
 #' @title Calculate the proposal distribution for the time series model
 #'
+#' @description based on the provided magnitude
+#'
 #' @param nit number of iterations used
 #' @param ntemps number of temperatures used
 #' @param nchangepoints number of change points to include in the model
@@ -159,6 +164,8 @@ proposal_dist <- function(nit, ntemps, nchangepoints, magnitude){
 
 #' @title Multinomial Time Series analysis of a topic model classification
 #'
+#' @description Full MTS analyses
+#'
 #' @param data data frame including the predictor and response variables
 #' @param formula formula for the continuous change equation
 #' @param nchangepoints number of change points to include in the model
@@ -166,7 +173,7 @@ proposal_dist <- function(nit, ntemps, nchangepoints, magnitude){
 #' @param nit number of iterations used
 #' @param magnitude scaling for the kick magnitude used in the proposal dist
 #' @param ... additional arguments to be passed to subfunctions
-#' @return 
+#' @return a lot of stuff in a list. this needs to be tidied 
 #'
 #' @export
 #'
