@@ -1,5 +1,8 @@
 # Two-Stage LDA - Time Series Analyses
 
+[![Build Status](https://travis-ci.org/weecology/LDATS.svg?branch=master)](https://travis-ci.org/weecology/LDATS)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/weecology/LDATS/master/LICENSE)
+
 ## Overview
 
 The `LDATS` package provides functionality for analyzing time series of 
