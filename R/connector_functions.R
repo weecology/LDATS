@@ -60,12 +60,15 @@ MTS_set <- function(data = NULL, formula, nchangepoints,
                     weights = rep(1, nrow(data[[1]])), ...){
 
   ldas <- 1:length(data)
+  if(is(formula, "formula")){
+    formula <- c(formula)
+  }
   mods <- expand.grid(lda = ldas, formula = formula, 
                       nchangepoints = nchangepoints, stringsAsFactors = FALSE)
   nmods <- nrow(mods)
   out <- vector("list", nmods)
   for(i in 1:nmods){
-    out[[i]] <- LDATS::MTS(data[[mods$lda[i]]], mods$formula[i], 
+    out[[i]] <- LDATS::MTS(data[[mods$lda[i]]], mods$formula[i][[1]], 
                            mods$nchangepoints[i], weights, ...)
   }
   return(out)

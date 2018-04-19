@@ -5,7 +5,7 @@
 #'   covariate impacts assuming no temporal autocorrelation by default
 #'
 #' @param data data frame including the predictor and response variables
-#' @param formula_RHS Right Hand Side of the continuous time formula as a 
+#' @param formula Right Hand Side of the continuous time formula as a 
 #'   character vector
 #' @param start_time start time for the chunk 
 #' @param end_time end time for the chunk
@@ -15,9 +15,9 @@
 #' 
 #' @export 
 #'
-multinom_chunk <- function(data, formula_RHS, start_time, end_time, weights, 
+multinom_chunk <- function(data, formula, start_time, end_time, weights, 
                            ...) {
-  formula <- as.formula(paste("gamma ~", formula_RHS))
+  formula <- as.formula(paste("gamma ~", formula))
   mod <- nnet::multinom(formula, data, weights, 
            subset = data$time > start_time & data$time <= end_time, 
            trace = FALSE, ...) 
@@ -30,7 +30,7 @@ multinom_chunk <- function(data, formula_RHS, start_time, end_time, weights,
 #'   assuming no temporal autocorrelation 
 #'
 #' @param data data frame including the predictor and response variables
-#' @param formula_RHS Right Hand Side of the continuous time formula as a 
+#' @param formula Right Hand Side of the continuous time formula as a 
 #'   character vector
 #' @param changepoints selections of the change points
 #' @param weights weights 
@@ -41,16 +41,17 @@ multinom_chunk <- function(data, formula_RHS, start_time, end_time, weights,
 #' NA
 #' @export 
 #'
-multinom_ts <- function(data, formula_RHS, changepoints = NULL, weights, ...){
+multinom_ts <- function(data, formula, changepoints = NULL, weights, ...){
 
   chunk_memo <- memoise::memoise(LDATS::multinom_chunk)
 
   nchunks <- length(changepoints) + 1
   start_times <- c(min(data$time) - 1, changepoints)
   end_times <- c(changepoints, max(data$time) + 1)
+  last_time <- max(data$time)
 
   nobs <- length(data$time)
-  time_check <- any(changepoints <=0) | any(changepoints >= nobs)
+  time_check <- any(changepoints <=0) | any(changepoints >= last_time)
   sort_check <- is.unsorted(changepoints, strictly = TRUE)
 
   if (time_check | sort_check){
@@ -61,7 +62,7 @@ multinom_ts <- function(data, formula_RHS, changepoints = NULL, weights, ...){
   mods <- vector("list", length = nchunks)
   ll <- rep(NA, nchunks)
   for (i in 1:nchunks){
-    mods[[i]] <- chunk_memo(data, formula_RHS, start_time = start_times[i], 
+    mods[[i]] <- chunk_memo(data, formula, start_time = start_times[i], 
                    end_time = end_times[i], weights)
     ll[i] <- logLik(mods[[i]])
   }
@@ -113,7 +114,7 @@ prep_changepts<- function(data, formula, ntemps, nchangepoints, weights){
   min_time <- min(data$time)
   max_time <- max(data$time)
   times <- seq(min_time, max_time, 1)
-  avail_times <- times[-length(times)]
+  avail_times <- times[-c(1, length(times))]
   cps <- matrix(NA, nrow = nchangepoints, ncol = ntemps)
   for (i in 1:ntemps){
     cp_times <- sort(sample(avail_times, nchangepoints, replace = FALSE))
@@ -159,7 +160,7 @@ proposal_dist <- function(nit, ntemps, nchangepoints, magnitude){
 #' @title Multinomial Time Series analysis of a topic model classification
 #'
 #' @param data data frame including the predictor and response variables
-#' @param formula formula for the continuous change
+#' @param formula formula for the continuous change equation
 #' @param nchangepoints number of change points to include in the model
 #' @param weights weights 
 #' @param nit number of iterations used
@@ -169,9 +170,11 @@ proposal_dist <- function(nit, ntemps, nchangepoints, magnitude){
 #'
 #' @export
 #'
-MTS <- function(data, formula = "1", nchangepoints = 1, 
+MTS <- function(data, formula = ~1, nchangepoints = 1, 
                 weights = NULL, nit = 1e4, magnitude = 12, ...){
-  
+
+  character_formula <- as.character(formula)
+  formula <- character_formula[length(character_formula)]
   ts_memo <- memoise::memoise(LDATS::multinom_ts)
 
   if(nchangepoints == 0){
