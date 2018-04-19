@@ -23,7 +23,8 @@ Imports: topicmodels,
     progress,
     nnet,
     doParallel,
-    magrittr
+    magrittr,
+    foreach
 Suggests:
 	testthat,
 	digest,
