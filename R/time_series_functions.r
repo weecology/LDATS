@@ -48,9 +48,10 @@ multinom_ts <- function(data, formula_RHS, changepoints = NULL, weights, ...){
   nchunks <- length(changepoints) + 1
   start_times <- c(min(data$time) - 1, changepoints)
   end_times <- c(changepoints, max(data$time) + 1)
+  last_time <- max(data$time)
 
   nobs <- length(data$time)
-  time_check <- any(changepoints <=0) | any(changepoints >= nobs)
+  time_check <- any(changepoints <=0) | any(changepoints >= last_time)
   sort_check <- is.unsorted(changepoints, strictly = TRUE)
 
   if (time_check | sort_check){
@@ -113,7 +114,7 @@ prep_changepts<- function(data, formula, ntemps, nchangepoints, weights){
   min_time <- min(data$time)
   max_time <- max(data$time)
   times <- seq(min_time, max_time, 1)
-  avail_times <- times[-length(times)]
+  avail_times <- times[-c(1, length(times))]
   cps <- matrix(NA, nrow = nchangepoints, ncol = ntemps)
   for (i in 1:ntemps){
     cp_times <- sort(sample(avail_times, nchangepoints, replace = FALSE))
