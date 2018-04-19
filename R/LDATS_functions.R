@@ -5,7 +5,7 @@
 #' @param document_term_matrix matrix of documents (rows) by terms (columns)
 #' @param document_covariate_matrix matrix of documents (rows) by covariates
 #'   (columns)
-#' @param formula vector of formulas for the continuous change
+#' @param formula formula or vector of formulas for the continuous change
 #' @param nchangepoints vector of the number of change points to include in 
 #'   the model
 #' @param ... additional arguments to be passed to subfunctions
@@ -17,7 +17,7 @@
 #'     data(rodents)
 #'     lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
 #'     ts_data <- data.frame("time" = data.frame(rodents)[ , "newmoon"])
-#'     r_LDATS <- LDATS::LDA_TS(lda_data, ts_data, formula = "time", 
+#'     r_LDATS <- LDATS::LDA_TS(lda_data, ts_data, formula = ~time, 
 #'                              ntopics = 2:5, nseeds = 2, ncores = 4, 
 #'                              nit = 100) 
 #'   }
@@ -26,7 +26,7 @@
 #'
 LDA_TS <- function(document_term_matrix = NULL, 
                    document_covariate_matrix = NULL, 
-                   formula = "1", nchangepoints = 1, ...){
+                   formula = ~1, nchangepoints = 1, ...){
 
   weights <- LDATS::doc_weights(document_term_matrix)
   ldas <- LDATS::LDA(data = document_term_matrix, ...) 
