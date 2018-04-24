@@ -78,7 +78,8 @@ multinom_ts <- function(data, formula, changepoints = NULL, weights, ...){
 #' @description based on general controls for parallel tempering
 #'
 #' @param ntemps number of temperatures
-#' @param penultimate_temp penultimate temperature
+#' @param penultimate_temp penultimate temperature (second hottest chain)
+#' @param ultimate_temp ultimate temperature (hottest chain)
 #' @param k the exponent controlling the temperature sequence: 0 implies 
 #'   geometric sequence, 1 implies squaring before exponentiating. Use larger 
 #'   values if the cooler chains aren't swapping enough.
@@ -88,12 +89,13 @@ multinom_ts <- function(data, formula, changepoints = NULL, weights, ...){
 #'
 #' @export
 #'
-prep_temps <- function(ntemps = 6, penultimate_temp = 2^6, k = 0, ...){
+prep_temps <- function(ntemps = 6, penultimate_temp = 2^6, 
+                       ultimate_temp = 1E10, k = 0, ...){
 
   sequence <- seq(0, log2(penultimate_temp), length.out = ntemps - 1)
   log_temps <- sequence^(1 + k) / log2(penultimate_temp)^k
   temps <- 2^(log_temps)
-  temps <- c(temps, 1E10) 
+  temps <- c(temps, ultimate_temp) 
   return(temps)
 }  
 
