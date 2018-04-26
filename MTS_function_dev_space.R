@@ -20,11 +20,19 @@ data = mtss[[1]]
 magnitude = 12
 
 
-
+nit<-1e5
 ############################
 
+
+prep_temps <- function (ntemps = 6, ultimate_temp = 2^6, k = 0, ...){
+    sequence <- seq(0, log2(ultimate_temp), length = ntemps)
+    log_temps <- sequence^(1 + k)/log2(ultimate_temp)^k
+    temps <- 2^(log_temps)
+    return(temps)
+}
+
 MTS <- function(data, formula = ~1, nchangepoints = 1, 
-                weights = NULL, nit = 1e4, magnitude = 12, ...){
+                weights = NULL, nit = 1e3, magnitude = 12, ...){
 
   character_formula <- as.character(formula)
   formula <- character_formula[length(character_formula)]
@@ -33,7 +41,7 @@ MTS <- function(data, formula = ~1, nchangepoints = 1,
   if(nchangepoints == 0){
     nit <- 1
   }
-  temps <- LDATS::prep_temps()#...)
+  temps <- prep_temps()#...)
   betas <- 1 / temps
   ntemps <- length(betas)
 
@@ -127,9 +135,11 @@ MTS <- function(data, formula = ~1, nchangepoints = 1,
     last_pos <- rle(last_extreme_vector[first_top:nit])$values
     trips[i] <- sum(last_pos == "bottom")
   }
+  trip_rate <- trips / nit
 
-  MCMCdiagnostics <- list(accept_rates, swap_rates, trips)
-  names(MCMCdiagnostics) <- c("acceptance_rates", "swapping_rates", "trips")
+  MCMCdiagnostics <- list(accept_rates, swap_rates, trips, trip_rate)
+  names(MCMCdiagnostics) <- c("acceptance_rates", "swapping_rates", 
+                              "trips", "trip_rate")
 
   out <- list()
   out$call <- match.call()
@@ -143,7 +153,6 @@ MTS <- function(data, formula = ~1, nchangepoints = 1,
   class(out) <- c("MTS", "list")
   attr(out, "hidden") <- c("data", "weights", "MCMCsetup", "lls", "lls_full",
                            "MCMCdiagnostics")
-
 
 
 
