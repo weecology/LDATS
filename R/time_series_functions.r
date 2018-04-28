@@ -73,32 +73,6 @@ multinom_ts <- function(data, formula, changepoints = NULL, weights, ...){
   return(output)
 }
 
-#' @title Prepare the temperatures for the MTS algorithm
-#'
-#' @description based on general controls for parallel tempering
-#'
-#' @param ntemps number of temperatures
-#' @param penultimate_temp penultimate temperature (second hottest chain)
-#' @param ultimate_temp ultimate temperature (hottest chain)
-#' @param k the exponent controlling the temperature sequence: 0 implies 
-#'   geometric sequence, 1 implies squaring before exponentiating. Use larger 
-#'   values if the cooler chains aren't swapping enough.
-#' @param ... additional arguments to be passed to subfunctions
-#'  
-#' @return temperatures
-#'
-#' @export
-#'
-prep_temps <- function(ntemps = 6, penultimate_temp = 2^6, 
-                       ultimate_temp = 1E10, k = 0, ...){
-
-  sequence <- seq(0, log2(penultimate_temp), length.out = ntemps - 1)
-  log_temps <- sequence^(1 + k) / log2(penultimate_temp)^k
-  temps <- 2^(log_temps)
-  temps <- c(temps, ultimate_temp) 
-  return(temps)
-}  
-
 #' @title Prepare the changepoints for the MTS algorithm
 #'
 #' @description includes sorting by logLik
@@ -174,13 +148,15 @@ proposal_dist <- function(nit, ntemps, nchangepoints, magnitude){
 #' @param weights weights 
 #' @param nit number of iterations used
 #' @param magnitude scaling for the kick magnitude used in the proposal dist
+#' @param burnin number of iterations to removed from the front-end of the 
+#'   simulations prior to summarizing the distributions of change points
 #' @param ... additional arguments to be passed to subfunctions
-#' @return a lot of stuff in a list. this needs to be tidied 
+#' @return an object of class MTS
 #'
 #' @export
 #'
 MTS <- function(data, formula = ~1, nchangepoints = 1, 
-                weights = NULL, nit = 1e4, magnitude = 12, ...){
+                weights = NULL, nit = 1e3, magnitude = 12, burnin = 1e2, ...){
 
   character_formula <- as.character(formula)
   formula <- character_formula[length(character_formula)]
@@ -201,6 +177,7 @@ MTS <- function(data, formula = ~1, nchangepoints = 1,
   saved_cps <- array(NA, c(nchangepoints, ntemps, nit))
   saved_lls <- matrix(NA, ntemps, nit)
   saved_ids <- matrix(NA, ntemps, nit)
+  saved_accepts <- matrix(NA, ntemps, nit)
   accept_rate <- 0
   temp_ids <- 1:ntemps
   swap_accepted <- matrix(FALSE, nit, ntemps - 1)
@@ -230,7 +207,7 @@ MTS <- function(data, formula = ~1, nchangepoints = 1,
     }
 
     accepts <- runif(ntemps) < exp((prop_lls - lls) * betas)
-    accept_rate <- accept_rate + accepts / nit
+    saved_accepts[ , i] <- accepts
     changepts[ , accepts] <- prop_changepts[ , accepts]
     lls[accepts] <- prop_lls[accepts]
     
@@ -254,15 +231,114 @@ MTS <- function(data, formula = ~1, nchangepoints = 1,
         temp_ids[j + 1] <- placeholder
       }
     }
+
     saved_cps[ , , i] <- changepts
     saved_ids[ , i] <- temp_ids
     saved_lls[ , i] <- lls
   }
 
-  swap_rates <- colMeans(swap_accepted)
-  out <- list(temps, saved_cps, saved_lls, saved_ids, swap_rates, accept_rate)
-  names(out) <- c("temps", "changepts", "lls", "ids", "swap_rates", 
-                  "accept_rate")
+  if (nchangepoints > 0){
+    cps <- remove_burnin(saved_cps, burnin)
+    ids <- remove_burnin(saved_ids, burnin)
+    lls <- remove_burnin(saved_lls, burnin)
+    accepts <- remove_burnin(saved_accepts, burnin)
+    swap_accept <- t(remove_burnin(t(swap_accepted), burnin))
+
+    cps_t1 <- t(array(cps[ , 1, ], dim = dim(cps)[c(1,3)]))
+
+    cp_summary <- summarize_cps(cps_t1)
+    cp_ccmat <- ccmat(cps_t1, lag = 0)
+
+    MCMCsetup <- list(ntemps, temps, magnitude)
+    names(MCMCsetup) <- c("ntemps", "temperatures", "magnitude")
+
+    swap_rates <- colMeans(swap_accept)
+    accept_rates <- rowMeans(accepts)
+    trips <- count_trips(ids)
+
+    MCMCdiagnostics <- list(accept_rates, swap_rates, trips$trip_counts, 
+                         trips$trip_rate)
+    names(MCMCdiagnostics) <- c("acceptance_rates", "swapping_rates", 
+                                "trip_counts", "trip_rates")
+  } else{
+    lls <- saved_lls
+    cps_t1 <- NULL
+    cp_summary <- NULL
+    cp_ccmat <- NULL
+    MCMCsetup <- NULL
+    MCMCdiagnostics <- NULL
+  }
+
+  out <- list()
+  out$call <- match.call()
+  out$formula <- formula
+  out$nchangepoints <- nchangepoints 
+  out$data <- data
+  out$weights <- weights
+  out$MCMCsetup <- MCMCsetup
+  out$lls <- lls[1, ]
+  out$lls_full <- lls
+  out$cps <- cps_t1
+  out$MCMCdiagnostics <- MCMCdiagnostics 
+  out$summary <- cp_summary
+  out$cor <- cp_ccmat
+  class(out) <- c("MTS", "list")
+  attr(out, "hidden") <- c("data", "weights", "MCMCsetup", "lls", "lls_full",
+                           "cps", "MCMCdiagnostics")
+
+  return(out)
+}
+
+#' @export
+#'
+print.MTS <- function(model){
+  hid <- attr(model, "hidden")
+  notHid <- !names(model) %in% hid
+  print(model[notHid])
+}
+
+#' @title Summarize the change point estimations
+#'
+#' @param cps change point estimates
+#' @param prob probability used for the interval
+#' @return model summary table for the change point locations  
+#'
+#' @export
+#'
+summarize_cps <- function(cps, prob = 0.95){
+
+  Mean <- round(apply(cps, 2, mean), 2)
+  Median <- round(apply(cps, 2, median), 2)
+  SD <- round(apply(cps, 2, sd), 2)
+  MCMCerr <- round(SD / sqrt(nrow(cps)), 4)
+  HPD <- coda::HPDinterval(coda::as.mcmc(cps), prob = prob)
+  Lower <- HPD[ , "lower"]
+  Upper <- HPD[ , "upper"]
+  AC10 <- t(round(coda::autocorr.diag(coda::as.mcmc(cps), lag = 10), 4))
+  ESS <- coda::effectiveSize(cps)
+  out <- data.frame(Mean, Median, Lower, Upper, SD, MCMCerr, AC10, ESS)
+  colnames(out)[7] <- "AC10"
+  rownames(out) <- sprintf("Changepoint_%d", 1:nrow(out))
+  return(out)
+}
+
+#' @title Measure the cross-correlation among change points
+#'
+#' @param cps change point estimates
+#' @param lag lag to be used in the correlation estimation
+#' @return matrix of among-changepoint correlations
+#'
+#' @export
+#'
+ccmat <- function(cps, lag = 0){
+
+  CC <- cps %>%
+        coda::as.mcmc() %>%
+        coda::autocorr(lag = lag) %>%
+        round(4)
+  out <- matrix(CC[1, , ], dim(CC)[2], dim(CC)[2]) 
+  colnames(out) <- sprintf("CP_%d", 1:dim(CC)[2])
+  rownames(out) <- sprintf("CP_%d", 1:dim(CC)[2])
   return(out)
 }
 

@@ -25,7 +25,8 @@ Imports: topicmodels,
     doParallel,
     magrittr,
     foreach,
-	methods
+	methods,
+	coda
 Suggests:
 	testthat,
 	digest,

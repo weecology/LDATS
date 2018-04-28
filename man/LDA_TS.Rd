@@ -5,7 +5,7 @@
 \title{Two-stage LDA-time series analysis}
 \usage{
 LDA_TS(document_term_matrix = NULL, document_covariate_matrix = NULL,
-  formula = "1", nchangepoints = 1, ...)
+  formula = ~1, nchangepoints = 1, ...)
 }
 \arguments{
 \item{document_term_matrix}{matrix of documents (rows) by terms (columns)}
@@ -13,7 +13,7 @@ LDA_TS(document_term_matrix = NULL, document_covariate_matrix = NULL,
 \item{document_covariate_matrix}{matrix of documents (rows) by covariates
 (columns)}
 
-\item{formula}{vector of formulas for the continuous change}
+\item{formula}{formula or vector of formulas for the continuous change}
 
 \item{nchangepoints}{vector of the number of change points to include in 
 the model}
@@ -32,7 +32,7 @@ Run LDA, select LDA, run MTS; return all outputs
     data(rodents)
     lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
     ts_data <- data.frame("time" = data.frame(rodents)[ , "newmoon"])
-    r_LDATS <- LDATS::LDA_TS(lda_data, ts_data, formula = "time", 
+    r_LDATS <- LDATS::LDA_TS(lda_data, ts_data, formula = ~time, 
                              ntopics = 2:5, nseeds = 2, ncores = 4, 
                              nit = 100) 
   }

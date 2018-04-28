@@ -4,8 +4,8 @@
 \alias{MTS}
 \title{Multinomial Time Series analysis of a topic model classification}
 \usage{
-MTS(data, formula = ~1, nchangepoints = 1, weights = NULL, nit = 10000,
-  magnitude = 12, ...)
+MTS(data, formula = ~1, nchangepoints = 1, weights = NULL, nit = 1000,
+  magnitude = 12, burnin = 100, ...)
 }
 \arguments{
 \item{data}{data frame including the predictor and response variables}
@@ -20,10 +20,13 @@ MTS(data, formula = ~1, nchangepoints = 1, weights = NULL, nit = 10000,
 
 \item{magnitude}{scaling for the kick magnitude used in the proposal dist}
 
+\item{burnin}{number of iterations to removed from the front-end of the 
+simulations prior to summarizing the distributions of change points}
+
 \item{...}{additional arguments to be passed to subfunctions}
 }
 \value{
-a lot of stuff in a list. this needs to be tidied
+an object of class MTS
 }
 \description{
 Full MTS analyses
