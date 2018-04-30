@@ -71,7 +71,7 @@ LDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
 #' @export 
 #'
 AIC.LDA <- function(object, ..., k = 2){
-  val <- topicmodels::logLik(x)
+  val <- topicmodels::logLik(object)
   ll <- as.numeric(val)
   df <- attr(val, "df")
   out <- -2 * ll + k * df
