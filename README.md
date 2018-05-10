@@ -12,9 +12,9 @@ analyses.
 
 ## Status: In Development
 
-The package is currently in development by the [Weecology 
+The package is currently *in development* by the [Weecology 
 Team](https://www.weecology.org). As such, any output should be considered
-***extremely provisional***. 
+***provisional***. 
 
 Previous versions of code and implementation (Christensen et al. manuscript
 and downsampling analyes) are located within `/previous_work`.
