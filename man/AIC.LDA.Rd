@@ -4,7 +4,7 @@
 \alias{AIC.LDA}
 \title{Generalization of the AIC function to work on LDA topic models}
 \usage{
-\method{AIC}{LDA}(object, ..., k = 2)
+\method{AIC}{LDA}(object, ..., k = 2, correction = FALSE)
 }
 \arguments{
 \item{object}{an LDA topic model}
@@ -12,6 +12,8 @@
 \item{...}{additional arguments to be passed to subfunctions}
 
 \item{k}{penalty per df}
+
+\item{correction}{AICc correction}
 }
 \value{
 Named (AIC or AICc) value.
