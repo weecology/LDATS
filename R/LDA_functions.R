@@ -59,6 +59,7 @@ LDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
 #' @param object an LDA topic model
 #' @param ... additional arguments to be passed to subfunctions
 #' @param k penalty per df
+#' @param correction AICc correction
 #' 
 #' @return Named (AIC or AICc) value.
 #' 
@@ -70,13 +71,13 @@ LDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
 #'   AIC(r_LDA[[2]])
 #' @export 
 #'
-AIC.LDA <- function(object, ..., k = 2){
+AIC.LDA <- function(object, ..., k = 2, correction = FALSE){
   val <- topicmodels::logLik(object)
   ll <- as.numeric(val)
   df <- attr(val, "df")
   out <- -2 * ll + k * df
   names(out) <- "AIC"
-  if (exists("correction")){
+  if (correction == TRUE){
     nobs <- attr(val, "nobs")
     corr <- ((2 * df^2) + (2 * df)) / (nobs - df - 1)
     out <- -2 * ll + k * df + corr
