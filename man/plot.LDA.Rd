@@ -4,12 +4,14 @@
 \alias{plot.LDA}
 \title{Plot an LDA model}
 \usage{
-\method{plot}{LDA}(x, ...)
+\method{plot}{LDA}(x, ..., cols = NULL)
 }
 \arguments{
 \item{x}{an LDA topic model output}
 
 \item{...}{additional arguments to be passed to subfunctions}
+
+\item{cols}{colors to be used to plot the topics}
 }
 \value{
 model plots
