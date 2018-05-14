@@ -117,21 +117,22 @@ plot.LDA_list <- function(x, ...){
 #' 
 #' @param x an LDA topic model output
 #' @param ... additional arguments to be passed to subfunctions
+#' @param cols colors to be used to plot the topics
 #' @return model plots
 #' 
 #' @export 
 #'
-plot.LDA <- function(x, ...){
+plot.LDA <- function(x, ..., cols = NULL){
 
-  gamma <- model@gamma
-  beta <- exp(model@beta)
+  gamma <- x@gamma
+  beta <- exp(x@beta)
   nobs <- nrow(gamma)
   ntopics <- ncol(gamma)
   nwords <- ncol(beta)
   beta_order <- apply(beta, 2, order)
   beta_sorted <- apply(beta, 2, sort)
 
-  if (!exists("cols")){
+  if (length(cols) == 0){
     cols <- rgb(runif(ntopics), runif(ntopics), runif(ntopics))
   }
   if (length(cols) == 1){
@@ -183,7 +184,7 @@ plot.LDA <- function(x, ...){
          col = rect_col[i])
   }
   axis(2, at = seq(0, max_y, 0.1), labels = FALSE, tck = -0.02)
-  mtext(side = 1, at = seq(1, nwords, 1), text = model@terms, tck = 0, 
+  mtext(side = 1, at = seq(1, nwords, 1), text = x@terms, tck = 0, 
        cex = 0.5, line = 0)
 
   par(fig = c(0.85, 1, 0.7, 1), new = TRUE, mar = c(0, 0, 0, 0))
