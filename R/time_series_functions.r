@@ -291,7 +291,7 @@ MTS <- function(data, formula = ~1, nchangepoints = 1,
 
 #' @export
 #'
-print.MTS <- function(x){
+print.MTS <- function(x, ...){
   hid <- attr(x, "hidden")
   notHid <- !names(x) %in% hid
   print(x[notHid])
