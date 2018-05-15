@@ -6,9 +6,6 @@
 #' @importFrom stats as.formula logLik rgeom runif
 #' @importFrom utils globalVariables
 #'
-globalVariables("i")
-globalVariables("model")
-globalVariables("x")
 
 #' @title Performs two-stage LDA-timeseries analyses
 #'
