@@ -291,13 +291,15 @@ MTS <- function(data, formula = ~1, nchangepoints = 1,
 
 #' @export
 #'
-print.MTS <- function(model){
-  hid <- attr(model, "hidden")
-  notHid <- !names(model) %in% hid
-  print(model[notHid])
+print.MTS <- function(x){
+  hid <- attr(x, "hidden")
+  notHid <- !names(x) %in% hid
+  print(x[notHid])
 }
 
 #' @title Summarize the change point estimations
+#'
+#' Function for summarizing change point estimations
 #'
 #' @param cps change point estimates
 #' @param prob probability used for the interval
@@ -323,6 +325,8 @@ summarize_cps <- function(cps, prob = 0.95){
 }
 
 #' @title Measure the cross-correlation among change points
+#'
+#' Measure the cross-correlation among change points
 #'
 #' @param cps change point estimates
 #' @param lag lag to be used in the correlation estimation

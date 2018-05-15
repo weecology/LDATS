@@ -5,6 +5,7 @@
 #' @importFrom methods is
 #' @importFrom stats as.formula logLik rgeom runif
 #' @importFrom utils globalVariables
+#' @importFrom stats sd median
 #'
 
 #' @title Performs two-stage LDA-timeseries analyses
