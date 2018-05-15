@@ -299,7 +299,7 @@ print.MTS <- function(x){
 
 #' @title Summarize the change point estimations
 #'
-#' Function for summarizing change point estimations
+#' @description Function for summarizing change point estimations
 #'
 #' @param cps change point estimates
 #' @param prob probability used for the interval
@@ -326,7 +326,7 @@ summarize_cps <- function(cps, prob = 0.95){
 
 #' @title Measure the cross-correlation among change points
 #'
-#' Measure the cross-correlation among change points
+#' @description Measure the cross-correlation among change points
 #'
 #' @param cps change point estimates
 #' @param lag lag to be used in the correlation estimation

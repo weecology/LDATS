@@ -37,7 +37,7 @@ LDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
   }
   cl <- parallel::makeCluster(ncores)
   doParallel::registerDoParallel(cl)
-
+  i <- 1
   mods <- foreach::foreach(i = 1:nruns, .packages = "topicmodels",
             .errorhandling = "pass") %dopar% {
 

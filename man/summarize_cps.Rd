@@ -2,9 +2,7 @@
 % Please edit documentation in R/time_series_functions.r
 \name{summarize_cps}
 \alias{summarize_cps}
-\title{Summarize the change point estimations
-
-Function for summarizing change point estimations}
+\title{Summarize the change point estimations}
 \usage{
 summarize_cps(cps, prob = 0.95)
 }
@@ -15,4 +13,7 @@ summarize_cps(cps, prob = 0.95)
 }
 \value{
 model summary table for the change point locations
+}
+\description{
+Function for summarizing change point estimations
 }

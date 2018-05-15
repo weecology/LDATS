@@ -62,7 +62,7 @@ remove_burnin <- function(object, burnin = 0){
 
 #' @title Count trips
 #'
-#' Function for counting trips
+#' @description Function for counting trips
 #'
 #' @param ids Matrix of identifiers of the initial temperature for particles
 #' @return list of counts and rates of trips by temperature

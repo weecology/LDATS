@@ -2,9 +2,7 @@
 % Please edit documentation in R/parallel_tempering_functions.R
 \name{count_trips}
 \alias{count_trips}
-\title{Count trips
-
-Function for counting trips}
+\title{Count trips}
 \usage{
 count_trips(ids)
 }
@@ -13,4 +11,7 @@ count_trips(ids)
 }
 \value{
 list of counts and rates of trips by temperature
+}
+\description{
+Function for counting trips
 }

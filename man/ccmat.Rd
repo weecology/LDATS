@@ -2,9 +2,7 @@
 % Please edit documentation in R/time_series_functions.r
 \name{ccmat}
 \alias{ccmat}
-\title{Measure the cross-correlation among change points
-
-Measure the cross-correlation among change points}
+\title{Measure the cross-correlation among change points}
 \usage{
 ccmat(cps, lag = 0)
 }
@@ -15,4 +13,7 @@ ccmat(cps, lag = 0)
 }
 \value{
 matrix of among-changepoint correlations
+}
+\description{
+Measure the cross-correlation among change points
 }
