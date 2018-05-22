@@ -6,9 +6,9 @@
 #'   across 8 50 m x 50 m plots, each sampled using 49 live traps (Brown 1998, 
 #'   Ernest \emph{et al.} 2016).
 #'
-#' @format A tbl with rows corresponding to sampling events and columns to 
-#'   covariates (newmoon number, date, number of plots trapped, number of 
-#'   traps used) and the 21 species. 
+#' @format A \code{data.frame} with rows corresponding to sampling events and 
+#'   columns to covariates (newmoon number, date, number of plots trapped,  
+#'   number of traps used) and the 21 species. 
 #' 
 #' @source \url{https://github.com/weecology/PortalData/Rodents}
 #'

@@ -4,9 +4,9 @@
 \name{rodents}
 \alias{rodents}
 \title{Portal rodent data}
-\format{A tbl with rows corresponding to sampling events and columns to 
-  covariates (newmoon number, date, number of plots trapped, number of 
-  traps used) and the 21 species.}
+\format{A \code{data.frame} with rows corresponding to sampling events and 
+  columns to covariates (newmoon number, date, number of plots trapped,  
+  number of traps used) and the 21 species.}
 \source{
 \url{https://github.com/weecology/PortalData/Rodents}
 }
