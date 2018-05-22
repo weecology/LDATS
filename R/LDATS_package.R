@@ -1,14 +1,20 @@
 #' @importFrom magrittr %>%
-#' @importFrom foreach %dopar%
+#' @importFrom foreach %dopar% foreach
 #' @importFrom grDevices devAskNewPage rgb
 #' @importFrom graphics axis mtext par plot points rect text
 #' @importFrom methods is
 #' @importFrom stats as.formula logLik rgeom runif
 #' @importFrom utils globalVariables
+#' @importFrom stats sd median
+#' @importFrom parallel detectCores makeCluster stopCluster
+#' @importFrom doParallel registerDoParallel
+#' @importFrom dplyr select
+#' @importFrom nnet multinom
+#' @importFrom memoise memoise
+#' @importFrom progress progress_bar
+#' @importFrom coda HPDinterval as.mcmc autocorr.diag effectiveSize autocorr
+#' @importFrom topicmodels logLik LDA
 #'
-globalVariables("i")
-globalVariables("model")
-globalVariables("x")
 
 #' @title Performs two-stage LDA-timeseries analyses
 #'

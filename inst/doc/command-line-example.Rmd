@@ -1,0 +1,48 @@
+---
+title: "LDATS Example"
+author: "Juniper L. Simonis"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r, include=FALSE}
+library(LDATS)
+vers <- packageVersion("LDATS")
+today <- Sys.Date()
+```
+
+This vignette walks through an example of **LDATS** at the command line and
+was constructed using **LDATS** version `r vers` on `r today`.
+
+
+## Installation
+
+To obtain the most recent version of **LDATS**, install the most recent 
+version from GitHub:
+
+```{r, eval=FALSE}
+install.packages("devtools")
+devtools::install_github("weecology/LDATS")
+```
+
+## Data
+
+For this vignette, we will be using rodent data from the control plots of the
+[Portal Project](https://github.com/weecology/portaldata), which come with
+the **LDATS** package
+
+```{r}
+data(rodents)
+rodents
+```
+

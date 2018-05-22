@@ -74,8 +74,8 @@ MTS_set <- function(data = NULL, formula, nchangepoints,
   nmods <- nrow(mods)
   out <- vector("list", nmods)
   for(i in 1:nmods){
-    out[[i]] <- LDATS::MTS(data[[mods$lda[i]]], mods$formula[i][[1]], 
-                           mods$nchangepoints[i], weights, ...)
+    out[[i]] <- MTS(data[[mods$lda[i]]], mods$formula[i][[1]], 
+                    mods$nchangepoints[i], weights, ...)
   }
   return(out)
 }

@@ -18,7 +18,7 @@
 multinom_chunk <- function(data, formula, start_time, end_time, weights, 
                            ...) {
   formula <- as.formula(paste("gamma ~", formula))
-  mod <- nnet::multinom(formula, data, weights, 
+  mod <- multinom(formula, data, weights, 
            subset = data$time > start_time & data$time <= end_time, 
            trace = FALSE, ...) 
   return(mod)
@@ -43,7 +43,7 @@ multinom_chunk <- function(data, formula, start_time, end_time, weights,
 #'
 multinom_ts <- function(data, formula, changepoints = NULL, weights, ...){
 
-  chunk_memo <- memoise::memoise(LDATS::multinom_chunk)
+  chunk_memo <- memoise(multinom_chunk)
 
   nchunks <- length(changepoints) + 1
   start_times <- c(min(data$time) - 1, changepoints)
@@ -160,7 +160,7 @@ MTS <- function(data, formula = ~1, nchangepoints = 1,
 
   character_formula <- as.character(formula)
   formula <- character_formula[length(character_formula)]
-  ts_memo <- memoise::memoise(LDATS::multinom_ts)
+  ts_memo <- memoise(multinom_ts)
 
   if(nchangepoints == 0){
     nit <- 1
@@ -169,7 +169,7 @@ MTS <- function(data, formula = ~1, nchangepoints = 1,
   betas <- 1 / temps
   ntemps <- length(betas)
 
-  prep_cpts <- LDATS::prep_changepts(data, formula, ntemps, nchangepoints, 
+  prep_cpts <- prep_changepts(data, formula, ntemps, nchangepoints, 
                  weights)
   changepts <- prep_cpts$changepts
   lls <- prep_cpts$lls
@@ -182,10 +182,10 @@ MTS <- function(data, formula = ~1, nchangepoints = 1,
   temp_ids <- 1:ntemps
   swap_accepted <- matrix(FALSE, nit, ntemps - 1)
 
-  pdist <- LDATS::proposal_dist(nit, ntemps, nchangepoints, magnitude)
+  pdist <- proposal_dist(nit, ntemps, nchangepoints, magnitude)
  
   pbform <- "  [:bar] :percent eta: :eta"
-  pb <- progress::progress_bar$new(pbform, nit, clear = FALSE, width = 60)
+  pb <- progress_bar$new(pbform, nit, clear = FALSE, width = 60)
 
   for (i in 1:nit){
   
@@ -291,13 +291,15 @@ MTS <- function(data, formula = ~1, nchangepoints = 1,
 
 #' @export
 #'
-print.MTS <- function(model){
-  hid <- attr(model, "hidden")
-  notHid <- !names(model) %in% hid
-  print(model[notHid])
+print.MTS <- function(x, ...){
+  hid <- attr(x, "hidden")
+  notHid <- !names(x) %in% hid
+  print(x[notHid])
 }
 
 #' @title Summarize the change point estimations
+#'
+#' @description Function for summarizing change point estimations
 #'
 #' @param cps change point estimates
 #' @param prob probability used for the interval
@@ -311,11 +313,11 @@ summarize_cps <- function(cps, prob = 0.95){
   Median <- round(apply(cps, 2, median), 2)
   SD <- round(apply(cps, 2, sd), 2)
   MCMCerr <- round(SD / sqrt(nrow(cps)), 4)
-  HPD <- coda::HPDinterval(coda::as.mcmc(cps), prob = prob)
+  HPD <- HPDinterval(as.mcmc(cps), prob = prob)
   Lower <- HPD[ , "lower"]
   Upper <- HPD[ , "upper"]
-  AC10 <- t(round(coda::autocorr.diag(coda::as.mcmc(cps), lag = 10), 4))
-  ESS <- coda::effectiveSize(cps)
+  AC10 <- t(round(autocorr.diag(as.mcmc(cps), lag = 10), 4))
+  ESS <- effectiveSize(cps)
   out <- data.frame(Mean, Median, Lower, Upper, SD, MCMCerr, AC10, ESS)
   colnames(out)[7] <- "AC10"
   rownames(out) <- sprintf("Changepoint_%d", 1:nrow(out))
@@ -323,6 +325,8 @@ summarize_cps <- function(cps, prob = 0.95){
 }
 
 #' @title Measure the cross-correlation among change points
+#'
+#' @description Measure the cross-correlation among change points
 #'
 #' @param cps change point estimates
 #' @param lag lag to be used in the correlation estimation
@@ -333,8 +337,8 @@ summarize_cps <- function(cps, prob = 0.95){
 ccmat <- function(cps, lag = 0){
 
   CC <- cps %>%
-        coda::as.mcmc() %>%
-        coda::autocorr(lag = lag) %>%
+        as.mcmc() %>%
+        autocorr(lags = lag) %>%
         round(4)
   out <- matrix(CC[1, , ], dim(CC)[2], dim(CC)[2]) 
   colnames(out) <- sprintf("CP_%d", 1:dim(CC)[2])

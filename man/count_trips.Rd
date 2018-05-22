@@ -12,3 +12,6 @@ count_trips(ids)
 \value{
 list of counts and rates of trips by temperature
 }
+\description{
+Function for counting trips
+}

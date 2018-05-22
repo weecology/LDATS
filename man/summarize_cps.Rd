@@ -14,3 +14,6 @@ summarize_cps(cps, prob = 0.95)
 \value{
 model summary table for the change point locations
 }
+\description{
+Function for summarizing change point estimations
+}

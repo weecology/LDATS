@@ -14,3 +14,6 @@ ccmat(cps, lag = 0)
 \value{
 matrix of among-changepoint correlations
 }
+\description{
+Measure the cross-correlation among change points
+}

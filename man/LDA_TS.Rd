@@ -28,13 +28,12 @@ a list of [1] the LDA model(s), [2] the selected LDA model(s), and
 Run LDA, select LDA, run MTS; return all outputs
 }
 \examples{
-  \dontrun{
-    data(rodents)
-    lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
-    ts_data <- data.frame("time" = data.frame(rodents)[ , "newmoon"])
-    r_LDATS <- LDATS::LDA_TS(lda_data, ts_data, formula = ~time, 
-                             ntopics = 2:5, nseeds = 2, ncores = 4, 
-                             nit = 100) 
-  }
+\dontrun{
+  data(rodents)
+  lda_data <- select(rodents, -c(newmoon, date, plots, traps))
+  ts_data <- data.frame("time" = data.frame(rodents)[ , "newmoon"])
+  r_LDATS <- LDA_TS(lda_data, ts_data, formula = ~time, ntopics = 2:5,
+                    nseeds = 2, ncores = 4, nit = 100) 
+}
 
 }
