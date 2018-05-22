@@ -1,20 +1,20 @@
 data(rodents)
 ?rodents
-
+library(dplyr)
 lda_data <- rodents %>%
-            dplyr::select(-c(newmoon, date, plots, traps))
+            select(-c(newmoon, date, plots, traps))
 ts_data <- rodents %>%
-           dplyr::select(c(newmoon)) %>% 
-           dplyr::rename(time = newmoon)
+           select(c(newmoon)) %>% 
+           rename(time = newmoon)
           
 
-weights <- LDATS::doc_weights(lda_data)
+weights <- doc_weights(lda_data)
 
-ldas <- LDATS::LDA(lda_data, ntopics = 2:3) 
-selected <- LDATS::LDA_select(ldas) 
+ldas <- parLDA(lda_data, ntopics = 2:3) 
+selected <- LDA_select(ldas) 
 
 prepped <- selected %>% 
-        LDATS::MTS_prep(ts_data)
+           MTS_prep(ts_data)
 
 
 mtss <- selected %>% 

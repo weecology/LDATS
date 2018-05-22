@@ -13,15 +13,15 @@
 #' @return List of LDA models
 #' 
 #' @examples 
-#'   \dontrun{
-#'     data(rodents)
-#'     lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
-#'     r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2, nseeds = 2, 
-#'                         ncores = 4)
-#'   }
+#' \dontrun{
+#'   data(rodents)
+#'   lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
+#'   r_LDA <- parLDA(data = lda_data, ntopics = 2, nseeds = 2, ncores = 4)
+#'                         
+#' }
 #' @export 
 #'
-LDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
+parLDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
 
   max_cores <- detectCores(logical = TRUE)
   seed_in <- rep(seq(2, nseeds * 2, 2), length(ntopics))
@@ -41,7 +41,7 @@ LDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
   mods <- foreach(i = 1:nruns, .packages = "topicmodels",
                   .errorhandling = "pass") %dopar% {
 
-    topicmodels::LDA(data, k = k_in[i], control = list(seed = seed_in[i]), 
+    topicmodels::LDA(data, k = k_in[i], control = list(seed = seed_in[i]),
                      ...)
   }
 
@@ -64,18 +64,18 @@ LDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
 #' @return Named (AIC or AICc) value.
 #' 
 #' @examples
-#'   \dontrun{
-#'     data(rodents)
-#'     lda_data <- select(rodents, -c(newmoon, date, plots, traps))
-#'     r_LDA <- LDA(data = lda_data, ntopics = 2, nseeds = 2)
-#'     AIC(r_LDA[[1]])
-#'     AIC(r_LDA[[2]])
-#'   }
+#' \dontrun{
+#'   data(rodents)
+#'   lda_data <- select(rodents, -c(newmoon, date, plots, traps))
+#'   r_LDA <- LDA(data = lda_data, ntopics = 2, nseeds = 2)
+#'   AIC(r_LDA[[1]])
+#'   AIC(r_LDA[[2]])
+#' }
 #'
 #' @export 
 #'
 AIC.LDA <- function(object, ..., k = 2, correction = FALSE){
-  val <- topicmodels::logLik(object)
+  val <- logLik(object)
   ll <- as.numeric(val)
   df <- attr(val, "df")
   out <- -2 * ll + k * df
@@ -99,12 +99,12 @@ AIC.LDA <- function(object, ..., k = 2, correction = FALSE){
 #' @return model-by-model plots
 #' 
 #' @examples 
-#'   \dontrun{
-#'     data(rodents)
-#'     lda_data <- select(rodents, -c(newmoon, date, plots, traps))
-#'     r_LDA <- LDA(data = lda_data, ntopics = 2, nseeds = 2)
-#'     plot(r_LDA)
-#'   }
+#' \dontrun{
+#'   data(rodents)
+#'   lda_data <- select(rodents, -c(newmoon, date, plots, traps))
+#'   r_LDA <- parLDA(data = lda_data, ntopics = 2, nseeds = 2)
+#'   plot(r_LDA)
+#' }
 #' @export 
 #'
 plot.LDA_list <- function(x, ...){

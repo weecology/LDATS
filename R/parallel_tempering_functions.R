@@ -87,8 +87,12 @@ count_trips <- function(ids){
       last_extreme_vector[j] <- last_extreme
     }
     first_top <- match("top", last_extreme_vector)
-    last_pos <- rle(last_extreme_vector[first_top:nit])$values
-    trips[i] <- sum(last_pos == "bottom")
+    if (is.na(first_top)){
+      trips[i] <- 0
+    } else{
+      last_pos <- rle(last_extreme_vector[first_top:nit])$values
+      trips[i] <- sum(last_pos == "bottom")
+    }
   }
   trip_rates <- trips / nit
   out <- list("trip_counts" = trips, "trip_rates" = trip_rates)

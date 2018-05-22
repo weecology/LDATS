@@ -13,13 +13,13 @@
 #'   [3] the time series model(s) on the selected LDA model(s)
 #'
 #' @examples 
-#'   \dontrun{
-#'     data(rodents)
-#'     lda_data <- select(rodents, -c(newmoon, date, plots, traps))
-#'     ts_data <- data.frame("time" = data.frame(rodents)[ , "newmoon"])
-#'     r_LDATS <- LDA_TS(lda_data, ts_data, formula = ~time, ntopics = 2:5,
-#'                       nseeds = 2, ncores = 4, nit = 100) 
-#'   }
+#' \dontrun{
+#'   data(rodents)
+#'   lda_data <- select(rodents, -c(newmoon, date, plots, traps))
+#'   ts_data <- data.frame("time" = data.frame(rodents)[ , "newmoon"])
+#'   r_LDATS <- LDA_TS(lda_data, ts_data, formula = ~time, ntopics = 2:5,
+#'                     nseeds = 2, ncores = 4, nit = 100) 
+#' }
 #'
 #' @export
 #'
@@ -28,7 +28,7 @@ LDA_TS <- function(document_term_matrix = NULL,
                    formula = ~1, nchangepoints = 1, ...){
 
   weights <- doc_weights(document_term_matrix)
-  ldas <- LDA(data = document_term_matrix, ...) 
+  ldas <- parLDA(data = document_term_matrix, ...) 
   selected <- LDA_select(ldas, ...) 
   mtss <- selected %>%
           MTS_prep(document_covariate_matrix) %>%

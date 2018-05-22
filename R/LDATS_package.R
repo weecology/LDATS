@@ -13,7 +13,8 @@
 #' @importFrom memoise memoise
 #' @importFrom progress progress_bar
 #' @importFrom coda HPDinterval as.mcmc autocorr.diag effectiveSize autocorr
-#' 
+#' @importFrom topicmodels logLik LDA
+#'
 
 #' @title Performs two-stage LDA-timeseries analyses
 #'
