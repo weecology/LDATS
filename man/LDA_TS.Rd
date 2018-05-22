@@ -30,11 +30,10 @@ Run LDA, select LDA, run MTS; return all outputs
 \examples{
   \dontrun{
     data(rodents)
-    lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
+    lda_data <- select(rodents, -c(newmoon, date, plots, traps))
     ts_data <- data.frame("time" = data.frame(rodents)[ , "newmoon"])
-    r_LDATS <- LDATS::LDA_TS(lda_data, ts_data, formula = ~time, 
-                             ntopics = 2:5, nseeds = 2, ncores = 4, 
-                             nit = 100) 
+    r_LDATS <- LDA_TS(lda_data, ts_data, formula = ~time, ntopics = 2:5,
+                      nseeds = 2, ncores = 4, nit = 100) 
   }
 
 }

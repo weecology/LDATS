@@ -21,8 +21,8 @@ Generalization of the plot function to work on a list of LDA
 \examples{
   \dontrun{
     data(rodents)
-    lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
-    r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2, nseeds = 2)
+    lda_data <- select(rodents, -c(newmoon, date, plots, traps))
+    r_LDA <- LDA(data = lda_data, ntopics = 2, nseeds = 2)
     plot(r_LDA)
   }
 }

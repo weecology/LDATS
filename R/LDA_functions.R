@@ -23,7 +23,7 @@
 #'
 LDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
 
-  max_cores <- parallel::detectCores(logical = TRUE)
+  max_cores <- detectCores(logical = TRUE)
   seed_in <- rep(seq(2, nseeds * 2, 2), length(ntopics))
   k_in <- rep(ntopics, each = length(seq(2, nseeds * 2, 2)))
   nruns <- length(seed_in)
@@ -35,17 +35,17 @@ LDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
     warning(msg)
     ncores <- capped_cores
   }
-  cl <- parallel::makeCluster(ncores)
-  doParallel::registerDoParallel(cl)
+  cl <- makeCluster(ncores)
+  registerDoParallel(cl)
   i <- 1
-  mods <- foreach::foreach(i = 1:nruns, .packages = "topicmodels",
-            .errorhandling = "pass") %dopar% {
+  mods <- foreach(i = 1:nruns, .packages = "topicmodels",
+                  .errorhandling = "pass") %dopar% {
 
     topicmodels::LDA(data, k = k_in[i], control = list(seed = seed_in[i]), 
                      ...)
   }
 
-  parallel::stopCluster(cl)
+  stopCluster(cl)
   names(mods) <- paste("k: ", k_in, ", seed: ", seed_in, sep = "")
   class(mods) <- c("LDA_list", "list")
   return(mods)
@@ -65,8 +65,8 @@ LDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
 #' 
 #' @examples
 #'   data(rodents)
-#'   lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
-#'   r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2, nseeds = 2)
+#'   lda_data <- select(rodents, -c(newmoon, date, plots, traps))
+#'   r_LDA <- LDA(data = lda_data, ntopics = 2, nseeds = 2)
 #'   AIC(r_LDA[[1]])
 #'   AIC(r_LDA[[2]])
 #' @export 
@@ -98,8 +98,8 @@ AIC.LDA <- function(object, ..., k = 2, correction = FALSE){
 #' @examples 
 #'   \dontrun{
 #'     data(rodents)
-#'     lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
-#'     r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2, nseeds = 2)
+#'     lda_data <- select(rodents, -c(newmoon, date, plots, traps))
+#'     r_LDA <- LDA(data = lda_data, ntopics = 2, nseeds = 2)
 #'     plot(r_LDA)
 #'   }
 #' @export 

@@ -15,11 +15,10 @@
 #' @examples 
 #'   \dontrun{
 #'     data(rodents)
-#'     lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
+#'     lda_data <- select(rodents, -c(newmoon, date, plots, traps))
 #'     ts_data <- data.frame("time" = data.frame(rodents)[ , "newmoon"])
-#'     r_LDATS <- LDATS::LDA_TS(lda_data, ts_data, formula = ~time, 
-#'                              ntopics = 2:5, nseeds = 2, ncores = 4, 
-#'                              nit = 100) 
+#'     r_LDATS <- LDA_TS(lda_data, ts_data, formula = ~time, ntopics = 2:5,
+#'                       nseeds = 2, ncores = 4, nit = 100) 
 #'   }
 #'
 #' @export
@@ -28,12 +27,12 @@ LDA_TS <- function(document_term_matrix = NULL,
                    document_covariate_matrix = NULL, 
                    formula = ~1, nchangepoints = 1, ...){
 
-  weights <- LDATS::doc_weights(document_term_matrix)
-  ldas <- LDATS::LDA(data = document_term_matrix, ...) 
-  selected <- LDATS::LDA_select(ldas, ...) 
+  weights <- doc_weights(document_term_matrix)
+  ldas <- LDA(data = document_term_matrix, ...) 
+  selected <- LDA_select(ldas, ...) 
   mtss <- selected %>%
-          LDATS::MTS_prep(document_covariate_matrix) %>%
-          LDATS::MTS_set(formula, nchangepoints, weights, ...) 
+          MTS_prep(document_covariate_matrix) %>%
+          MTS_set(formula, nchangepoints, weights, ...) 
 
   out <- list(ldas, selected, mtss)
   names(out) <- c("LDA model(s)", "Selected LDA model(s)", "MTS model(s)")
