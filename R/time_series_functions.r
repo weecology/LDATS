@@ -338,7 +338,7 @@ ccmat <- function(cps, lag = 0){
 
   CC <- cps %>%
         as.mcmc() %>%
-        autocorr(lag = lag) %>%
+        autocorr(lags = lag) %>%
         round(4)
   out <- matrix(CC[1, , ], dim(CC)[2], dim(CC)[2]) 
   colnames(out) <- sprintf("CP_%d", 1:dim(CC)[2])

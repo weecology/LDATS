@@ -64,11 +64,14 @@ LDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
 #' @return Named (AIC or AICc) value.
 #' 
 #' @examples
-#'   data(rodents)
-#'   lda_data <- select(rodents, -c(newmoon, date, plots, traps))
-#'   r_LDA <- LDA(data = lda_data, ntopics = 2, nseeds = 2)
-#'   AIC(r_LDA[[1]])
-#'   AIC(r_LDA[[2]])
+#'   \dontrun{
+#'     data(rodents)
+#'     lda_data <- select(rodents, -c(newmoon, date, plots, traps))
+#'     r_LDA <- LDA(data = lda_data, ntopics = 2, nseeds = 2)
+#'     AIC(r_LDA[[1]])
+#'     AIC(r_LDA[[2]])
+#'   }
+#'
 #' @export 
 #'
 AIC.LDA <- function(object, ..., k = 2, correction = FALSE){
