@@ -1,0 +1,119 @@
+---
+title: "LDA kratplots results"
+author: "Renata Diaz"
+date: "5/8/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(topicmodels)
+library(RCurl)
+library(multipanelfigure)
+library(reshape2)
+library(LDATS)
+
+
+
+source('rodent_data_for_LDA.r')
+source('rodent_data_from_portalr.R')
+source('AIC_model_selection.R')
+source('LDA_figure_scripts.R')
+source('changepointmodel.r')
+source('LDA-distance.R')
+
+```
+
+## Eight plots, starting in 1988
+
+### Prepare rodent data
+
+```{r}
+
+dat = get_exclosure_rodents(cont_or_exclosures = 'control', time_or_plots = 'plots')
+
+
+# dates to go with count data
+moondat = read.csv(text=getURL("https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/moon_dates.csv"),stringsAsFactors = F)
+moondat$date = as.Date(moondat$censusdate)
+
+period_dates = filter(moondat,period %in% dat$period) %>% select(period,date)
+dates = period_dates$date
+
+dat = dat[,2:22]
+
+```
+
+### Select number of topics
+```{r}
+# ==================================================================
+# 2a. select number of topics
+# ==================================================================
+Select LDA model using LDATS
+
+
+# Changepoint models
+
+# set up parameters for model
+year_continuous = 1970 + as.integer(julian(dates)) / 365.25
+x = data.frame(
+  year_continuous = year_continuous,
+  sin_year = sin(year_continuous * 2 * pi),
+  cos_year = cos(year_continuous * 2 * pi)
+)
+
+# run models with 1, 2, 3, 4, 5 changepoints
+cp_results_rodent_3topics = changepoint_model(ldamodel3, x, 1, weights = rep(1,length(year_continuous)))
+cp_results_rodent2_3topics = changepoint_model(ldamodel3, x, 2, weights = rep(1,length(year_continuous)))
+cp_results_rodent3_3topics = changepoint_model(ldamodel3, x, 3, weights = rep(1,length(year_continuous)))
+cp_results_rodent4_3topics = changepoint_model(ldamodel3, x, 4, weights = rep(1,length(year_continuous)))
+cp_results_rodent5_3topics = changepoint_model(ldamodel3, x, 5, weights = rep(1,length(year_continuous)))
+
+# Save changepoint models
+save(cp_results_rodent_3topics,
+     cp_results_rodent2_3topics, 
+     cp_results_rodent3_3topics, cp_results_rodent4_3topics, 
+     cp_results_rodent5_3topics, 
+     file = 'models/cp_8plots_3topics.Rdata')
+
+
+# change point model selection
+# mean deviance ( -2 * log likelihood) + 2*(#parameters)
+mean(cp_results_rodent_3topics$saved_lls * -2) + 2*(3*(ntopics-1)*(1+1)+(1))
+mean(cp_results_rodent2_3topics$saved_lls * -2)+ 2*(3*(ntopics-1)*(2+1)+(2))
+mean(cp_results_rodent3_3topics$saved_lls * -2)+ 2*(3*(ntopics-1)*(3+1)+(3))
+mean(cp_results_rodent4_3topics$saved_lls * -2)+ 2*(3*(ntopics-1)*(4+1)+(4))
+mean(cp_results_rodent5_3topics$saved_lls * -2)+ 2*(3*(ntopics-1)*(5+1)+(5))
+
+# 3 topics is best supported.
+
+rm(list= c(cp_results_rodent2_3topics, cp_results_rodent_3topics,
+           cp_results_rodent4_3topics, cp_results_rodent5_3topics))
+
+# some quick histograms of changepoint model results
+hist(year_continuous[cp_results_rodent3_3topics$saved[,1,]],breaks = seq(1988,2016,.25),xlab='',main='Changepoint Estimate')
+annual_hist(cp_results_rodent3_3topics,year_continuous)
+
+# turn changepoint results into data frame
+df_3_3topics = as.data.frame(t(cp_results_rodent3_3topics$saved[,1,])) %>% melt()
+df_3_3topics$value = year_continuous[df_3_3topics$value]
+
+# find 95% confidence intervals on each changepoint:
+quantile(df_3_3topics[df_3_3topics$variable=='V1','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
+quantile(df_3_3topics[df_3_3topics$variable=='V2','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
+quantile(df_3_3topics[df_3_3topics$variable=='V3','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
+
+write.csv(df_3_3topics, file = 'models/df_3_3topics.csv', row.names =F)
+
+```
+
+#### Eight plots starting in 1988, 4 topics
+```{r}
+SEED_4 = unlist(best_seed_4)[1]
+
+ntopics = 4
+
+ldamodel4 = LDA(dat,ntopics, control = list(seed = SEED_4),method='VEM')
+
+```

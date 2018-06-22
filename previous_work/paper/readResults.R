@@ -1,0 +1,27 @@
+# read rodent changepoint/lda results without running the changepoint model again
+
+everything <- readRDS('/Users/renatadiaz/Documents/GitHub/Extreme-events-LDA/exclosuresResults.rds')
+dat <- everything[[1]]
+seeds <- everything[[2]]
+best_ntopic <- everything[[3]]
+seeds_3topics <- everything[[4]]
+best_seed <- everything[[5]]
+mean_dist <- everything[[6]]
+max_dist <- everything[[7]]
+ntopics <- everything[[8]]
+SEED <- everything[[9]]
+ldamodel <- everything[[10]]
+year_continuous <- everything[[11]]
+x <- everything[[12]]
+cp_results_rodent <- everything[[13]]
+cp_results_rodent2 <- everything[[14]]
+cp_results_rodent3 <- everything[[15]]
+cp_results_rodent4 <- everything[[16]]
+cp_results_rodent5 <- everything[[17]]
+df_1 <- everything[[18]]
+df_2 <- everything[[19]]
+df_3 <- everything[[20]]
+df_4 <- everything[[21]]
+df_5 <- everything[[22]]
+dates <- everything[[23]]
+rm(everything)

@@ -15,8 +15,7 @@ library(multipanelfigure)
 library(reshape2)
 
 
-source('previous-work/rodent_data_for_LDA.r')
-source('rodent_data_from_portalr.R')
+source('rodent_data_for_LDA.r')
 source('AIC_model_selection.R')
 source('LDA_figure_scripts.R')
 source('changepointmodel.r')
@@ -25,31 +24,14 @@ source('LDA-distance.R')
 # ===================================================================
 # 1. prepare rodent data
 # ===================================================================
-# for controls:
-dat = create_rodent_table(period_first = 1,
-                          period_last = 436,
-                          selected_plots = c(2,4,8,11,12,14,17,22),
-                          selected_species = c('BA','DM','DO','DS','NA','OL','OT','PB','PE','PF','PH','PI','PL','PM','PP','RF','RM','RO','SF','SH','SO'))
-
-# for exclosures: 
-
-dat = get_exclosure_rodents(time_or_plots = 'plots')
-
+dat = create_rodent_table()
 
 # dates to go with count data
 moondat = read.csv(text=getURL("https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/moon_dates.csv"),stringsAsFactors = F)
 moondat$date = as.Date(moondat$censusdate)
 
-erica_periods = c(1:436)
-
-period_dates = filter(moondat,period %in% erica_periods) %>% select(period,date)
+period_dates = filter(moondat,period %in% rownames(dat)) %>% select(period,date)
 dates = period_dates$date
-
-dat = cbind(dates, dat)
-
-write.csv(dat, 'paper_dat.csv', row.names = FALSE)
-
-dat = dat[,2:22]
 
 
 # ==================================================================
@@ -73,30 +55,28 @@ hist(best_ntopic$k,breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='best 
 # 2b. how different is species composition of 4 community-types when LDA is run with different seeds?
 # ==================================================================
 # get the best 100 seeds where 4 topics was the best LDA model
-seeds_4topics = best_ntopic %>% 
-  filter(k == 4) %>% 
-  arrange(aic) %>% 
-  head(100) %>% 
+seeds_4topics = best_ntopic %>%
+  filter(k == 4) %>%
+  arrange(aic) %>%
+  head(100) %>%
   pull(SEED)
 
-# best seed for 4 is 
 # choose seed with highest log likelihood for all following analyses
 #    (also produces plot of community composition for 'best' run compared to 'worst')
-best_seed = calculate_LDA_distance(dat,seeds_4topics, k =4)
+best_seed = calculate_LDA_distance(dat,seeds_4topics)
 mean_dist = unlist(best_seed)[2]
 max_dist = unlist(best_seed)[3]
 
 # ==================================================================
 # 3. run LDA model
 # ==================================================================
-ntopics = 3
+ntopics = 4
 SEED = unlist(best_seed)[1]  # For the paper, I use seed 206
-# For 4, seed = 14
-ldamodel4= LDA(dat,ntopics, control = list(seed = SEED),method='VEM')
-ldamodel3 = LDA(dat,ntopics, control = list(seed = SEED),method='VEM')
+ldamodel = LDA(dat,ntopics, control = list(seed = SEED),method='VEM')
+
 
 # ==================================================================
-# 4. change point model 
+# 4. change point model
 # ==================================================================
 
 # set up parameters for model
@@ -141,9 +121,9 @@ mean(cp_results_rodent5$saved_lls * -2)+ 2*(3*(ntopics-1)*(5+1)+(5))
 # =================================================================
 
 # plot community compositions
-beta1_4 = community_composition(ldamodel4)
+beta1 = community_composition(ldamodel)
 # put columns in order of largest species to smallest
-composition = beta1_4[,c('NA','DS','SH','SF','SO','DO','DM','PB','PH','OL','OT','PL','PM','PE','PP','PI','RF','RM','RO','BA','PF')]
+composition = beta1[,c('NA','DS','SH','SF','SO','DO','DM','PB','PH','OL','OT','PL','PM','PE','PP','PI','RF','RM','RO','BA','PF')]
 plot_community_composition(composition,c(3,4,1,2))
 
 
@@ -187,11 +167,11 @@ H_4 = ggplot(data = df_4, aes(x=value)) +
         panel.border=element_rect(colour='black',fill=NA),
         panel.background = element_blank(),
         panel.grid.major = element_line(colour='grey90'),
-        panel.grid.minor = element_line(colour='grey90')) 
+        panel.grid.minor = element_line(colour='grey90'))
   #theme_bw()
 H_4
 
- 
+
 # changepoint model plot
 cpts = find_changepoint_location(cp_results_rodent4)
 cpt_plot = get_ll_non_memoized_plot(ldamodel,x,cpts,make_plot=T,weights=rep(1,length(year_continuous)))
@@ -304,6 +284,7 @@ figure_spcomp5
 (figure_s4 <- multi_panel_figure(
   width = c(70,70,70,70),
   height = c(60,60),
+  column_spacing = 0,
   panel_label_type = "lower-alpha"))
 figure_s4 %<>% fill_panel(
   figure_spcomp5,
@@ -365,7 +346,7 @@ H_4b = ggplot(data = df_4, aes(x=value)) +
         panel.border=element_rect(colour='black',fill=NA),
         panel.background = element_blank(),
         panel.grid.major = element_line(colour='grey90'),
-        panel.grid.minor = element_line(colour='grey90')) 
+        panel.grid.minor = element_line(colour='grey90'))
 H_4b
 
 H_5 = ggplot(data = df_5, aes(x=value)) +
@@ -410,7 +391,7 @@ H_3 = ggplot(data = df_3, aes(x=value)) +
         panel.grid.major = element_line(colour='grey90'),
         panel.grid.minor = element_line(colour='grey90'),
         legend.position = 'none') +
-  xlim(range(year_continuous)) 
+  xlim(range(year_continuous))
 H_3
 H_4b = ggplot(data = df_4, aes(x=value)) +
   geom_histogram(data=df_4,aes(y=..count../sum(..count..),fill=variable),binwidth = .5,color='black') +
