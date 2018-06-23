@@ -28,8 +28,8 @@ abund_dat = merge(abund_dat,fullcensus[,c('period','censusdate')])
 abund_dat$density = abund_dat$n/2 # density is in rodents/hectare: each plot is 1/4 hectare, there are 8 control plots, so total area covered by control plots is 2 hectares
 
 # finding data in the lowest .15 fraction of the data. 
-descdist(abund_dat$n, discrete=TRUE)
-fit.negbin = fitdist(abund_dat$n, "nbinom")
+fitdistrplus::descdist(abund_dat$n, discrete=TRUE)
+fit.negbin = fitdistrplus::fitdist(abund_dat$n, "nbinom")
 plot(fit.negbin)
 dist_size = fit.negbin$estimate[[1]]
 dist_mu = fit.negbin$estimate[[2]]
@@ -45,23 +45,25 @@ chpts = data.frame(x1=c(as.Date('1983-12-01'),as.Date('1988-10-01'),as.Date('199
 ggplot(abund_dat,aes(x=censusdate,y=density)) +
   coord_cartesian(ylim=c(-10,110)) +
   geom_rect(data=chpts, inherit.aes=F,aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), alpha=0.5) +
-  geom_line(size=1.5) +  
-  geom_point(size=3, aes(fill = as.factor(abund_dat$extreme)),colour='black',pch=21) +
+  geom_line(size=1) +  
+  geom_point(size=1.6, aes(fill = as.factor(abund_dat$extreme)),colour='black',pch=21) +
   geom_hline(yintercept = mean(abund_dat$density),linetype=2) +
-  labs(x='',y='rodent density (rodents per hectare)') +
-  theme(axis.text=element_text(size=14),
-        axis.title=element_text(size=14)) +
+  labs(x='',y='rodent density\n(rodents per hectare)') +
+  theme(axis.text=element_text(size=11),
+        axis.title=element_text(size=12)) +
   scale_fill_manual(values = c('#000000',"#56B4E9")) +
-  annotate("text", x=as.Date('1994-01-01'), y=-4, label= "Drought",fontface=2) +
-  annotate("text", x=as.Date('1983-08-01'), y=-4, label= "Storm", fontface=2) +
-  annotate("text", x=as.Date('1999-08-01'), y=-4, label= "Storm", fontface=2) +
-  annotate("text", x=as.Date('2009-06-01'), y=-4, label= "Drought",fontface=2) +
-  geom_segment(aes(x=as.Date('1993-09-01'), xend=as.Date('1994-10-01'), y=-10, yend=-10),size=1.5) +
-  geom_segment(aes(x=as.Date('1993-09-01'), xend=as.Date('1993-09-01'), y=-12, yend=-8), size=1.5) +
-  geom_segment(aes(x=as.Date('1994-10-01'), xend=as.Date('1994-10-01'), y=-12, yend=-8), size=1.5) +
-  geom_segment(aes(x=as.Date('2009-01-01'), xend=as.Date('2009-12-31'), y=-10, yend=-10),size=1.5) +
-  geom_segment(aes(x=as.Date('2009-01-01'), xend=as.Date('2009-01-01'), y=-12, yend=-8), size=1.5) +
-  geom_segment(aes(x=as.Date('2009-12-31'), xend=as.Date('2009-12-31'), y=-12, yend=-8), size=1.5) +
-  geom_point(size=3, inherit.aes=F,aes(x=as.Date('1983-10-01'),y=-10),pch=15) +
-  geom_point(size=3, inherit.aes=F,aes(x=as.Date('1999-08-15'),y=-10),pch=15) +
+  annotate("text", x=as.Date('1994-01-01'), y=-3.5, label= "Drought",fontface=2,size=3) +
+  annotate("text", x=as.Date('1983-08-01'), y=-3.5, label= "Storm", fontface=2,size=3) +
+  annotate("text", x=as.Date('1999-08-01'), y=-3.5, label= "Storm", fontface=2,size=3) +
+  annotate("text", x=as.Date('2009-06-01'), y=-3.5, label= "Drought",fontface=2,size=3) +
+  geom_segment(aes(x=as.Date('1993-09-01'), xend=as.Date('1994-10-01'), y=-10, yend=-10),size=1) +
+  geom_segment(aes(x=as.Date('1993-09-01'), xend=as.Date('1993-09-01'), y=-12, yend=-8), size=1) +
+  geom_segment(aes(x=as.Date('1994-10-01'), xend=as.Date('1994-10-01'), y=-12, yend=-8), size=1) +
+  geom_segment(aes(x=as.Date('2009-01-01'), xend=as.Date('2009-12-31'), y=-10, yend=-10),size=1) +
+  geom_segment(aes(x=as.Date('2009-01-01'), xend=as.Date('2009-01-01'), y=-12, yend=-8), size=1) +
+  geom_segment(aes(x=as.Date('2009-12-31'), xend=as.Date('2009-12-31'), y=-12, yend=-8), size=1) +
+  geom_point(size=2, inherit.aes=F,aes(x=as.Date('1983-10-01'),y=-10),pch=15) +
+  geom_point(size=2, inherit.aes=F,aes(x=as.Date('1999-08-15'),y=-10),pch=15) +
   theme(legend.position = 'none') 
+
+ggsave(filename='Figure2.tiff',width=6,height=2.8,units='in',dpi=600,compression='lzw')

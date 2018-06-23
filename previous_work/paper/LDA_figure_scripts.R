@@ -28,9 +28,9 @@ ltypes = c('solid','longdash','longdash','solid','solid')
 
 plot_gamma = function(gamma_frame,ntopics,ylab='',colors=cbPalette) {
   g = ggplot(gamma_frame, aes(x=date,y=relabund,colour=community)) + 
-    geom_point() +
+    #geom_point() +
     geom_line(aes(size=community)) +
-    scale_size_manual(values=c(1,1,1.5,1.5,1), guide=FALSE) +
+    scale_size_manual(values=c(1,1,1,1,1), guide=FALSE) +
     scale_y_continuous(name=ylab,limits=c(0,1)) +
     scale_x_date(name='') +
     theme(axis.text=element_text(size=12),
@@ -183,12 +183,15 @@ plot_community_composition = function(composition,topic_order=1:dim(composition)
 #' @param composition matrix of species composition of topics; as in output of community_composition()
 #' @param topic_order order of topics -- for making this bar graph relate to the component community graph
 #' @param ylim vector of limits for yaxis
+#' @param colors color palette specification
+#' @param title T/F if you want title or not
+#' @param ylabels T/F if you want yaxis label or not
 #' 
 #' @return barplots of the n component communities
 #' 
 #' 
 #' 
-plot_community_composition_gg = function(composition,topic_order,ylim,colors=cbPalette,title=T) {
+plot_community_composition_gg = function(composition,topic_order,ylim,colors=cbPalette,title=T,ylabels = T) {
   topics = dim(composition)[1]
   community = c()
   for (j in 1:topics) {community=append(community,rep(j,length(composition[j,])))}
@@ -201,21 +204,21 @@ plot_community_composition_gg = function(composition,topic_order,ylim,colors=cbP
   p = list()
   j = 1
   for (i in topic_order) {
-    if (j == 1) {ylabel='% Composition'} else {ylabel=''}
+    if (j == 1 && ylabels == T) {ylabel='% Composition'} else {ylabel=''}
     x <- ggplot(data=comp[comp$community==i,], aes(x=species, y=relabund)) +
       geom_bar(stat='identity',fill=colors[i])  +
-      geom_bar(data=grass[grass$community==i,],aes(x=species,y=relabund),fill=colors[i],stat='identity',alpha=0,size=1,color='black') +
-        theme(axis.text=element_text(size=10),
+      geom_bar(data=grass[grass$community==i,],aes(x=species,y=relabund),fill=colors[i],stat='identity',alpha=0,size=.5,color='black') +
+        theme(axis.text=element_text(size=9),
               panel.background = element_blank(),
               panel.border=element_rect(colour='black',fill=NA),
-              axis.text.x = element_text(angle = 90,hjust=0,vjust=.5),
+              axis.text.x = element_text(angle = 90,hjust=0,vjust=.5,size=6),
               plot.margin = unit(c(0,1,0,0),"mm"),
-              axis.text.y = element_text(angle=0,size=9,vjust=.5,hjust=.5),
-              plot.title = element_text(hjust = 0.5)) +
+              axis.text.y = element_text(angle=0,size=8,vjust=.5,hjust=.5),
+              plot.title = element_text(hjust = 0.5,size=10.5)) +
       scale_x_discrete(name='') +
       scale_y_continuous(name=ylabel,limits = ylim) +
       geom_hline(yintercept = 0)  +
-      if (title==T) {ggtitle(paste('Community-type',j))} else {ggtitle('')}
+      if (title==T) {ggtitle(paste('Community-\ntype',j))} else {ggtitle('')}
 
     p[[j]] <- x
     j=j+1

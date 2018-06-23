@@ -143,7 +143,7 @@ plot_sections = function(all_sections,x,changepoints) {
   cpt_dates = datevec[changepoints]
   
   section_plot = ggplot(all_sections,aes=c(x=date,y=value,colour=variable)) +
-    geom_line(aes(x=date,y=value,colour=variable,group=variable),size=1.5) +
+    geom_line(aes(x=date,y=value,colour=variable,group=variable),size=1) +
     scale_y_continuous(name = '', limits = c(0,1)) +
     scale_x_date(name = '', limits = c(min(datevec),max(datevec))) +
     theme(axis.text=element_text(size=12),
@@ -153,7 +153,7 @@ plot_sections = function(all_sections,x,changepoints) {
                         breaks=as.character(seq(ntopics)),
                         values=cbPalette[1:ntopics],
                         guide=FALSE) +
-    geom_vline(xintercept = as.numeric(cpt_dates),size=2)
+    geom_vline(xintercept = as.numeric(cpt_dates),size=1.5)
   return(section_plot)
 }
 

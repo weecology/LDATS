@@ -46,15 +46,15 @@ min_H = function(p1, p2, k) {
 #'
 #' @param ldas list of results from LDA model
 #' @param seeds vector of seeds for which LDA models will be fit and results compared
-#' @param k number of topics
 #' 
 #' @return list including: seed associated with highest log likelihood
 #'                         mean distance between best model and all others
 #'                         max distuance between best model and worst
 #'
-calculate_LDA_distance = function(ldas,seeds,k) {
+calculate_LDA_distance = function(ldas,seeds) {
   
-  # Calculate a bunch of LDAs with k topics
+  # Calculate a bunch of LDAs with 4 topics
+  k = 4
   ldas = purrr::map(seeds, 
                     ~LDA(dat, k = k, method = "VEM", control = list(seed = .x)))
   
@@ -104,8 +104,8 @@ calculate_LDA_distance = function(ldas,seeds,k) {
   
   # between community distance
   comm_dist = c()
-  for (i in 1:(k-1)) {
-    for (j in (i+1):k) {
+  for (i in 1:3) {
+    for (j in (i+1):4) {
       comm_dist = append(comm_dist,Hellinger(best_ps[i,],best_ps[j,]))
     }
   }
