@@ -24,10 +24,7 @@ source('LDA-distance.R')
 # ===================================================================
 # 1. prepare rodent data
 # ===================================================================
-dat = create_rodent_table(period_first = 1,
-                          period_last = 436,
-                          selected_plots = c(2,4,8,11,12,14,17,22),
-                          selected_species = c('BA','DM','DO','DS','NA','OL','OT','PB','PE','PF','PH','PI','PL','PM','PP','RF','RM','RO','SF','SH','SO'))
+dat = create_rodent_table()
 
 # dates to go with count data
 moondat = read.csv(text=getURL("https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/moon_dates.csv"),stringsAsFactors = F)
@@ -58,10 +55,10 @@ hist(best_ntopic$k,breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='best 
 # 2b. how different is species composition of 4 community-types when LDA is run with different seeds?
 # ==================================================================
 # get the best 100 seeds where 4 topics was the best LDA model
-seeds_4topics = best_ntopic %>% 
-  filter(k == 4) %>% 
-  arrange(aic) %>% 
-  head(100) %>% 
+seeds_4topics = best_ntopic %>%
+  filter(k == 4) %>%
+  arrange(aic) %>%
+  head(100) %>%
   pull(SEED)
 
 # choose seed with highest log likelihood for all following analyses
@@ -79,7 +76,7 @@ ldamodel = LDA(dat,ntopics, control = list(seed = SEED),method='VEM')
 
 
 # ==================================================================
-# 4. change point model 
+# 4. change point model
 # ==================================================================
 
 # set up parameters for model
@@ -125,13 +122,8 @@ mean(cp_results_rodent5$saved_lls * -2)+ 2*(3*(ntopics-1)*(5+1)+(5))
 
 # plot community compositions
 beta1 = community_composition(ldamodel)
-# change column names to modern taxonomy of species
-colnames(beta1)[colnames(beta1)=='PB'] <- 'CB'
-colnames(beta1)[colnames(beta1)=='PH'] <- 'CH'
-colnames(beta1)[colnames(beta1)=='PP'] <- 'CP'
-colnames(beta1)[colnames(beta1)=='PI'] <- 'CI'
 # put columns in order of largest species to smallest
-composition = beta1[,c('NA','DS','SH','SF','SO','DO','DM','CB','CH','OL','OT','PL','PM','PE','CP','CI','RF','RM','RO','BA','PF')]
+composition = beta1[,c('NA','DS','SH','SF','SO','DO','DM','PB','PH','OL','OT','PL','PM','PE','PP','PI','RF','RM','RO','BA','PF')]
 plot_community_composition(composition,c(3,4,1,2))
 
 
@@ -139,8 +131,8 @@ plot_community_composition(composition,c(3,4,1,2))
 P = plot_community_composition_gg(composition,c(3,4,1,2),ylim=c(0,.8))
 
 (figure_spcomp <- multi_panel_figure(
-  width = c(38,38,38,38),
-  height = c(40,5),
+  width = c(70,70,70,70),
+  height = c(70,10),
   panel_label_type = "none",
   column_spacing = 0))
 figure_spcomp %<>% fill_panel(
@@ -175,38 +167,36 @@ H_4 = ggplot(data = df_4, aes(x=value)) +
         panel.border=element_rect(colour='black',fill=NA),
         panel.background = element_blank(),
         panel.grid.major = element_line(colour='grey90'),
-        panel.grid.minor = element_line(colour='grey90')) 
+        panel.grid.minor = element_line(colour='grey90'))
   #theme_bw()
 H_4
 
- 
+
 # changepoint model plot
 cpts = find_changepoint_location(cp_results_rodent4)
 cpt_plot = get_ll_non_memoized_plot(ldamodel,x,cpts,make_plot=T,weights=rep(1,length(year_continuous)))
 
 
-# Figure 1 -- community composition, LDA model, changepoint histogram, changepoint timeseries
+# Figure 3 -- community composition, LDA model, changepoint histogram, changepoint timeseries
 (figure <- multi_panel_figure(
-  width = c(3,38,38,38,38),
-  height = c(5,40,42,42,42),
+  width = c(70,70,70,70),
+  height = c(60,60,60,60),
   column_spacing = 0,
-  row_spacing = 0,
   panel_label_type = "lower-alpha"))
 figure %<>% fill_panel(
   figure_spcomp,
-  row = 2, column = 2:5)
+  row = 1, column = 1:4)
 figure %<>% fill_panel(
   cc,
-  row = 3, column = 2:5)
+  row = 2, column = 1:4)
 figure %<>% fill_panel(
   H_4,
-  row = 4, column = 2:5)
+  row = 3, column = 1:4)
 figure %<>% fill_panel(
   cpt_plot,
-  row = 5, column = 2:5)
+  row = 4, column = 1:4)
 figure
 
-save_multi_panel_figure(figure,'Figure1.tiff',dpi=600,compression='lzw')
 
 # ===================================================================
 # 6. appendix: LDA with 3 and 5 topics
@@ -216,17 +206,12 @@ save_multi_panel_figure(figure,'Figure1.tiff',dpi=600,compression='lzw')
 ldamodel3topic = LDA(dat,3, control = list(seed = 46),method='VEM')
 cc3 = plot_component_communities(ldamodel3topic,3,dates)
 beta13topic = community_composition(ldamodel3topic)
-# change column names to modern taxonomy of species
-colnames(beta13topic)[colnames(beta13topic)=='PB'] <- 'CB'
-colnames(beta13topic)[colnames(beta13topic)=='PH'] <- 'CH'
-colnames(beta13topic)[colnames(beta13topic)=='PP'] <- 'CP'
-colnames(beta13topic)[colnames(beta13topic)=='PI'] <- 'CI'
-composition3 = beta13topic[,c('NA','DS','SH','SF','SO','DO','DM','CB','CH','OL','OT','PL','PM','PE','CP','CI','RF','RM','RO','BA','PF')]
+composition3 = beta13topic[,c('NA','DS','SH','SF','SO','DO','DM','PB','PH','OL','OT','PL','PM','PE','PP','PI','RF','RM','RO','BA','PF')]
 P3topic = plot_community_composition_gg(composition3,c(3,2,1),c(0,.8))
 
 (figure_spcomp3 <- multi_panel_figure(
-  width = c(60,60,60),
-  height = c(60,10),
+  width = c(70,70,70),
+  height = c(70,10),
   panel_label_type = "none",
   column_spacing = 0))
 figure_spcomp3 %<>% fill_panel(
@@ -241,63 +226,37 @@ figure_spcomp3 %<>% fill_panel(
 figure_spcomp3
 
 (figure_s2 <- multi_panel_figure(
-  width = c(5,70,70,70,70),
+  width = c(70,70,70,70),
   height = c(60,60),
   column_spacing = 0,
-  panel_label_type = "upper-alpha"))
+  panel_label_type = "lower-alpha"))
 figure_s2 %<>% fill_panel(
   figure_spcomp3,
-  row = 1, column = 2:5)
+  row = 1, column = 1:4)
 figure_s2 %<>% fill_panel(
   cc3,
-  row = 2, column = 2:5)
+  row = 2, column = 1:4)
 figure_s2
-save_multi_panel_figure(figure_s2,'FigureB-3.tiff',dpi=600,compression='lzw')
 
 # 4 topics
-(figure_spcomp4 <- multi_panel_figure(
-  width = c(65,65,65,65),
-  height = c(60,10),
-  panel_label_type = "none",
-  column_spacing = 0))
-figure_spcomp4 %<>% fill_panel(
-  P[[1]],
-  row = 1, column = 1)
-figure_spcomp4 %<>% fill_panel(
-  P[[2]],
-  row = 1, column = 2)
-figure_spcomp4 %<>% fill_panel(
-  P[[3]],
-  row = 1, column = 3)
-figure_spcomp4 %<>% fill_panel(
-  P[[4]],
-  row = 1, column = 4)
-figure_spcomp4
-
 (figure_s3 <- multi_panel_figure(
-  width = c(5,65,65,65,65),
+  width = c(70,70,70,70),
   height = c(60,60),
   column_spacing = 0,
-  panel_label_type = "upper-alpha"))
+  panel_label_type = "lower-alpha"))
 figure_s3 %<>% fill_panel(
-  figure_spcomp4,
-  row = 1, column = 2:5)
+  figure_spcomp,
+  row = 1, column = 1:4)
 figure_s3 %<>% fill_panel(
   cc,
-  row = 2, column = 2:5)
+  row = 2, column = 1:4)
 figure_s3
-save_multi_panel_figure(figure_s3,'FigureB-4.tiff',dpi=600,compression='lzw')
 
 # 5 topics
 ldamodel5topic = LDA(dat,5, control = list(seed = 110),method='VEM')
 cc5 = plot_component_communities(ldamodel5topic,5,dates,'',c(1,5,3,4,2))
 beta15topic = community_composition(ldamodel5topic)
-# change column names to modern taxonomy of species
-colnames(beta15topic)[colnames(beta15topic)=='PB'] <- 'CB'
-colnames(beta15topic)[colnames(beta15topic)=='PH'] <- 'CH'
-colnames(beta15topic)[colnames(beta15topic)=='PP'] <- 'CP'
-colnames(beta15topic)[colnames(beta15topic)=='PI'] <- 'CI'
-composition5 = beta15topic[c(1,5,3,4,2),c('NA','DS','SH','SF','SO','DO','DM','CB','CH','OL','OT','PL','PM','PE','CP','CI','RF','RM','RO','BA','PF')]
+composition5 = beta15topic[c(1,5,3,4,2),c('NA','DS','SH','SF','SO','DO','DM','PB','PH','OL','OT','PL','PM','PE','PP','PI','RF','RM','RO','BA','PF')]
 P5topic = plot_community_composition_gg(composition5,c(3,4,5,2,1),c(0,.8))
 
 (figure_spcomp5 <- multi_panel_figure(
@@ -322,11 +281,11 @@ figure_spcomp5 %<>% fill_panel(
   row = 1, column = 5)
 figure_spcomp5
 
-
 (figure_s4 <- multi_panel_figure(
-  width = c(70,70,70,70,5),
+  width = c(70,70,70,70),
   height = c(60,60),
-  panel_label_type = "upper-alpha"))
+  column_spacing = 0,
+  panel_label_type = "lower-alpha"))
 figure_s4 %<>% fill_panel(
   figure_spcomp5,
   row = 1, column = 1:4)
@@ -334,7 +293,6 @@ figure_s4 %<>% fill_panel(
   cc5,
   row = 2, column = 1:4)
 figure_s4
-save_multi_panel_figure(figure_s4,'FigureB-5.tiff',dpi=600,compression='lzw')
 
 # =======================================================
 # two, three, and five changepoints
@@ -388,7 +346,7 @@ H_4b = ggplot(data = df_4, aes(x=value)) +
         panel.border=element_rect(colour='black',fill=NA),
         panel.background = element_blank(),
         panel.grid.major = element_line(colour='grey90'),
-        panel.grid.minor = element_line(colour='grey90')) 
+        panel.grid.minor = element_line(colour='grey90'))
 H_4b
 
 H_5 = ggplot(data = df_5, aes(x=value)) +
@@ -411,76 +369,76 @@ H_5
 
 # ======================
 # stacked histograms
-# H_2 = ggplot(data = df_2, aes(x=value)) +
-#   geom_histogram(data=df_2,aes(y=..count../sum(..count..),fill=variable),binwidth = .5,color='black') +
-#   labs(x='',y='') +
-#   scale_y_continuous(labels=c('0.00','0.20','0.40','0.60','0.80'),breaks = c(0,.2,.4,.6,.8)) +
-#   theme(axis.text=element_text(size=12),
-#         panel.border=element_rect(colour='black',fill=NA),
-#         panel.background = element_blank(),
-#         panel.grid.major = element_line(colour='grey90'),
-#         panel.grid.minor = element_line(colour='grey90'),
-#         legend.position = 'none') +
-#   xlim(range(year_continuous))
-# H_2
-# H_3 = ggplot(data = df_3, aes(x=value)) +
-#   geom_histogram(data=df_3,aes(y=..count../sum(..count..),fill=variable),binwidth = .5,color='black') +
-#   labs(x='',y='') +
-#   scale_y_continuous(labels=c('0.00','0.20','0.40','0.60','0.80'),breaks = c(0,.2,.4,.6,.8)) +
-#   theme(axis.text=element_text(size=12),
-#         panel.border=element_rect(colour='black',fill=NA),
-#         panel.background = element_blank(),
-#         panel.grid.major = element_line(colour='grey90'),
-#         panel.grid.minor = element_line(colour='grey90'),
-#         legend.position = 'none') +
-#   xlim(range(year_continuous)) 
-# H_3
-# H_4b = ggplot(data = df_4, aes(x=value)) +
-#   geom_histogram(data=df_4,aes(y=..count../sum(..count..),fill=variable),binwidth = .5,color='black') +
-#   labs(x='',y='') +
-#   scale_y_continuous(labels=c('0.00','0.20','0.40','0.60','0.80'),breaks = c(0,.2,.4,.6,.8)) +
-#   theme(axis.text=element_text(size=12),
-#         panel.border=element_rect(colour='black',fill=NA),
-#         panel.background = element_blank(),
-#         panel.grid.major = element_line(colour='grey90'),
-#         panel.grid.minor = element_line(colour='grey90'),
-#         legend.position = 'none') +
-#   xlim(range(year_continuous))
-# H_4b
-# H_5 = ggplot(data = df_5, aes(x=value)) +
-#   geom_histogram(data=df_5,aes(y=..count../sum(..count..),fill=variable),binwidth = .5,color='black') +
-#   labs(x='',y='') +
-#   scale_y_continuous(labels=c('0.00','0.20','0.40','0.60','0.80','1.00','1.20'),breaks = c(0,.2,.4,.6,.8,1,1.2)) +
-#   theme(axis.text=element_text(size=12),
-#         panel.border=element_rect(colour='black',fill=NA),
-#         panel.background = element_blank(),
-#         panel.grid.major = element_line(colour='grey90'),
-#         panel.grid.minor = element_line(colour='grey90'),
-#         legend.position = 'none') +
-#   xlim(range(year_continuous))
-# H_5
+H_2 = ggplot(data = df_2, aes(x=value)) +
+  geom_histogram(data=df_2,aes(y=..count../sum(..count..),fill=variable),binwidth = .5,color='black') +
+  labs(x='',y='') +
+  scale_y_continuous(labels=c('0.00','0.20','0.40','0.60','0.80'),breaks = c(0,.2,.4,.6,.8)) +
+  theme(axis.text=element_text(size=12),
+        panel.border=element_rect(colour='black',fill=NA),
+        panel.background = element_blank(),
+        panel.grid.major = element_line(colour='grey90'),
+        panel.grid.minor = element_line(colour='grey90'),
+        legend.position = 'none') +
+  xlim(range(year_continuous))
+H_2
+H_3 = ggplot(data = df_3, aes(x=value)) +
+  geom_histogram(data=df_3,aes(y=..count../sum(..count..),fill=variable),binwidth = .5,color='black') +
+  labs(x='',y='') +
+  scale_y_continuous(labels=c('0.00','0.20','0.40','0.60','0.80'),breaks = c(0,.2,.4,.6,.8)) +
+  theme(axis.text=element_text(size=12),
+        panel.border=element_rect(colour='black',fill=NA),
+        panel.background = element_blank(),
+        panel.grid.major = element_line(colour='grey90'),
+        panel.grid.minor = element_line(colour='grey90'),
+        legend.position = 'none') +
+  xlim(range(year_continuous))
+H_3
+H_4b = ggplot(data = df_4, aes(x=value)) +
+  geom_histogram(data=df_4,aes(y=..count../sum(..count..),fill=variable),binwidth = .5,color='black') +
+  labs(x='',y='') +
+  scale_y_continuous(labels=c('0.00','0.20','0.40','0.60','0.80'),breaks = c(0,.2,.4,.6,.8)) +
+  theme(axis.text=element_text(size=12),
+        panel.border=element_rect(colour='black',fill=NA),
+        panel.background = element_blank(),
+        panel.grid.major = element_line(colour='grey90'),
+        panel.grid.minor = element_line(colour='grey90'),
+        legend.position = 'none') +
+  xlim(range(year_continuous))
+H_4b
+H_5 = ggplot(data = df_5, aes(x=value)) +
+  geom_histogram(data=df_5,aes(y=..count../sum(..count..),fill=variable),binwidth = .5,color='black') +
+  labs(x='',y='') +
+  scale_y_continuous(labels=c('0.00','0.20','0.40','0.60','0.80','1.00','1.20'),breaks = c(0,.2,.4,.6,.8,1,1.2)) +
+  theme(axis.text=element_text(size=12),
+        panel.border=element_rect(colour='black',fill=NA),
+        panel.background = element_blank(),
+        panel.grid.major = element_line(colour='grey90'),
+        panel.grid.minor = element_line(colour='grey90'),
+        legend.position = 'none') +
+  xlim(range(year_continuous))
+H_5
 
 
 
 (figure_s6 <- multi_panel_figure(
-  width = c(5,60,60,60,60),
+  width = c(60,60,60,60),
   height = c(60,60,60,60),
   column_spacing = 0,
-  panel_label_type = "upper-alpha"))
+  panel_label_type = "lower-alpha"))
 figure_s6 %<>% fill_panel(
   H_2,
-  row = 1, column = 2:5)
+  row = 1, column = 1:4)
 figure_s6 %<>% fill_panel(
   H_3,
-  row = 2, column = 2:5)
+  row = 2, column = 1:4)
 figure_s6 %<>% fill_panel(
   H_4b,
-  row = 3, column = 2:5)
+  row = 3, column = 1:4)
 figure_s6 %<>% fill_panel(
   H_5,
-  row = 4, column = 2:5)
+  row = 4, column = 1:4)
 figure_s6
-save_multi_panel_figure(figure_s6,'FigureB-2.tiff',dpi=600,compression='lzw')
+ggsave("explanatory.pdf", width = 7, height = 6)
 
 # ============================================================
 # figures not in manuscript

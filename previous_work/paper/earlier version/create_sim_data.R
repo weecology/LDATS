@@ -1,42 +1,17 @@
 
-#' @title create series of simulated data
-#' 
-#' @param total_len total length of time series (number of steps)
-#' @param change_len length of gradiated change (number of steps)
-#' @param ntopics number of "topics" (columns in output frame)
-#' 
-#' @return matrix with columns representing topics and rows representing time steps
-#' 
-create_sim_series = function(total_len,change_len,ntopics) {
-  
-  start_change = floor(total_len/2 - change_len/2)
-  end_change = start_change + change_len
-  
-  sim_series = matrix(rep(0,total_len*ntopics),nrow=total_len,ncol=ntopics)
-  # proportions are constant before change
-  sim_series[1:start_change,1] = rep(1)
-  sim_series[1:start_change,2] = rep(0)
-  # duration of change
-  sim_series[(start_change+1):end_change,1] = seq(change_len)*(-1/change_len)+1
-  sim_series[(start_change+1):end_change,2] = seq(change_len)*(1/change_len)+0
-  # proportions are constant for rest of time series
-  sim_series[(end_change+1):total_len,1] = rep(0)
-  sim_series[(end_change+1):total_len,2] = rep(1)
-  
-  return(sim_series)
-}
 
 #' create simulated data for demonstrating LDA analysis
 #'    2 topics
 #'     
 #' @param nspecies = number of species in all topic groups
 #' @param tsteps = number of [monthly] time steps
-#' @param N = total number of individuals of all species
 #' 
 #' @return 
 #'    beta = matrix of species composition of the groups
 #'    gamma = matrix of topic composition over time
 #'            3 simulations of gamma: uniform, slow transition, and fast transition
+#' @export 
+
 create_sim_data_2topic = function(nspecies=24,tsteps=400) {
 
   topics = 2
@@ -52,15 +27,29 @@ create_sim_data_2topic = function(nspecies=24,tsteps=400) {
   gamma_constant[,2] = rep(0,tsteps)
   
   # gamma for a fast transition from topic1 to topic2 (one year/12 time steps)
-  gamma_fast = create_sim_series(total_len=tsteps,change_len=12,topics)
+  gamma_fast = matrix(rep(0,tsteps*topics),nrow=tsteps,ncol=topics)
+  # proportions are constant for first 200 time steps
+  gamma_fast[1:200,1] = rep(1)
+  gamma_fast[1:200,2] = rep(0)
+  # fast transition from tstep 201-212
+  gamma_fast[201:212,1] = seq(12)*(-1/12)+1
+  gamma_fast[201:212,2] = seq(12)*(1/12)+0
+  # proportions are constant for rest of time series
+  gamma_fast[213:tsteps,1] = rep(0)
+  gamma_fast[213:tsteps,2] = rep(1) 
   
   # gamma for a slow transition from topic1 to topic2
-  gamma_slow = create_sim_series(total_len=tsteps,change_len=300,topics)
+  gamma_slow = matrix(rep(0,tsteps*topics),nrow=tsteps,ncol=topics)
+  # brief period of constant values at beginning and end of series
+  gamma_slow[1:50,1] = rep(1)
+  gamma_slow[1:50,2] = rep(0)
+  gamma_slow[351:400,1] = rep(0)
+  gamma_slow[351:400,2] = rep(1)
+  gamma_slow[51:350,1] = seq(300)*(-1/(tsteps-100))+1
+  gamma_slow[51:350,2] = seq(300)*(1/(tsteps-100))+0
   
   return(list(beta,gamma_constant,gamma_fast,gamma_slow))
 }
-
-
 
 #' variation: create simulated data for demonstrating LDA analysis
 #' 2 topics, nonuniform distribution of species in two community-types
@@ -71,6 +60,8 @@ create_sim_data_2topic = function(nspecies=24,tsteps=400) {
 #'    beta = matrix of species composition of the groups
 #'    gamma = matrix of topic composition over time
 #'            3 simulations of gamma: uniform, slow transition, and fast transition
+#' @export 
+
 create_sim_data_2topic_nonuniform = function(tsteps=400) {
   
   topics = 2
@@ -92,32 +83,39 @@ create_sim_data_2topic_nonuniform = function(tsteps=400) {
   gamma_constant[,2] = rep(0,tsteps)
   
   # gamma for a fast transition from topic1 to topic2 (one year/12 time steps)
-  gamma_1yr = create_sim_series(total_len=tsteps,change_len=12,topics)
-  
-  # gamma for a fast transition from topic1 to topic2 (two year/24 time steps)
-  gamma_2yr = create_sim_series(total_len=tsteps,change_len=24,topics)
-  
-  # gamma for a slow transition from topic1 to topic2: 5 years, 60 time steps
-  gamma_5yr = create_sim_series(total_len=tsteps,change_len=60,topics)
+  gamma_fast = matrix(rep(0,tsteps*topics),nrow=tsteps,ncol=topics)
+  # proportions are constant for first 200 time steps
+  gamma_fast[1:200,1] = rep(1)
+  gamma_fast[1:200,2] = rep(0)
+  # fast transition from tstep 201-212
+  gamma_fast[201:212,1] = seq(12)*(-1/12)+1
+  gamma_fast[201:212,2] = seq(12)*(1/12)+0
+  # proportions are constant for rest of time series
+  gamma_fast[213:tsteps,1] = rep(0)
+  gamma_fast[213:tsteps,2] = rep(1) 
   
   # gamma for a slow transition from topic1 to topic2
-  gamma_25yr = create_sim_series(total_len=tsteps,change_len=300,topics)
+  gamma_slow = matrix(rep(0,tsteps*topics),nrow=tsteps,ncol=topics)
+  # brief period of constant values at beginning and end of series
+  gamma_slow[1:50,1] = rep(1)
+  gamma_slow[1:50,2] = rep(0)
+  gamma_slow[351:400,1] = rep(0)
+  gamma_slow[351:400,2] = rep(1)
+  gamma_slow[51:350,1] = seq(300)*(-1/(tsteps-100))+1
+  gamma_slow[51:350,2] = seq(300)*(1/(tsteps-100))+0
   
-  return(list(beta,gamma_constant,gamma_1yr,gamma_2yr,gamma_5yr,gamma_25yr))
+  return(list(beta,gamma_constant,gamma_fast,gamma_slow))
 }
 
-
+#' create simulated data for demonstrating LDA analysis
+#'    3 topics
+#'     
+#' @param nspecies = number of species in all topic groups
+#' @param tsteps = number of [monthly] time steps
+#' 
+#' @export 
 
 create_sim_data_3topic = function(nspecies=24,tsteps=400) {
-  # create beta and gammas; 3 topics
-  #  Inputs:
-  #    nspecies = number of species in all topic groups
-  #    tsteps = number of [monthly] time steps
-  #    N = total number of individuals of all species
-  #  Outputs:
-  #    beta = matrix of species composition of the groups
-  #    gamma = matrix of topic composition over time
-  #            3 simulations of gamma: uniform, slow transition, and fast transition
 
   topics = 3
   
