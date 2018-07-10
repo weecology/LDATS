@@ -121,11 +121,22 @@ plot.LDA_list <- function(x, ...){
 #' @param x an LDA topic model output
 #' @param ... additional arguments to be passed to subfunctions
 #' @param cols colors to be used to plot the topics
+#' @param option A character string indicating the colormap option to use if 
+#'   `cols == NULL`. Four options are available: "magma" (or "A"), "inferno" 
+#'   (or "B"), "plasma" (or "C"), "viridis" (or "D", the default option) and 
+#'   "cividis" (or "E").
 #' @return model plots
+#' 
+#' @examples 
+#'   data(rodents)
+#'   lda_data <- select(rodents, -c(newmoon, date, plots, traps))
+#'   lda_models <- parLDA(data = lda_data, ntopics = 4, nseeds = 10)
+#'   best_lda <- LDA_select(lda_models)
+#'   plot(best_lda, option = "cividis")
 #' 
 #' @export 
 #'
-plot.LDA <- function(x, ..., cols = NULL){
+plot.LDA <- function(x, ..., cols = NULL, option = "D"){
 
   gamma <- x@gamma
   beta <- exp(x@beta)
@@ -136,7 +147,7 @@ plot.LDA <- function(x, ..., cols = NULL){
   beta_sorted <- apply(beta, 2, sort)
 
   if (length(cols) == 0){
-    cols <- rgb(runif(ntopics), runif(ntopics), runif(ntopics))
+    cols <- viridis::viridis(ntopics, option = option)
   }
   if (length(cols) == 1){
     if (cols == "greys"){

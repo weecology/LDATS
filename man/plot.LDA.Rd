@@ -4,7 +4,7 @@
 \alias{plot.LDA}
 \title{Plot an LDA model}
 \usage{
-\method{plot}{LDA}(x, ..., cols = NULL)
+\method{plot}{LDA}(x, ..., cols = NULL, option = "D")
 }
 \arguments{
 \item{x}{an LDA topic model output}
@@ -12,6 +12,11 @@
 \item{...}{additional arguments to be passed to subfunctions}
 
 \item{cols}{colors to be used to plot the topics}
+
+\item{option}{A character string indicating the colormap option to use if 
+`cols == NULL`. Four options are available: "magma" (or "A"), "inferno" 
+(or "B"), "plasma" (or "C"), "viridis" (or "D", the default option) and 
+"cividis" (or "E").}
 }
 \value{
 model plots
@@ -19,4 +24,12 @@ model plots
 \description{
 Function used to create an LDA summary plot, called using the 
   plot method
+}
+\examples{
+  data(rodents)
+  lda_data <- select(rodents, -c(newmoon, date, plots, traps))
+  lda_models <- parLDA(data = lda_data, ntopics = 4, nseeds = 10)
+  best_lda <- LDA_select(lda_models)
+  plot(best_lda, option = "cividis")
+
 }
