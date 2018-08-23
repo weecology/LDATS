@@ -16,9 +16,9 @@
 #' \dontrun{
 #'   data(rodents)
 #'   lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
-#'   r_LDA <- parLDA(data = lda_data, ntopics = 2, nseeds = 2, ncores = 4)
-#'                         
+#'   r_LDA <- parLDA(data = lda_data, ntopics = 2, nseeds = 2, ncores = 4)                         
 #' }
+#'
 #' @export 
 #'
 parLDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
@@ -121,11 +121,24 @@ plot.LDA_list <- function(x, ...){
 #' @param x an LDA topic model output
 #' @param ... additional arguments to be passed to subfunctions
 #' @param cols colors to be used to plot the topics
+#' @param option A character string indicating the colormap option to use if 
+#'   `cols == NULL`. Four options are available: "magma" (or "A"), "inferno" 
+#'   (or "B"), "plasma" (or "C"), "viridis" (or "D", the default option) and 
+#'   "cividis" (or "E").
 #' @return model plots
 #' 
+#' @examples 
+#' \dontrun{
+#'   data(rodents)
+#'   lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
+#'   lda_models <- parLDA(data = lda_data, ntopics = 4, nseeds = 10)
+#'   best_lda <- LDA_select(lda_models)
+#'   plot(best_lda, option = "cividis")
+#' }
+#'
 #' @export 
 #'
-plot.LDA <- function(x, ..., cols = NULL){
+plot.LDA <- function(x, ..., cols = NULL, option = "D"){
 
   gamma <- x@gamma
   beta <- exp(x@beta)
@@ -136,11 +149,11 @@ plot.LDA <- function(x, ..., cols = NULL){
   beta_sorted <- apply(beta, 2, sort)
 
   if (length(cols) == 0){
-    cols <- rgb(runif(ntopics), runif(ntopics), runif(ntopics))
+    cols <- viridis(ntopics, option = option)
   }
   if (length(cols) == 1){
-    if (cols == "greys"){
-      ggg <- runif(ntopics, 0, 0.8)
+    if (cols == "greys" | cols == "grey" | cols == "grays" | cols == "gray"){
+      ggg <- seq(0, 0.8, length.out = ntopics)
       cols <- rep(NA, ntopics)
       for (i in 1:ntopics){
        cols[i] <- rgb(ggg[i], ggg[i], ggg[i])

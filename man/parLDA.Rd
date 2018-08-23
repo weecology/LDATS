@@ -29,7 +29,7 @@ Runs each of the number of input topics for the number of
 \dontrun{
   data(rodents)
   lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
-  r_LDA <- parLDA(data = lda_data, ntopics = 2, nseeds = 2, ncores = 4)
-                        
+  r_LDA <- parLDA(data = lda_data, ntopics = 2, nseeds = 2, ncores = 4)                         
 }
+
 }
