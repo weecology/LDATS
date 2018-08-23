@@ -152,8 +152,8 @@ plot.LDA <- function(x, ..., cols = NULL, option = "D"){
     cols <- viridis(ntopics, option = option)
   }
   if (length(cols) == 1){
-    if (cols == "greys"){
-      ggg <- runif(ntopics, 0, 0.8)
+    if (cols == "greys" | cols == "grey" | cols == "grays" | cols == "gray"){
+      ggg <- seq(0, 0.8, length.out = ntopics)
       cols <- rep(NA, ntopics)
       for (i in 1:ntopics){
        cols[i] <- rgb(ggg[i], ggg[i], ggg[i])
