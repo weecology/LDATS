@@ -26,10 +26,12 @@ Function used to create an LDA summary plot, called using the
   plot method
 }
 \examples{
+\dontrun{
   data(rodents)
   lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
   lda_models <- parLDA(data = lda_data, ntopics = 4, nseeds = 10)
   best_lda <- LDA_select(lda_models)
   plot(best_lda, option = "cividis")
+}
 
 }

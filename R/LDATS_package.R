@@ -14,6 +14,7 @@
 #' @importFrom progress progress_bar
 #' @importFrom coda HPDinterval as.mcmc autocorr.diag effectiveSize autocorr
 #' @importFrom topicmodels logLik LDA
+#' @importFrom viridis viridis
 #'
 
 #' @title Performs two-stage LDA-timeseries analyses

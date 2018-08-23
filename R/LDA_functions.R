@@ -16,9 +16,9 @@
 #' \dontrun{
 #'   data(rodents)
 #'   lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
-#'   r_LDA <- parLDA(data = lda_data, ntopics = 2, nseeds = 2, ncores = 4)
-#'                         
+#'   r_LDA <- parLDA(data = lda_data, ntopics = 2, nseeds = 2, ncores = 4)                         
 #' }
+#'
 #' @export 
 #'
 parLDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
@@ -128,12 +128,14 @@ plot.LDA_list <- function(x, ...){
 #' @return model plots
 #' 
 #' @examples 
+#' \dontrun{
 #'   data(rodents)
 #'   lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
 #'   lda_models <- parLDA(data = lda_data, ntopics = 4, nseeds = 10)
 #'   best_lda <- LDA_select(lda_models)
 #'   plot(best_lda, option = "cividis")
-#' 
+#' }
+#'
 #' @export 
 #'
 plot.LDA <- function(x, ..., cols = NULL, option = "D"){
@@ -147,7 +149,7 @@ plot.LDA <- function(x, ..., cols = NULL, option = "D"){
   beta_sorted <- apply(beta, 2, sort)
 
   if (length(cols) == 0){
-    cols <- viridis::viridis(ntopics, option = option)
+    cols <- viridis(ntopics, option = option)
   }
   if (length(cols) == 1){
     if (cols == "greys"){
