@@ -155,22 +155,21 @@ proposal_dist <- function(nit, ntemps, nchangepoints, magnitude){
 #'
 #' @export
 #'
-MTS <- function(data, formula = ~1, nchangepoints = 1, 
-                weights = NULL, nit = 1e3, magnitude = 12, burnin = 1e2, ...){
+MTS <- function(data, formula = ~1, nchangepoints = 1, weights = NULL, 
+                nit = 1e3, magnitude = 12, burnin = 1e2, ...){
 
-  character_formula <- as.character(formula)
-  formula <- character_formula[length(character_formula)]
+  formula <- prep_formula(formula)
   ts_memo <- memoise(multinom_ts)
 
-  if(nchangepoints == 0){
+  if(nchangepoints == 0){ # consider handling this cleaner
     nit <- 1
-  }
+  }   	
+
   temps <- prep_temps(...)
   betas <- 1 / temps
   ntemps <- length(betas)
 
-  prep_cpts <- prep_changepts(data, formula, ntemps, nchangepoints, 
-                 weights)
+  prep_cpts <- prep_changepts(data, formula, ntemps, nchangepoints, weights)
   changepts <- prep_cpts$changepts
   lls <- prep_cpts$lls
 
