@@ -1,14 +1,14 @@
 Package: LDATS
-Title: Detect Community-Types from Data and Identify Break Points
+Title: Latent Dirichlet Allocation coupled with Time Series analyses
 Version: 0.0.5
 Authors@R: c(
 	person("Juniper", "Simonis", email = "juniper.simonis@weecology.org",
 	role = c("aut", "cre")),
-    person("Erica", "Christensen", email = "erica.christensen@weecology.org",
-	role = c("aut")),
-    person("Dave", "Harris", email = "dave.harris@weecology.org", 
-	role = c("aut")),
-    person("Hao", "Ye", email = "hao.ye@weecology.org", role = c("ctb"))
+    person("Erica", "Christensen", role = c("aut")),
+    person("Dave", "Harris", role = c("aut")),
+    person("Hao", "Ye", role = c("aut")),
+	person("Renata", "Diaz", role = c("aut")),
+    person("S. K. Morgan", "Ernest", role = c("aut"))
     )
 Description: Combines Latent Dirichlet Allocation and Time Series methods
     in a two-stage analysis to identify temporal changes in multi-dimensional 
