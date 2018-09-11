@@ -14,7 +14,7 @@ prep_LDA_control(seed, control = NULL)
 specific model.}
 }
 \value{
-List (class: "\code{LDAcontrol}") of LDA control to be used.
+List (class: "\code{LDAcontrol}") of LDA controls to be used.
 }
 \description{
 Update the control liste for the LDA model with the specific

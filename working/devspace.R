@@ -8,3 +8,4 @@ slotNames(x1)
 
 
 test LDA functions.
+fill out any more function doc info. 
