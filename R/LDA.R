@@ -78,7 +78,7 @@ check_MV <- function(MV){
 #' @export
 #'
 check_topics <- function(topics){
-  if (any(topics %% 1 != 0)){
+  if (!is.numeric(topics) || any(topics %% 1 != 0)){
     stop("topics vector must be integers")
   }
   if (any(topics < 2)){
@@ -113,8 +113,3 @@ prep_LDA_control <- function(seed, control = NULL){
   }
   control
 }
-
-
-
-
-

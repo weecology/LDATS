@@ -192,7 +192,7 @@ LDA_plot_bottom_panel <- function(x, xtime, xname, cols){
 #'
 #' @export 
 #'
-set_LDA_plot_colors <- function(x, cols, option){
+set_LDA_plot_colors <- function(x, cols = NULL, option = "D"){
 
   gamma <- x@gamma
   ntopics <- ncol(gamma)
