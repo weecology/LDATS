@@ -4,10 +4,10 @@
 \name{LDATS}
 \alias{LDATS}
 \alias{LDATS-package}
-\title{Performs two-stage LDA-timeseries analyses}
+\title{Two-stage LDA-TimeSeries analyses}
 \description{
-This package is designed to analyze multivariate time series
+Performs two-stage analysis of multivariate temporal data
   using a combination of Latent Dirichlet Allocation and multinomial 
-  regression.
+  time series models.
 }
 \keyword{package}

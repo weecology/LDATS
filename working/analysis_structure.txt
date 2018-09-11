@@ -1,0 +1,10 @@
+code pipeline:
+
+LDA_TS
+
+
+LDA should take 
+
+
+notes:
+model selection within the time series

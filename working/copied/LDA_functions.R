@@ -8,7 +8,6 @@
 #' @param nseeds number of seeds (replicate starts) to use for each value of
 #'   ntopics
 #' @param ncores integer number of cores to use
-#' @param ... additional arguments to be passed to the topicmodel LDA function
 #' 
 #' @return List of LDA models
 #' 
@@ -21,7 +20,7 @@
 #'
 #' @export 
 #'
-parLDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
+parLDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1) {
 
   max_cores <- detectCores(logical = TRUE)
   seed_in <- rep(seq(2, nseeds * 2, 2), length(ntopics))
@@ -29,7 +28,7 @@ parLDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
   nruns <- length(seed_in)
 
   if (ncores > max_cores){
-    capped_cores <- floor(0.75 * parallel::detectCores(logical = TRUE))
+    capped_cores <- floor(0.75 * detectCores(logical = TRUE))
     msg <- paste(ncores, " is larger than max cores available (", max_cores,
              "); capped at ", capped_cores, " cores.", sep = "")
     warning(msg)
@@ -40,9 +39,7 @@ parLDA <- function(data, ntopics = 2, nseeds = 1, ncores = 1, ...) {
   i <- 1
   mods <- foreach(i = 1:nruns, .packages = "topicmodels",
                   .errorhandling = "pass") %dopar% {
-
-    topicmodels::LDA(data, k = k_in[i], control = list(seed = seed_in[i]),
-                     ...)
+    topicmodels::LDA(data, k = k_in[i], control = list(seed = seed_in[i]))
   }
 
   stopCluster(cl)

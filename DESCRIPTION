@@ -1,6 +1,6 @@
 Package: LDATS
 Title: Latent Dirichlet Allocation coupled with Time Series analyses
-Version: 0.0.5
+Version: 0.0.6
 Authors@R: c(
 	person("Juniper", "Simonis", email = "juniper.simonis@weecology.org",
 	role = c("aut", "cre")),
@@ -10,31 +10,21 @@ Authors@R: c(
 	person("Renata", "Diaz", role = c("aut")),
     person("S. K. Morgan", "Ernest", role = c("aut"))
     )
-Description: Combines Latent Dirichlet Allocation and Time Series methods
-    in a two-stage analysis to identify temporal changes in multi-dimensional 
-	time series data.
+Description: Combines Latent Dirichlet Allocation and Multinomial Time Series
+    methods in a two-stage analysis to quantify dynamics in  
+	high-dimensional temporal data.
 Depends: R (>= 3.2.3)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: topicmodels,
-    dplyr,
-    memoise,
-    progress,
-    nnet,
-    doParallel,
-    magrittr,
-    foreach,
-	methods,
-	coda,
-	testthat,
-	digest,
-	tidyverse,
-	viridis,
-	gridExtra
+Imports: 
+    digest,
+    topicmodels,
+    viridis
 Suggests:
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat
 VignetteBuilder:
     knitr
 RoxygenNote: 6.0.1
