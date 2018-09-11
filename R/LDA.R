@@ -91,7 +91,7 @@ check_topics <- function(topics){
 #' @description Update the control liste for the LDA model with the specific
 #'   seed as indicated.
 #'   
-#' @param nseeds Integer number of seeds (replicate starts) to use for the 
+#' @param seed Integer number of seeds (replicate starts) to use for the 
 #'   specific model.
 #'
 #' @param control Named list of control parameters to be used in 

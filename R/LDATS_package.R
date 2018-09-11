@@ -1,4 +1,6 @@
 #' @importFrom digest digest
+#' @importFrom graphics axis, mtext, par, plot, points, rect, text
+#' @importFrom grDevices devAskNewPage rgb
 #' @importFrom topicmodels LDA logLik
 #' @importFrom viridis viridis
 #'
