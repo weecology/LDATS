@@ -23,8 +23,8 @@ within the specific models described via the argument \code{formula}
 
 \item{timename}{Character name of the column in the 
 \code{document_covariate_table} that contains the time index to use
-for assignment of the changepoints (corresponding to the vector \code{t}
-in the mathematical description of the model.}
+for assignment of the changepoints (corresponding to the vector 
+\strong{\eqn{t}} in the mathematical description of the model).}
 
 \item{formula}{Vector of \code{formula}(s) for the continuous change. Any 
 predictor variable included in a formula must also be a column in the
@@ -39,7 +39,8 @@ implementation can reasonably include up to 6 change points. Each element
 segementation of the data  for each continuous model and each LDA model.}
 
 \item{weights}{Optional class \code{numeric} vector of weights for each 
-document. Corresponds to the term \eqn{v} in the math description.}
+document. Corresponds to the vector \strong{\eqn{v}} in the math 
+description.}
 
 \item{ptMCMC_controls}{Class \code{ptMCMC_controls} list, holding control 
 parameters for the parallel tempering Markov Chain Monte Carlo (ptMCMC)

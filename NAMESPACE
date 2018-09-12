@@ -2,6 +2,7 @@
 
 S3method(plot,LDA)
 S3method(plot,LDA_list)
+export(LDA_TS)
 export(LDA_plot_bottom_panel)
 export(LDA_plot_top_panel)
 export(LDA_set)

@@ -78,7 +78,7 @@ check_document_term_table <- function(document_term_table){
   document_term_table_m <- as.matrix(document_term_table)
   if(!is.integer(document_term_table_m[1, 1])){
     dtt <- "document_term_table"
-    msg <- paste0(dct, "is not conformable to a matrix of integers")
+    msg <- paste0(dtt, "is not conformable to a matrix of integers")
     stop(msg)
   }
 }
