@@ -14,7 +14,7 @@ specific model.}
 \code{\link[topicmodels]{LDA}} (note that "seed" will be overwritten).}
 }
 \value{
-List (class: "\code{LDAcontrol}") of LDA controls to be used.
+List (class: "\code{list}") of controls to be used in the LDA.
 }
 \description{
 Update the control liste for the LDA model with the specific

@@ -107,7 +107,7 @@ check_topics <- function(topics){
 #' @param control Named list of control parameters to be used in 
 #'   \code{\link[topicmodels]{LDA}} (note that "seed" will be overwritten).
 #'
-#' @return List (class: "\code{LDAcontrol}") of LDA controls to be used.
+#' @return List (class: "\code{list}") of controls to be used in the LDA. 
 #' 
 #' @export
 #'
@@ -122,4 +122,44 @@ prep_LDA_control <- function(seed, control = NULL){
     control <- list(seed = seed)
   }
   control
+}
+
+#' @title Select the best LDA model(s) for use in time series
+#'
+#' @description Select the best model(s) of interest from an
+#'   \code{LDA_list} object, based on a set of user-provided functions. The
+#'   functions default to choosing the model with the lowest AIC value.
+#'
+#' @param lda_models An object of class \code{LDA_list} produced by
+#'   \code{LDA_set}.
+#'
+#' @param measurer, selector Function names for use in evaluation of the LDA
+#'   models. \code{measurer} is used to create a value for each model
+#'   and \code{selector} operates on the values to choose the model(s) to 
+#'   pass on. 
+#'
+#' @return A reduced version of \code{lda_models} that only includes the 
+#'   selected LDA model(s). The returned object is still an object of
+#'   class \code{LDA_list}.
+#'
+#' \dontrun{
+#'   data(rodents)
+#'   lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
+#'   r_LDA <- LDA_set(MV = lda_data, topics = 2, nseeds = 2)  
+#'   select_LDA(r_LDA)                       
+#' }
+#'
+#' @export
+#'
+select_LDA <- function(lda_models = NULL, measurer = AIC, selector = min){
+
+  if("LDA_list" %in% attr(r_LDA, "class") == FALSE){
+    stop("lda_models must be of class LDA_list")
+  }
+  
+  lda_measured <- sapply(lda_models, measurer) %>%
+                  matrix(ncol = 1)
+  lda_selected <- apply(lda_measured, 2, selector) 
+  which_selected <- which(lda_measured %in% lda_selected)
+  lda_models[which_selected]
 }

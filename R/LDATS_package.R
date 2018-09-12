@@ -1,6 +1,7 @@
 #' @importFrom digest digest
 #' @importFrom graphics axis mtext par plot points rect text
 #' @importFrom grDevices devAskNewPage rgb
+#' @importFrom magrittr %>%
 #' @importFrom topicmodels LDA logLik
 #' @importFrom viridis viridis
 #'
@@ -12,7 +13,9 @@
 #'   time series models.
 #'
 #' @name LDATS
+#'
 #' @docType package
+#'
 #' @keywords package
 #'
 NULL
