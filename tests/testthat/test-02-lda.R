@@ -33,3 +33,9 @@ test_that("check output from prep_LDA_control", {
   expect_equal(prep_LDA_control(1)$seed, 1)
   expect_equal(prep_LDA_control(1, list(seed = 10))$seed, 1)
 })
+
+test_that("check selection via select_LDA", {
+  expect_is(select_LDA(lda), "LDA_list")
+  expect_equal(length(select_LDA(lda)), 1)
+  expect_equal(select_LDA(lda)[1], lda[3])
+})

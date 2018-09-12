@@ -153,7 +153,7 @@ prep_LDA_control <- function(seed, control = NULL){
 #'
 select_LDA <- function(lda_models = NULL, measurer = AIC, selector = min){
 
-  if("LDA_list" %in% attr(r_LDA, "class") == FALSE){
+  if("LDA_list" %in% attr(lda_models, "class") == FALSE){
     stop("lda_models must be of class LDA_list")
   }
   
@@ -161,5 +161,7 @@ select_LDA <- function(lda_models = NULL, measurer = AIC, selector = min){
                   matrix(ncol = 1)
   lda_selected <- apply(lda_measured, 2, selector) 
   which_selected <- which(lda_measured %in% lda_selected)
-  lda_models[which_selected]
+  out <- lda_models[which_selected]
+  class(out)  <- c("LDA_list", "list") 
+  out
 }
