@@ -4,7 +4,7 @@
 \alias{set_LDA_plot_colors}
 \title{Prepare the colors to be used}
 \usage{
-set_LDA_plot_colors(x, cols, option)
+set_LDA_plot_colors(x, cols = NULL, option = "D")
 }
 \arguments{
 \item{x}{Object of class \code{LDA}}

@@ -2,17 +2,20 @@
 #' 
 #' @description For a given dataset (counts of words across several 
 #'   documents), conduct multiple Latent Dirichlet Allocation (LDA) models
-#'   (using the Variational Expectation Maximization (VEM) algorithm) to 
-#'   account for [1] uncertainty in the number of latent topics and
-#'   [2] the impact of intial values in the estimation procedure 
+#'   (using the Variational Expectation Maximization (VEM) algorithm; Blei et 
+#'   al.) to account for [1] uncertainty in the number of latent topics and
+#'   [2] the impact of intial values in the estimation procedure. 
+#'
+#' This function is a wrapper of the \code{\link[topicmodels]{LDA}} function
+#'   in the \code{topicmodels} package (Grun and Hornik 2011).
 #'   
 #' @param MV Matrix of observation count data (rows: documents (\code{M}), 
-#'   columns: terms (\code{V})).
+#'   columns: terms (\code{V})). Must be conformable to a matrix of integers.
 #'
 #' @param topics Vector of the number of topics to evaluate.
 #'
 #' @param nseeds Integer number of seeds (replicate starts) to use for each 
-#'   value of \code{ntopics}.
+#'   value of \code{topics}.
 #'
 #' @param control Named list of control parameters to be used in 
 #'   \code{\link[topicmodels]{LDA}} (note that "seed" will be overwritten).
@@ -20,6 +23,13 @@
 #' @return List (class: "\code{LDA_list}") of LDA models (class: 
 #'   "\code{LDA}").
 #' 
+#' @references 
+#'   Blei, D. M., A. Y. Ng, and M. I. Jordan. 2003. Latent Dirichlet
+#'   Allocation. Journal of Machine Learning Research 3:993-1022.
+#'
+#'   Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
+#'   Models. Journal of Statistical Software 40:13.
+#'
 #' @examples 
 #' \dontrun{
 #'   data(rodents)
