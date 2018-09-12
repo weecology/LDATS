@@ -27,8 +27,8 @@ Nothing yet.
 }
 \description{
 This function runs a complete suite of Latent Dirichlet
-  Allocation (LDA) models (via \link{\code{LDA_set}}), selects the choice
-  LDA model(s) (via \link{\code{select_LDA}}), runs a complete set of Time 
-  Series (TS) models (via \link{\code{TS_set_on_LDA}}) on the choice LDA
+  Allocation (LDA) models (via \code{\link{LDA_set}}), selects the choice
+  LDA model(s) (via \code{\link{select_LDA}}), runs a complete set of Time 
+  Series (TS) models (via \code{\link{TS_set_on_LDA}}) on the choice LDA
   model(s), then selects the best TS model (via \code{select_TS}).
 }
