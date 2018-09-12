@@ -13,7 +13,7 @@
 #' \dontrun{
 #'   data(rodents)
 #'   lda_data <- select(rodents, -c(newmoon, date, plots, traps))
-#'   r_LDA <- parLDA(data = lda_data, ntopics = 2, nseeds = 2)
+#'   r_LDA <- parLDA(lda_data, topics = 2, nseeds = 2)
 #'   plot(r_LDA)
 #' }
 #' @export 
@@ -53,7 +53,7 @@ plot.LDA_list <- function(x, ...){
 #' \dontrun{
 #'   data(rodents)
 #'   lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
-#'   lda_models <- parLDA(data = lda_data, ntopics = 4, nseeds = 10)
+#'   lda_models <- parLDA(lda_data, topics = 4, nseeds = 10)
 #'   best_lda <- LDA_select(lda_models)
 #'   plot(best_lda, option = "cividis")
 #' }

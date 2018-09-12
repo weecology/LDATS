@@ -3,7 +3,7 @@ context("Check LDA plot functions")
 data(rodents)
 rem <- which(colnames(rodents) %in% c("newmoon", "date", "plots", "traps"))
 lda_data <- rodents[ , -rem]
-ldas <- LDA_set(MV = lda_data, topics = c(2, 4), nseeds = 2)
+ldas <- LDA_set(lda_data, topics = c(2, 4), nseeds = 2)
 lda <- ldas[[1]]
 xtime <- rodents$newmoon
 

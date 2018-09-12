@@ -4,11 +4,14 @@
 \alias{LDA_set}
 \title{Run a set of Latent Dirichlet Allocation models}
 \usage{
-LDA_set(MV, topics = 2, nseeds = 1, control = NULL)
+LDA_set(document_term_table, topics = 2, nseeds = 1, control = NULL)
 }
 \arguments{
-\item{MV}{Matrix of observation count data (rows: documents (\code{M}), 
-columns: terms (\code{V})). Must be conformable to a matrix of integers.}
+\item{document_term_table}{Table of observation count data (rows: 
+documents (\eqn{M}), columns: terms (\eqn{V})). May be a class 
+\code{matrix} or \code{data.frame} but must be conformable to
+a code of integers. This table is a document-level summary of the data 
+noted as \eqn{w} (the word-level topic identity) in the math description.}
 
 \item{topics}{Vector of the number of topics to evaluate.}
 
@@ -36,7 +39,7 @@ This function is a wrapper of the \code{\link[topicmodels]{LDA}} function
 \dontrun{
   data(rodents)
   lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
-  r_LDA <- LDA_set(MV = lda_data, topics = 2, nseeds = 2)                         
+  r_LDA <- LDA_set(lda_data, topics = 2, nseeds = 2)                         
 }
 
 }

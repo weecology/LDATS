@@ -14,10 +14,13 @@ test_that("check output from LDA_set", {
   expect_is(lda[[4]], "LDA")
 })
 
-test_that("check error catching of check_MV", {
-  expect_error(check_MV("a"))
-  expect_error(check_MV(matrix(1:100, 10, 10), NA))
-  expect_error(check_MV(data.frame("dummy" = 1:100), NA))
+test_that("check error catching of check_document_term_table", {
+  dtt <- "a"
+  expect_error(check_document_term_table(dtt))
+  dtt <- matrix(1:100, 10, 10)
+  expect_error(check_document_term_table(dtt, NA))
+  dtt <- data.frame("dummy" = 1:100)
+  expect_error(check_document_term_table(dtt, NA))
 })
 
 test_that("check error catching of check_topics", {

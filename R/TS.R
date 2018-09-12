@@ -38,7 +38,7 @@
 #'   segementation of the data  for each continuous model and each LDA model.
 #'
 #' @param weights Optional class \code{numeric} vector of weights for each 
-#'   document. Corresponds to the term \code{v} in the math description.
+#'   document. Corresponds to the term \eqn{v} in the math description.
 #'
 #' @param ptMCMC_controls Class \code{ptMCMC_controls} list, holding control 
 #'   parameters for the parallel tempering Markov Chain Monte Carlo (ptMCMC)
@@ -48,7 +48,7 @@
 #'
 #' @export
 #'
-TS_set_on_LDA <- function(lda_models, document_covariate_matrix, timename,
+TS_set_on_LDA <- function(lda_models, document_covariate_table, timename,
                           formula = ~ 1, changepoints = 0, weights = NULL, 
                           ptMCMC_controls = ptMCMC_controls_list()){
 

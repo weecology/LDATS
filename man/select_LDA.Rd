@@ -19,16 +19,18 @@ pass on.}
 A reduced version of \code{lda_models} that only includes the 
   selected LDA model(s). The returned object is still an object of
   class \code{LDA_list}.
-
-\dontrun{
-  data(rodents)
-  lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
-  r_LDA <- LDA_set(MV = lda_data, topics = 2, nseeds = 2)  
-  select_LDA(r_LDA)                       
-}
 }
 \description{
 Select the best model(s) of interest from an
   \code{LDA_list} object, based on a set of user-provided functions. The
   functions default to choosing the model with the lowest AIC value.
+}
+\examples{
+\dontrun{
+  data(rodents)
+  lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
+  r_LDA <- LDA_set(lda_data, topics = 2, nseeds = 2)  
+  select_LDA(r_LDA)                       
+}
+
 }

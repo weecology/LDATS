@@ -22,7 +22,7 @@ Generalization of the plot function to work on a list of LDA
 \dontrun{
   data(rodents)
   lda_data <- select(rodents, -c(newmoon, date, plots, traps))
-  r_LDA <- parLDA(data = lda_data, ntopics = 2, nseeds = 2)
+  r_LDA <- parLDA(lda_data, topics = 2, nseeds = 2)
   plot(r_LDA)
 }
 }
