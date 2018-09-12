@@ -19,6 +19,7 @@ Encoding: UTF-8
 LazyData: true
 Imports: 
     digest,
+    magrittr,
     topicmodels,
     viridis
 Suggests:
