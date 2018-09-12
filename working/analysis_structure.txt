@@ -1,10 +1,13 @@
 code pipeline:
 
-LDA_TS
+-LDA_TS
+  -LDA_set
+    -LDA
+  -select_LDA
 
-
-LDA should take 
 
 
 notes:
 model selection within the time series
+the final result should give all of the LDAs and all of the time series run on the selected LDA, but only if asked for
+the main final result should be the selected time series on the selected LDA

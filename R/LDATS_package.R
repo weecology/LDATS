@@ -2,6 +2,7 @@
 #' @importFrom graphics axis mtext par plot points rect text
 #' @importFrom grDevices devAskNewPage rgb
 #' @importFrom magrittr %>%
+#' @importFrom stats AIC
 #' @importFrom topicmodels LDA logLik
 #' @importFrom viridis viridis
 #'

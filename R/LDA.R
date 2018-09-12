@@ -133,7 +133,7 @@ prep_LDA_control <- function(seed, control = NULL){
 #' @param lda_models An object of class \code{LDA_list} produced by
 #'   \code{LDA_set}.
 #'
-#' @param measurer, selector Function names for use in evaluation of the LDA
+#' @param measurer,selector Function names for use in evaluation of the LDA
 #'   models. \code{measurer} is used to create a value for each model
 #'   and \code{selector} operates on the values to choose the model(s) to 
 #'   pass on. 
