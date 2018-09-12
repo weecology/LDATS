@@ -142,6 +142,7 @@ prep_LDA_control <- function(seed, control = NULL){
 #'   selected LDA model(s). The returned object is still an object of
 #'   class \code{LDA_list}.
 #'
+#' @examples
 #' \dontrun{
 #'   data(rodents)
 #'   lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
