@@ -169,7 +169,7 @@ select_LDA <- function(LDA_models = NULL, measurer = AIC, selector = min){
                   matrix(ncol = 1)
   lda_selected <- apply(lda_measured, 2, selector) 
   which_selected <- which(lda_measured %in% lda_selected)
-  out <- lda_models[which_selected]
+  out <- LDA_models[which_selected]
   class(out)  <- c("LDA_list", "list") 
   out
 }
