@@ -8,4 +8,5 @@ smod <- select_LDA(r_lda)
 
 slotNames(x1)
 
-
+yy <- smod[[1]]@gamma
+XX(yy~1)

@@ -1,6 +1,7 @@
 #' @importFrom digest digest
 #' @importFrom graphics axis mtext par plot points rect text
 #' @importFrom grDevices devAskNewPage rgb
+#' @importFrom lubridate is.Date
 #' @importFrom magrittr %>%
 #' @importFrom stats AIC
 #' @importFrom topicmodels LDA logLik
