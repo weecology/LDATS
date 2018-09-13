@@ -3,6 +3,7 @@
 #' @importFrom grDevices devAskNewPage rgb
 #' @importFrom lubridate is.Date
 #' @importFrom magrittr %>%
+#' @importFrom methods is
 #' @importFrom stats AIC
 #' @importFrom topicmodels LDA logLik
 #' @importFrom viridis viridis

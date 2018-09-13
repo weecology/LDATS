@@ -120,7 +120,7 @@ check_document_covariate_table <- function(document_covariate_table,
   if (length(dct_df) == 1 && is.na(dct_df)){
     stop("document_covariate_table is not conformable to a data frame")
   }
-  if (nrow(document_covariate_matrix) != nrow(LDA_models[[1]]@gamma)){
+  if (nrow(document_covariate_table) != nrow(LDA_models[[1]]@gamma)){
     stop("number of documents in covariate table is not equal to number of 
       documents observed")
   }
