@@ -4,12 +4,12 @@
 \alias{TS_set_on_LDA}
 \title{Conduct a set of Time Series analyses on LDA models}
 \usage{
-TS_set_on_LDA(lda_models, document_covariate_table, timename, formula = ~1,
+TS_set_on_LDA(LDA_models, document_covariate_table, timename, formula = ~1,
   changepoints = 0, weights = NULL,
   ptMCMC_controls = ptMCMC_controls_list())
 }
 \arguments{
-\item{lda_models}{List of LDA models (class \code{LDA_list}) or a singular
+\item{LDA_models}{List of LDA models (class \code{LDA_list}) or a singular
 LDA model (class \code{LDA}).}
 
 \item{document_covariate_table}{Document covariate table (rows:

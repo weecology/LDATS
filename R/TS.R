@@ -8,7 +8,7 @@
 #'   main Time Series function, \code{MTS}, via the \code{ptMCMC_controls}
 #'   argument  
 #'
-#' @param lda_models List of LDA models (class \code{LDA_list}) or a singular
+#' @param LDA_models List of LDA models (class \code{LDA_list}) or a singular
 #'   LDA model (class \code{LDA}).
 #'
 #' @param document_covariate_table Document covariate table (rows:
@@ -49,18 +49,18 @@
 #'
 #' @export
 #'
-TS_set_on_LDA <- function(lda_models, document_covariate_table, timename,
+TS_set_on_LDA <- function(LDA_models, document_covariate_table, timename,
                           formula = ~ 1, changepoints = 0, weights = NULL, 
                           ptMCMC_controls = ptMCMC_controls_list()){
 
-  lda_models <- check_LDA_models(lda_models)
-  check_document_covariate_table(document_covariate_table, lda_models)
+  LDA_models <- check_LDA_models(LDA_models)
+  check_document_covariate_table(document_covariate_table, LDA_models)
   check_timename(document_covariate_table, timename)
   formula <- check_formula(formula, document_covariate_table)  
   check_changepoints(changepoints)
   check_weights(weights)
 
-  mods <- expand_TS(lda_models, formula, changepoints)
+  mods <- expand_TS(LDA_models, formula, changepoints)
   nmods <- nrow(mods)
   out <- vector("list", nmods)
   for(i in 1:nmods){
@@ -71,15 +71,14 @@ TS_set_on_LDA <- function(lda_models, document_covariate_table, timename,
 
 check_changepoints <- function(changepoints){
 # to do: verify that the input is a vector of integers
-
 }
 
 check_weights <- function(weights){
 # to do: verify that the input is a vector of numeric values, should be [0,1]
 }
 
-expand_TS <- function(lda_models, formula, changepoints){
-  nmods <- length(lda_models)
+expand_TS <- function(LDA_models, formula, changepoints){
+  nmods <- length(LDA_models)
   expand.grid(lda = 1:nmods, formula = formula, 
                       nchangepoints = changepoints, stringsAsFactors = FALSE)
 }
@@ -115,29 +114,29 @@ check_timename <- function(document_covariate_table, timename){
 }
 
 check_document_covariate_table <- function(document_covariate_table, 
-                                           lda_models){
+                                           LDA_models){
   dct_df <- tryCatch(data.frame(document_covariate_table),
                      warning = function(x){NA}, error = function(x){NA})
   if (length(dct_df) == 1 && is.na(dct_df)){
     stop("document_covariate_table is not conformable to a data frame")
   }
-  if (nrow(document_covariate_matrix) != nrow(lda_models[[1]]@gamma)){
+  if (nrow(document_covariate_matrix) != nrow(LDA_models[[1]]@gamma)){
     stop("number of documents in covariate table is not equal to number of 
       documents observed")
   }
 }
 
 
-check_lda_models <- function(lda_models){
-  if(("LDA_list" %in% class(lda_models)) == FALSE){
-    if(is(lda_models, "LDA") == TRUE){
-      lda_models <- list(lda_models)
-      class(lda_models) <- c("LDA_list", "list")
+check_LDA_models <- function(LDA_models){
+  if(("LDA_list" %in% class(LDA_models)) == FALSE){
+    if(is(LDA_models, "LDA") == TRUE){
+      LDA_models <- list(LDA_models)
+      class(LDA_models) <- c("LDA_list", "list")
     } else{
-      stop("lda_models is not an LDA object or LDA_list object")
+      stop("LDA_models is not an LDA object or LDA_list object")
     }
   }
-  lda_models
+  LDA_models
 }
 
 

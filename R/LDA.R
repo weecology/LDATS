@@ -137,7 +137,7 @@ prep_LDA_control <- function(seed, control = NULL){
 #'   \code{LDA_list} object, based on a set of user-provided functions. The
 #'   functions default to choosing the model with the lowest AIC value.
 #'
-#' @param lda_models An object of class \code{LDA_list} produced by
+#' @param LDA_models An object of class \code{LDA_list} produced by
 #'   \code{LDA_set}.
 #'
 #' @param measurer,selector Function names for use in evaluation of the LDA
@@ -145,7 +145,7 @@ prep_LDA_control <- function(seed, control = NULL){
 #'   and \code{selector} operates on the values to choose the model(s) to 
 #'   pass on. 
 #'
-#' @return A reduced version of \code{lda_models} that only includes the 
+#' @return A reduced version of \code{LDA_models} that only includes the 
 #'   selected LDA model(s). The returned object is still an object of
 #'   class \code{LDA_list}.
 #'
@@ -159,13 +159,13 @@ prep_LDA_control <- function(seed, control = NULL){
 #'
 #' @export
 #'
-select_LDA <- function(lda_models = NULL, measurer = AIC, selector = min){
+select_LDA <- function(LDA_models = NULL, measurer = AIC, selector = min){
 
-  if("LDA_list" %in% attr(lda_models, "class") == FALSE){
-    stop("lda_models must be of class LDA_list")
+  if("LDA_list" %in% attr(LDA_models, "class") == FALSE){
+    stop("LDA_models must be of class LDA_list")
   }
   
-  lda_measured <- sapply(lda_models, measurer) %>%
+  lda_measured <- sapply(LDA_models, measurer) %>%
                   matrix(ncol = 1)
   lda_selected <- apply(lda_measured, 2, selector) 
   which_selected <- which(lda_measured %in% lda_selected)
