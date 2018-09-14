@@ -7,7 +7,7 @@
 check_formula(formula, document_covariate_table)
 }
 \arguments{
-\item{formula}{Vector of the formulae to evaluate.}
+\item{formula}{Vector of the formulas to evaluate.}
 
 \item{document_covariate_table}{Document covariate table used to evaluate
 the availability of the data required by the formula inputs.}
@@ -16,7 +16,7 @@ the availability of the data required by the formula inputs.}
 Input \code{formula} properly formatted.
 }
 \description{
-Verify that the vector of formulae is actually formatted
+Verify that the vector of formulas is actually formatted
   as a vector formula objects and that the predictor variables are all 
   included in the document covariate table.
 }

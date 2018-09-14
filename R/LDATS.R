@@ -4,7 +4,7 @@
 #' @importFrom lubridate is.Date
 #' @importFrom magrittr %>%
 #' @importFrom methods is
-#' @importFrom stats AIC
+#' @importFrom stats AIC terms
 #' @importFrom topicmodels LDA logLik
 #' @importFrom viridis viridis
 #'

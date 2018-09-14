@@ -2,7 +2,7 @@
 #'
 #' @description This is a wrapper function that expands the main Time Series
 #'   analyses function (\code{MTS}) across the LDA models and the Time Series 
-#'   models, with respect to both continuous time formulae and the number
+#'   models, with respect to both continuous time formulas and the number
 #'   of discrete changepoints. This function allows direct passage of the
 #'   control parameters for the parallel tempering MCMC through to the 
 #'   main Time Series function, \code{MTS}, via the \code{ptMCMC_controls}
@@ -70,11 +70,7 @@ TS_set_on_LDA <- function(LDA_models, document_covariate_table, timename,
 }
 
 
-expand_TS <- function(LDA_models, formula, changepoints){
-  nmods <- length(LDA_models)
-  expand.grid(lda = 1:nmods, formula = formula, 
-                      nchangepoints = changepoints, stringsAsFactors = FALSE)
-}
+
 
 ptMCMC_controls_list <- function(){
   out <- list()
@@ -84,6 +80,29 @@ ptMCMC_controls_list <- function(){
 
 
 
+#' @title Expand the TS models needed across the factorial combination of
+#'   LDA models, continuous formulas, and number of change points
+#' 
+#' @description Expand the completely crossed combination of model inputs: 
+#'   LDA model results, continuous formulas
+#'   
+#' @param LDA_models \code{LDA_list}-class object of LDA models.
+#' 
+#' @param formula Vector of the continuous formulas. 
+#'
+#' @param changepoints Vector of the number of changepoints.
+#'
+#' @return Expanded table of the three values: [1] the LDA model (indicated
+#'   as a numeric element reference to the \code{LDA_list} object), [2] the 
+#'   continuous formula, and [3] the number of changepoints.
+#' 
+#' @export
+#'
+expand_TS <- function(LDA_models, formula, changepoints){
+  nmods <- length(LDA_models)
+  expand.grid(LDA = 1:nmods, formula = formula, 
+              nchangepoints = changepoints, stringsAsFactors = FALSE)
+}
 
 
 #' @title Verify that changepoints vector is proper
@@ -208,11 +227,11 @@ check_timename <- function(document_covariate_table, timename){
 
 #' @title Verify that formula vector is proper
 #' 
-#' @description Verify that the vector of formulae is actually formatted
+#' @description Verify that the vector of formulas is actually formatted
 #'   as a vector formula objects and that the predictor variables are all 
 #'   included in the document covariate table.
 #'   
-#' @param formula Vector of the formulae to evaluate.
+#' @param formula Vector of the formulas to evaluate.
 #'
 #' @param document_covariate_table Document covariate table used to evaluate
 #'   the availability of the data required by the formula inputs.
@@ -242,7 +261,7 @@ check_formula <- function(formula, document_covariate_table){
   if (!all(pred %in% colnames(dct))){
     misses <- pred[which(pred %in% colnames(dct) == FALSE)]
     mis <- paste(misses, collapse = ", ")
-    stop(paste0("formulae include predictors not present in data: ", mis))
+    stop(paste0("formulas include predictors not present in data: ", mis))
   }
   formula
 }

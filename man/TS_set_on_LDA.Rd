@@ -52,7 +52,7 @@ the set of results from MTS
 \description{
 This is a wrapper function that expands the main Time Series
   analyses function (\code{MTS}) across the LDA models and the Time Series 
-  models, with respect to both continuous time formulae and the number
+  models, with respect to both continuous time formulas and the number
   of discrete changepoints. This function allows direct passage of the
   control parameters for the parallel tempering MCMC through to the 
   main Time Series function, \code{MTS}, via the \code{ptMCMC_controls}
