@@ -69,13 +69,6 @@ TS_set_on_LDA <- function(LDA_models, document_covariate_table, timename,
   return(out)
 }
 
-check_changepoints <- function(changepoints){
-# to do: verify that the input is a vector of integers
-}
-
-check_weights <- function(weights){
-# to do: verify that the input is a vector of numeric values, should be [0,1]
-}
 
 expand_TS <- function(LDA_models, formula, changepoints){
   nmods <- length(LDA_models)
@@ -83,36 +76,98 @@ expand_TS <- function(LDA_models, formula, changepoints){
                       nchangepoints = changepoints, stringsAsFactors = FALSE)
 }
 
-check_formula <- function(formula, document_covariate_table){
-  if(!is(formula, "vector")){
-    if(is(formula, "formula")){
-      formula <- c(formula)
+ptMCMC_controls_list <- function(){
+  out <- list()
+  class(out) <- c("ptMCMC_controls", "list")
+  out
+}
+
+
+
+
+
+#' @title Verify that changepoints vector is proper
+#' 
+#' @description Verify that the vector of numbers of changepoints is 
+#'   conformable to integers greater than 1.
+#'   
+#' @param changepoints Vector of the number of changepoints to evaluate.
+#'
+#' @return Nothing.
+#' 
+#' @export
+#'
+check_changepoints <- function(changepoints){
+  if (!is.numeric(changepoints) || any(changepoints %% 1 != 0)){
+    stop("changepoints vector must be integers")
+  }
+}
+
+#' @title Verify that weights vector is proper
+#' 
+#' @description Verify that the vector of document weights is numeric
+#'   and inform the user if weights are outside the optimal range: 
+#'   \eqn{(0,1]}.
+#'   
+#' @param weights Vector of the document weights to evaluate.
+#'
+#' @return Nothing.
+#' 
+#' @export
+#'
+check_weights <- function(weights){
+  if (!is.numeric(weights)){
+    stop("weights vector must be numeric")
+  }
+  if (min(weights) <= 0 | max(weights) > 1){
+    ideal <- "weights should be scaled to (0,1]; "
+    wrange <- paste0("min: ", min(weights), ", max: ", max(weights), "; ")
+    warn <- "fit may be unstable"
+    warning(paste0(ideal, wrange, warn))
+  }
+}
+
+#' @title Verify that LDA model input is proper
+#' 
+#' @description Verify that the \code{LDA_models} input is, in fact, LDA 
+#'   models or a singular LDA model. If there is only one model, convert it
+#'   from a singular class \code{LDA} list to a length-1 class \code{LDA_list}
+#'   class and return it.
+#'   
+#' @param LDA_models List of LDA models or singular LDA model to evaluate.
+#'
+#' @return \code{LDA_models} as an \code{LDA_list}-class object.
+#' 
+#' @export
+#'
+check_LDA_models <- function(LDA_models){
+  if(("LDA_list" %in% class(LDA_models)) == FALSE){
+    if(is(LDA_models, "LDA") == TRUE){
+      LDA_models <- list(LDA_models)
+      class(LDA_models) <- c("LDA_list", "list")
     } else{
-      stop("formula is not a formula")
-    }
-  } else{ 
-    if (!all(unlist(lapply(formula, is, "formula")))){
-      stop("formula is not a vector of formulas")
+      stop("LDA_models is not an LDA object or LDA_list object")
     }
   }
-
-  # to do: verify that all predictors in the formulas are in the table
-
-  formula
+  LDA_models
 }
 
-
-check_timename <- function(document_covariate_table, timename){
-  covariate_names <- colnames(document_covariate_table)
-  if ((timename %in% covariate_names) == FALSE){
-    stop("timename not present in document covariate table")
-  }
-  time_covariate <- document_covariate_table[ , timename]
-  if (!(is.numeric(time_covariate)) & !(is.Date(time_covariate))){
-    stop("covariate indicated by timename is not numeric or temporal")
-  }
-}
-
+#' @title Verify that the document covariate table is proper
+#' 
+#' @description Verify that the table of document-level covariates is 
+#'   conformable to a data frame and of the right size (correct number of 
+#'   documents) for the document-topic output from the LDA models.
+#'   
+#' @param document_covariate_table Document covariate table to evaluate.
+#'
+#' @param LDA_models Reference LDA model list (class \code{LDA_list}) that 
+#'   includes as its first element a properly fitted \code{LDA} model with 
+#'   a \code{gamma} slot with the document-topic distribution. 
+#'
+#' @return Nothing.
+#' 
+#' @export
+#'
 check_document_covariate_table <- function(document_covariate_table, 
                                            LDA_models){
   dct_df <- tryCatch(data.frame(document_covariate_table),
@@ -126,22 +181,68 @@ check_document_covariate_table <- function(document_covariate_table,
   }
 }
 
-
-check_LDA_models <- function(LDA_models){
-  if(("LDA_list" %in% class(LDA_models)) == FALSE){
-    if(is(LDA_models, "LDA") == TRUE){
-      LDA_models <- list(LDA_models)
-      class(LDA_models) <- c("LDA_list", "list")
-    } else{
-      stop("LDA_models is not an LDA object or LDA_list object")
-    }
+#' @title Verify that the time vector is proper
+#' 
+#' @description Verify that the vector of time values is included in the 
+#'   document covariate table and that it is either numeric or a date.
+#'   
+#' @param document_covariate_table Document covariate table used to query
+#'   for the time column.
+#'
+#' @param timename Column name for the time variable to evaluate.
+#'
+#' @return Nothing.
+#' 
+#' @export
+#'
+check_timename <- function(document_covariate_table, timename){
+  covariate_names <- colnames(document_covariate_table)
+  if ((timename %in% covariate_names) == FALSE){
+    stop("timename not present in document covariate table")
   }
-  LDA_models
+  time_covariate <- document_covariate_table[ , timename]
+  if (!(is.numeric(time_covariate)) & !(is.Date(time_covariate))){
+    stop("covariate indicated by timename is not numeric or temporal")
+  }
 }
 
-
-ptMCMC_controls_list <- function(){
-  out <- list()
-  class(out) <- c("ptMCMC_controls", "list")
-  out
+#' @title Verify that formula vector is proper
+#' 
+#' @description Verify that the vector of formulae is actually formatted
+#'   as a vector formula objects and that the predictor variables are all 
+#'   included in the document covariate table.
+#'   
+#' @param formula Vector of the formulae to evaluate.
+#'
+#' @param document_covariate_table Document covariate table used to evaluate
+#'   the availability of the data required by the formula inputs.
+#'
+#' @return Input \code{formula} properly formatted.
+#' 
+#' @export
+#'
+check_formula <- function(formula, document_covariate_table){
+  dct <- document_covariate_table
+  if(!is(formula, "vector")){
+    if(is(formula, "formula")){
+      formula <- c(formula)
+    } else{
+      stop("formula is not a formula")
+    }
+  } else{ 
+    if (!all(unlist(lapply(formula, is, "formula")))){
+      stop("formula is not a vector of formulas")
+    }
+  }
+  resp <- unlist(lapply(lapply(formula, terms), attr, "response"))
+  pred <- unlist(lapply(lapply(formula, terms), attr, "term.labels"))
+  if (any(resp != 0)){
+    stop("formula inputs should not include response variable")
+  }
+  if (!all(pred %in% colnames(dct))){
+    misses <- pred[which(pred %in% colnames(dct) == FALSE)]
+    mis <- paste(misses, collapse = ", ")
+    stop(paste0("formulae include predictors not present in data: ", mis))
+  }
+  formula
 }
