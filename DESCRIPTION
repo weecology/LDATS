@@ -21,7 +21,9 @@ Imports:
     digest,
     lubridate,
     magrittr,
+    memoise,
     methods,
+    nnet,
     topicmodels,
     viridis
 Suggests:

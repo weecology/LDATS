@@ -5,8 +5,7 @@
 \title{Conduct a set of Time Series analyses on LDA models}
 \usage{
 TS_set_on_LDA(LDA_models, document_covariate_table, timename, formula = ~1,
-  changepoints = 0, weights = NULL,
-  ptMCMC_controls = ptMCMC_controls_list())
+  changepoints = 0, weights = NULL, control = TS_controls_list())
 }
 \arguments{
 \item{LDA_models}{List of LDA models (class \code{LDA_list}) or a singular
@@ -42,12 +41,12 @@ segementation of the data  for each continuous model and each LDA model.}
 document. Corresponds to the vector \strong{\eqn{v}} in the math 
 description.}
 
-\item{ptMCMC_controls}{Class \code{ptMCMC_controls} list, holding control 
-parameters for the parallel tempering Markov Chain Monte Carlo (ptMCMC)
-fitting of the MTS models.}
+\item{control}{Class \code{TS_controls} list, holding control parameters
+for the Time Series model including the parallel tempering Markov Chain 
+Monte Carlo (ptMCMC) controls.}
 }
 \value{
-the set of results from MTS
+the set of results from TS
 }
 \description{
 This is a wrapper function that expands the main Time Series

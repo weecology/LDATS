@@ -41,17 +41,17 @@
 #'   document. Corresponds to the vector \strong{\eqn{v}} in the math 
 #'   description.
 #'
-#' @param ptMCMC_controls Class \code{ptMCMC_controls} list, holding control 
-#'   parameters for the parallel tempering Markov Chain Monte Carlo (ptMCMC)
-#'   fitting of the MTS models.
+#' @param control Class \code{TS_controls} list, holding control parameters
+#'   for the Time Series model including the parallel tempering Markov Chain 
+#'   Monte Carlo (ptMCMC) controls.
 #'
-#' @return the set of results from MTS
+#' @return the set of results from TS
 #'
 #' @export
 #'
 TS_set_on_LDA <- function(LDA_models, document_covariate_table, timename,
                           formula = ~ 1, changepoints = 0, weights = NULL, 
-                          ptMCMC_controls = ptMCMC_controls_list()){
+                          control = TS_controls_list()){
 
   LDA_models <- check_LDA_models(LDA_models)
   check_document_covariate_table(document_covariate_table, LDA_models)
@@ -67,7 +67,8 @@ TS_set_on_LDA <- function(LDA_models, document_covariate_table, timename,
     gamma_i <- LDA_models[[mods$LDA[i]]]@gamma
     formula_i <- mods$formula[i]
     nchangepoints_i <- mods$nchangepoints[i]
-    out[[i]] <- TS(gamma_i, formula_i, nchangepoints_i, ptMCMC_controls)
+    out[[i]] <- TS(gamma_i, document_covariate_table, timename, formula_i, 
+                   nchangepoints_i, weights, control)
   }
   return(out)
 }
