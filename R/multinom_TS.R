@@ -42,7 +42,7 @@ multinom_TS <- function(data, formula_RHS, changepoints = NULL,
   names(mods) <- sprintf("%s %d %s", "chunk", 1:nchunks, "model")
   ll <- rep(0, nchunks)
   for (i in 1:nchunks){
-    mods[[i]] <- chunk_memo(data, formulaRHS, starts, ends, weights)
+    mods[[i]] <- chunk_memo(data, formula_RHS, starts, ends, weights)
     ll[i] <- logLik(mods)
   }
   list("chunk models" = mods, "logLik" = sum(ll))
