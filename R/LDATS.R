@@ -6,7 +6,7 @@
 #' @importFrom memoise memoise
 #' @importFrom methods is
 #' @importFrom nnet multinom
-#' @importFrom stats AIC terms
+#' @importFrom stats AIC as.formula terms
 #' @importFrom topicmodels LDA logLik
 #' @importFrom viridis viridis
 #'

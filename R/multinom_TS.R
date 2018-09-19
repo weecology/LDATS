@@ -96,10 +96,10 @@ check_chunks <- function(data, changepoints){
 #' 
 #' @export 
 #'
-multinom_chunk <- function(data, formulaRHS, start_time, end_time, 
+multinom_chunk <- function(data, formula_RHS, start_time, end_time, 
                            weights = NULL){
 
   formula <- as.formula(paste("gamma ~", formula))
   chunk <- data$time > start_time & data$time <= end_time
-  multinom(formula, data, weights, subset = chunk, trace = FALSE) 
+  multinom(formula_RHS, data, weights, subset = chunk, trace = FALSE) 
 }

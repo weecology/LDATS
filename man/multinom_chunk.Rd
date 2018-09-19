@@ -4,11 +4,14 @@
 \alias{multinom_chunk}
 \title{Fit a multinomial Time Series model chunk}
 \usage{
-multinom_chunk(data, formulaRHS, start_time, end_time, weights = NULL)
+multinom_chunk(data, formula_RHS, start_time, end_time, weights = NULL)
 }
 \arguments{
 \item{data}{Class \code{data.frame} object including the predictor and 
 response variables.}
+
+\item{formula_RHS}{Right Hand Side of the continuous time formula as a 
+character vector.}
 
 \item{start_time}{Start time for the chunk.}
 
@@ -17,9 +20,6 @@ response variables.}
 \item{weights}{Optional class \code{numeric} vector of weights for each 
 document. Corresponds to the vector \strong{\eqn{v}} in the math 
 description.}
-
-\item{formula_RHS}{Right Hand Side of the continuous time formula as a 
-character vector.}
 }
 \value{
 Fitted model for the chunk.
