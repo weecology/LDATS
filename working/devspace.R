@@ -23,10 +23,15 @@ changepoints = 0
 weights = NULL
 ptMCMC_controls = ptMCMC_controls_list()
 
+
+
 TS(gamma_i, formula_i, nchangepoints_i, ptMCMC_controls)
 
-
-
+mtsDat <- data.frame(dct)
+mtsDat$gamma <- smod[[1]]@gamma
+colnames(mtsDat)[1] <- "time"
+multinom_TS(data = mtsDat, formula_RHS = "1",
+  changepoints = c(20,50), weights = NULL, control = TS_controls_list())
 
 
 

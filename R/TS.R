@@ -12,8 +12,8 @@ TS <- function(gamma, document_covariate_table, timename, formula,
 
 
 
-TS_controls_list <- function(memoise = TRUE){
-  out <- list(memoise = memoise)
+TS_controls_list <- function(memoise = TRUE, response = "gamma"){
+  out <- list(memoise = memoise, response = response)
   class(out) <- c("TS_controls", "list")
   out
 }

@@ -1,4 +1,3 @@
-
 #' @title Fit a multinomial change point Time Series model
 #'
 #' @description Fit a set of multinomial regression models to a time series of
@@ -33,7 +32,9 @@ multinom_TS <- function(data, formula_RHS, changepoints = NULL,
     return(list("chunk models" = NA, "logLik" = -Inf))
   }
 
-  chunk_memo <- memoise_fun(multinom_chunk, control$memoise)
+  TS_chunk_memo <- memoise_fun(multinom_TS_chunk, control$memoise)
+  formula <- as.formula(paste0(control$response, " ~ ", formula_RHS))
+
   starts <- c(min(data$time) - 1, changepoints)   
   ends <- c(changepoints, max(data$time)) #removed the +1 on the max
   nchunks <- length(changepoints) + 1
@@ -42,8 +43,8 @@ multinom_TS <- function(data, formula_RHS, changepoints = NULL,
   names(mods) <- sprintf("%s %d %s", "chunk", 1:nchunks, "model")
   ll <- rep(0, nchunks)
   for (i in 1:nchunks){
-    mods[[i]] <- chunk_memo(data, formula_RHS, starts, ends, weights)
-    ll[i] <- logLik(mods)
+    mods[[i]] <- TS_chunk_memo(data, formula, starts[i], ends[i], weights)
+    ll[i] <- logLik(mods[[i]])
   }
   list("chunk models" = mods, "logLik" = sum(ll))
 }
@@ -68,7 +69,7 @@ check_chunks <- function(data, changepoints){
   last_time <- max(data$time)
   time_check <- any(changepoints <= 0) | any(changepoints >= last_time)
   sort_check <- is.unsorted(changepoints, strictly = TRUE)
-  check <- time_check | sort_check
+  check <- !(time_check | sort_check)
   return(check)
 }
 
@@ -81,8 +82,8 @@ check_chunks <- function(data, changepoints){
 #' @param data Class \code{data.frame} object including the predictor and 
 #'   response variables.
 #'
-#' @param formula_RHS Right Hand Side of the continuous time formula as a 
-#'   character vector.
+#' @param formula Formula as a class \code{formula} or class \code{character} 
+#'   object describing the chunk.
 #'
 #' @param start_time Start time for the chunk.
 #'
@@ -94,12 +95,17 @@ check_chunks <- function(data, changepoints){
 #' 
 #' @return Fitted model for the chunk.
 #' 
+#' @references 
+#'   Ripley, B. D. 1996. Pattern Recognition and Neural Networks. Cambridge.
+#'
+#'   Venables, W. N. and B. D. Ripley. 2002. Modern Applied Statistics with S.
+#'   Fourth edition. Springer. 
+#'
 #' @export 
 #'
-multinom_chunk <- function(data, formula_RHS, start_time, end_time, 
-                           weights = NULL){
+multinom_TS_chunk <- function(data, formula, start, end, weights = NULL){
 
-  formula <- as.formula(paste("gamma ~", formula))
-  chunk <- data$time > start_time & data$time <= end_time
-  multinom(formula_RHS, data, weights, subset = chunk, trace = FALSE) 
+  formula <- as.formula(format(formula))
+  chunk <- data$time > start & data$time <= end
+  multinom(formula, data, weights, subset = chunk, trace = FALSE) 
 }
