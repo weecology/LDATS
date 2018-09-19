@@ -1,8 +1,8 @@
 
-#' @title Fit a multinomial time series model
+#' @title Fit a multinomial change point Time Series model
 #'
 #' @description Fit a set of multinomial regression models to a time series of
-#'   of data divided into multiple chunks. 
+#'   of data divided into multiple chunks based on change points. 
 #'
 #' @param data Class \code{data.frame} object including the predictor and 
 #'   response variables.
@@ -26,7 +26,7 @@
 #'
 #' @export 
 #'
-multinom_ts <- function(data, formula_RHS, changepoints = NULL, 
+multinom_TS <- function(data, formula_RHS, changepoints = NULL, 
                         weights = NULL, control = TS_controls_list()){
 
   if (!check_chunks(data, changepoints)){
@@ -72,7 +72,7 @@ check_chunks <- function(data, changepoints){
   return(check)
 }
 
-#' @title Fit a multinomial time series model chunk
+#' @title Fit a multinomial Time Series model chunk
 #'
 #' @description Fit a multinomial regression model to a defined chunk of time
 #'   \code{(start_time, end_time]} within a time series. The fit is conducted

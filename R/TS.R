@@ -2,7 +2,7 @@
 TS <- function(gamma, document_covariate_table, timename, formula, 
                nchangepoints, weights, control = TS_controls_list()){
 
-  ts_memo <- memoise_fun(multinom_ts, control$memoise)
+  TS_memo <- memoise_fun(multinom_TS, control$memoise)
 
 
 }

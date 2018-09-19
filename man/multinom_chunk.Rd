@@ -2,7 +2,7 @@
 % Please edit documentation in R/multinom_TS.R
 \name{multinom_chunk}
 \alias{multinom_chunk}
-\title{Fit a multinomial time series model chunk}
+\title{Fit a multinomial Time Series model chunk}
 \usage{
 multinom_chunk(data, formulaRHS, start_time, end_time, weights = NULL)
 }
