@@ -103,9 +103,10 @@ check_chunks <- function(data, changepoints){
 #'
 #' @export 
 #'
-multinom_TS_chunk <- function(data, formula, start, end, weights = NULL){
+multinom_TS_chunk <- function(data, formula, start_time, end_time, 
+                              weights = NULL){
 
   formula <- as.formula(format(formula))
-  chunk <- data$time > start & data$time <= end
+  chunk <- data$time > start_time & data$time <= end_time
   multinom(formula, data, weights, subset = chunk, trace = FALSE) 
 }

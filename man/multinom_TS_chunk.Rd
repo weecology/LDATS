@@ -4,7 +4,7 @@
 \alias{multinom_TS_chunk}
 \title{Fit a multinomial Time Series model chunk}
 \usage{
-multinom_TS_chunk(data, formula, start, end, weights = NULL)
+multinom_TS_chunk(data, formula, start_time, end_time, weights = NULL)
 }
 \arguments{
 \item{data}{Class \code{data.frame} object including the predictor and 
@@ -13,13 +13,13 @@ response variables.}
 \item{formula}{Formula as a class \code{formula} or class \code{character} 
 object describing the chunk.}
 
-\item{weights}{Optional class \code{numeric} vector of weights for each 
-document. Corresponds to the vector \strong{\eqn{v}} in the math 
-description.}
-
 \item{start_time}{Start time for the chunk.}
 
 \item{end_time}{End time for the chunk.}
+
+\item{weights}{Optional class \code{numeric} vector of weights for each 
+document. Corresponds to the vector \strong{\eqn{v}} in the math 
+description.}
 }
 \value{
 Fitted model for the chunk.
