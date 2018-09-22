@@ -1,12 +1,12 @@
-#' @title Conduct a set of Time Series analyses on LDA models
+#' @title Conduct a set of Time Series analyses on a set of LDA models
 #'
 #' @description This is a wrapper function that expands the main Time Series
-#'   analyses function (\code{MTS}) across the LDA models and the Time Series 
-#'   models, with respect to both continuous time formulas and the number
-#'   of discrete changepoints. This function allows direct passage of the
-#'   control parameters for the parallel tempering MCMC through to the 
-#'   main Time Series function, \code{MTS}, via the \code{ptMCMC_controls}
-#'   argument  
+#'   analyses function (\code{\link{TS}}) across the LDA models and the Time
+#'   Series models, with respect to both continuous time formulas and the 
+#'   number of discrete changepoints. This function allows direct passage of
+#'   the control parameters for the parallel tempering MCMC through to the 
+#'   main Time Series function, \code{\link{TS}}, via the 
+#'   \code{ptMCMC_controls} argument.
 #'
 #' @param LDA_models List of LDA models (class \code{LDA_list}) or a singular
 #'   LDA model (class \code{LDA}).
@@ -49,9 +49,9 @@
 #'
 #' @export
 #'
-TS_set_on_LDA <- function(LDA_models, document_covariate_table, timename,
-                          formula = ~ 1, changepoints = 0, weights = NULL, 
-                          control = TS_controls_list()){
+TS_on_LDA <- function(LDA_models, document_covariate_table, timename,
+                      formula = ~ 1, changepoints = 0, weights = NULL, 
+                      control = TS_controls_list()){
 
   LDA_models <- check_LDA_models(LDA_models)
   check_document_covariate_table(document_covariate_table, LDA_models)
@@ -93,8 +93,9 @@ TS_set_on_LDA <- function(LDA_models, document_covariate_table, timename,
 #'
 expand_TS <- function(LDA_models, formula, changepoints){
   nmods <- length(LDA_models)
-  expand.grid(LDA = 1:nmods, formula = formula, 
-              nchangepoints = changepoints, stringsAsFactors = FALSE)
+  out <- expand.grid(1:nmods, formula, changepoints, stringsAsFactors = FALSE)
+  colnames(out) <- c("LDA", "formula", "nchangepoints") 
+  out
 }
 
 #' @title Verify that changepoints vector is proper

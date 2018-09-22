@@ -8,7 +8,6 @@ dct <- data.frame(time = rodents[ , "newmoon"])
 mts_data <- data.frame(dct)
 mts_data$gamma <- lda[[1]]@gamma
 
-
 test_that("check good output from multinom_TS", {
   mts <- multinom_TS(data = mts_data, formula_RHS = "1", 
            changepoints = c(20,50), weights = NULL, 
