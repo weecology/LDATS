@@ -60,8 +60,8 @@ multinom_TS <- function(data, formula_RHS, changepoints = NULL,
 #' @param chunks Data frame of \code{start} and \code{end} times for each 
 #'   chunk (row).
 #'
-#' @param fits List of chunk-level fits returned by 
-#'   \code{\link{TS_chunk_memo}}. 
+#' @param fits List of chunk-level fits returned by \code{TS_chunk_memo},
+#'   (the memoised version of \code{\link{multinom_TS_chunk}}  
 #'
 #' @return Object of class \code{multinom_TS_fit}, which is a list of [1]
 #'   chunk-level model fits and [2] the total log likelihood combined across 

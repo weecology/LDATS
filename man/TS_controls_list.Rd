@@ -9,9 +9,9 @@ TS_controls_list(memoise = TRUE, response = "gamma",
 }
 \arguments{
 \item{memoise}{Logical indicator of whether the multinomial functions 
-should be memoised (via ). Memoisation 
-happens to both \code\link{{multinom_TS}} and 
-\code\link{{multinom_TS_chunk}}}
+should be memoised (via \code{\link[memoise]{memoise}}). Memoisation 
+happens to both \code{\link{multinom_TS}} and 
+\code{\link{multinom_TS_chunk}}.}
 
 \item{response}{Character indicating the response variable used in the time
 series.}

@@ -10,8 +10,8 @@ package_chunk_fits(chunks, fits)
 \item{chunks}{Data frame of \code{start} and \code{end} times for each 
 chunk (row).}
 
-\item{fits}{List of chunk-level fits returned by 
-\code{\link{TS_chunk_memo}}.}
+\item{fits}{List of chunk-level fits returned by \code{TS_chunk_memo},
+(the memoised version of \code{\link{multinom_TS_chunk}}}
 }
 \value{
 Object of class \code{multinom_TS_fit}, which is a list of [1]
