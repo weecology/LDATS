@@ -20,8 +20,9 @@ Object of class \code{multinom_TS_fit}, which is a list of [1]
 }
 \description{
 Takes the list of fitted chunk-level models returned from
-  \code{\link{TS_chunk_memo}} and packages it as a \code{multinom_TS_fit}
-  object. This involves naming the model fits based on the chunk time 
-  windows, combining the log likelihood values across the chunks, and 
-  setting the class of the output object.
+  \code{TS_chunk_memo} (the memoised version of 
+  \code{\link{multinom_TS_chunk}} and packages it as a 
+  \code{multinom_TS_fit} object. This involves naming the model fits based 
+  on the chunk time windows, combining the log likelihood values across the 
+  chunks, and setting the class of the output object.
 }
