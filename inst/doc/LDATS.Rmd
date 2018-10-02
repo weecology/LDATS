@@ -1,0 +1,48 @@
+---
+title: "Latent Dirichlet Allocation Time Series (LDATS)"
+author: "Juniper L. Simonis"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r, include=FALSE}
+library(LDATS)
+vers <- packageVersion("LDATS")
+today <- Sys.Date()
+```
+
+## Overview 
+
+This vignette details the code base for the **LDATS** package. It was
+constructed using **LDATS** version `r vers` on `r today`.
+
+## Installation
+
+To obtain the most recent version of **LDATS**, install the most recent 
+version from GitHub:
+
+```{r, eval=FALSE}
+install.packages("devtools")
+devtools::install_github("weecology/LDATS")
+```
+
+## Analytical Pipeline
+
+* `LDA_TS()`
+  * `LDA_set()`
+    * `LDA()`
+  * `select_LDA()`
+  * `TS_set_on_LDA()`
+  * `select_TS()`
+
+

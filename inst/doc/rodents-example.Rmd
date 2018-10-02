@@ -1,5 +1,5 @@
 ---
-title: "LDATS Example"
+title: "LDATS Rodents Example"
 author: "Juniper L. Simonis"
 output: rmarkdown::html_vignette
 vignette: >
@@ -43,6 +43,7 @@ the **LDATS** package
 
 ```{r}
 data(rodents)
-rodents
+head(rodents, 10)
 ```
+
 

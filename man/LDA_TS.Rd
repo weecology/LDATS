@@ -5,7 +5,8 @@
 \title{Run a full set of Latent Dirichlet Allocation models then Time 
   Series models}
 \usage{
-LDA_TS(document_term_table, topics = 2, nseeds = 1, lda_control = NULL)
+LDA_TS(document_term_table, topics = 2, nseeds = 1,
+  lda_control = NULL)
 }
 \arguments{
 \item{document_term_table}{Table of observation count data (rows: 

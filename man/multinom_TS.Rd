@@ -26,8 +26,9 @@ for the Time Series model including the parallel tempering Markov Chain
 Monte Carlo (ptMCMC) controls.}
 }
 \value{
-List of chunk-level model fits and the total log likelihood 
-  combined across all the chunks.
+Object of class \code{multinom_TS_fit}, which is a list of [1]
+  chunk-level model fits and [2] the total log likelihood combined across 
+  all chunks.
 }
 \description{
 Fit a set of multinomial regression models to a time series of

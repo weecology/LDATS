@@ -1,6 +1,6 @@
 
-TS <- function(gamma, document_covariate_table, timename, formula, 
-               nchangepoints, weights, control = TS_controls_list()){
+TS <- function(data, timename, formula, nchangepoints, weights, 
+               control = TS_controls_list()){
 
   TS_memo <- memoise_fun(multinom_TS, control$memoise)
 
@@ -12,11 +12,13 @@ TS <- function(gamma, document_covariate_table, timename, formula,
 
 
 
-TS_controls_list <- function(memoise = TRUE, response = "gamma"){
-  out <- list(memoise = memoise, response = response)
+TS_controls_list <- function(memoise = TRUE, response = "gamma", 
+                             timename = "newmoon"){
+  out <- list(memoise = memoise, response = response, timename = timename)
   class(out) <- c("TS_controls", "list")
   out
 }
+
 
 
 #' @title Logical control on whether or not to memoise

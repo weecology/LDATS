@@ -20,17 +20,12 @@
 #'   within the specific models described via the argument \code{formula} 
 #'   (if desired). Must be a conformable to a data table. 
 #'
-#' @param timename Character name of the column in the 
-#'   \code{document_covariate_table} that contains the time index to use
-#'   for assignment of the changepoints (corresponding to the vector 
-#'   \strong{\eqn{t}} in the mathematical description of the model). 
-#'
 #' @param formula Vector of \code{formula}(s) for the continuous change. Any 
 #'   predictor variable included in a formula must also be a column in the
 #'   \code{document_covariate_table}. Each element (formula) in the vector
 #'   is evaluated for each number of change points and each LDA model.
 #'
-#' @param changepoints Vector of integers corresponding to the number of 
+#' @param nchangepoints Vector of integers corresponding to the number of 
 #'   change points to include in the model. 0 is a valid input (corresponding
 #'   to no change points, so a singular time series model), and the current 
 #'   implementation can reasonably include up to 6 change points. Each element 
@@ -49,26 +44,26 @@
 #'
 #' @export
 #'
-TS_on_LDA <- function(LDA_models, document_covariate_table, timename,
-                      formula = ~ 1, changepoints = 0, weights = NULL, 
+TS_on_LDA <- function(LDA_models, document_covariate_table, formula = ~ 1, 
+                      nchangepoints = 0, weights = NULL, 
                       control = TS_controls_list()){
 
   LDA_models <- check_LDA_models(LDA_models)
   check_document_covariate_table(document_covariate_table, LDA_models)
-  check_timename(document_covariate_table, timename)
+  check_timename(document_covariate_table, control$timename)
   formula <- check_formula(formula, document_covariate_table)  
-  check_changepoints(changepoints)
+  check_nchangepoints(nchangepoints)
   check_weights(weights)
 
-  mods <- expand_TS(LDA_models, formula, changepoints)
+  mods <- expand_TS(LDA_models, formula, nchangepoints)
   nmods <- nrow(mods)
   out <- vector("list", nmods)
   for(i in 1:nmods){
-    gamma_i <- LDA_models[[mods$LDA[i]]]@gamma
     formula_i <- mods$formula[i]
     nchangepoints_i <- mods$nchangepoints[i]
-    out[[i]] <- TS(gamma_i, document_covariate_table, timename, formula_i, 
-                   nchangepoints_i, weights, control)
+    data_i <- document_covariate_table
+    data_i$gamma <- LDA_models[[mods$LDA[i]]]@gamma
+    out[[i]] <- TS(data_i, formula_i, nchangepoints_i, weights, control)
   }
   return(out)
 }
@@ -83,7 +78,7 @@ TS_on_LDA <- function(LDA_models, document_covariate_table, timename,
 #' 
 #' @param formula Vector of the continuous formulas. 
 #'
-#' @param changepoints Vector of the number of changepoints.
+#' @param nchangepoints Vector of the number of changepoints.
 #'
 #' @return Expanded table of the three values: [1] the LDA model (indicated
 #'   as a numeric element reference to the \code{LDA_list} object), [2] the 
@@ -91,27 +86,28 @@ TS_on_LDA <- function(LDA_models, document_covariate_table, timename,
 #' 
 #' @export
 #'
-expand_TS <- function(LDA_models, formula, changepoints){
+expand_TS <- function(LDA_models, formula, nchangepoints){
   nmods <- length(LDA_models)
-  out <- expand.grid(1:nmods, formula, changepoints, stringsAsFactors = FALSE)
+  mods <- 1:nmods
+  out <- expand.grid(mods, formula, nchangepoints, stringsAsFactors = FALSE)
   colnames(out) <- c("LDA", "formula", "nchangepoints") 
   out
 }
 
-#' @title Verify that changepoints vector is proper
+#' @title Verify that nchangepoints vector is proper
 #' 
 #' @description Verify that the vector of numbers of changepoints is 
 #'   conformable to integers greater than 1.
 #'   
-#' @param changepoints Vector of the number of changepoints to evaluate.
+#' @param nchangepoints Vector of the number of changepoints to evaluate.
 #'
 #' @return Nothing.
 #' 
 #' @export
 #'
-check_changepoints <- function(changepoints){
-  if (!is.numeric(changepoints) || any(changepoints %% 1 != 0)){
-    stop("changepoints vector must be integers")
+check_nchangepoints <- function(nchangepoints){
+  if (!is.numeric(nchangepoints) || any(nchangepoints %% 1 != 0)){
+    stop("nchangepoints vector must be integers")
   }
 }
 

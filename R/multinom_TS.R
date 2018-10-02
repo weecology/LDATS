@@ -20,36 +20,94 @@
 #'   for the Time Series model including the parallel tempering Markov Chain 
 #'   Monte Carlo (ptMCMC) controls.
 #'
-#' @return List of chunk-level model fits and the total log likelihood 
-#'   combined across all the chunks.
+#' @return Object of class \code{multinom_TS_fit}, which is a list of [1]
+#'   chunk-level model fits and [2] the total log likelihood combined across 
+#'   all chunks.
 #'
 #' @export 
 #'
 multinom_TS <- function(data, formula_RHS, changepoints = NULL, 
                         weights = NULL, control = TS_controls_list()){
 
-  if (!check_chunks(data, changepoints)){
+  if (!check_changepoints(data, changepoints, control$timename)){
     return(list("chunk models" = NA, "logLik" = -Inf))
   }
 
   TS_chunk_memo <- memoise_fun(multinom_TS_chunk, control$memoise)
   formula <- as.formula(paste0(control$response, " ~ ", formula_RHS))
-
-  starts <- c(min(data$time) - 1, changepoints)   
-  ends <- c(changepoints, max(data$time)) #removed the +1 on the max
-  nchunks <- length(changepoints) + 1
-
-  mods <- vector("list", length = nchunks)
-  names(mods) <- sprintf("%s %d %s", "chunk", 1:nchunks, "model")
-  ll <- rep(0, nchunks)
+  chunks <- prep_chunks(data, changepoints, control$timename)
+  nchunks <- nrow(chunks)
+  fits <- vector("list", length = nchunks)
   for (i in 1:nchunks){
-    mods[[i]] <- TS_chunk_memo(data, formula, starts[i], ends[i], weights)
-    ll[i] <- logLik(mods[[i]])
+    fits[[i]] <- TS_chunk_memo(data, formula, chunks[i, ], weights)
   }
-  list("chunk models" = mods, "logLik" = sum(ll))
+  package_chunk_fits(chunks, fits)
 }
 
-#' @title Verify the chunks of a multinomial time series model
+
+#' @title Package the output of the chunk-level multinomial models into a
+#'    
+#' @description Takes the list of fitted chunk-level models returned from
+#'   \code{\link{TS_chunk_memo}} and packages it as a \code{multinom_TS_fit}
+#'   object. This involves naming the model fits based on the chunk time 
+#'   windows, combining the log likelihood values across the chunks, and 
+#'   setting the class of the output object. 
+#'
+#' @param chunks Data frame of \code{start} and \code{end} times for each 
+#'   chunk (row).
+#'
+#' @param fits List of chunk-level fits returned by 
+#'   \code{\link{TS_chunk_memo}}. 
+#'
+#' @return Object of class \code{multinom_TS_fit}, which is a list of [1]
+#'   chunk-level model fits and [2] the total log likelihood combined across 
+#'   all chunks.
+#'
+#' @export 
+#'
+package_chunk_fits <- function(chunks, fits){
+  nchunks <- nrow(chunks)
+  chunk_times <- paste0("(", chunks[ , "start"], " - ", chunks[ , "end"], ")")
+  names(fits) <- paste("chunk", 1:nchunks, chunk_times, "model")
+  ll <- sum(sapply(fits, logLik))
+  out <- list("chunk models" = fits, "logLik" = ll)
+  attr(out, "class") <- c("multinom_TS_fit", "list")
+  out
+}
+
+#' @title Prepare the time chunk table for a multinomial change point 
+#'   Time Series model
+#'
+#' @description Creates the table containing the start and end times for each
+#'   chunk within a time series, based on the changepoints (used to break up
+#'   the time series) and the range of the time series. If there are no 
+#'   changepoints (i.e. \code{changepoints} is \code{NULL}, there is still a
+#'   single chunk defined by the start and end of the time series.
+#'
+#' @param data Class \code{data.frame} object including the predictor and 
+#'   response variables, but specifically here containing the column indicated
+#'   by the \code{timename} input. 
+#'
+#' @param changepoints Numeric vector indicating locations of the change 
+#'   points.
+#'
+#' @param timename The name of the column containing the time variable used 
+#'   to chunk out the time series. Generally contained in the \code{control}
+#'   (class \code{TS_controls}) list.
+#'
+#' @return Data frame of \code{start} and \code{end} times for each chunk 
+#'   (row).
+#'
+#' @export 
+#'
+prep_chunks <- function(data, changepoints = NULL, 
+                        timename = TS_controls_list()$timename){
+  start <- c(min(data[ , timename]), changepoints + 1)   
+  end <- c(changepoints, max(data[ , timename])) 
+  data.frame(start, end)
+}
+
+#' @title Verify the change points of a multinomial time series model
 #'
 #' @description Check to verify that a time series can be broken into a set 
 #'   of chunks based on input changepoints. 
@@ -60,24 +118,36 @@ multinom_TS <- function(data, formula_RHS, changepoints = NULL,
 #' @param changepoints Numeric vector indicating locations of the change 
 #'   points.
 #'
+#' @param timename Character name of the column in the 
+#'   \code{document_covariate_table} that contains the time index to use
+#'   for assignment of the changepoints (corresponding to the vector 
+#'   \strong{\eqn{t}} in the mathematical description of the model). 
+#'
 #' @return Logical indicator of the check passing \code{TRUE} or failing
 #'   \code{FALSE}.
 #'
 #' @export 
 #'
-check_chunks <- function(data, changepoints){
-  last_time <- max(data$time)
-  time_check <- any(changepoints <= 0) | any(changepoints >= last_time)
+check_changepoints <- function(data, changepoints = NULL, 
+                               timename = TS_controls_list()$timename){
+
+  if (is.null(changepoints)){
+    return(TRUE)
+  }
+
+  first_time <- min(data[ , timename])
+  last_time <- max(data[ , timename])
+  time_check <- any(changepoints <= first_time | changepoints >= last_time)
   sort_check <- is.unsorted(changepoints, strictly = TRUE)
-  check <- !(time_check | sort_check)
-  return(check)
+
+  !(time_check | sort_check)
 }
 
 #' @title Fit a multinomial Time Series model chunk
 #'
 #' @description Fit a multinomial regression model to a defined chunk of time
-#'   \code{(start_time, end_time]} within a time series. The fit is conducted
-#'   via \code{\link[nnet]{multinom}}
+#'   \code{[chunk$start, chunk$_time]} within a time series. The fit is 
+#'   conducted via \code{\link[nnet]{multinom}}.
 #'
 #' @param data Class \code{data.frame} object including the predictor and 
 #'   response variables.
@@ -85,15 +155,15 @@ check_chunks <- function(data, changepoints){
 #' @param formula Formula as a class \code{formula} or class \code{character} 
 #'   object describing the chunk.
 #'
-#' @param start_time Start time for the chunk.
-#'
-#' @param end_time End time for the chunk.
+#' @param chunk Length-2 vector of times: [1] \code{start}, the start time 
+#'   for the chunk and [2] \code{end}, the end time for the chunk.
 #'
 #' @param weights Optional class \code{numeric} vector of weights for each 
 #'   document. Corresponds to the vector \strong{\eqn{v}} in the math 
 #'   description.
 #' 
-#' @return Fitted model for the chunk.
+#' @return Fitted model object for the chunk, of classes \code{multinom} and
+#'   \code{nnet}.
 #' 
 #' @references 
 #'   Ripley, B. D. 1996. Pattern Recognition and Neural Networks. Cambridge.
@@ -103,10 +173,13 @@ check_chunks <- function(data, changepoints){
 #'
 #' @export 
 #'
-multinom_TS_chunk <- function(data, formula, start_time, end_time, 
-                              weights = NULL){
+multinom_TS_chunk <- function(data, formula, chunk, weights = NULL,
+                              control = TS_controls_list()){
 
   formula <- as.formula(format(formula))
-  chunk <- data$time > start_time & data$time <= end_time
-  multinom(formula, data, weights, subset = chunk, trace = FALSE) 
+  time_obs <- data[ , control$timename] 
+  chunk_start <- as.numeric(chunk["start"])
+  chunk_end <- as.numeric(chunk["end"])
+  in_chunk <- time_obs >= chunk_start & time_obs <= chunk_end
+  fit <- multinom(formula, data, weights, subset = in_chunk, trace = FALSE) 
 }

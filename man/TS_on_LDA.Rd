@@ -2,10 +2,10 @@
 % Please edit documentation in R/TS_on_LDA.R
 \name{TS_on_LDA}
 \alias{TS_on_LDA}
-\title{Conduct a set of Time Series analyses on LDA models}
+\title{Conduct a set of Time Series analyses on a set of LDA models}
 \usage{
-TS_on_LDA(LDA_models, document_covariate_table, timename, formula = ~1,
-  changepoints = 0, weights = NULL, control = TS_controls_list())
+TS_on_LDA(LDA_models, document_covariate_table, formula = ~1,
+  nchangepoints = 0, weights = NULL, control = TS_controls_list())
 }
 \arguments{
 \item{LDA_models}{List of LDA models (class \code{LDA_list}) or a singular
@@ -20,17 +20,12 @@ In addition, the table needs to include as columns all covariates named
 within the specific models described via the argument \code{formula} 
 (if desired). Must be a conformable to a data table.}
 
-\item{timename}{Character name of the column in the 
-\code{document_covariate_table} that contains the time index to use
-for assignment of the changepoints (corresponding to the vector 
-\strong{\eqn{t}} in the mathematical description of the model).}
-
 \item{formula}{Vector of \code{formula}(s) for the continuous change. Any 
 predictor variable included in a formula must also be a column in the
 \code{document_covariate_table}. Each element (formula) in the vector
 is evaluated for each number of change points and each LDA model.}
 
-\item{changepoints}{Vector of integers corresponding to the number of 
+\item{nchangepoints}{Vector of integers corresponding to the number of 
 change points to include in the model. 0 is a valid input (corresponding
 to no change points, so a singular time series model), and the current 
 implementation can reasonably include up to 6 change points. Each element 
@@ -50,10 +45,10 @@ the set of results from TS
 }
 \description{
 This is a wrapper function that expands the main Time Series
-  analyses function (\code{MTS}) across the LDA models and the Time Series 
-  models, with respect to both continuous time formulas and the number
-  of discrete changepoints. This function allows direct passage of the
-  control parameters for the parallel tempering MCMC through to the 
-  main Time Series function, \code{MTS}, via the \code{ptMCMC_controls}
-  argument
+  analyses function (\code{\link{TS}}) across the LDA models and the Time
+  Series models, with respect to both continuous time formulas and the 
+  number of discrete changepoints. This function allows direct passage of
+  the control parameters for the parallel tempering MCMC through to the 
+  main Time Series function, \code{\link{TS}}, via the 
+  \code{ptMCMC_controls} argument.
 }

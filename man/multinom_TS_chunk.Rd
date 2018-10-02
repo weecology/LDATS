@@ -4,7 +4,8 @@
 \alias{multinom_TS_chunk}
 \title{Fit a multinomial Time Series model chunk}
 \usage{
-multinom_TS_chunk(data, formula, start_time, end_time, weights = NULL)
+multinom_TS_chunk(data, formula, chunk, weights = NULL,
+  control = TS_controls_list())
 }
 \arguments{
 \item{data}{Class \code{data.frame} object including the predictor and 
@@ -13,21 +14,21 @@ response variables.}
 \item{formula}{Formula as a class \code{formula} or class \code{character} 
 object describing the chunk.}
 
-\item{start_time}{Start time for the chunk.}
-
-\item{end_time}{End time for the chunk.}
+\item{chunk}{Length-2 vector of times: [1] \code{start}, the start time 
+for the chunk and [2] \code{end}, the end time for the chunk.}
 
 \item{weights}{Optional class \code{numeric} vector of weights for each 
 document. Corresponds to the vector \strong{\eqn{v}} in the math 
 description.}
 }
 \value{
-Fitted model for the chunk.
+Fitted model object for the chunk, of classes \code{multinom} and
+  \code{nnet}.
 }
 \description{
 Fit a multinomial regression model to a defined chunk of time
-  \code{(start_time, end_time]} within a time series. The fit is conducted
-  via \code{\link[nnet]{multinom}}
+  \code{[chunk$start, chunk$_time]} within a time series. The fit is 
+  conducted via \code{\link[nnet]{multinom}}.
 }
 \references{
 Ripley, B. D. 1996. Pattern Recognition and Neural Networks. Cambridge.
