@@ -52,8 +52,7 @@ TS_on_LDA <- function(LDA_models, document_covariate_table, formulas = ~ 1,
   LDA_models <- check_LDA_models(LDA_models)
   check_document_covariate_table(document_covariate_table, LDA_models)
   check_timename(document_covariate_table, control$timename)
-  check_formulas(formulas, document_covariate_table)  
-  formulas <- prep_formulas(formulas, control$response)
+  formulas <- check_formulas(formulas, document_covariate_table, control)  
   check_nchangepoints(nchangepoints)
   check_weights(weights)
 
@@ -61,7 +60,7 @@ TS_on_LDA <- function(LDA_models, document_covariate_table, formulas = ~ 1,
   nmods <- nrow(mods)
   out <- vector("list", nmods)
   for(i in 1:nmods){
-    formula_i <- mods$formula[i]
+    formula_i <- mods$formula[[i]]
     nchangepoints_i <- mods$nchangepoints[i]
     data_i <- document_covariate_table
     data_i$gamma <- LDA_models[[mods$LDA[i]]]@gamma
@@ -91,7 +90,7 @@ TS_on_LDA <- function(LDA_models, document_covariate_table, formulas = ~ 1,
 expand_TS <- function(LDA_models, formulas, nchangepoints){
   nmods <- length(LDA_models)
   mods <- 1:nmods
-  out <- expand.grid(mods, formula, nchangepoints, stringsAsFactors = FALSE)
+  out <- expand.grid(mods, formulas, nchangepoints, stringsAsFactors = FALSE)
   colnames(out) <- c("LDA", "formula", "nchangepoints") 
   out
 }
@@ -218,22 +217,28 @@ check_timename <- function(document_covariate_table, timename){
   }
 }
 
-#' @title Verify that formulas vector is proper
+#' @title Verify that formulas vector is proper and append the response 
+#'   variable
 #' 
 #' @description Verify that the vector of formulas is actually formatted
 #'   as a vector formula objects and that the predictor variables are all 
-#'   included in the document covariate table.
+#'   included in the document covariate table. Add the response variable
+#'   to each of the formulas.
 #'   
 #' @param formulas Vector of the formulas to evaluate.
 #'
 #' @param document_covariate_table Document covariate table used to evaluate
 #'   the availability of the data required by the formula inputs.
 #'
-#' @return Nothing.
+#' @param control Class \code{TS_controls} list, holding control parameters
+#'   for the Time Series model.
+#'
+#' @return Updated \code{formulas}.
 #' 
 #' @export
 #'
-check_formulas <- function(formulas, document_covariate_table){
+check_formulas <- function(formulas, document_covariate_table, control){
+  response <- control$response
   dct <- document_covariate_table
   if(!is(formulas, "vector")){
     if(is(formulas, "formula")){
@@ -242,12 +247,12 @@ check_formulas <- function(formulas, document_covariate_table){
       stop("formulas does not contain a formula")
     }
   } else{ 
-    if (!all(unlist(lapply(formula, is, "formula")))){
+    if (!all(unlist(lapply(formulas, is, "formula")))){
       stop("formulas is not a vector of formulas")
     }
   }
-  resp <- unlist(lapply(lapply(formula, terms), attr, "response"))
-  pred <- unlist(lapply(lapply(formula, terms), attr, "term.labels"))
+  resp <- unlist(lapply(lapply(formulas, terms), attr, "response"))
+  pred <- unlist(lapply(lapply(formulas, terms), attr, "term.labels"))
   if (any(resp != 0)){
     stop("formula inputs should not include response variable")
   }
@@ -256,21 +261,6 @@ check_formulas <- function(formulas, document_covariate_table){
     mis <- paste(misses, collapse = ", ")
     stop(paste0("formulas include predictors not present in data: ", mis))
   }
-}
-
-#' @title Prepare the formulas by adding the response variable 
-#' 
-#' @description Add the response variable to each of the formulas.
-#'   
-#' @param formulas Vector of the formulas to evaluate.
-#'
-#' @param response Character element representing the response variable. 
-#'
-#' @return Updated \code{formulas}.
-#' 
-#' @export
-#'
-prep_formulas <- function(formulas, response){
   out <- formulas
   for (i in 1:length(formulas)){
     tformula <- paste(as.character(formulas[[i]]), collapse = "")
