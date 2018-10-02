@@ -25,7 +25,7 @@ test_that("check packaging of chunk fits", {
 })
 
 test_that("check good output from multinom_TS", {
-  mts <- multinom_TS(data = mts_data, formula_RHS = "1", 
+  mts <- multinom_TS(data = mts_data, formula = gamma~1, 
            changepoints = c(20,50), weights = NULL, 
            control = TS_controls_list())
   expect_is(mts, "list")
@@ -37,7 +37,7 @@ test_that("check good output from multinom_TS", {
 })
 
 test_that("check failed output from multinom_TS", {
-  mts <- multinom_TS(data = mts_data, formula_RHS = "1", 
+  mts <- multinom_TS(data = mts_data, formula = gamma~1, 
            changepoints = c(50,40), weights = NULL, 
            control = TS_controls_list())
   expect_is(mts, "list")

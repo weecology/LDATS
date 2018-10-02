@@ -36,10 +36,49 @@ TS <- function(data, formula, nchangepoints, weights,
 
   TS_memo <- memoise_fun(multinom_TS, control$memoise)
 
+  check_timename(data, control$timename)
+  check_formula(formula, data)
 
 }
 
+#' @title Verify that a formula is proper
+#' 
+#' @description Verify that the formula is actually a formula and that the
+#'   response and predictor variabless are all included in the data.
+#'   
+#' @param formula Formula to evaluate.
+#'
+#' @param data Class \code{data.frame} object including [1] the time variable
+#'   (indicated in \code{control}), [2] the predictor variables (required by
+#'   \code{formula}) and [3], the multinomial response variable (indicated
+#'   in \code{control}).
+#'
+#' @return Nothing.
+#' 
+#' @export
+#'
+check_formula <- function(formula, data){
 
+  if (!is(formula, "formula")){
+    stop("formula does not contain a single formula")
+  }
+
+  respLoc <- attr(terms(formula), "response")
+  if (respLoc == 0){
+    stop("formula inputs should include response variable")
+  }  
+
+  resp <- as.character(attr(terms(formula), "variables"))[-1][respLoc]
+  pred <- attr(terms(formula), "term.labels")
+  if (!resp %in% colnames(data)){
+    stop("formula includes response not present in data")
+  }
+  if (!all(pred %in% colnames(data))){
+    misses <- pred[which(pred %in% colnames(data) == FALSE)]
+    mis <- paste(misses, collapse = ", ")
+    stop(paste0("formula includes predictors not present in data: ", mis))
+  }
+}
 
 
 #' @title Create the controls list for the Time Series model
@@ -70,8 +109,6 @@ TS_controls_list <- function(memoise = TRUE, response = "gamma",
   out
 }
 
-
-
 #' @title Logical control on whether or not to memoise
 #'
 #' @description This function provides a simple, logical toggle control on
@@ -83,7 +120,7 @@ TS_controls_list <- function(memoise = TRUE, response = "gamma",
 #' @param memoise_fun Logical value indicatiing if \code{fun} should be 
 #'   memoised.
 #'
-#' @return function, memoised if desired
+#' @return \code{fun}, memoised if desired.
 #'
 #' @export
 #'

@@ -20,7 +20,7 @@
 #'   within the specific models described via the argument \code{formula} 
 #'   (if desired). Must be a conformable to a data table. 
 #'
-#' @param formula Vector of \code{formula}(s) for the continuous change. Any 
+#' @param formulas Vector of \code{formula}(s) for the continuous change. Any 
 #'   predictor variable included in a formula must also be a column in the
 #'   \code{document_covariate_table}. Each element (formula) in the vector
 #'   is evaluated for each number of change points and each LDA model.
@@ -45,18 +45,19 @@
 #'
 #' @export
 #'
-TS_on_LDA <- function(LDA_models, document_covariate_table, formula = ~ 1, 
+TS_on_LDA <- function(LDA_models, document_covariate_table, formulas = ~ 1, 
                       nchangepoints = 0, weights = NULL, 
                       control = TS_controls_list()){
 
   LDA_models <- check_LDA_models(LDA_models)
   check_document_covariate_table(document_covariate_table, LDA_models)
   check_timename(document_covariate_table, control$timename)
-  formula <- check_formula(formula, document_covariate_table)  
+  check_formulas(formulas, document_covariate_table)  
+  formulas <- prep_formulas(formulas, control$response)
   check_nchangepoints(nchangepoints)
   check_weights(weights)
 
-  mods <- expand_TS(LDA_models, formula, nchangepoints)
+  mods <- expand_TS(LDA_models, formulas, nchangepoints)
   nmods <- nrow(mods)
   out <- vector("list", nmods)
   for(i in 1:nmods){
@@ -77,7 +78,7 @@ TS_on_LDA <- function(LDA_models, document_covariate_table, formula = ~ 1,
 #'   
 #' @param LDA_models \code{LDA_list}-class object of LDA models.
 #' 
-#' @param formula Vector of the continuous formulas. 
+#' @param formulas Vector of the continuous formulas. 
 #'
 #' @param nchangepoints Vector of the number of changepoints.
 #'
@@ -87,7 +88,7 @@ TS_on_LDA <- function(LDA_models, document_covariate_table, formula = ~ 1,
 #' 
 #' @export
 #'
-expand_TS <- function(LDA_models, formula, nchangepoints){
+expand_TS <- function(LDA_models, formulas, nchangepoints){
   nmods <- length(LDA_models)
   mods <- 1:nmods
   out <- expand.grid(mods, formula, nchangepoints, stringsAsFactors = FALSE)
@@ -108,7 +109,7 @@ expand_TS <- function(LDA_models, formula, nchangepoints){
 #'
 check_nchangepoints <- function(nchangepoints){
   if (!is.numeric(nchangepoints) || any(nchangepoints %% 1 != 0)){
-    stop("nchangepoints vector must be integers")
+    stop("nchangepoints must be integer-valued")
   }
 }
 
@@ -217,32 +218,32 @@ check_timename <- function(document_covariate_table, timename){
   }
 }
 
-#' @title Verify that formula vector is proper
+#' @title Verify that formulas vector is proper
 #' 
 #' @description Verify that the vector of formulas is actually formatted
 #'   as a vector formula objects and that the predictor variables are all 
 #'   included in the document covariate table.
 #'   
-#' @param formula Vector of the formulas to evaluate.
+#' @param formulas Vector of the formulas to evaluate.
 #'
 #' @param document_covariate_table Document covariate table used to evaluate
 #'   the availability of the data required by the formula inputs.
 #'
-#' @return Input \code{formula} properly formatted.
+#' @return Nothing.
 #' 
 #' @export
 #'
-check_formula <- function(formula, document_covariate_table){
+check_formulas <- function(formulas, document_covariate_table){
   dct <- document_covariate_table
-  if(!is(formula, "vector")){
-    if(is(formula, "formula")){
-      formula <- c(formula)
+  if(!is(formulas, "vector")){
+    if(is(formulas, "formula")){
+      formulas <- c(formulas)
     } else{
-      stop("formula is not a formula")
+      stop("formulas does not contain a formula")
     }
   } else{ 
     if (!all(unlist(lapply(formula, is, "formula")))){
-      stop("formula is not a vector of formulas")
+      stop("formulas is not a vector of formulas")
     }
   }
   resp <- unlist(lapply(lapply(formula, terms), attr, "response"))
@@ -255,5 +256,25 @@ check_formula <- function(formula, document_covariate_table){
     mis <- paste(misses, collapse = ", ")
     stop(paste0("formulas include predictors not present in data: ", mis))
   }
-  formula
+}
+
+#' @title Prepare the formulas by adding the response variable 
+#' 
+#' @description Add the response variable to each of the formulas.
+#'   
+#' @param formulas Vector of the formulas to evaluate.
+#'
+#' @param response Character element representing the response variable. 
+#'
+#' @return Updated \code{formulas}.
+#' 
+#' @export
+#'
+prep_formulas <- function(formulas, response){
+  out <- formulas
+  for (i in 1:length(formulas)){
+    tformula <- paste(as.character(formulas[[i]]), collapse = "")
+    out[[i]] <- as.formula(paste(response, tformula))
+  }
+  out
 }

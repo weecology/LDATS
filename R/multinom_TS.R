@@ -8,8 +8,9 @@
 #'   \code{formula}) and [3], the multinomial response variable (indicated
 #'   in \code{control}).
 #'
-#' @param formula_RHS Right Hand Side of the continuous time formula as a 
-#'   character vector.
+#' @param formula \code{formula} describing the continuous change. Any 
+#'   predictor variable included must also be a column in the
+#'   \code{data}. 
 #'
 #' @param changepoints Numeric vector indicating locations of the change 
 #'   points.
@@ -29,7 +30,7 @@
 #'
 #' @export 
 #'
-multinom_TS <- function(data, formula_RHS, changepoints = NULL, 
+multinom_TS <- function(data, formula, changepoints = NULL, 
                         weights = NULL, control = TS_controls_list()){
 
   if (!check_changepoints(data, changepoints, control$timename)){
@@ -37,7 +38,7 @@ multinom_TS <- function(data, formula_RHS, changepoints = NULL,
   }
 
   TS_chunk_memo <- memoise_fun(multinom_TS_chunk, control$memoise)
-  formula <- as.formula(paste0(control$response, " ~ ", formula_RHS))
+
   chunks <- prep_chunks(data, changepoints, control$timename)
   nchunks <- nrow(chunks)
   fits <- vector("list", length = nchunks)

@@ -5,12 +5,12 @@
 \title{Expand the TS models needed across the factorial combination of
   LDA models, continuous formulas, and number of change points}
 \usage{
-expand_TS(LDA_models, formula, nchangepoints)
+expand_TS(LDA_models, formulas, nchangepoints)
 }
 \arguments{
 \item{LDA_models}{\code{LDA_list}-class object of LDA models.}
 
-\item{formula}{Vector of the continuous formulas.}
+\item{formulas}{Vector of the continuous formulas.}
 
 \item{nchangepoints}{Vector of the number of changepoints.}
 }

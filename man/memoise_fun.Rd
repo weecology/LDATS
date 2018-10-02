@@ -13,7 +13,7 @@ memoise_fun(fun, memoise_fun)
 memoised.}
 }
 \value{
-function, memoised if desired
+\code{fun}, memoised if desired.
 }
 \description{
 This function provides a simple, logical toggle control on

@@ -4,7 +4,7 @@
 \alias{TS_on_LDA}
 \title{Conduct a set of Time Series analyses on a set of LDA models}
 \usage{
-TS_on_LDA(LDA_models, document_covariate_table, formula = ~1,
+TS_on_LDA(LDA_models, document_covariate_table, formulas = ~1,
   nchangepoints = 0, weights = NULL, control = TS_controls_list())
 }
 \arguments{
@@ -20,7 +20,7 @@ In addition, the table needs to include as columns all covariates named
 within the specific models described via the argument \code{formula} 
 (if desired). Must be a conformable to a data table.}
 
-\item{formula}{Vector of \code{formula}(s) for the continuous change. Any 
+\item{formulas}{Vector of \code{formula}(s) for the continuous change. Any 
 predictor variable included in a formula must also be a column in the
 \code{document_covariate_table}. Each element (formula) in the vector
 is evaluated for each number of change points and each LDA model.}

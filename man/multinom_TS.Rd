@@ -4,7 +4,7 @@
 \alias{multinom_TS}
 \title{Fit a multinomial change point Time Series model}
 \usage{
-multinom_TS(data, formula_RHS, changepoints = NULL, weights = NULL,
+multinom_TS(data, formula, changepoints = NULL, weights = NULL,
   control = TS_controls_list())
 }
 \arguments{
@@ -13,8 +13,9 @@ multinom_TS(data, formula_RHS, changepoints = NULL, weights = NULL,
 \code{formula}) and [3], the multinomial response variable (indicated
 in \code{control}).}
 
-\item{formula_RHS}{Right Hand Side of the continuous time formula as a 
-character vector.}
+\item{formula}{\code{formula} describing the continuous change. Any 
+predictor variable included must also be a column in the
+\code{data}.}
 
 \item{changepoints}{Numeric vector indicating locations of the change 
 points.}
