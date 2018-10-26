@@ -1,40 +1,37 @@
 Package: LDATS
-Title: Detect Community-Types from Data and Identify Break Points
-Version: 0.0.5
+Title: Latent Dirichlet Allocation coupled with Time Series analyses
+Version: 0.0.6
 Authors@R: c(
 	person("Juniper", "Simonis", email = "juniper.simonis@weecology.org",
 	role = c("aut", "cre")),
-    person("Erica", "Christensen", email = "erica.christensen@weecology.org",
-	role = c("aut")),
-    person("Dave", "Harris", email = "dave.harris@weecology.org", 
-	role = c("aut")),
-    person("Hao", "Ye", email = "hao.ye@weecology.org", role = c("ctb"))
+    person("Erica", "Christensen", role = c("aut")),
+    person("Dave", "Harris", role = c("aut")),
+	person("Renata", "Diaz", role = c("aut")),
+    person("Hao", "Ye", role = c("aut")),
+	person("White", "Ethan", role = c("aut")),
+    person("S. K. Morgan", "Ernest", role = c("aut"))
     )
-Description: Combines Latent Dirichlet Allocation and Time Series methods
-    in a two-stage analysis to identify temporal changes in multi-dimensional 
-	time series data.
+Description: Combines Latent Dirichlet Allocation and Multinomial Time Series
+    methods in a two-stage analysis to quantify dynamics in  
+	high-dimensional temporal data.
 Depends: R (>= 3.2.3)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: topicmodels,
-    dplyr,
-    memoise,
-    progress,
-    nnet,
-    doParallel,
+Imports: 
+    digest,
+    lubridate,
     magrittr,
-    foreach,
-	methods,
-	coda,
-	testthat,
-	digest,
-	tidyverse,
-	viridis,
-	gridExtra
+    memoise,
+    methods,
+    nnet,
+    topicmodels,
+    viridis
 Suggests:
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat,
+    vdiffr
 VignetteBuilder:
     knitr
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0

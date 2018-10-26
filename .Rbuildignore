@@ -1,4 +1,5 @@
-previous_work
-.travis.yml
+^previous_work$
+^working$
+^.travis.yml$
 ^.*\.Rproj$
 ^\.Rproj\.user$
