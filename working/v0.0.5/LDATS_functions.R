@@ -28,7 +28,7 @@ LDA_TS <- function(document_term_matrix = NULL,
                    formula = ~1, nchangepoints = 1, ...){
 
   weights <- doc_weights(document_term_matrix)
-  ldas <- parLDA(data = document_term_matrix) 
+  ldas <- parLDA(data = document_term_matrix, ...) 
   selected <- LDA_select(ldas, ...) 
   mtss <- selected %>%
           MTS_prep(document_covariate_matrix) %>%

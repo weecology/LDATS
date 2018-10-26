@@ -6,8 +6,9 @@ Authors@R: c(
 	role = c("aut", "cre")),
     person("Erica", "Christensen", role = c("aut")),
     person("Dave", "Harris", role = c("aut")),
-    person("Hao", "Ye", role = c("aut")),
 	person("Renata", "Diaz", role = c("aut")),
+    person("Hao", "Ye", role = c("aut")),
+	person("White", "Ethan", role = c("aut")),
     person("S. K. Morgan", "Ernest", role = c("aut"))
     )
 Description: Combines Latent Dirichlet Allocation and Multinomial Time Series
