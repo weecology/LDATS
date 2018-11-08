@@ -38,10 +38,11 @@
 TS <- function(data, formula, nchangepoints, weights, 
                control = TS_controls_list()){
 
-  TS_memo <- memoise_fun(multinom_TS, control$memoise)
-
   check_timename(data, control$timename)
   check_formula(formula, data)
+
+  TS_memo <- memoise_fun(multinom_TS, control$memoise)
+
 
 
 
