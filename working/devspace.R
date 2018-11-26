@@ -26,6 +26,13 @@ mts <- multinom_TS(data, formula, changepoints = c(5, 100))
 # point. so now let's jump back to TS and get going there!
 #  presently working within TS, have all of the prep work done, leading up to
 #  the main for loop
+#
+# note that i might want to restructure the change point x temp matrix into
+#  a vector so that it is actually a changepoint * temp x nit matrix rather than
+#  a changepoint x temp x nit 3-D array... i have a feeling that the writing
+#  to the array at each iteration might be slowing things considerably.
+#
+
 
 xx <- multinom_TS(data, formula, changepoints = c(5, 100))[[1]][[1]]
 vcov(xx)

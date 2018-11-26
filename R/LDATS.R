@@ -7,7 +7,7 @@
 #' @importFrom methods is
 #' @importFrom nnet multinom
 #' @importFrom progress progress_bar
-#' @importFrom stats AIC as.formula terms
+#' @importFrom stats AIC as.formula rgeom terms
 #' @importFrom topicmodels LDA logLik
 #' @importFrom viridis viridis
 #'
