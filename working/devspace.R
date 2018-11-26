@@ -20,10 +20,12 @@ data$gamma <- gamma
 formula<- gamma ~ newmoon
 changepoints <- NULL
 
-multinom_TS(data, formula, changepoints = c(5, 100))
+mts <- multinom_TS(data, formula, changepoints = c(5, 100))
 
 # multinom_TS and its set of underlying functions are all good to go at this 
 # point. so now let's jump back to TS and get going there!
+#  presently working within TS, have all of the prep work done, leading up to
+#  the main for loop
 
 xx <- multinom_TS(data, formula, changepoints = c(5, 100))[[1]][[1]]
 vcov(xx)

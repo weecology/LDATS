@@ -5,19 +5,43 @@
 \title{Create the controls list for the Time Series model}
 \usage{
 TS_controls_list(memoise = TRUE, response = "gamma",
-  timename = "newmoon")
+  timename = "newmoon", ntemps = 6, penultimate_temp = 2^6,
+  ultimate_temp = 1e+10, q = 0, nit = 10000, magnitude = 12,
+  quiet = FALSE)
 }
 \arguments{
-\item{memoise}{Logical indicator of whether the multinomial functions 
-should be memoised (via \code{\link[memoise]{memoise}}). Memoisation 
-happens to both \code{\link{multinom_TS}} and 
+\item{memoise}{\code{logical} indicator of whether the multinomial 
+functions should be memoised (via \code{\link[memoise]{memoise}}). 
+Memoisation happens to both \code{\link{multinom_TS}} and 
 \code{\link{multinom_TS_chunk}}.}
 
-\item{response}{Character indicating the response variable used in the time
-series.}
+\item{response}{\code{character} element indicating the response variable 
+used in the time series.}
 
-\item{timename}{Character indicating the time variable used in the time 
-series.}
+\item{timename}{\code{character} element indicating the time variable
+used in the time series.}
+
+\item{ntemps}{\code{integer} number of temperatures to use in the 
+ptMCMC (referenced as \eqn{H} in the math description).}
+
+\item{penultimate_temp}{Penultimate temperature in the ptMCMC sequence.}
+
+\item{ultimate_temp}{Ultimate temperature in the ptMCMC sequence.}
+
+\item{q}{Exponent controlling the ptMCMC temperature sequence from the 
+focal chain (reference with temperature = 1) to the penultimate chain. 0
+(default) implies a geometric sequence. 1 implies squaring before 
+exponentiating.}
+
+\item{nit}{\code{integer} number of iterations (steps) used in the ptMCMC
+algorithm (referenced as \eqn{G} in the math description).}
+
+\item{magnitude}{Average magnitude (defining a geometric distribution)
+for the proposed step size in the ptMCMC algorithm (referenced as 
+\eqn{\kappa} in the math description).}
+
+\item{quiet}{\code{logical} indicator of whether the model should run 
+quietly (if \code{FALSE}, a progress bar is returned).}
 }
 \value{
 List of class \code{TS_controls}.

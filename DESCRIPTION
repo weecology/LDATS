@@ -20,11 +20,15 @@ Encoding: UTF-8
 LazyData: true
 Imports: 
     digest,
+    graphics,
+    grDevices,
     lubridate,
     magrittr,
     memoise,
     methods,
     nnet,
+    progress,
+    stats,
     topicmodels,
     viridis
 Suggests:

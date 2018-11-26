@@ -193,5 +193,6 @@ multinom_TS_chunk <- function(data, formula, chunk, weights = NULL,
   chunk_start <- as.numeric(chunk["start"])
   chunk_end <- as.numeric(chunk["end"])
   in_chunk <- time_obs >= chunk_start & time_obs <= chunk_end
-  fit <- multinom(formula, data, weights, subset = in_chunk, trace = FALSE) 
+  fit <- multinom(formula, data, weights, subset = in_chunk, trace = FALSE)
+  fit 
 }
