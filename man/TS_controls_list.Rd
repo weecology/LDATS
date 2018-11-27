@@ -7,7 +7,7 @@
 TS_controls_list(memoise = TRUE, response = "gamma",
   timename = "newmoon", ntemps = 6, penultimate_temp = 2^6,
   ultimate_temp = 1e+10, q = 0, nit = 10000, magnitude = 12,
-  quiet = FALSE)
+  quiet = FALSE, burnin = 0, thin_frac = 1)
 }
 \arguments{
 \item{memoise}{\code{logical} indicator of whether the multinomial 
@@ -42,6 +42,12 @@ for the proposed step size in the ptMCMC algorithm (referenced as
 
 \item{quiet}{\code{logical} indicator of whether the model should run 
 quietly (if \code{FALSE}, a progress bar is returned).}
+
+\item{burnin}{\code{integer} number of iterations to remove from the 
+beginning of the ptMCMC algorithm.}
+
+\item{thin_frac}{Fraction of iterations to retain, must be \eqn{(0, 1]},
+and the default value of 1 represents no thinning.}
 }
 \value{
 List of class \code{TS_controls}.

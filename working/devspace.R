@@ -9,7 +9,7 @@ LDA_models = select_LDA(r_lda)
 document_covariate_table = dct
 timename = "newmoon"
 formulas = c(~ 1)
-nchangepoints = 0
+nchangepoints = 2
 weights = NULL
 control = TS_controls_list()
 
@@ -20,21 +20,25 @@ data$gamma <- gamma
 formula<- gamma ~ newmoon
 changepoints <- NULL
 
+
+
 mts <- multinom_TS(data, formula, changepoints = c(5, 100))
 
 # multinom_TS and its set of underlying functions are all good to go at this 
 # point. so now let's jump back to TS and get going there!
 #  presently working within TS, have all of the prep work done, leading up to
 #  the main for loop
-#
-# note that i might want to restructure the change point x temp matrix into
-#  a vector so that it is actually a changepoint * temp x nit matrix rather than
-#  a changepoint x temp x nit 3-D array... i have a feeling that the writing
-#  to the array at each iteration might be slowing things considerably.
-#
+
 
 
 xx <- multinom_TS(data, formula, changepoints = c(5, 100))[[1]][[1]]
 vcov(xx)
 
 
+system.time(
+xx<-prep_proposal_dist(6)
+)
+
+system.time(
+for(i in 1:1e6)
+xx<-prep_proposal_dist(6))
