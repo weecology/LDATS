@@ -21,24 +21,9 @@ formula<- gamma ~ newmoon
 changepoints <- NULL
 
 
-
-mts <- multinom_TS(data, formula, changepoints = c(5, 100))
-
-# multinom_TS and its set of underlying functions are all good to go at this 
-# point. so now let's jump back to TS and get going there!
-#  presently working within TS, have all of the prep work done, leading up to
-#  the main for loop
-
-
-
-xx <- multinom_TS(data, formula, changepoints = c(5, 100))[[1]][[1]]
-vcov(xx)
-
-
-system.time(
-xx<-prep_proposal_dist(6)
-)
-
-system.time(
-for(i in 1:1e6)
-xx<-prep_proposal_dist(6))
+#
+# working within the TS function
+#   everything is set and working great within est_changepts
+#   now need to include the unconditional estimates of the regressors
+#   also want to include tests on the all existing functions and probably
+#   want to break up the TS function script a bit soon...
