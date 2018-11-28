@@ -107,7 +107,7 @@ summarize_TS <- function(data, formula, weights, control, rho_dist,
               rho_summary = rho_summary, rho_vcov = rho_vcov,
               eta_summary = eta_summary, eta_vcov = eta_vcov,
               logLik = logLik, deviance = deviance)
-  attr(out, "class") <- c("TS_fit", "list")
+  class(out) <- c("TS_fit", "list")
   to_hide <- c("data", "weights", "control", "lls", "rhos", "etas", 
                "rho_vcov", "eta_vcov")
   if (nchangepoints == 0){
@@ -697,7 +697,7 @@ prep_ptMCMC_inputs <- function(data, formula, nchangepoints, weights,
   control$weights <- weights
   control$data <- data
   control$TS_memo <- memoise_fun(multinom_TS, control$memoise)
-  attr(control, "class")[1] <- "ptMCMC_inputs"
+  class(control) <- c("ptMCMC_inputs", "list")
   control
 }
 

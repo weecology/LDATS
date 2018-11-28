@@ -39,7 +39,7 @@ multinom_TS <- function(data, formula, changepoints = NULL,
 
   if (!check_changepoints(data, changepoints, control$timename)){
     out <- list("chunk models" = NA, "logLik" = -Inf)
-    attr(out, "class") <- c("multinom_TS_fit", "list")
+    class(out) <- c("multinom_TS_fit", "list")
     return(out)
   }
 
@@ -99,7 +99,7 @@ package_chunk_fits <- function(chunks, fits){
   names(fits) <- paste("chunk", 1:nchunks, chunk_times, "model")
   ll <- sum(sapply(fits, logLik))
   out <- list("chunk models" = fits, "logLik" = ll)
-  attr(out, "class") <- c("multinom_TS_fit", "list")
+  class(out) <- c("multinom_TS_fit", "list")
   out
 }
 
