@@ -11,7 +11,10 @@ data$gamma <- LDA_models[[1]]@gamma
 
 
 
+mod0 <- TS(data = data, formula = gamma ~1, nchangepoints= 0, weights = NULL, 
+               control = TS_controls_list())
 mod1 <- TS(data = data, formula = gamma ~1, nchangepoints= 1, weights = NULL, 
                control = TS_controls_list())
-
+mod2 <- TS(data = data, formula = gamma ~1, nchangepoints= 2, weights = NULL, 
+               control = TS_controls_list())
 

@@ -59,7 +59,7 @@ multinom_TS <- function(data, formula, changepoints = NULL,
 #' @description Convenience function to simply extract the \code{logLik}
 #'   element from a \code{multinom_TS_fit}-class object.
 #'
-#' @param x A \code{multinom_TS_fit}-class object.
+#' @param object A \code{multinom_TS_fit}-class object.
 #'
 #' @param ... Not used, simply included to maintain method compatability.
 #'
@@ -67,7 +67,7 @@ multinom_TS <- function(data, formula, changepoints = NULL,
 #'
 #' @export
 #'
-logLik.multinom_TS_fit <- function(x, ...){
+logLik.multinom_TS_fit <- function(object, ...){
   x$logLik
 }
 

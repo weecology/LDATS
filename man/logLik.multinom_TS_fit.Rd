@@ -4,10 +4,10 @@
 \alias{logLik.multinom_TS_fit}
 \title{Log likelihood of a multinomial TS model}
 \usage{
-logLik.multinom_TS_fit(x, ...)
+logLik.multinom_TS_fit(object, ...)
 }
 \arguments{
-\item{x}{A \code{multinom_TS_fit}-class object.}
+\item{object}{A \code{multinom_TS_fit}-class object.}
 
 \item{...}{Not used, simply included to maintain method compatability.}
 }

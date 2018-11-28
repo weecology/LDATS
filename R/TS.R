@@ -140,7 +140,7 @@ print.TS_fit <- function(x, ...){
 #'   of the chunk-level regressors and \code{measure_ets_vcov} generates
 #'   the variance-covariance matrix for the regressors.
 #'
-#' @param rhos Matrix of regressors (columns) across iterations of the 
+#' @param etas Matrix of regressors (columns) across iterations of the 
 #'   ptMCMC (rows).
 #'
 #' @param control Class \code{TS_controls} list, holding control parameters
