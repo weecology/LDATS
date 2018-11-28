@@ -5,6 +5,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom memoise memoise
 #' @importFrom methods is
+#' @importFrom mvtnorm rmvnorm
 #' @importFrom nnet multinom
 #' @importFrom progress progress_bar
 #' @importFrom stats AIC as.formula rgeom runif terms

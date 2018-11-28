@@ -5,7 +5,7 @@
 \alias{update_pbar}
 \title{Initialize and tick through the progress bar}
 \usage{
-prep_pbar(control = TS_controls_list())
+prep_pbar(control = TS_controls_list(), bar_type = "rho", nr = NULL)
 
 update_pbar(pbar, control = TS_controls_list())
 }
@@ -18,6 +18,12 @@ a \code{logical} indicator of whether there should be information
 (i.e. the progress bar) printed during the run or not. Default is 
 \code{TRUE}.}
 
+\item{bar_type}{"rho" (for change point locations) or "eta" (for 
+regressors).}
+
+\item{nr}{\code{integer} number of unique realizations, needed when
+\code{bar_type} = "eta".}
+
 \item{pbar}{The progress bar object returned from \code{prep_pbar}.}
 }
 \value{
@@ -27,5 +33,5 @@ a \code{logical} indicator of whether there should be information
 }
 \description{
 \code{prep_pbar} creates and \code{update_pbar} steps
-  through the progress bar (if desired) in \code{\link{TS}}
+  through the progress bars (if desired) in \code{\link{TS}}
 }

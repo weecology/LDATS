@@ -26,6 +26,7 @@ Imports:
     magrittr,
     memoise,
     methods,
+    mvtnorm,
     nnet,
     progress,
     stats,

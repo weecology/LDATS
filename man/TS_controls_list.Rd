@@ -4,19 +4,16 @@
 \alias{TS_controls_list}
 \title{Create the controls list for the Time Series model}
 \usage{
-TS_controls_list(memoise = TRUE, response = "gamma",
-  timename = "newmoon", ntemps = 6, penultimate_temp = 2^6,
-  ultimate_temp = 1e+10, q = 0, nit = 10000, magnitude = 12,
-  quiet = FALSE, burnin = 0, thin_frac = 1)
+TS_controls_list(memoise = TRUE, timename = "newmoon", ntemps = 6,
+  penultimate_temp = 2^6, ultimate_temp = 1e+10, q = 0,
+  nit = 10000, magnitude = 12, quiet = FALSE, burnin = 0,
+  thin_frac = 1)
 }
 \arguments{
 \item{memoise}{\code{logical} indicator of whether the multinomial 
 functions should be memoised (via \code{\link[memoise]{memoise}}). 
 Memoisation happens to both \code{\link{multinom_TS}} and 
 \code{\link{multinom_TS_chunk}}.}
-
-\item{response}{\code{character} element indicating the response variable 
-used in the time series.}
 
 \item{timename}{\code{character} element indicating the time variable
 used in the time series.}

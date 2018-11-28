@@ -38,7 +38,9 @@ multinom_TS <- function(data, formula, changepoints = NULL,
                         weights = NULL, control = TS_controls_list()){
 
   if (!check_changepoints(data, changepoints, control$timename)){
-    return(list("chunk models" = NA, "logLik" = -Inf))
+    out <- list("chunk models" = NA, "logLik" = -Inf)
+    attr(out, "class") <- c("multinom_TS_fit", "list")
+    return(out)
   }
 
   TS_chunk_memo <- memoise_fun(multinom_TS_chunk, control$memoise)
@@ -52,8 +54,23 @@ multinom_TS <- function(data, formula, changepoints = NULL,
   package_chunk_fits(chunks, fits)
 }
 
+#' @title Log likelihood of a multinomial TS model
+#' 
+#' @description Convenience function to simply extract the \code{logLik}
+#'   element from a \code{multinom_TS_fit}-class object.
+#'
+#' @param x A \code{multinom_TS_fit}-class object.
+#'
+#' @return Log likelihood of the model.
+#'
+#' @export
+#'
+logLik.multinom_TS_fit <- function(x, ...){
+  x$logLik
+}
 
 #' @title Package the output of the chunk-level multinomial models into a
+#'   multinom_TS_fit list
 #'    
 #' @description Takes the list of fitted chunk-level models returned from
 #'   \code{TS_chunk_memo} (the memoised version of 

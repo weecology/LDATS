@@ -27,3 +27,9 @@ changepoints <- NULL
 #   now need to include the unconditional estimates of the regressors
 #   also want to include tests on the all existing functions and probably
 #   want to break up the TS function script a bit soon...
+
+
+t1 <- system.time(
+  rho_dist <- est_changepts(data, formula, nchangepoints, weights, control)
+)
+
