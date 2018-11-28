@@ -26,7 +26,8 @@ development tasks.
 
 ### Style
 For all code, please follow the [Weecology Code Style 
-Guide](https://github.com/weecology/lab-wiki/wiki/Code-style-guide)
+Guide](https://github.com/weecology/lab-wiki/wiki/Programming:-Style-Guide-for-Code)
+(currently a private document).
 
 ## Installation
 
