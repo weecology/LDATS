@@ -15,5 +15,6 @@ today <- Sys.Date()
 
 ## ------------------------------------------------------------------------
 data(rodents)
-head(rodents, 10)
+head(rodents$document_term_table, 10)
+head(rodents$document_covariate_table, 10)
 

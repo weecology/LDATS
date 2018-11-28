@@ -1,3 +1,9 @@
+# TS is working now just great
+# next to do: plot functions, tests, tidy up documentation
+# after that: select_TS
+# and then: LDA_TS
+# and then: full vignette
+
 devtools::load_all()
 data(rodents)
 rem <- which(colnames(rodents) %in% c("newmoon", "date", "plots", "traps"))
