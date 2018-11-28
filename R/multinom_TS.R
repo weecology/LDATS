@@ -67,7 +67,7 @@ multinom_TS <- function(data, formula, changepoints = NULL,
 #'
 #' @export
 #'
-logLik.multinom_TS_fit <- function(object, ...){
+logLik_multinom_TS_fit <- function(object, ...){
   object$logLik
 }
 

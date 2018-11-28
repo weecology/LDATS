@@ -45,6 +45,8 @@ devtools::install_github("weecology/LDATS")
   * `TS_on_LDA()`
     * `TS()`
       * `est_changepoints()`
-    * `select_TS()`
+      * `est_regressors()`
+      * `summarize_TS()`	  
+	* `select_TS()`
 
 
