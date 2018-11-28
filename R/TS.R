@@ -83,7 +83,7 @@ summarize_TS <- function(data, formula, weights, control, rho_dist,
   if (is.null(nchangepoints)){
     nchangepoints <- 0
     mod <- multinom_TS(data, formula, changepoints = NULL, weights)[[1]][[1]]
-    lls <- as.numeric(logLik_multinom_TS_fit(mod))
+    lls <- as.numeric(logLik(mod))
     rhos <- NULL
   } else{
     lls <- rho_dist$lls[1, ]
@@ -552,7 +552,7 @@ propose_step <- function(i, cpts, inputs){
   }
   prop_changepts[selection] <- prop_changepts_s
   mods <- proposed_step_mods(prop_changepts, inputs)
-  lls <- sapply(mods, logLik_multinom_TS_fit)
+  lls <- sapply(mods, logLik)
   list(changepts = prop_changepts, lls = lls)
 }
 

@@ -62,6 +62,34 @@ LDA_set <- function(document_term_table, topics = 2, nseeds = 1,
   return(mods)
 }
 
+#' @title Calculate the log likelihood of a VEM LDA model fit
+#'
+#' @description Imported calculations from topicmodels, as applied to
+#'   Latent Dirichlet Allocation fit with Variational Expectation Maximization
+#'   via \code{\link[topicmodels]{LDA}}. 
+#'
+#' @param object A \code{LDA_VEM}-class object.
+#'
+#' @param ... Not used, simply included to maintain method compatability.
+#'
+#' @return Log likelihood of the model, also with \code{df} (degrees of
+#'    freedom) and \code{nobs} (number of observations) values.
+#'
+#' @references 
+#'   Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
+#'   Models. Journal of Statistical Software 40(13):1-30.
+#'
+#' @export
+#'
+logLik.LDA_VEM <- function(object, ...){
+  val <- sum(object@loglikelihood)
+  df <- as.integer(object@control@estimate.alpha) + length(object@beta)
+  attr(val, "df") <- df
+  attr(val, "nobs") <- object@Dim[1]
+  class(val) <- "logLik"
+  val
+}
+
 #' @title Verify that document term table is proper
 #' 
 #' @description Verify that the table of observations is conformable to
