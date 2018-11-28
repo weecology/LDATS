@@ -38,7 +38,7 @@ This function is a wrapper of the \code{\link[topicmodels]{LDA}} function
 \examples{
 \dontrun{
   data(rodents)
-  lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
+  lda_data <- rodents$document_term_table
   r_LDA <- LDA_set(lda_data, topics = 2, nseeds = 2)                         
 }
 

@@ -1,8 +1,7 @@
 context("Check LDA functions")
 
 data(rodents)
-rem <- which(colnames(rodents) %in% c("newmoon", "date", "plots", "traps"))
-lda_data <- rodents[ , -rem]
+lda_data <- rodents$document_term_table
 lda <- LDA_set(lda_data, c(2, 4), nseeds = 2)
 
 test_that("check output from LDA_set", {

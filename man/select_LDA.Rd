@@ -28,7 +28,7 @@ Select the best model(s) of interest from an
 \examples{
 \dontrun{
   data(rodents)
-  lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
+  lda_data <- rodents$document_term_table
   r_LDA <- LDA_set(lda_data, topics = 2, nseeds = 2)  
   select_LDA(r_LDA)                       
 }

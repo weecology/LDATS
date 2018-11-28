@@ -1,6 +1,8 @@
 context("Check data loading")
 
 test_that("check rodents data", {
-  hash_val <- digest(data(rodents))
-  expect_equal(hash_val, "d1d3201c55cb74b44109513daf07bee4")
+  data(rodents)
+  expect_equal(length(rodents), 2)
+  expect_equal(names(rodents), c("document_term_table",
+                                 "document_covariate_table"))
 })
