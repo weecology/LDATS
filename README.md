@@ -46,7 +46,6 @@ lda_data <- rodents$document_term_table
 ts_data <- rodents$document_covariate_table
 
 r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2:5, nseeds = 2, ncores = 4)
-
 ```
 
 ## More Information 
