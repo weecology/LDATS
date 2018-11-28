@@ -76,8 +76,8 @@ and DGE-1842473).
 J. L. Simonis provided insight on LDA applications and feedback on technical
 writing during development of the first version of the LDATS model and
 application, led the coding and mathematical development of the model into an
-R package, and led the writing on this manuscript. E. M. Christensen led the
-project during development of the first version of the LDATS model and its
+R package, and led writing on the technical manuscript. E. M. Christensen led
+the project during development of the first version of the LDATS model and its
 application to the Portal data, specifically conceiving the project, coding
 the pipeline wrappers of the analysis, and writing and editing the first
 description of the model and its application (Christensen et al. 2018). D. J.
