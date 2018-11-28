@@ -68,7 +68,7 @@ multinom_TS <- function(data, formula, changepoints = NULL,
 #' @export
 #'
 logLik.multinom_TS_fit <- function(object, ...){
-  x$logLik
+  object$logLik
 }
 
 #' @title Package the output of the chunk-level multinomial models into a
