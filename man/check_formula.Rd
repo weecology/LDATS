@@ -4,15 +4,14 @@
 \alias{check_formula}
 \title{Verify that a formula is proper}
 \usage{
-check_formula(formula, data)
+check_formula(data, formula)
 }
 \arguments{
-\item{formula}{Formula to evaluate.}
-
 \item{data}{Class \code{data.frame} object including [1] the time variable
 (indicated in \code{control}), [2] the predictor variables (required by
-\code{formula}) and [3], the multinomial response variable (indicated
-in \code{control}).}
+\code{formula}) and [3], the multinomial response variable.}
+
+\item{formula}{Formula to evaluate.}
 }
 \value{
 Nothing.

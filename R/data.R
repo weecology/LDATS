@@ -6,9 +6,13 @@
 #'   across 8 50 m x 50 m plots, each sampled using 49 live traps (Brown 1998, 
 #'   Ernest \emph{et al.} 2016).
 #'
-#' @format A \code{data.frame} with rows corresponding to sampling events and 
-#'   columns to covariates (newmoon number, date, number of plots trapped,  
-#'   number of traps used) and the 21 species. 
+#' @format A \code{list} of two \code{data.frame}-objects with rows 
+#'   corresponding to documents (sampling events). One element is the
+#'   document term table (called \code{document_term_table}), which contains
+#'   counts of the species (terms) in each sample (document), and the other is
+#'   the document covariate table (called \code{document_covariate_table}) 
+#'   with columns of covariates (newmoon number, sin and cos of the fraction
+#'   of the year).
 #' 
 #' @source \url{https://github.com/weecology/PortalData/Rodents}
 #'

@@ -1,8 +1,10 @@
 context("Check LDA plot functions")
 
+# note: if the figure images need to be updated, delete the files, then run
+#  vdiffr::manage_cases() and validate everything 
+
 data(rodents)
-rem <- which(colnames(rodents) %in% c("newmoon", "date", "plots", "traps"))
-lda_data <- rodents[ , -rem]
+lda_data <- rodents$document_term_table
 ldas <- LDA_set(lda_data, topics = c(2, 4), nseeds = 2)
 lda <- ldas[[1]]
 xtime <- rodents$newmoon

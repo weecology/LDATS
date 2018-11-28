@@ -2,7 +2,8 @@
 % Please edit documentation in R/multinom_TS.R
 \name{package_chunk_fits}
 \alias{package_chunk_fits}
-\title{Package the output of the chunk-level multinomial models into a}
+\title{Package the output of the chunk-level multinomial models into a
+  multinom_TS_fit list}
 \usage{
 package_chunk_fits(chunks, fits)
 }

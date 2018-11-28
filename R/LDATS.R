@@ -1,3 +1,4 @@
+#' @importFrom coda as.mcmc autocorr autocorr.diag effectiveSize HPDinterval
 #' @importFrom digest digest
 #' @importFrom graphics axis mtext par plot points rect text
 #' @importFrom grDevices devAskNewPage rgb
@@ -5,9 +6,12 @@
 #' @importFrom magrittr %>%
 #' @importFrom memoise memoise
 #' @importFrom methods is
+#' @importFrom mvtnorm rmvnorm
 #' @importFrom nnet multinom
-#' @importFrom stats AIC as.formula terms
-#' @importFrom topicmodels LDA logLik
+#' @importFrom progress progress_bar
+#' @importFrom stats AIC as.formula coef logLik median rgeom runif sd terms 
+#'   var vcov
+#' @importFrom topicmodels LDA
 #' @importFrom viridis viridis
 #'
 
