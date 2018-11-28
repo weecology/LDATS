@@ -61,6 +61,8 @@ multinom_TS <- function(data, formula, changepoints = NULL,
 #'
 #' @param x A \code{multinom_TS_fit}-class object.
 #'
+#' @param ... Not used, simply included to maintain method compatability.
+#'
 #' @return Log likelihood of the model.
 #'
 #' @export

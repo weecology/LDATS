@@ -7,7 +7,7 @@
 TS_controls_list(memoise = TRUE, timename = "newmoon", ntemps = 6,
   penultimate_temp = 2^6, ultimate_temp = 1e+10, q = 0,
   nit = 10000, magnitude = 12, quiet = FALSE, burnin = 0,
-  thin_frac = 1)
+  thin_frac = 1, summary_prob = 0.95)
 }
 \arguments{
 \item{memoise}{\code{logical} indicator of whether the multinomial 
@@ -45,6 +45,9 @@ beginning of the ptMCMC algorithm.}
 
 \item{thin_frac}{Fraction of iterations to retain, must be \eqn{(0, 1]},
 and the default value of 1 represents no thinning.}
+
+\item{summary_prob}{Probability used for summarizing the posterior 
+distributions (via the highest posterior density interval).}
 }
 \value{
 List of class \code{TS_controls}.

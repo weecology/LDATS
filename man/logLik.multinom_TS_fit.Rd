@@ -8,6 +8,8 @@ logLik.multinom_TS_fit(x, ...)
 }
 \arguments{
 \item{x}{A \code{multinom_TS_fit}-class object.}
+
+\item{...}{Not used, simply included to maintain method compatability.}
 }
 \value{
 Log likelihood of the model.

@@ -1,3 +1,4 @@
+#' @importFrom coda as.mcmc autocorr autocorr.diag effectiveSize HPDinterval
 #' @importFrom digest digest
 #' @importFrom graphics axis mtext par plot points rect text
 #' @importFrom grDevices devAskNewPage rgb
