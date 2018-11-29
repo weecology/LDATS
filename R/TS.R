@@ -126,6 +126,8 @@ summarize_TS <- function(data, formula, weights, control, rho_dist,
 #'
 #' @param ... Not used, simply included to maintain method compatability.
 #'
+#' @return Nothing (model is printed, not returned).
+#'
 #' @export
 #'
 print.TS_fit <- function(x, ...){
@@ -732,13 +734,13 @@ prep_pbar <- function(control = TS_controls_list(), bar_type = "rho",
   form <- "  [:bar] :percent eta: :eta"
   if (bar_type == "rho"){
     cat("  Estimating changepoint distribution \n") 
-    return(progress_bar$new(form, control$nit, clear = FALSE, width = 60))
+    out <- progress_bar$new(form, control$nit, width = 60)
   }
   if (bar_type == "eta"){
     cat("  Estimating regressor distribution \n") 
-    return(progress_bar$new(form, nr, clear = FALSE, width = 60))
+    out <- progress_bar$new(form, nr, width = 60)
   }
-
+  out
 }
 
 #' @rdname prep_pbar
@@ -1037,6 +1039,9 @@ check_formula <- function(data, formula){
 #'   Memoisation happens to both \code{\link{multinom_TS}} and 
 #'   \code{\link{multinom_TS_chunk}}.
 #'
+#' @param response \code{character} element indicating the response variable 
+#'   used in the time series. 
+#'
 #' @param timename \code{character} element indicating the time variable
 #'   used in the time series. 
 #'
@@ -1060,7 +1065,7 @@ check_formula <- function(data, formula){
 #'   \eqn{\kappa} in the math description).
 #'
 #' @param quiet \code{logical} indicator of whether the model should run 
-#'   quietly (if \code{FALSE}, a progress bar is returned).
+#'   quietly (if \code{FALSE}, a progress bar and notifications are printed).
 #'
 #' @param burnin \code{integer} number of iterations to remove from the 
 #'   beginning of the ptMCMC algorithm.
@@ -1075,13 +1080,13 @@ check_formula <- function(data, formula){
 #'
 #' @export
 #'
-TS_controls_list <- function(memoise = TRUE,  
+TS_controls_list <- function(memoise = TRUE, response = "gamma", 
                              timename = "newmoon", ntemps = 6, 
                              penultimate_temp = 2^6, ultimate_temp = 1e10,
                              q = 0, nit = 1e4, magnitude = 12, 
                              quiet = FALSE, burnin = 0, thin_frac = 1,
                              summary_prob = 0.95){
-  out <- list(memoise = memoise, timename = timename,
+  out <- list(memoise = memoise, response = response, timename = timename,
               ntemps = ntemps, penultimate_temp = penultimate_temp,
               ultimate_temp = ultimate_temp, q = q, nit = nit,
               magnitude = magnitude, quiet = quiet, burnin = burnin,

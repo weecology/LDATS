@@ -7,7 +7,7 @@
 select_LDA(LDA_models = NULL, measurer = AIC, selector = min)
 }
 \arguments{
-\item{LDA_models}{An object of class \code{LDA_list} produced by
+\item{LDA_models}{An object of class \code{LDA_set} produced by
 \code{LDA_set}.}
 
 \item{measurer, selector}{Function names for use in evaluation of the LDA
@@ -18,11 +18,11 @@ pass on.}
 \value{
 A reduced version of \code{LDA_models} that only includes the 
   selected LDA model(s). The returned object is still an object of
-  class \code{LDA_list}.
+  class \code{LDA_set}.
 }
 \description{
 Select the best model(s) of interest from an
-  \code{LDA_list} object, based on a set of user-provided functions. The
+  \code{LDA_set} object, based on a set of user-provided functions. The
   functions default to choosing the model with the lowest AIC value.
 }
 \examples{

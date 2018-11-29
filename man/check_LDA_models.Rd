@@ -10,11 +10,11 @@ check_LDA_models(LDA_models)
 \item{LDA_models}{List of LDA models or singular LDA model to evaluate.}
 }
 \value{
-\code{LDA_models} as an \code{LDA_list}-class object.
+\code{LDA_models} as an \code{LDA_set}-class object.
 }
 \description{
 Verify that the \code{LDA_models} input is, in fact, LDA 
   models or a singular LDA model. If there is only one model, convert it
-  from a singular class \code{LDA} list to a length-1 class \code{LDA_list}
+  from a singular class \code{LDA} list to a length-1 class \code{LDA_set}
   class and return it.
 }

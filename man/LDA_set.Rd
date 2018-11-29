@@ -4,7 +4,8 @@
 \alias{LDA_set}
 \title{Run a set of Latent Dirichlet Allocation models}
 \usage{
-LDA_set(document_term_table, topics = 2, nseeds = 1, control = NULL)
+LDA_set(document_term_table, topics = 2, nseeds = 1, control = NULL,
+  quiet = FALSE)
 }
 \arguments{
 \item{document_term_table}{Table of observation count data (rows: 
@@ -19,10 +20,13 @@ noted as \eqn{w} (the word-level topic identity) in the math description.}
 value of \code{topics}.}
 
 \item{control}{Named list of control parameters to be used in 
-\code{\link[topicmodels]{LDA}} (note that "seed" will be overwritten).}
+\code{LDA} (note that "seed" will be overwritten).}
+
+\item{quiet}{\code{logical} indicator of whether the model should run 
+quietly.}
 }
 \value{
-List (class: "\code{LDA_list}") of LDA models (class: 
+List (class: \code{LDA_set}) of LDA models (class: 
   "\code{LDA}").
 }
 \description{
@@ -32,7 +36,7 @@ For a given dataset (counts of words across several
   al.) to account for [1] uncertainty in the number of latent topics and
   [2] the impact of intial values in the estimation procedure. 
 
-This function is a wrapper of the \code{\link[topicmodels]{LDA}} function
+This function is a wrapper of the \code{LDA} function
   in the \code{topicmodels} package (Grun and Hornik 2011).
 }
 \examples{

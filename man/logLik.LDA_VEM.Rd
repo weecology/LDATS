@@ -18,7 +18,7 @@ Log likelihood of the model, also with \code{df} (degrees of
 \description{
 Imported calculations from topicmodels, as applied to
   Latent Dirichlet Allocation fit with Variational Expectation Maximization
-  via \code{\link[topicmodels]{LDA}}.
+  via \code{LDA}.
 }
 \references{
 Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic

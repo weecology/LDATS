@@ -274,7 +274,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <div id="overview" class="section level2">
 <h2>Overview</h2>
-<p>This vignette details the code base for the <strong>LDATS</strong> package. It was constructed using <strong>LDATS</strong> version 0.0.7 on 2018-11-28.</p>
+<p>This vignette details the code base for the <strong>LDATS</strong> package. It was constructed using <strong>LDATS</strong> version 0.0.8 on 2018-11-29.</p>
 </div>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
@@ -284,27 +284,30 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 </div>
 <div id="analytical-pipeline" class="section level2">
 <h2>Analytical Pipeline</h2>
+<p>The full LDATS analysis can be executed using the <code>LDA_TS</code> function, which is the top-level of the coding pipeline’s hierarchy of functions:</p>
 <ul>
-<li><code>LDA_TS()</code>
+<li><code>LDA_TS</code>
 <ul>
-<li><code>LDA_set()</code>
+<li><code>LDA_set</code>
 <ul>
-<li><code>LDA()</code></li>
+<li><code>LDA</code></li>
 </ul></li>
-<li><code>select_LDA()</code></li>
-<li><code>TS_on_LDA()</code>
+<li><code>select_LDA</code></li>
+<li><code>TS_on_LDA</code>
 <ul>
-<li><code>expand_TS()</code></li>
-<li><code>TS()</code>
+<li><code>expand_TS</code></li>
+<li><code>TS</code>
 <ul>
-<li><code>est_changepoints()</code></li>
-<li><code>est_regressors()</code></li>
-<li><code>summarize_TS()</code></li>
+<li><code>est_changepoints</code></li>
+<li><code>est_regressors</code></li>
+<li><code>summarize_TS</code></li>
 </ul></li>
 </ul></li>
-<li><code>select_TS()</code></li>
+<li><code>select_TS</code></li>
+<li><code>package_LDA_TS</code></li>
 </ul></li>
 </ul>
+<p>The component functions can all be run independently, as well.</p>
 </div>
 
 
