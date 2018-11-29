@@ -41,7 +41,8 @@
 #'
 #' @param weights Optional class \code{numeric} vector of weights for each 
 #'   document. Corresponds to the vector \strong{\eqn{v}} in the math 
-#'   description.
+#'   description. Defaults to value calculated by 
+#'   \code{\link{document_weights}}, but can be set as \code{NULL}.
 #'
 #' @param LDA_control Named list of control parameters to be used in 
 #'   \code{LDA} (note that "seed" will be overwritten).
@@ -61,7 +62,8 @@
 #'
 LDA_TS <- function(document_term_table, document_covariate_table,
                    topics = 2, nseeds = 1, formulas = ~ 1, nchangepoints = 0,
-                   weights = NULL, LDA_control = NULL, 
+                   weights = document_weights(document_term_table),  
+                   LDA_control = NULL, 
                    TS_control = TS_controls_list(), quiet = FALSE){
   qprint("Latent Dirichlet Allocation", "----", quiet)
   LDAs <- LDA_set(document_term_table, topics, nseeds, LDA_control, quiet)
@@ -73,7 +75,6 @@ LDA_TS <- function(document_term_table, document_covariate_table,
   sel_TSs <- select_TS(TSs)
   package_LDA_TS(LDAs, sel_LDA, TSs, sel_TSs)
 }
-
 
 
 #' @title Print the selected LDA and TS models of LDA_TS object
@@ -107,7 +108,7 @@ print.LDA_TS <- function(x, ...){
 #' @param TSs Class \code{TS_on_LDA} list of results from \code{\link{TS}} 
 #'   applied for each model on each LDA model input.
 #'
-#' @param sel_TS A reduced version of \code{TSs} that only includes the 
+#' @param sel_TSs A reduced version of \code{TSs} that only includes the 
 #'   selected TS model. The returned object is still an object of
 #'   class \code{TS_fit}.
 #'

@@ -17,7 +17,7 @@ class \code{LDA_set}.}
 \item{TSs}{Class \code{TS_on_LDA} list of results from \code{\link{TS}} 
 applied for each model on each LDA model input.}
 
-\item{sel_TS}{A reduced version of \code{TSs} that only includes the 
+\item{sel_TSs}{A reduced version of \code{TSs} that only includes the 
 selected TS model. The returned object is still an object of
 class \code{TS_fit}.}
 }

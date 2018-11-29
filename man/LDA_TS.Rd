@@ -6,8 +6,9 @@
   Series models}
 \usage{
 LDA_TS(document_term_table, document_covariate_table, topics = 2,
-  nseeds = 1, formulas = ~1, nchangepoints = 0, weights = NULL,
-  LDA_control = NULL, TS_control = TS_controls_list(), quiet = FALSE)
+  nseeds = 1, formulas = ~1, nchangepoints = 0,
+  weights = document_weights(document_term_table), LDA_control = NULL,
+  TS_control = TS_controls_list(), quiet = FALSE)
 }
 \arguments{
 \item{document_term_table}{Table of observation count data (rows: 
@@ -44,7 +45,8 @@ segementation of the data  for each continuous model and each LDA model.}
 
 \item{weights}{Optional class \code{numeric} vector of weights for each 
 document. Corresponds to the vector \strong{\eqn{v}} in the math 
-description.}
+description. Defaults to value calculated by 
+\code{\link{document_weights}}, but can be set as \code{NULL}.}
 
 \item{LDA_control}{Named list of control parameters to be used in 
 \code{LDA} (note that "seed" will be overwritten).}

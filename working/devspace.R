@@ -6,11 +6,10 @@
 
 devtools::load_all()
 data(rodents)
-document_term_table <- rodents$document_term_table
+document_t_table <- rodents$document_term_table
 document_covariate_table <- rodents$document_covariate_table
 
-mods <- LDA_TS(document_term_table, document_covariate_table,
+mods <- LDA_TS(document_t_table, document_covariate_table,
                topics = 2:3, nseeds = 2, formulas = c(~ 1, ~newmoon), 
-               nchangepoints = 0:1,
-               weights = NULL, LDA_control = NULL, 
+               nchangepoints = 0:1, LDA_control = NULL, 
                TS_control = TS_controls_list())

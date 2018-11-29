@@ -38,16 +38,21 @@ devtools::install_github("weecology/LDATS")
 
 ## Analytical Pipeline
 
-* `LDA_TS()`
-  * `LDA_set()`
-    * `LDA()`
-  * `select_LDA()`
-  * `TS_on_LDA()`
-    * `expand_TS()`
-    * `TS()`
-      * `est_changepoints()`
-      * `est_regressors()`
-      * `summarize_TS()`
-  * `select_TS()`
+The full LDATS analysis can be executed using the `LDA_TS` function,
+which is the top-level of the coding pipeline's hierarchy of
+functions:
 
+* `LDA_TS`
+  * `LDA_set`
+    * `LDA`
+  * `select_LDA`
+  * `TS_on_LDA`
+    * `expand_TS`
+    * `TS`
+      * `est_changepoints`
+      * `est_regressors`
+      * `summarize_TS`
+  * `select_TS`
+  * `package_LDA_TS`
 
+The component functions can all be run independently, as well.
