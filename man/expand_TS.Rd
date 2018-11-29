@@ -8,7 +8,7 @@
 expand_TS(LDA_models, formulas, nchangepoints)
 }
 \arguments{
-\item{LDA_models}{\code{LDA_list}-class object of LDA models.}
+\item{LDA_models}{\code{LDA_set}-class object of LDA models.}
 
 \item{formulas}{Vector of the continuous formulas.}
 
@@ -16,7 +16,7 @@ expand_TS(LDA_models, formulas, nchangepoints)
 }
 \value{
 Expanded table of the three values: [1] the LDA model (indicated
-  as a numeric element reference to the \code{LDA_list} object), [2] the 
+  as a numeric element reference to the \code{LDA_set} object), [2] the 
   continuous formula, and [3] the number of changepoints.
 }
 \description{

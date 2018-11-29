@@ -6,7 +6,7 @@
 #'   al.) to account for [1] uncertainty in the number of latent topics and
 #'   [2] the impact of intial values in the estimation procedure. 
 #'
-#' This function is a wrapper of the \code{\link[topicmodels]{LDA}} function
+#' This function is a wrapper of the \code{LDA} function
 #'   in the \code{topicmodels} package (Grun and Hornik 2011).
 #'   
 #' @param document_term_table Table of observation count data (rows: 
@@ -21,9 +21,12 @@
 #'   value of \code{topics}.
 #'
 #' @param control Named list of control parameters to be used in 
-#'   \code{\link[topicmodels]{LDA}} (note that "seed" will be overwritten).
+#'   \code{LDA} (note that "seed" will be overwritten).
 #' 
-#' @return List (class: "\code{LDA_list}") of LDA models (class: 
+#' @param quiet \code{logical} indicator of whether the model should run 
+#'   quietly.
+#'
+#' @return List (class: \code{LDA_set}) of LDA models (class: 
 #'   "\code{LDA}").
 #' 
 #' @references 
@@ -43,7 +46,7 @@
 #' @export
 #'
 LDA_set <- function(document_term_table, topics = 2, nseeds = 1, 
-                    control = NULL){
+                    control = NULL, quiet = FALSE){
 
   check_document_term_table(document_term_table)
   check_topics(topics)
@@ -54,11 +57,14 @@ LDA_set <- function(document_term_table, topics = 2, nseeds = 1,
   nmods <- length(mod_topics)
   mods <- vector("list", length = nmods)
   for (i in 1:nmods){
+    topic_msg <- paste0("Running LDA with ", mod_topics[i], " topics ")
+    seed_msg <- paste0("(seed ", mod_seeds[i], ")")
+    qprint(paste0(topic_msg, seed_msg), "", quiet)
     control <- prep_LDA_control(seed = mod_seeds[i], control = control)
     mods[[i]] <- LDA(x = dtt, k = mod_topics[i], control = control)
   }
-  names(mods) <- paste0("c: ", mod_topics, ", seed: ", mod_seeds)
-  class(mods) <- c("LDA_list", "list")  
+  names(mods) <- paste0("k: ", mod_topics, ", seed: ", mod_seeds)
+  class(mods) <- c("LDA_set", "list")  
   return(mods)
 }
 
@@ -66,7 +72,7 @@ LDA_set <- function(document_term_table, topics = 2, nseeds = 1,
 #'
 #' @description Imported calculations from topicmodels, as applied to
 #'   Latent Dirichlet Allocation fit with Variational Expectation Maximization
-#'   via \code{\link[topicmodels]{LDA}}. 
+#'   via \code{LDA}. 
 #'
 #' @param object A \code{LDA_VEM}-class object.
 #'
@@ -140,7 +146,7 @@ check_topics <- function(topics){
 #'   specific model.
 #'
 #' @param control Named list of control parameters to be used in 
-#'   \code{\link[topicmodels]{LDA}} (note that "seed" will be overwritten).
+#'   \code{LDA} (note that "seed" will be overwritten).
 #'
 #' @return List (class: "\code{list}") of controls to be used in the LDA. 
 #' 
@@ -162,10 +168,10 @@ prep_LDA_control <- function(seed, control = NULL){
 #' @title Select the best LDA model(s) for use in time series
 #'
 #' @description Select the best model(s) of interest from an
-#'   \code{LDA_list} object, based on a set of user-provided functions. The
+#'   \code{LDA_set} object, based on a set of user-provided functions. The
 #'   functions default to choosing the model with the lowest AIC value.
 #'
-#' @param LDA_models An object of class \code{LDA_list} produced by
+#' @param LDA_models An object of class \code{LDA_set} produced by
 #'   \code{LDA_set}.
 #'
 #' @param measurer,selector Function names for use in evaluation of the LDA
@@ -175,7 +181,7 @@ prep_LDA_control <- function(seed, control = NULL){
 #'
 #' @return A reduced version of \code{LDA_models} that only includes the 
 #'   selected LDA model(s). The returned object is still an object of
-#'   class \code{LDA_list}.
+#'   class \code{LDA_set}.
 #'
 #' @examples
 #' \dontrun{
@@ -189,8 +195,8 @@ prep_LDA_control <- function(seed, control = NULL){
 #'
 select_LDA <- function(LDA_models = NULL, measurer = AIC, selector = min){
 
-  if("LDA_list" %in% attr(LDA_models, "class") == FALSE){
-    stop("LDA_models must be of class LDA_list")
+  if("LDA_set" %in% attr(LDA_models, "class") == FALSE){
+    stop("LDA_models must be of class LDA_set")
   }
   
   lda_measured <- sapply(LDA_models, measurer) %>%
@@ -198,6 +204,6 @@ select_LDA <- function(LDA_models = NULL, measurer = AIC, selector = min){
   lda_selected <- apply(lda_measured, 2, selector) 
   which_selected <- which(lda_measured %in% lda_selected)
   out <- LDA_models[which_selected]
-  class(out)  <- c("LDA_list", "list") 
+  class(out)  <- c("LDA_set", "list") 
   out
 }

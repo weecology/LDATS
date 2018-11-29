@@ -2,7 +2,7 @@ context("Check multinomial TS functions")
 
 data(rodents)
 lda_data <- rodents$document_term_table
-lda <- LDA_set(lda_data, c(4), nseeds = 1)
+lda <- LDA_set(lda_data, c(4), nseeds = 1, quiet = TRUE)
 dct <- rodents$document_covariate_table
 mts_data <- data.frame(dct)
 mts_data$gamma <- lda[[1]]@gamma

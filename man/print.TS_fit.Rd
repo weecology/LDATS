@@ -11,6 +11,9 @@
 
 \item{...}{Not used, simply included to maintain method compatability.}
 }
+\value{
+Nothing (model is printed, not returned).
+}
 \description{
 Convenience function to print only the most important 
   components of a \code{TS_fit}-class object.

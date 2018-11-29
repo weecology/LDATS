@@ -9,7 +9,7 @@ check_document_covariate_table(document_covariate_table, LDA_models)
 \arguments{
 \item{document_covariate_table}{Document covariate table to evaluate.}
 
-\item{LDA_models}{Reference LDA model list (class \code{LDA_list}) that 
+\item{LDA_models}{Reference LDA model list (class \code{LDA_set}) that 
 includes as its first element a properly fitted \code{LDA} model with 
 a \code{gamma} slot with the document-topic distribution.}
 }
