@@ -20,8 +20,8 @@
 #' @param nseeds Integer number of seeds (replicate starts) to use for each 
 #'   value of \code{topics}.
 #'
-#' @param control Named list of control parameters to be used in 
-#'   \code{LDA} (note that "seed" will be overwritten).
+#' @param control Class \code{LDA_controls} list of control parameters to be
+#'   used in \code{LDA} (note that "seed" will be overwritten).
 #' 
 #' @param quiet \code{logical} indicator of whether the model should run 
 #'   quietly.
@@ -46,26 +46,19 @@
 #' @export
 #'
 LDA_set <- function(document_term_table, topics = 2, nseeds = 1, 
-                    control = NULL, quiet = FALSE){
-
-  check_document_term_table(document_term_table)
-  check_topics(topics)
+                    control = LDA_controls_list()){
+  check_LDA_set_inputs(document_term_table, topics, control)
   mod_topics <- rep(topics, each = length(seq(2, nseeds * 2, 2)))
   mod_seeds <- rep(seq(2, nseeds * 2, 2), length(topics))
-  dtt <- document_term_table
-
   nmods <- length(mod_topics)
   mods <- vector("list", length = nmods)
   for (i in 1:nmods){
-    topic_msg <- paste0("Running LDA with ", mod_topics[i], " topics ")
-    seed_msg <- paste0("(seed ", mod_seeds[i], ")")
-    qprint(paste0(topic_msg, seed_msg), "", quiet)
-    control <- prep_LDA_control(seed = mod_seeds[i], control = control)
-    mods[[i]] <- LDA(x = dtt, k = mod_topics[i], control = control)
+    LDA_msg(mod_topics[i], mod_seeds[i], control)
+    control_i <- prep_LDA_control(seed = mod_seeds[i], control = control)
+    mods[[i]] <- LDA(document_term_table, k = mod_topics[i], 
+                     control = control_i)
   }
-  names(mods) <- paste0("k: ", mod_topics, ", seed: ", mod_seeds)
-  class(mods) <- c("LDA_set", "list")  
-  return(mods)
+  package_LDA_set(mods, mod_topics, mod_seeds)
 }
 
 #' @title Calculate the log likelihood of a VEM LDA model fit
@@ -94,6 +87,27 @@ logLik.LDA_VEM <- function(object, ...){
   attr(val, "nobs") <- object@Dim[1]
   class(val) <- "logLik"
   val
+}
+
+#' @title Verify that all of the inputs are proper for LDA_set 
+#' 
+#' @description Verify that the table of observations is conformable to
+#'   a matrix of integers, the number of topics is an integer, and the 
+#'   controls list is proper.
+#'   
+#' @param document_term_table Table of observation count data (rows: 
+#'   documents (\eqn{M}), columns: terms (\eqn{V})).
+#'
+#' @return Nothing.
+#' 
+#' @export
+#'
+check_LDA_set_inputs <- function(document_term_table, topics, control){
+  check_document_term_table(document_term_table)
+  check_topics(topics)
+  if(!("LDA_controls" %in% class(control))){
+    stop("control must be of class LDA_controls")
+  }
 }
 
 #' @title Verify that document term table is proper
@@ -153,10 +167,11 @@ check_topics <- function(topics){
 #' @export
 #'
 prep_LDA_control <- function(seed, control = NULL){
-  if(!is.list(control) & !is.null(control)){
-    stop("control must be either a list or NULL")
-  }
-  if(is.list(control)){
+  if("LDA_controls" %in% class(control)){
+    class(control) <- "list"
+    control$quiet <- NULL
+    control$measurer <- NULL
+    control$selector <- NULL
     control$seed <- seed
   }
   if(is.null(control)){
@@ -174,10 +189,8 @@ prep_LDA_control <- function(seed, control = NULL){
 #' @param LDA_models An object of class \code{LDA_set} produced by
 #'   \code{LDA_set}.
 #'
-#' @param measurer,selector Function names for use in evaluation of the LDA
-#'   models. \code{measurer} is used to create a value for each model
-#'   and \code{selector} operates on the values to choose the model(s) to 
-#'   pass on. 
+#' @param control Class \code{LDA_controls} list including (named) elements
+#'   corresponding to the \code{measurer} and \code{evaluator} functions.
 #'
 #' @return A reduced version of \code{LDA_models} that only includes the 
 #'   selected LDA model(s). The returned object is still an object of
@@ -193,8 +206,10 @@ prep_LDA_control <- function(seed, control = NULL){
 #'
 #' @export
 #'
-select_LDA <- function(LDA_models = NULL, measurer = AIC, selector = min){
+select_LDA <- function(LDA_models = NULL, control = LDA_controls_list()){
 
+  measurer <- control$measurer
+  selector <- control$selector
   if("LDA_set" %in% attr(LDA_models, "class") == FALSE){
     stop("LDA_models must be of class LDA_set")
   }
@@ -205,5 +220,78 @@ select_LDA <- function(LDA_models = NULL, measurer = AIC, selector = min){
   which_selected <- which(lda_measured %in% lda_selected)
   out <- LDA_models[which_selected]
   class(out)  <- c("LDA_set", "list") 
+  out
+}
+
+#' @title Package the output from LDA_set
+#'
+#' @description Name the elements (LDA models) and set the class 
+#'   (\code{LDA_set}) of the models returned by the \code{LDA_set} function.
+#'
+#' @param mods Fitted models returned from \code{LDA}.
+#'
+#' @param mod_topics Vector of \code{integer} values corresponding to the 
+#'   number of topics in each model.
+#' 
+#' @param mod_seeds Vector of \code{integer} values corresponding to the 
+#'   seed used for each model.
+#'
+#' @return List (class: \code{LDA_set}) of LDA models (class: 
+#'   "\code{LDA}").
+#'
+#' @export
+#'
+package_LDA_set <- function(mods, mod_topics, mod_seeds){
+  names(mods) <- paste0("k: ", mod_topics, ", seed: ", mod_seeds)
+  class(mods) <- c("LDA_set", "list")  
+  mods
+}
+
+#' @title Create the model-running-message for an LDA
+#'
+#' @description Produce and print the message for a given LDA model.
+#'
+#' @param mod_topics \code{integer} value corresponding to the number of 
+#'   topics in the model.
+#' 
+#' @param mod_seeds \code{integer} value corresponding to the seed used for 
+#'   the model.
+#'
+#' @param control Class \code{LDA_controls} list of control parameters to be
+#'   used in \code{LDA} (note that "seed" will be overwritten).
+#'
+#' @return Nothing (message is printed, not returned).
+#'
+#' @export
+#'
+LDA_msg <- function(mod_topics, mod_seeds, control){
+  topic_msg <- paste0("Running LDA with ", mod_topics, " topics ")
+  seed_msg <- paste0("(seed ", mod_seeds, ")")
+  qprint(paste0(topic_msg, seed_msg), "", control$quiet)
+}
+
+#  @description This function provides a simple creation and definition of the
+#'   list used to control the set of LDA models. It is set up to be easy to 
+#'   work with the existing control capacity of the \code{LDA} function.
+#'
+#' @param quiet \code{logical} indicator of whether the model should run 
+#'   quietly.
+#'
+#' @param measurer,selector Function names for use in evaluation of the LDA
+#'   models. \code{measurer} is used to create a value for each model
+#'   and \code{selector} operates on the values to choose the model(s) to 
+#'   pass on. 
+#'
+#' @param ... Additional arguments to be passed to \code{LDA} as a 
+#'   \code{control} input.
+#'
+#' @return Class \code{LDA_controls} list for controlling the LDA model fit.
+#'
+#' @export
+#'
+LDA_controls_list <- function(quiet = FALSE, measurer = AIC, selector = min,
+                              ...){
+  out <- list(quiet = quiet, measurer = measurer, selector = selector, ...)
+  class(out) <- c("LDA_controls", "list")
   out
 }

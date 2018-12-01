@@ -49,26 +49,61 @@
 TS_on_LDA <- function(LDA_models, document_covariate_table, formulas = ~ 1, 
                       nchangepoints = 0, weights = NULL, 
                       control = TS_controls_list()){
-
-  LDA_models <- check_LDA_models(LDA_models)
-  check_document_covariate_table(document_covariate_table, LDA_models)
-  check_timename(document_covariate_table, control$timename)
-  formulas <- check_formulas(formulas, document_covariate_table, control)  
-  check_nchangepoints(nchangepoints)
-  check_weights(weights)
-
+  check_TS_on_LDA(match.call())
   mods <- expand_TS(LDA_models, formulas, nchangepoints)
   nmods <- nrow(mods)
   TSmods <- vector("list", nmods)
+
   for(i in 1:nmods){
     print_model_run_message(mods, i, LDA_models, control)
     formula_i <- mods$formula[[i]]
     nchangepoints_i <- mods$nchangepoints[i]
-    data_i <- document_covariate_table
-    data_i$gamma <- LDA_models[[mods$LDA[i]]]@gamma
+    data_i <- prep_TS_data(document_covariate_table, LDA_models, mods, i)
     TSmods[[i]] <- TS(data_i, formula_i, nchangepoints_i, weights, control)
   }
   package_TS_on_LDA(TSmods, LDA_models, mods)
+
+}
+
+#' @title Prepare the model-specific data to be used in the TS analysis
+#' 
+#' @description Append the estimated topic proportions (\eqn{\gamma}) values 
+#'   from a fitted LDA model to the document covariate table to create the
+#'   data structure needed for \code{TS}.
+#'
+#' @param document_covariate_table Document covariate table (rows:
+#'   documents (\code{M}), columns: time index and covariate options). 
+#'   Every model needs a covariate to describe the time value for each
+#'   document (in whatever relevant units), whose name in the table is input
+#'   via \code{timename}, that dictates the application of the changepoints. 
+#'   In addition, the table needs to include as columns all covariates named 
+#'   within the specific models described via the argument \code{formula} 
+#'   (if desired). Must be a conformable to a data table. 
+#'
+#' @param LDA_models List of LDA models (class \code{LDA_set}) or a singular
+#'   LDA model (class \code{LDA}).
+#'
+#' @param mods The \code{data.table} created by \code{expand_TS} the contains
+#'   each of the models (defined by the LDA model to use and the formula and
+#'   number of changepoints for the TS model). Indexded here by \code{i}.
+#'
+#' @param i \code{integer} index referencing the row in \code{mods} to use.
+#'
+#' @return Class \code{data.frame} object including [1] the time variable
+#'   (indicated in \code{control}), [2] the predictor variables (required by
+#'   \code{formula}) and [3], the multinomial response variable (indicated
+#'   in \code{formula}), ready for input into \code{TS}.
+#'
+#' @export
+#'
+prep_TS_data <- function(document_covariate_table, LDA_models, mods, i){
+  if(is(LDA_models, "LDA")){
+    LDA_models <- c(LDA_models)
+    class(LDA_models) <- c("LDA_set", "list")
+  }
+  data_i <- document_covariate_table
+  data_i$gamma <- LDA_models[[mods$LDA[i]]]@gamma
+  data_i
 }
 
 #' @title Select the best Time Series model
@@ -80,9 +115,8 @@ TS_on_LDA <- function(LDA_models, document_covariate_table, formulas = ~ 1,
 #' @param TS_models An object of class \code{TS_on_LDA} produced by
 #'   \code{TS_on_LDA}.
 #'
-#' @param measurer,selector Function names for use in evaluation of the TS
-#'   models. \code{measurer} is used to create a value for each model
-#'   and \code{selector} operates on the values to choose the model. 
+#' @param control Class \code{LDA_controls} list including (named) elements
+#'   corresponding to the \code{measurer} and \code{evaluator} functions.
 #'
 #' @return A reduced version of \code{TS_models} that only includes the 
 #'   selected TS model. The returned object is still an object of
@@ -90,12 +124,14 @@ TS_on_LDA <- function(LDA_models, document_covariate_table, formulas = ~ 1,
 #'
 #' @export
 #'
-select_TS <- function(TS_models, measurer = AIC, selector = min){
+select_TS <- function(TS_models, control = TS_controls_list()){
+  measurer <- control$measurer
+  selector <- control$selector
   TS_measured <- sapply(TS_models, measurer) %>%
                   matrix(ncol = 1)
   TS_selected <- apply(TS_measured, 2, selector) 
   which_selected <- which(TS_measured %in% TS_selected)
-  out <- TS_models[which_selected]
+  out <- TS_models[[which_selected]]
   class(out)  <- c("TS_fit", "list") 
   out
 }
@@ -140,6 +176,10 @@ AIC.TS_fit <- function(object, ..., k = 2){
 #' @export
 #'
 package_TS_on_LDA <- function(TSmods, LDA_models, models){
+  if(is(LDA_models, "LDA")){
+    LDA_models <- c(LDA_models)
+    class(LDA_models) <- c("LDA_set", "list")
+  }
   nmodels <- nrow(models)
   nms <- rep(NA, nmodels)
   for (i in 1:nmodels){
@@ -226,6 +266,21 @@ print_model_run_message <- function(models, i, LDA_models, control){
 #' @export
 #'
 expand_TS <- function(LDA_models, formulas, nchangepoints){
+  if(is(LDA_models, "LDA")){
+    LDA_models <- c(LDA_models)
+    class(LDA_models) <- c("LDA_set", "list")
+  }
+  if(!is(formulas, "vector")){
+    if(is(formulas, "formula")){
+      formulas <- c(formulas)
+    }
+  }
+  out <- formulas
+  for (i in 1:length(formulas)){
+    tformula <- paste(as.character(formulas[[i]]), collapse = "")
+    out[[i]] <- as.formula(paste("gamma", tformula))
+  }
+  formulas <- out
   nmods <- length(LDA_models)
   mods <- 1:nmods
   out <- expand.grid(mods, formulas, nchangepoints, stringsAsFactors = FALSE)
@@ -279,26 +334,20 @@ check_weights <- function(weights){
 #' @title Verify that LDA model input is proper
 #' 
 #' @description Verify that the \code{LDA_models} input is, in fact, LDA 
-#'   models or a singular LDA model. If there is only one model, convert it
-#'   from a singular class \code{LDA} list to a length-1 class \code{LDA_set}
-#'   class and return it.
+#'   models or a singular LDA model. 
 #'   
 #' @param LDA_models List of LDA models or singular LDA model to evaluate.
 #'
-#' @return \code{LDA_models} as an \code{LDA_set}-class object.
+#' @return Nothing.
 #' 
 #' @export
 #'
 check_LDA_models <- function(LDA_models){
   if(("LDA_set" %in% class(LDA_models)) == FALSE){
-    if(is(LDA_models, "LDA") == TRUE){
-      LDA_models <- list(LDA_models)
-      class(LDA_models) <- c("LDA_set", "list")
-    } else{
+    if(is(LDA_models, "LDA") == FALSE){
       stop("LDA_models is not an LDA object or LDA_set object")
     }
   }
-  LDA_models
 }
 
 #' @title Verify that the document covariate table is proper
@@ -360,8 +409,7 @@ check_timename <- function(document_covariate_table, timename){
 #' 
 #' @description Verify that the vector of formulas is actually formatted
 #'   as a vector formula objects and that the predictor variables are all 
-#'   included in the document covariate table. Add the response variable
-#'   to each of the formulas.
+#'   included in the document covariate table. 
 #'   
 #' @param formulas Vector of the formulas to evaluate.
 #'
@@ -371,7 +419,7 @@ check_timename <- function(document_covariate_table, timename){
 #' @param control Class \code{TS_controls} list, holding control parameters
 #'   for the Time Series model.
 #'
-#' @return Updated \code{formulas}.
+#' @return Nothing.
 #' 
 #' @export
 #'
@@ -399,10 +447,32 @@ check_formulas <- function(formulas, document_covariate_table, control){
     mis <- paste(misses, collapse = ", ")
     stop(paste0("formulas include predictors not present in data: ", mis))
   }
-  out <- formulas
-  for (i in 1:length(formulas)){
-    tformula <- paste(as.character(formulas[[i]]), collapse = "")
-    out[[i]] <- as.formula(paste(response, tformula))
-  }
-  out
+
+}
+
+#' @title Check all of the inputs to TS_on_LDA
+#'
+#' @description Verify the inputs to (\code{\link{TS_on_LDA}}).
+#'
+#' @param call Class \code{class} list, holding all of the arguments passed
+#'   to \code{\link{TS_on_LDA}}.
+#'
+#' @return Nothing.
+#'
+#' @export
+#'
+check_TS_on_LDA <- function(call){
+  call <- as.list(call)
+  LDA_models <- eval(call$LDA_models)
+  document_covariate_table <- eval(call$document_covariate_table)
+  control <- eval(call$control)
+  nchangepoints <- eval(call$nchangepoints)
+  weights <- eval(call$weights)
+  formulas <- eval(call$formulas)
+  check_LDA_models(LDA_models)
+  check_document_covariate_table(document_covariate_table, LDA_models)
+  check_timename(document_covariate_table, control$timename)
+  check_formulas(formulas, document_covariate_table, control)  
+  check_nchangepoints(nchangepoints)
+  check_weights(weights)
 }

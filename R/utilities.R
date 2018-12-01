@@ -57,3 +57,45 @@ qprint <- function(msg, wrapper, quiet){
   }
   cat(paste0(wrapper, msg, wrapper, "\n"))
 }
+
+
+#' @title Create a properly symmetrix variance covariance matrix
+#'
+#' @description If the default matrix returned by \code{vcov} is not, in fact,
+#'   symmetric (as occurs occasionally in the \code{multinom} function from
+#'   \code{nnet}), make the matrix symmetric by mirroring the lower triangle.
+#'
+#' @param x Model object that has a defined method for \code{vcov}.
+#'
+#' @return Properly symmetric variance covariance matrix.
+#'
+#' @export
+#'
+mirror_vcov <- function(x){
+  vcv <- vcov(x)
+  if (isSymmetric(vcv)){
+    return(vcv)
+  }
+  lt <- vcv[lower.tri(vcv)]
+  ut <- t(vcv)[lower.tri(t(vcv))]
+  if (any((abs(lt - ut) > (0.001 * abs(lt))))){
+    stop("Relative discrepancies in model vcov matrix are too large.")  
+  }
+  vcv2 <- t(vcv)
+  vcv2[lower.tri(vcv2)] <- vcv[lower.tri(vcv)]
+  vcv2
+}
+
+#' @title Normalize a vector
+#'
+#' @description Normalize a \code{numeric} vector to be on the scale of [0,1].
+#'
+#' @param x \code{numeric} vector.
+#'
+#' @return Normalized \code{x}.
+#' 
+#' @export 
+#'
+normalize <- function(x){
+  (x - min(x)) / (max(x) - min(x))
+}

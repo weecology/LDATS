@@ -614,11 +614,12 @@ proposed_step_mods <- function(prop_changepts, inputs){
   weights <- inputs$weights
   TS_memo <- inputs$TS_memo
   ntemps <- length(inputs$temps)
-  mods <- vector("list", length = ntemps)
+  control <- TS_controls_list()
+  out <- vector("list", length = ntemps)
   for (i in 1:ntemps){
-    mods[[i]] <- TS_memo(data, formula, prop_changepts[ , i], weights)
+    out[[i]] <- TS_memo(data, formula, prop_changepts[ , i], weights, control)
   }
-  mods
+  out
 }
 
 
@@ -1045,6 +1046,14 @@ check_formula <- function(data, formula){
 #' @param timename \code{character} element indicating the time variable
 #'   used in the time series. 
 #'
+#' @param lambda \code{numeric} weight decay term used to set the prior
+#'   on the regressors within each chunk-level model. Defaults to 0, 
+#'   corresponding to a fully vague prior.
+#'
+#' @param measurer,selector Function names for use in evaluation of the TS
+#'   models. \code{measurer} is used to create a value for each model
+#'   and \code{selector} operates on the values to choose the model. 
+#'
 #' @param ntemps \code{integer} number of temperatures to use in the 
 #'   ptMCMC (referenced as \eqn{H} in the math description).
 #'
@@ -1081,12 +1090,14 @@ check_formula <- function(data, formula){
 #' @export
 #'
 TS_controls_list <- function(memoise = TRUE, response = "gamma", 
-                             timename = "newmoon", ntemps = 6, 
+                             timename = "newmoon", lambda = 0, 
+                             measurer = AIC, selector = min, ntemps = 6, 
                              penultimate_temp = 2^6, ultimate_temp = 1e10,
                              q = 0, nit = 1e4, magnitude = 12, 
                              quiet = FALSE, burnin = 0, thin_frac = 1,
                              summary_prob = 0.95){
   out <- list(memoise = memoise, response = response, timename = timename,
+              lambda = lambda, measurer = measurer, selector = selector,
               ntemps = ntemps, penultimate_temp = penultimate_temp,
               ultimate_temp = ultimate_temp, q = q, nit = nit,
               magnitude = magnitude, quiet = quiet, burnin = burnin,

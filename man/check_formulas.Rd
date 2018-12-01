@@ -17,11 +17,10 @@ the availability of the data required by the formula inputs.}
 for the Time Series model.}
 }
 \value{
-Updated \code{formulas}.
+Nothing.
 }
 \description{
 Verify that the vector of formulas is actually formatted
   as a vector formula objects and that the predictor variables are all 
-  included in the document covariate table. Add the response variable
-  to each of the formulas.
+  included in the document covariate table.
 }
