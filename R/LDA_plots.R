@@ -1,25 +1,28 @@
 #' @title Plot a set of LDATS LDA models
 #'
 #' @description Generalization of the plot function to work on a list of LDA 
-#'   topic models (class \code{LDA_list}). 
+#'   topic models (class \code{LDA_set}). 
 #' 
 #' @param x An \code{LDA_list} object of LDA topic models.
 #' 
 #' @param ... Additional arguments to be passed to subfunctions.
 #' 
-#' @return Model-by-model plots.
+#' @return Nothin. Model-by-model plots are generated in the active graphics
+#'   device.
 #' 
 #' @examples 
 #' \dontrun{
 #'   data(rodents)
-#'   lda_data <- select(rodents, -c(newmoon, date, plots, traps))
-#'   r_LDA <- parLDA(lda_data, topics = 2, nseeds = 2)
+#'   lda_data <- rodents$document_term_table
+#'   r_LDA <- LDA_set(lda_data, topics = 2, nseeds = 2) 
 #'   plot(r_LDA)
 #' }
 #' @export 
 #'
-plot.LDA_list <- function(x, ...){
-  devAskNewPage(TRUE)
+plot.LDA_set <- function(x, ...){
+  if (length(x) > 1){
+    devAskNewPage(TRUE)
+  }
   lapply(x, plot, ...)
   devAskNewPage(FALSE)
 }
@@ -52,9 +55,9 @@ plot.LDA_list <- function(x, ...){
 #' @examples 
 #' \dontrun{
 #'   data(rodents)
-#'   lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
-#'   lda_models <- parLDA(lda_data, topics = 4, nseeds = 10)
-#'   best_lda <- LDA_select(lda_models)
+#'   lda_data <- rodents$document_term_table
+#'   r_LDA <- LDA_set(lda_data, topics = 4, nseeds = 10) 
+#'   best_lda <- select_LDA(r_LDA)
 #'   plot(best_lda, option = "cividis")
 #' }
 #'
@@ -174,21 +177,21 @@ LDA_plot_bottom_panel <- function(x, xtime, xname, cols){
 
 }
 
-#' @title Prepare the colors to be used
+#' @title Prepare the colors to be used in the LDA plot
 #'
 #' @description Based on the inputs, create the set of colors to be used in
-#'   the plots
+#'   the LDA plots.
 #' 
-#' @param x Object of class \code{LDA}
+#' @param x Object of class \code{LDA}.
 #'
-#' @param cols colors to be used to plot the topics
+#' @param cols Colors to be used to plot the topics.
 #' 
 #' @param option A character string indicating the colormap option to use if 
 #'   `cols == NULL`. Four options are available: "magma" (or "A"), "inferno" 
 #'   (or "B"), "plasma" (or "C"), "viridis" (or "D", the default option) and 
 #'   "cividis" (or "E").
 #'
-#' @return Vector of colors to use.
+#' @return Vector of \code{character} hex codes indicating colors to use.
 #'
 #' @export 
 #'

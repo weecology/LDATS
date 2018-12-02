@@ -23,9 +23,6 @@
 #' @param control Class \code{LDA_controls} list of control parameters to be
 #'   used in \code{LDA} (note that "seed" will be overwritten).
 #' 
-#' @param quiet \code{logical} indicator of whether the model should run 
-#'   quietly.
-#'
 #' @return List (class: \code{LDA_set}) of LDA models (class: 
 #'   "\code{LDA}").
 #' 
@@ -97,6 +94,11 @@ logLik.LDA_VEM <- function(object, ...){
 #'   
 #' @param document_term_table Table of observation count data (rows: 
 #'   documents (\eqn{M}), columns: terms (\eqn{V})).
+#'
+#' @param topics Vector of the number of topics to evaluate.
+#'
+#' @param control Class \code{LDA_controls} list of control parameters to be
+#'   used in \code{LDA} (note that "seed" will be overwritten).
 #'
 #' @return Nothing.
 #' 

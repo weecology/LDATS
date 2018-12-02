@@ -36,9 +36,9 @@ Create an LDATS LDA summary plot, with a top panel showing
 \examples{
 \dontrun{
   data(rodents)
-  lda_data <- dplyr::select(rodents, -c(newmoon, date, plots, traps))
-  lda_models <- parLDA(lda_data, topics = 4, nseeds = 10)
-  best_lda <- LDA_select(lda_models)
+  lda_data <- rodents$document_term_table
+  r_LDA <- LDA_set(lda_data, topics = 4, nseeds = 10) 
+  best_lda <- select_LDA(r_LDA)
   plot(best_lda, option = "cividis")
 }
 

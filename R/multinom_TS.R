@@ -38,7 +38,7 @@ multinom_TS <- function(data, formula, changepoints = NULL,
                         weights = NULL, control = TS_controls_list()){
 
   if (!check_changepoints(data, changepoints, control$timename)){
-    out <- list("chunk models" = NA, "logLik" = -Inf)
+    out <- list("chunk models" = NA, "logLik" = -Inf, "chunks" = NA)
     class(out) <- c("multinom_TS_fit", "list")
     return(out)
   }
@@ -88,8 +88,8 @@ logLik.multinom_TS_fit <- function(object, ...){
 #'   (the memoised version of \code{\link{multinom_TS_chunk}}  
 #'
 #' @return Object of class \code{multinom_TS_fit}, which is a list of [1]
-#'   chunk-level model fits and [2] the total log likelihood combined across 
-#'   all chunks.
+#'   chunk-level model fits, [2] the total log likelihood combined across 
+#'   all chunks, and [3] the chunk time data table.
 #'
 #' @export 
 #'
@@ -98,7 +98,7 @@ package_chunk_fits <- function(chunks, fits){
   chunk_times <- paste0("(", chunks[ , "start"], " - ", chunks[ , "end"], ")")
   names(fits) <- paste("chunk", 1:nchunks, chunk_times, "model")
   ll <- sum(sapply(fits, logLik))
-  out <- list("chunk models" = fits, "logLik" = ll)
+  out <- list("chunk models" = fits, "logLik" = ll, "chunks" = chunks)
   class(out) <- c("multinom_TS_fit", "list")
   out
 }
@@ -213,5 +213,6 @@ multinom_TS_chunk <- function(data, formula, chunk, weights = NULL,
   chunk_end <- as.numeric(chunk["end"])
   in_chunk <- time_obs >= chunk_start & time_obs <= chunk_end
   fit <- multinom(formula, data, weights, subset = in_chunk, trace = FALSE)
+  fit$timevals <- time_obs[which(in_chunk)]
   fit 
 }

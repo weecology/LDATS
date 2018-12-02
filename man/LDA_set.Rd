@@ -21,9 +21,6 @@ value of \code{topics}.}
 
 \item{control}{Class \code{LDA_controls} list of control parameters to be
 used in \code{LDA} (note that "seed" will be overwritten).}
-
-\item{quiet}{\code{logical} indicator of whether the model should run 
-quietly.}
 }
 \value{
 List (class: \code{LDA_set}) of LDA models (class: 
