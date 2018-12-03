@@ -37,6 +37,7 @@
 #'
 #' @return Nothing. Plots are generated in the active graphics device.
 #' 
+#' @examples
 #' \dontrun{
 #'   data(rodents)
 #'   lda_data <- rodents$document_term_table

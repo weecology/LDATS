@@ -43,7 +43,12 @@ currently (except for testing).}
 }
 \value{
 Nothing. Plots are generated in the active graphics device.
-
+}
+\description{
+Generalization of the \code{plot} function to work on fitted
+  LDA_TS model (class \code{LDA_TS}).
+}
+\examples{
 \dontrun{
   data(rodents)
   lda_data <- rodents$document_term_table
@@ -56,8 +61,5 @@ Nothing. Plots are generated in the active graphics device.
                 control = LDA_TS_controls_list())
   plot(mod)
 }
-}
-\description{
-Generalization of the \code{plot} function to work on fitted
-  LDA_TS model (class \code{LDA_TS}).
+
 }
