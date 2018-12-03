@@ -271,7 +271,7 @@ TS_summary_cols <- function(rho_cols = NULL, rho_option = "D",
 #' @export
 #'
 TS_summary_plot <- function(x, bin_width, xlab, selection = "median", 
-                            cols = TS_summary_cols(), split_need = TRUE){
+                            cols = TS_summary_cols()){
 
   par(mfrow = c(2, 1))
   rc <- cols$rho
