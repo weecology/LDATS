@@ -4,7 +4,7 @@
 \alias{plot.TS_fit}
 \title{Plot a LDATS TS models}
 \usage{
-\method{plot}{TS_fit}(x, ..., plot_type = "diagnostic",
+\method{plot}{TS_fit}(x, ..., plot_type = "summary",
   cols = TS_summary_cols(), bin_width = 1, xlab = NULL,
   selection = "median")
 }

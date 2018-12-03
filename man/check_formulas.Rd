@@ -16,9 +16,6 @@ the availability of the data required by the formula inputs.}
 \item{control}{Class \code{TS_controls} list, holding control parameters
 for the Time Series model.}
 }
-\value{
-Nothing.
-}
 \description{
 Verify that the vector of formulas is actually formatted
   as a vector formula objects and that the predictor variables are all 

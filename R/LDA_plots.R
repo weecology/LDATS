@@ -48,6 +48,9 @@ plot.LDA_set <- function(x, ...){
 #'   (or "B"), "plasma" (or "C"), "viridis" (or "D", the default option) and 
 #'   "cividis" (or "E").
 #'
+#' @param alpha Numeric value [0,1] that indicates the transparency of the 
+#'   colors used. Supported only on some devices, see \code{rgb}.
+#'
 #' @param ... Not used, retained for alignment with base function.
 #'
 #' @return LDATS LDA model plots.
@@ -64,8 +67,8 @@ plot.LDA_set <- function(x, ...){
 #' @export 
 #'
 plot.LDA <- function(x, ..., xtime = NULL, xname = NULL, cols = NULL, 
-                     option = "E"){
-  cols <- set_LDA_plot_colors(x, cols, option)
+                     option = "E", alpha = 0.8){
+  cols <- set_LDA_plot_colors(x, cols, option, alpha)
   LDA_plot_top_panel(x, cols)
   LDA_plot_bottom_panel(x, xtime, xname, cols)
 }
@@ -131,7 +134,8 @@ LDA_plot_top_panel <- function(x, cols){
   ypos <- (0.9 / ntopics) * (ntopics:1)
   ttext <- paste("Topic ", 1:ntopics, sep = "")
   for (i in 1:ntopics){
-    text(ttext[i], x = 0.1, y = ypos[i], col = cols[i], adj = 0, cex = 0.75)
+    text(ttext[i], x = 0.1, y = ypos[i], col = cols[i], adj = 0, cex = 0.75,
+         font = 2)
   }
 }
 
@@ -172,7 +176,7 @@ LDA_plot_bottom_panel <- function(x, xtime, xname, cols){
   mtext(side = 1, xname, line = 2.2, cex = 1.25)
   mtext(side = 2, "Proportion", line = 2.8, cex = 1.25)
   for (i in 1:ntopics){
-    points(xtime, gamma[ , i], col = cols[i], type = "l", lwd = 1)
+    points(xtime, gamma[ , i], col = cols[i], type = "l", lwd = 2)
   }
 
 }
@@ -191,16 +195,19 @@ LDA_plot_bottom_panel <- function(x, xtime, xname, cols){
 #'   (or "B"), "plasma" (or "C"), "viridis" (or "D", the default option) and 
 #'   "cividis" (or "E").
 #'
+#' @param alpha Numeric value [0,1] that indicates the transparency of the 
+#'   colors used. Supported only on some devices, see \code{rgb}.
+#'
 #' @return Vector of \code{character} hex codes indicating colors to use.
 #'
 #' @export 
 #'
-set_LDA_plot_colors <- function(x, cols = NULL, option = "D"){
+set_LDA_plot_colors <- function(x, cols = NULL, option = "D", alpha = 0.8){
 
   gamma <- x@gamma
   ntopics <- ncol(gamma)
   if (length(cols) == 0){
-    cols <- viridis(ntopics, option = option)
+    cols <- viridis(ntopics, option = option, alpha = alpha, end = 0.9)
   }
   if (length(cols) == 1){
     if (cols == "greys" | cols == "grey" | cols == "grays" | cols == "gray"){

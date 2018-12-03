@@ -9,9 +9,6 @@ check_weights(weights)
 \arguments{
 \item{weights}{Vector of the document weights to evaluate.}
 }
-\value{
-Nothing.
-}
 \description{
 Verify that the vector of document weights is numeric
   and inform the user if weights are outside the optimal range: 

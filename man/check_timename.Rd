@@ -12,9 +12,6 @@ for the time column.}
 
 \item{timename}{Column name for the time variable to evaluate.}
 }
-\value{
-Nothing.
-}
 \description{
 Verify that the vector of time values is included in the 
   document covariate table and that it is either numeric or a date.

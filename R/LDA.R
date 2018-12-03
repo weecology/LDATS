@@ -113,9 +113,7 @@ check_LDA_set_inputs <- function(document_term_table, topics, nseeds,
   check_document_term_table(document_term_table)
   check_topics(topics)
   check_seeds(nseeds)
-  if(!("LDA_controls" %in% class(control))){
-    stop("control must be of class LDA_controls")
-  }
+  check_control(control, "LDA_controls")
 }
 
 #' @title Verify that document term table is proper

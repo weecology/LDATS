@@ -49,8 +49,8 @@
 TS_on_LDA <- function(LDA_models, document_covariate_table, formulas = ~ 1, 
                       nchangepoints = 0, weights = NULL, 
                       control = TS_controls_list()){
-  check_TS_on_LDA(LDA_models, document_covariate_table, formulas, 
-                      nchangepoints, weights, control)
+  check_TS_on_LDA_inputs(LDA_models, document_covariate_table, formulas, 
+                         nchangepoints, weights, control)
   mods <- expand_TS(LDA_models, formulas, nchangepoints)
   nmods <- nrow(mods)
   TSmods <- vector("list", nmods)
@@ -98,9 +98,14 @@ TS_on_LDA <- function(LDA_models, document_covariate_table, formulas = ~ 1,
 #' @export
 #'
 prep_TS_data <- function(document_covariate_table, LDA_models, mods, i){
+  check_document_covariate_table(document_covariate_table)
+  check_LDA_models(LDA_models)
   if(is(LDA_models, "LDA")){
     LDA_models <- c(LDA_models)
     class(LDA_models) <- c("LDA_set", "list")
+  }
+  if(nrow(document_covariate_table) != nrow(LDA_models[[mods$LDA[i]]]@gamma)){
+    stop("document covariate table and LDA model are not conformable")
   }
   data_i <- document_covariate_table
   data_i$gamma <- LDA_models[[mods$LDA[i]]]@gamma
@@ -126,6 +131,10 @@ prep_TS_data <- function(document_covariate_table, LDA_models, mods, i){
 #' @export
 #'
 select_TS <- function(TS_models, control = TS_controls_list()){
+  if (!("TS_on_LDA" %in% class(TS_models))){
+    stop("TS_models must be of class TS_on_LDA")
+  }
+  check_control(control, "TS_controls")
   measurer <- control$measurer
   selector <- control$selector
   TS_measured <- sapply(TS_models, measurer) %>%
@@ -136,24 +145,6 @@ select_TS <- function(TS_models, control = TS_controls_list()){
   class(out)  <- c("TS_fit", "list") 
   out
 }
-
-#' @title Determine the AIC (deviance) value of a TS model
-#'
-#' @description Convenience function to extract the AIC (deviance) element of 
-#'   \code{TS_fit}-class object.
-#'
-#' @param object Class \code{TS_fit} object to be evaluated.
-#'
-#' @param ... Not used, simply included to maintain method compatability.
-#'
-#' @param k Not used, simply included to maintain method compatability.
-#'
-#' @export
-#'
-AIC.TS_fit <- function(object, ..., k = 2){
-  object$deviance
-}
-
 
 #' @title Package the output of TS_on_LDA
 #'
@@ -177,6 +168,7 @@ AIC.TS_fit <- function(object, ..., k = 2){
 #' @export
 #'
 package_TS_on_LDA <- function(TSmods, LDA_models, models){
+  check_LDA_models(LDA_models)
   if(is(LDA_models, "LDA")){
     LDA_models <- c(LDA_models)
     class(LDA_models) <- c("LDA_set", "list")
@@ -193,6 +185,7 @@ package_TS_on_LDA <- function(TSmods, LDA_models, models){
   TSmods
 }
 
+
 #' @title Print a set of Time Series models fit to LDAs
 #'
 #' @description Convenience function to print only the names of a 
@@ -201,8 +194,6 @@ package_TS_on_LDA <- function(TSmods, LDA_models, models){
 #' @param x Class \code{TS_on_LDA} object to be printed.
 #'
 #' @param ... Not used, simply included to maintain method compatability.
-#'
-#' @return Nothing (names are printed, not returned).
 #'
 #' @export
 #'
@@ -231,13 +222,11 @@ print.TS_on_LDA <- function(x, ...){
 #'   \code{\link{TS_controls_list}}. Of particular importance here is 
 #'   the \code{logical}-class element named \code{quiet}.
 #'
-#' @return Nothing (message is printed, not returned).
-#'
 #' @export
 #'
 print_model_run_message <- function(models, i, LDA_models, control){
   if (control$quiet){
-    return(NULL)
+    return()
   }
   equation <- deparse(models$formula[[i]])
   chngpt_msg <- paste0("with ", models$nchangepoints[i], " changepoints ")
@@ -267,6 +256,8 @@ print_model_run_message <- function(models, i, LDA_models, control){
 #' @export
 #'
 expand_TS <- function(LDA_models, formulas, nchangepoints){
+  check_LDA_models(LDA_models)
+  check_nchangepoints(nchangepoints)
   if(is(LDA_models, "LDA")){
     LDA_models <- c(LDA_models)
     class(LDA_models) <- c("LDA_set", "list")
@@ -274,7 +265,11 @@ expand_TS <- function(LDA_models, formulas, nchangepoints){
   if(!is(formulas, "vector")){
     if(is(formulas, "formula")){
       formulas <- c(formulas)
+    } else{
+      stop("formulas does not contain formula(s)")
     }
+  } else if (!is(formulas[[1]], "formula")){
+      stop("formulas does not contain formula(s)")
   }
   out <- formulas
   for (i in 1:length(formulas)){
@@ -295,14 +290,15 @@ expand_TS <- function(LDA_models, formulas, nchangepoints){
 #'   conformable to integers greater than 1.
 #'   
 #' @param nchangepoints Vector of the number of changepoints to evaluate.
-#'
-#' @return Nothing.
 #' 
 #' @export
 #'
 check_nchangepoints <- function(nchangepoints){
   if (!is.numeric(nchangepoints) || any(nchangepoints %% 1 != 0)){
     stop("nchangepoints must be integer-valued")
+  }
+  if (any(nchangepoints < 0)){
+    stop("nchangepoints must be non-negative")
   }
 }
 
@@ -313,8 +309,6 @@ check_nchangepoints <- function(nchangepoints){
 #'   \eqn{(0,1]}.
 #'   
 #' @param weights Vector of the document weights to evaluate.
-#'
-#' @return Nothing.
 #' 
 #' @export
 #'
@@ -338,8 +332,6 @@ check_weights <- function(weights){
 #'   models or a singular LDA model. 
 #'   
 #' @param LDA_models List of LDA models or singular LDA model to evaluate.
-#'
-#' @return Nothing.
 #' 
 #' @export
 #'
@@ -362,21 +354,30 @@ check_LDA_models <- function(LDA_models){
 #' @param LDA_models Reference LDA model list (class \code{LDA_set}) that 
 #'   includes as its first element a properly fitted \code{LDA} model with 
 #'   a \code{gamma} slot with the document-topic distribution. 
-#'
-#' @return Nothing.
 #' 
+#' @param document_term_table Optional input for checking when
+#'   \code{LDA_models} is \code{NULL}
+#'
 #' @export
 #'
 check_document_covariate_table <- function(document_covariate_table, 
-                                           LDA_models){
+                                           LDA_models = NULL,
+                                           document_term_table = NULL){
   dct_df <- tryCatch(data.frame(document_covariate_table),
                      warning = function(x){NA}, error = function(x){NA})
   if (length(dct_df) == 1 && is.na(dct_df)){
     stop("document_covariate_table is not conformable to a data frame")
   }
-  if (nrow(document_covariate_table) != nrow(LDA_models[[1]]@gamma)){
-    stop("number of documents in covariate table is not equal to number of 
-      documents observed")
+  if (!is.null(LDA_models)){
+    if (nrow(document_covariate_table) != nrow(LDA_models[[1]]@gamma)){
+      stop("number of documents in covariate table is not equal to number of 
+        documents observed")
+    }
+  } else if (!is.null(document_term_table)){
+    if (nrow(document_covariate_table) != nrow(document_term_table)){
+      stop("number of documents in covariate table is not equal to number of 
+        documents observed")
+    }
   }
 }
 
@@ -389,12 +390,16 @@ check_document_covariate_table <- function(document_covariate_table,
 #'   for the time column.
 #'
 #' @param timename Column name for the time variable to evaluate.
-#'
-#' @return Nothing.
 #' 
 #' @export
 #'
 check_timename <- function(document_covariate_table, timename){
+  if (!("character" %in% class(timename))){
+    stop("timename is not a character value")
+  }
+  if (length(timename) > 1){
+    stop("timename can only be one value")
+  }
   covariate_names <- colnames(document_covariate_table)
   if ((timename %in% covariate_names) == FALSE){
     stop("timename not present in document covariate table")
@@ -419,12 +424,12 @@ check_timename <- function(document_covariate_table, timename){
 #'
 #' @param control Class \code{TS_controls} list, holding control parameters
 #'   for the Time Series model.
-#'
-#' @return Nothing.
 #' 
 #' @export
 #'
 check_formulas <- function(formulas, document_covariate_table, control){
+  check_document_covariate_table(document_covariate_table)
+  check_control(control, "TS_controls")
   response <- control$response
   dct <- document_covariate_table
   if(!is(formulas, "vector")){
@@ -454,7 +459,6 @@ check_formulas <- function(formulas, document_covariate_table, control){
 #' @title Check all of the inputs to TS_on_LDA
 #'
 #' @description Verify the inputs to (\code{\link{TS_on_LDA}}).
-#'
 #'
 #' @param LDA_models List of LDA models (class \code{LDA_set}) or a singular
 #'   LDA model (class \code{LDA}).
@@ -489,11 +493,9 @@ check_formulas <- function(formulas, document_covariate_table, control){
 #'   Monte Carlo (ptMCMC) controls, generated by 
 #'   \code{\link{TS_controls_list}}.
 #'
-#' @return Nothing.
-#'
 #' @export
 #'
-check_TS_on_LDA <- function(LDA_models, document_covariate_table, 
+check_TS_on_LDA_inputs <- function(LDA_models, document_covariate_table, 
                             formulas = ~ 1, nchangepoints = 0, weights = NULL, 
                             control = TS_controls_list()){
   check_LDA_models(LDA_models)
@@ -502,4 +504,5 @@ check_TS_on_LDA <- function(LDA_models, document_covariate_table,
   check_formulas(formulas, document_covariate_table, control)  
   check_nchangepoints(nchangepoints)
   check_weights(weights)
+  check_control(control, "TS_controls")
 }

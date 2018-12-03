@@ -4,35 +4,29 @@
 \alias{LDA_TS_summary_cols}
 \title{Create the list of colors for the LDATS summary plot}
 \usage{
-LDA_TS_summary_cols(LDA_cols = NULL, LDA_option = "E",
-  rho_cols = NULL, rho_option = "D", rho_alpha = 0.4,
-  gamma_cols = NULL, gamma_option = "C", gamma_alpha = 0.8)
+LDA_TS_summary_cols(rho_cols = NULL, rho_option = "D",
+  rho_alpha = 0.4, gamma_cols = NULL, gamma_option = "C",
+  gamma_alpha = 0.8)
 }
 \arguments{
-\item{LDA_cols}{Colors to be used to plot the LDA results.}
-
-\item{LDA_option}{A character string indicating the colormap option to use
-if `LDA_cols == NULL`. Four options are available: "magma" (or "A"), 
-"inferno" (or "B"), "plasma" (or "C"), "viridis" (or "D", the default
-option) and "cividis" (or "E").}
-
 \item{rho_cols}{Colors to be used to plot the histograms of changepoints.}
 
 \item{rho_option}{A character string indicating the colormap option to use
-if `cols == NULL`. Four options are available: "magma" (or "A"), 
+if `rho_cols == NULL`. Four options are available: "magma" (or "A"), 
 "inferno" (or "B"), "plasma" (or "C"), "viridis" (or "D", the default
 option) and "cividis" (or "E").}
 
 \item{rho_alpha}{Numeric value [0,1] that indicates the transparency of the 
 colors used. Supported only on some devices, see \code{rgb}.}
 
-\item{gamma_cols}{Colors to be used to plot the time series of fitted topic 
-proportions (gammas).}
+\item{gamma_cols}{Colors to be used to plot the LDA topic proportions,
+time series of observed topic proportions, and time series of fitted 
+topic proportions.}
 
 \item{gamma_option}{A character string indicating the colormap option to 
-use if `cols == NULL`. Four options are available: "magma" (or "A"),
-"inferno" (or "B", the default option), "plasma" (or "C"), "viridis" 
-(or "D") and "cividis" (or "E")}
+use if `gamma_cols == NULL`. Four options are available: "magma" (or 
+"A"), "inferno" (or "B", the default option), "plasma" (or "C"), 
+"viridis" (or "D") and "cividis" (or "E")}
 
 \item{gamma_alpha}{Numeric value [0,1] that indicates the transparency of 
 the colors used. Supported only on some devices, see \code{rgb}.}

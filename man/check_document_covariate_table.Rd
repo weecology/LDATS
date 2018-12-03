@@ -4,7 +4,8 @@
 \alias{check_document_covariate_table}
 \title{Verify that the document covariate table is proper}
 \usage{
-check_document_covariate_table(document_covariate_table, LDA_models)
+check_document_covariate_table(document_covariate_table,
+  LDA_models = NULL, document_term_table = NULL)
 }
 \arguments{
 \item{document_covariate_table}{Document covariate table to evaluate.}
@@ -12,9 +13,9 @@ check_document_covariate_table(document_covariate_table, LDA_models)
 \item{LDA_models}{Reference LDA model list (class \code{LDA_set}) that 
 includes as its first element a properly fitted \code{LDA} model with 
 a \code{gamma} slot with the document-topic distribution.}
-}
-\value{
-Nothing.
+
+\item{document_term_table}{Optional input for checking when
+\code{LDA_models} is \code{NULL}}
 }
 \description{
 Verify that the table of document-level covariates is 

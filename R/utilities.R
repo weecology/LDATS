@@ -110,3 +110,49 @@ normalize <- function(x){
   }
   (x - min(x)) / (max(x) - min(x))
 }
+
+
+#' @title Logical control on whether or not to memoise
+#'
+#' @description This function provides a simple, logical toggle control on
+#'   whether the function \code{fun} should be memoised via
+#'   \code{\link[memoise]{memoise}} or not. 
+#'
+#' @param fun Function name to (potentially) be memoised.
+#'
+#' @param memoise_fun \code{logical} value indicatiing if \code{fun} should be 
+#'   memoised.
+#'
+#' @return \code{fun}, memoised if desired.
+#'
+#' @export
+#'
+memoise_fun <- function(fun, memoise_fun){
+  if (!("function" %in% class(fun))){
+    stop("fun is not a function")
+  }
+  if (!("logical" %in% class(memoise_fun))){
+    stop("memoise_fun is not logical")
+  }
+  if (memoise_fun){
+    fun <- memoise(fun)
+  }
+  fun
+}
+
+
+#' @title Verify that a control list is proper
+#' 
+#' @description Verify that a list of controls is of the right class.
+#'   
+#' @param control Control list to evaluate.
+#' 
+#' @param eclass Expected class of the list to be evaluated.
+#'
+#' @export
+#'
+check_control <- function(control, eclass = "TS_controls"){
+  if (!(eclass %in% class(control))){
+    stop(paste0("control is not of class ", eclass))
+  }
+}

@@ -7,7 +7,6 @@
 #  for tests, i'm just working through script-by-script
 #  still to do:
 #    TS
-#    TS_on_LDA
 #    TS_plots
 
 
