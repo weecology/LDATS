@@ -26,6 +26,15 @@ test_that("LDA_TS on 1 changepoints", {
   expect_is(mod1[[4]], "TS_fit")
 })
 
+test_that("check print on LDA_TS", {
+  mod1 <- LDA_TS(document_term_table, document_covariate_table,
+                 topics = 2, nseeds = 1, formulas = ~ 1, nchangepoints = 1,
+                 weights = document_weights(document_term_table), 
+                 control = LDA_TS_controls_list(
+                           TS_control = TS_controls_list(nit = 100)))
+  expect_output(print(mod1))
+})
+
 test_that("Check LDA_TS_controls_list", {
   expect_is(LDA_TS_controls_list(), "LDA_TS_controls")
   expect_equal(length(LDA_TS_controls_list()), 3)

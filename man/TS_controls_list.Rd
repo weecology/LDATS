@@ -8,7 +8,7 @@ TS_controls_list(memoise = TRUE, response = "gamma",
   timename = "newmoon", lambda = 0, measurer = AIC, selector = min,
   ntemps = 6, penultimate_temp = 2^6, ultimate_temp = 1e+10, q = 0,
   nit = 10000, magnitude = 12, quiet = FALSE, burnin = 0,
-  thin_frac = 1, summary_prob = 0.95)
+  thin_frac = 1, summary_prob = 0.95, seed = NULL)
 }
 \arguments{
 \item{memoise}{\code{logical} indicator of whether the multinomial 
@@ -60,6 +60,8 @@ and the default value of 1 represents no thinning.}
 
 \item{summary_prob}{Probability used for summarizing the posterior 
 distributions (via the highest posterior density interval).}
+
+\item{seed}{Input to \code{set.seed} for replication purposes.}
 }
 \value{
 List of class \code{TS_controls}.

@@ -7,10 +7,7 @@
 check_topics(topics)
 }
 \arguments{
-\item{topics}{Vector of the number of topics to evaluate.}
-}
-\value{
-Nothing.
+\item{topics}{Vector of the number of topics to evaluate (\eqn{k}).}
 }
 \description{
 Verify that the vector of numbers of topics is conformable to

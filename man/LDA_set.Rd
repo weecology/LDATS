@@ -20,18 +20,17 @@ noted as \eqn{w} (the word-level topic identity) in the math description.}
 value of \code{topics}.}
 
 \item{control}{Class \code{LDA_controls} list of control parameters to be
-used in \code{LDA} (note that "seed" will be overwritten).}
+used in \code{LDA} (note that \code{seed} will be overwritten).}
 }
 \value{
-List (class: \code{LDA_set}) of LDA models (class: 
-  "\code{LDA}").
+List (class: \code{LDA_set}) of LDA models (class: \code{LDA}).
 }
 \description{
 For a given dataset (counts of words across several 
   documents), conduct multiple Latent Dirichlet Allocation (LDA) models
-  (using the Variational Expectation Maximization (VEM) algorithm; Blei et 
-  al.) to account for [1] uncertainty in the number of latent topics and
-  [2] the impact of intial values in the estimation procedure. 
+  (using the Variational Expectation Maximization (VEM) algorithm; Blei  
+  \emph{et al.}) to account for [1] uncertainty in the number of latent 
+  topics and [2] the impact of intial values in the estimation procedure. 
 
 This function is a wrapper of the \code{LDA} function
   in the \code{topicmodels} package (Grun and Hornik 2011).
@@ -46,8 +45,11 @@ This function is a wrapper of the \code{LDA} function
 }
 \references{
 Blei, D. M., A. Y. Ng, and M. I. Jordan. 2003. Latent Dirichlet
-  Allocation. Journal of Machine Learning Research 3:993-1022.
+  Allocation. \emph{Journal of Machine Learning Research} 
+  \strong{3}:993-1022.
+  \href{http://jmlr.csail.mit.edu/papers/v3/blei03a.html}{link}.
 
   Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
-  Models. Journal of Statistical Software 40:13.
+  Models. \emph{Journal of Statistical Software} \strong{40}:13.
+  \href{https://www.jstatsoft.org/article/view/v040i13}{link}.
 }

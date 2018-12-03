@@ -32,7 +32,7 @@ the model).}
 \item{xlab}{Label for the x-axis in the summary time series plot.}
 
 \item{selection}{Indicator of the changepoints to use in the timeseries
-summary plot. Currently only defined for \code{"median"}.}
+summary plot. Currently only defined for "median" and "mode".}
 }
 \value{
 Nothing. Plots are generated in the active graphics device.

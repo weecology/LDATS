@@ -18,6 +18,11 @@ Team](https://www.weecology.org). As such, any output should be considered
 Previous versions of code and implementation (Christensen et al. manuscript
 and downsampling analyes) are located within `/previous_work`.
 
+## Mathematical background
+
+For a full description of the math underlying the `LDATS` package, see the
+*draft* [technical manuscript](https://github.com/weecology/LDATS/blob/master/working/ldats_ms.pdf).
+
 ## Contributing
 
 Folks interested in contributing to development, should see 
@@ -43,17 +48,21 @@ Here is an example of an LDA and an LDATS using the Portal rodent data:
 
 ```
 data(rodents)
-lda_data <- rodents$document_term_table
-ts_data <- rodents$document_covariate_table
+dtt <- rodents$document_term_table
+dct <- rodents$document_covariate_table
 
-r_LDA <- LDATS::LDA(data = lda_data, ntopics = 2:5, nseeds = 2, ncores = 4)
+r_LDA <- LDATS::LDA_set(dtt, topics = 2:5, nseeds = 2)
+r_LDATS <- LDATS::LDA_TS(dtt, dct, topics = 2:5, nseeds = 2, 
+                         formulas = ~ 1, nchangepoints = 1)
+
 ```
 
 ## More Information 
 
 Based on inital work using [LDA to analyze time-series data at Portal by Erica
 Christensen, Dave Harris, and Morgan 
-Ernest](https://github.com/emchristensen/Extreme-events-LDA).
+Ernest](https://github.com/emchristensen/Extreme-events-LDA), which has been
+[published in *Ecology*](https://doi.org/10.1002/ecy.2373)
 
 ## Acknowledgements 
 

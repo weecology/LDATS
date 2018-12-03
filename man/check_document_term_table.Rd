@@ -10,9 +10,6 @@ check_document_term_table(document_term_table)
 \item{document_term_table}{Table of observation count data (rows: 
 documents (\eqn{M}), columns: terms (\eqn{V})).}
 }
-\value{
-Nothing.
-}
 \description{
 Verify that the table of observations is conformable to
   a matrix of integers
