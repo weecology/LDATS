@@ -7,7 +7,7 @@
 pred_gamma_TS_plot(x, selection = "median", cols, xlab)
 }
 \arguments{
-\item{x}{Object of class \code{TS_list}.}
+\item{x}{Object of class \code{TS_fit}.}
 
 \item{selection}{Indicator of the changepoints to use. Currently only
 defined for \code{"median"}.}

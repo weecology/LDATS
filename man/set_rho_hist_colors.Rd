@@ -8,7 +8,7 @@ set_rho_hist_colors(x, cols = NULL, option = "D", alpha = 1)
 }
 \arguments{
 \item{x}{Matrix of changepoint locations (element \code{rhos}) from an 
-object of class \code{TS_list}.}
+object of class \code{TS_fit}.}
 
 \item{cols}{Colors to be used to plot the histograms of changepoints.}
 

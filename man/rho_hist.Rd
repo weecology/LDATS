@@ -7,7 +7,7 @@
 rho_hist(x, cols, bin_width, xlab = NULL)
 }
 \arguments{
-\item{x}{Object of class \code{TS_list}.}
+\item{x}{Object of class \code{TS_fit}.}
 
 \item{cols}{Hex values of the colors to be used to plot the histograms of 
 changepoints.}

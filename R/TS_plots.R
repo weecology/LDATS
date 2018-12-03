@@ -1,4 +1,35 @@
-
+#' @title Plot a LDATS TS models
+#'
+#' @description Generalization of the \code{plot} function to work on fitted
+#'   TS model (class \code{TS_fit}). 
+#' 
+#' @param x A \code{TS_fit} object of a multinomial time series model fit by
+#'   \code{multinom_TS}.
+#' 
+#' @param ... Additional arguments to be passed to subfunctions. Not currently
+#'   used, just retained for alignment with \code{plot}.
+#'
+#' @param bin_width Width of the bins used in the histograms of the summary 
+#'   timeseries plot, in units of the x-axis (the time variable used to fit 
+#'   the model).
+#'
+#' @param xlab Label for the x-axis in the summary time series plot.
+#'
+#' @param selection Indicator of the changepoints to use in the timeseries
+#'   summary plot. Currently only defined for \code{"median"}.
+#'
+#' @param cols \code{list} of elements used to define the colors for the two
+#'   panels of the summary plot, as generated simply using 
+#'   \code{TS_summary_cols}. \code{cols} has two elements \code{rho} and 
+#'   \code{gamma}, each corresponding to the related panel, and each 
+#'   containing default values for entries named \code{cols}, \code{option}, 
+#'   and \code{alpha}. See \code{set_gamma_colors} and 
+#'   \code{set_rho_hist_colors} for details on usage.
+#' 
+#' @return Nothing. Plots are generated in the active graphics device.
+#' 
+#' @export 
+#'
 plot.TS_fit <- function(x, ..., plot_type = "diagnostic", 
                         cols = TS_summary_cols(),
                         bin_width = 1, xlab = NULL, selection = "median"){
@@ -9,9 +40,156 @@ plot.TS_fit <- function(x, ..., plot_type = "diagnostic",
   }
 }
 
-
+#' @title Plot the diagnostics of the parameters fit in a TS model
+#'
+#' @description Plot 4-panel figures (showing trace plots, posterior ECDF, 
+#'   posterior density, and iteration autocorrelation) for each of the 
+#'   parameters (changepoint locations and regressors) fitted within a 
+#'   multinomial time series model (fit by \code{multinom_TS})
+#'
+#' @param x Object of class \code{TS_fit} to have its diagnostics plotted.
+#'
+#' @return Nothing. Plots sent to active graphics device.
+#'
+#' @export 
+#'
 TS_diagnostics_plot <- function(x){
+  rho_diagnostics_plots(x)
+  eta_diagnostics_plots(x)
+}
 
+#' @rdname TS_diagnostics_plot
+#'
+#' @export 
+#'
+eta_diagnostics_plots <- function(x){
+  etas <- x$etas
+  if (is.null(etas)){
+    return()
+  }
+  netas <- ncol(etas) 
+  for (i in 1:netas){
+    devAskNewPage(TRUE)
+    par(mfrow = c(2, 2), mar = c(5, 5, 1, 1))
+    chead <- colnames(etas)[i]
+    spl1 <- strsplit(chead, "_")[[1]]
+    seglab <- paste0("Segment ", spl1[1])
+    spl2 <- strsplit(spl1[2], ":")[[1]]
+    toplab <- paste0(" Topic ", spl2[1])
+    coflab <- gsub("\\(Intercept\\)", "Intercept", spl2[2])
+    lab <- paste0(seglab, toplab, " ", coflab)
+    trace_plot(etas[ , i], lab)
+    ecdf_plot(etas[ , i], lab)
+    posterior_plot(etas[ , i], lab)
+    autocorr_plot(etas[ , i])
+  }  
+  devAskNewPage(FALSE)
+}
+
+#' @rdname TS_diagnostics_plot
+#'
+#' @export 
+#'
+rho_diagnostics_plots <- function(x){
+  rhos <- x$rhos
+  if (is.null(rhos)){
+    return()
+  }
+  nrhos <- ncol(rhos) 
+  for (i in 1:nrhos){
+    devAskNewPage(TRUE)
+    par(mfrow = c(2, 2), mar = c(5, 5, 1, 1))
+    lab <- paste0("Changepoint ", i, " location")
+    trace_plot(rhos[ , i], lab)
+    ecdf_plot(rhos[ , i], lab)
+    posterior_plot(rhos[ , i], lab)
+    autocorr_plot(rhos[ , i])
+  }  
+  devAskNewPage(FALSE)
+}
+
+#' @title Produce the trace plot panel for the TS diagnostic plot of a 
+#'   parameter
+#' 
+#' @description Produce a trace plot for the parameter of interest (rho or 
+#'   eta). Horizontal line added to show the median of the posterior.
+#'
+#' @param x Vector of parameter values drawn from the posterior distribution,
+#'   indexed to the iteration by the order of the vector.
+#'
+#' @param ylab \code{character} value used to label the y axis.
+#'
+#' @return Nothing. Plot sent to active graphics device.
+#'
+#' @export
+#'
+trace_plot <- function(x, ylab){
+  plot(x, type = "l", lwd = 1, col = 0,
+       xlab = "Iteration", ylab = ylab, las = 1, bty = "L")
+  ext <- 0.01 * length(x)
+  points(c(-ext, length(x) + ext), rep(median(x), 2), type = "l", lwd = 2, 
+        lty = 2)
+  points(1:length(x), x, type = "l", col = rgb(0.4, 0.4, 0.4, alpha = 0.9))
+}
+
+#' @title Produce the posterior distribution ECDF panel for the TS 
+#'   diagnostic plot of a parameter
+#' 
+#' @description Produce a vanilla ECDF (empirical cumulative distribution
+#'   function) plot using \code{ecdf} for the parameter of interest (rho or 
+#'   eta). Horizontal line added to show the median of the posterior.
+#'
+#' @param x Vector of parameter values drawn from the posterior distribution,
+#'   indexed to the iteration by the order of the vector.
+#'
+#' @param xlab \code{character} value used to label the x axis.
+#'
+#' @return Nothing. Plot sent to active graphics device.
+#'
+#' @export
+#'
+ecdf_plot <- function(x, xlab){
+  ECDF <- ecdf(x)
+  plot(ECDF, main = "", xlab = xlab, ylab = "%", las = 1, bty = "L")
+  abline(a = 0.5, b = 0, lwd = 2, lty = 2)
+}
+
+#' @title Produce the posterior distribution histogram panel for the TS 
+#'   diagnostic plot of a parameter
+#' 
+#' @description Produce a vanilla histogram plot using \code{hist} for the 
+#'   parameter of interest (rho or eta). Vertical line added to show the 
+#'   median of the posterior.
+#'
+#' @param x Vector of parameter values drawn from the posterior distribution,
+#'   indexed to the iteration by the order of the vector.
+#'
+#' @param xlab \code{character} value used to label the x axis.
+#'
+#' @return Nothing. Plot sent to active graphics device.
+#'
+#' @export
+#'
+posterior_plot <- function(x, xlab){
+  hist(x, las = 1, main = "", xlab = xlab)
+  points(rep(median(x), 2), c(0, 1e5), type = "l", lwd = 2, lty = 2)
+}
+
+#' @title Produce the autocorrelation panel for the TS diagnostic plot of
+#'   a parameter
+#' 
+#' @description Produce a vanilla ACF plot using \code{acf} for the parameter
+#'   of interest (rho or eta).
+#'
+#' @param x Vector of parameter values drawn from the posterior distribution,
+#'   indexed to the iteration by the order of the vector.
+#'
+#' @return Nothing. Plot sent to active graphics device.
+#'
+#' @export
+#'
+autocorr_plot <- function(x){
+  acf(x, las = 1, ylab = "Autocorrelation")
 }
 
 #' @title Create the list of colors for the TS summary plot
@@ -68,7 +246,7 @@ TS_summary_cols <- function(rho_cols = NULL, rho_option = "D",
 #'   fitted topic proportions (gamma values) over time, based on a selected 
 #'   set of changepoint locations.
 #'
-#' @param x Object of class \code{TS_list}.
+#' @param x Object of class \code{TS_fit}.
 #'
 #' @param bin_width Width of the bins used in the histograms, in units of the
 #'   x-axis (the time variable used to fit the model).
@@ -110,7 +288,7 @@ TS_summary_plot <- function(x, bin_width, xlab, selection = "median",
 #'   (gamma values) over time, based on a selected set of changepoint 
 #'   locations.
 #'
-#' @param x Object of class \code{TS_list}.
+#' @param x Object of class \code{TS_fit}.
 #'
 #' @param selection Indicator of the changepoints to use. Currently only
 #'   defined for \code{"median"}.
@@ -191,7 +369,7 @@ rho_lines <- function(spec_rhos){
 #' @description Produces a plot of the changepoint distributions as histograms
 #'   over time.
 #'
-#' @param x Object of class \code{TS_list}.
+#' @param x Object of class \code{TS_fit}.
 #'
 #' @param cols Hex values of the colors to be used to plot the histograms of 
 #'   changepoints.
@@ -255,7 +433,7 @@ rho_hist <- function(x, cols, bin_width, xlab = NULL){
 #'   the changepoint histogram.
 #' 
 #' @param x Matrix of changepoint locations (element \code{rhos}) from an 
-#'   object of class \code{TS_list}.
+#'   object of class \code{TS_fit}.
 #'
 #' @param cols Colors to be used to plot the histograms of changepoints.
 #' 
@@ -307,7 +485,7 @@ set_rho_hist_colors <- function(x, cols = NULL, option = "D", alpha = 1){
 #' @description Based on the inputs, create the set of colors to be used in
 #'   the timeseries of the fitted gamma (topic proportion) values.
 #' 
-#' @param x Object of class \code{TS_list}.
+#' @param x Object of class \code{TS_fit}.
 #'
 #' @param cols Colors to be used to plot the time series of fitted topic 
 #'   proportions (gammas).

@@ -8,7 +8,7 @@ TS_summary_plot(x, bin_width, xlab, selection = "median",
   cols = TS_summary_cols())
 }
 \arguments{
-\item{x}{Object of class \code{TS_list}.}
+\item{x}{Object of class \code{TS_fit}.}
 
 \item{bin_width}{Width of the bins used in the histograms, in units of the
 x-axis (the time variable used to fit the model).}

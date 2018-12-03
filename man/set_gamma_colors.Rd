@@ -7,7 +7,7 @@
 set_gamma_colors(x, cols = NULL, option = "D", alpha = 1)
 }
 \arguments{
-\item{x}{Object of class \code{TS_list}.}
+\item{x}{Object of class \code{TS_fit}.}
 
 \item{cols}{Colors to be used to plot the time series of fitted topic 
 proportions (gammas).}
