@@ -2,7 +2,7 @@ context("Check multinomial TS functions")
 
 data(rodents)
 lda_data <- rodents$document_term_table
-lda <- LDA_set(lda_data, c(4), nseeds = 1, quiet = TRUE)
+lda <- LDA_set(lda_data, c(4), nseeds = 1, LDA_controls_list(quiet = TRUE))
 dct <- rodents$document_covariate_table
 mts_data <- data.frame(dct)
 mts_data$gamma <- lda[[1]]@gamma
@@ -29,8 +29,8 @@ test_that("check good output from multinom_TS", {
            control = TS_controls_list())
   expect_is(mts, "list")
   expect_is(mts, "multinom_TS_fit")
-  expect_equal(length(mts), 2)
-  expect_equal(names(mts), c("chunk models", "logLik"))
+  expect_equal(length(mts), 3)
+  expect_equal(names(mts), c("chunk models", "logLik", "chunks"))
   expect_equal(length(mts$"chunk models"), 3)
   expect_is(mts$logLik, "numeric")
 })
@@ -40,8 +40,8 @@ test_that("check failed output from multinom_TS", {
            changepoints = c(50,40), weights = NULL, 
            control = TS_controls_list())
   expect_is(mts, "list")
-  expect_equal(length(mts), 2)
-  expect_equal(names(mts), c("chunk models", "logLik"))
+  expect_equal(length(mts), 3)
+  expect_equal(names(mts), c("chunk models", "logLik", "chunks"))
   expect_equal(mts$"chunk models", NA)
   expect_equal(mts$logLik, -Inf)
 })

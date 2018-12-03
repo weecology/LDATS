@@ -5,9 +5,10 @@
 \title{Create the controls list for the Time Series model}
 \usage{
 TS_controls_list(memoise = TRUE, response = "gamma",
-  timename = "newmoon", ntemps = 6, penultimate_temp = 2^6,
-  ultimate_temp = 1e+10, q = 0, nit = 10000, magnitude = 12,
-  quiet = FALSE, burnin = 0, thin_frac = 1, summary_prob = 0.95)
+  timename = "newmoon", lambda = 0, measurer = AIC, selector = min,
+  ntemps = 6, penultimate_temp = 2^6, ultimate_temp = 1e+10, q = 0,
+  nit = 10000, magnitude = 12, quiet = FALSE, burnin = 0,
+  thin_frac = 1, summary_prob = 0.95)
 }
 \arguments{
 \item{memoise}{\code{logical} indicator of whether the multinomial 
@@ -20,6 +21,14 @@ used in the time series.}
 
 \item{timename}{\code{character} element indicating the time variable
 used in the time series.}
+
+\item{lambda}{\code{numeric} weight decay term used to set the prior
+on the regressors within each chunk-level model. Defaults to 0, 
+corresponding to a fully vague prior.}
+
+\item{measurer, selector}{Function names for use in evaluation of the TS
+models. \code{measurer} is used to create a value for each model
+and \code{selector} operates on the values to choose the model.}
 
 \item{ntemps}{\code{integer} number of temperatures to use in the 
 ptMCMC (referenced as \eqn{H} in the math description).}

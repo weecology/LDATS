@@ -4,8 +4,8 @@
 \alias{LDA_set}
 \title{Run a set of Latent Dirichlet Allocation models}
 \usage{
-LDA_set(document_term_table, topics = 2, nseeds = 1, control = NULL,
-  quiet = FALSE)
+LDA_set(document_term_table, topics = 2, nseeds = 1,
+  control = LDA_controls_list())
 }
 \arguments{
 \item{document_term_table}{Table of observation count data (rows: 
@@ -19,11 +19,8 @@ noted as \eqn{w} (the word-level topic identity) in the math description.}
 \item{nseeds}{Integer number of seeds (replicate starts) to use for each 
 value of \code{topics}.}
 
-\item{control}{Named list of control parameters to be used in 
-\code{LDA} (note that "seed" will be overwritten).}
-
-\item{quiet}{\code{logical} indicator of whether the model should run 
-quietly.}
+\item{control}{Class \code{LDA_controls} list of control parameters to be
+used in \code{LDA} (note that "seed" will be overwritten).}
 }
 \value{
 List (class: \code{LDA_set}) of LDA models (class: 

@@ -5,7 +5,7 @@ context("Check LDA plot functions")
 
 data(rodents)
 lda_data <- rodents$document_term_table
-ldas <- LDA_set(lda_data, topics = c(2, 4), nseeds = 2, quiet = TRUE)
+ldas <- LDA_set(lda_data, c(2, 4), 2, LDA_controls_list(quiet = TRUE))
 lda <- ldas[[1]]
 xtime <- rodents$newmoon
 

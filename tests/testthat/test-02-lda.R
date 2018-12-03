@@ -2,7 +2,7 @@ context("Check LDA functions")
 
 data(rodents)
 lda_data <- rodents$document_term_table
-lda <- LDA_set(lda_data, c(2, 4), nseeds = 2, quiet = TRUE)
+lda <- LDA_set(lda_data, c(2, 4), nseeds = 2, LDA_controls_list(quiet = TRUE))
 
 test_that("check output from LDA_set", {
   expect_equal(length(lda), 4)
@@ -33,7 +33,7 @@ test_that("check error catching of check_topics", {
 test_that("check output from prep_LDA_control", {
   expect_is(prep_LDA_control(1), "list")
   expect_equal(prep_LDA_control(1)$seed, 1)
-  expect_equal(prep_LDA_control(1, list(seed = 10))$seed, 1)
+  expect_equal(prep_LDA_control(1, LDA_controls_list(seed = 10))$seed, 1)
 })
 
 test_that("check selection via select_LDA", {

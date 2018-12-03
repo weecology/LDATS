@@ -4,15 +4,14 @@
 \alias{select_TS}
 \title{Select the best Time Series model}
 \usage{
-select_TS(TS_models, measurer = AIC, selector = min)
+select_TS(TS_models, control = TS_controls_list())
 }
 \arguments{
 \item{TS_models}{An object of class \code{TS_on_LDA} produced by
 \code{TS_on_LDA}.}
 
-\item{measurer, selector}{Function names for use in evaluation of the TS
-models. \code{measurer} is used to create a value for each model
-and \code{selector} operates on the values to choose the model.}
+\item{control}{Class \code{LDA_controls} list including (named) elements
+corresponding to the \code{measurer} and \code{evaluator} functions.}
 }
 \value{
 A reduced version of \code{TS_models} that only includes the 

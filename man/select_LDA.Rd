@@ -4,16 +4,14 @@
 \alias{select_LDA}
 \title{Select the best LDA model(s) for use in time series}
 \usage{
-select_LDA(LDA_models = NULL, measurer = AIC, selector = min)
+select_LDA(LDA_models = NULL, control = LDA_controls_list())
 }
 \arguments{
 \item{LDA_models}{An object of class \code{LDA_set} produced by
 \code{LDA_set}.}
 
-\item{measurer, selector}{Function names for use in evaluation of the LDA
-models. \code{measurer} is used to create a value for each model
-and \code{selector} operates on the values to choose the model(s) to 
-pass on.}
+\item{control}{Class \code{LDA_controls} list including (named) elements
+corresponding to the \code{measurer} and \code{evaluator} functions.}
 }
 \value{
 A reduced version of \code{LDA_models} that only includes the 

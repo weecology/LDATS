@@ -16,8 +16,8 @@ chunk (row).}
 }
 \value{
 Object of class \code{multinom_TS_fit}, which is a list of [1]
-  chunk-level model fits and [2] the total log likelihood combined across 
-  all chunks.
+  chunk-level model fits, [2] the total log likelihood combined across 
+  all chunks, and [3] the chunk time data table.
 }
 \description{
 Takes the list of fitted chunk-level models returned from

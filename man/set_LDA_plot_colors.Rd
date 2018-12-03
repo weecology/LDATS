@@ -2,14 +2,14 @@
 % Please edit documentation in R/LDA_plots.R
 \name{set_LDA_plot_colors}
 \alias{set_LDA_plot_colors}
-\title{Prepare the colors to be used}
+\title{Prepare the colors to be used in the LDA plot}
 \usage{
 set_LDA_plot_colors(x, cols = NULL, option = "D")
 }
 \arguments{
-\item{x}{Object of class \code{LDA}}
+\item{x}{Object of class \code{LDA}.}
 
-\item{cols}{colors to be used to plot the topics}
+\item{cols}{Colors to be used to plot the topics.}
 
 \item{option}{A character string indicating the colormap option to use if 
 `cols == NULL`. Four options are available: "magma" (or "A"), "inferno" 
@@ -17,9 +17,9 @@ set_LDA_plot_colors(x, cols = NULL, option = "D")
 "cividis" (or "E").}
 }
 \value{
-Vector of colors to use.
+Vector of \code{character} hex codes indicating colors to use.
 }
 \description{
 Based on the inputs, create the set of colors to be used in
-  the plots
+  the LDA plots.
 }
