@@ -62,3 +62,17 @@ This function runs a complete suite of Latent Dirichlet
   Series (TS) models (via \code{\link{TS_on_LDA}}) on the choice LDA
   model(s), then selects the best TS model (via \code{select_TS}).
 }
+\examples{
+\dontrun{
+  data(rodents)
+  lda_data <- rodents$document_term_table
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  
+  mod <- LDA_TS(document_term_table, document_covariate_table,
+                topics = 2, nseeds = 1, formulas = ~ 1, nchangepoints = 1,
+                weights = document_weights(document_term_table), 
+                control = LDA_TS_controls_list())
+}
+
+}

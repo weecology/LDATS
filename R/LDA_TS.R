@@ -50,6 +50,19 @@
 #' @return Class \code{LDA_TS} object including all fitted models and selected 
 #'   models specifically. 
 #'
+#' @examples 
+#' \dontrun{
+#'   data(rodents)
+#'   lda_data <- rodents$document_term_table
+#'   document_term_table <- rodents$document_term_table
+#'   document_covariate_table <- rodents$document_covariate_table
+#'   
+#'   mod <- LDA_TS(document_term_table, document_covariate_table,
+#'                 topics = 2, nseeds = 1, formulas = ~ 1, nchangepoints = 1,
+#'                 weights = document_weights(document_term_table), 
+#'                 control = LDA_TS_controls_list())
+#' }
+#'
 #' @export
 #'
 LDA_TS <- function(document_term_table, document_covariate_table,
@@ -107,6 +120,19 @@ print.LDA_TS <- function(x, ...){
 #' @export
 #'
 package_LDA_TS <- function(LDAs, sel_LDA, TSs, sel_TSs){
+  if (!("LDA_set" %in% class(LDAs))){
+    stop("LDAs not of class LDA_set")
+  }
+  if (!("LDA_set" %in% class(sel_LDA))){
+    stop("sel_LDA not of class LDA_set")
+  }
+  if (!("TS_on_LDA" %in% class(TSs))){
+    stop("TSs not of class TS_on_LDA")
+  }
+  if (!("TS_fit" %in% class(sel_TSs))){
+    stop("sel_TS not of class TS_fit")
+  }
+
   out <- list("LDA models" = LDAs, "Selected LDA model" = sel_LDA,
               "TS models" = TSs, "Selected TS model" = sel_TSs)
   class(out) <- c("LDA_TS", "list")
