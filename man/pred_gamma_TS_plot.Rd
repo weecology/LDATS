@@ -10,7 +10,7 @@ pred_gamma_TS_plot(x, selection = "median", cols, xlab)
 \item{x}{Object of class \code{TS_fit}.}
 
 \item{selection}{Indicator of the changepoints to use. Currently only
-defined for \code{"median"}.}
+defined for "median" and "mode".}
 
 \item{cols}{Hex values of the colors to be used to plot the time series.}
 

@@ -12,8 +12,8 @@ multinom_TS(data, formula, changepoints = NULL, weights = NULL,
 (indicated in \code{control}), [2] the predictor variables (required by
 \code{formula}) and [3], the multinomial response variable (indicated
 in \code{formula}). Note that the response variables should be formatted
-as \code{<name>.1}, \code{<name>.2}, etc. (where \code{<name>} is the
-actual name of the response variable, such as \code{gamma} for a standard
+as a \code{data.frame} object named as indicated by the \code{response}
+entry in the \code{control} list, such as \code{gamma} for a standard
 TS analysis on LDA output.}
 
 \item{formula}{\code{formula} describing the continuous change. Any 

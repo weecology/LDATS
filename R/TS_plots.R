@@ -18,7 +18,7 @@
 #' @param xlab Label for the x-axis in the summary time series plot.
 #'
 #' @param selection Indicator of the changepoints to use in the timeseries
-#'   summary plot. Currently only defined for \code{"median"}.
+#'   summary plot. Currently only defined for "median" and "mode".
 #'
 #' @param cols \code{list} of elements used to define the colors for the two
 #'   panels of the summary plot, as generated simply using 
@@ -256,7 +256,7 @@ TS_summary_cols <- function(rho_cols = NULL, rho_option = "D",
 #' @param xlab Label for the x-axis.
 #'
 #' @param selection Indicator of the changepoints to use. Currently only
-#'   defined for \code{"median"}.
+#'   defined for "median" and "mode".
 #'
 #' @param cols \code{list} of elements used to define the colors for the two
 #'   panels, as generated simply using \code{TS_summary_cols}. \code{cols}
@@ -293,7 +293,7 @@ TS_summary_plot <- function(x, bin_width, xlab, selection = "median",
 #' @param x Object of class \code{TS_fit}.
 #'
 #' @param selection Indicator of the changepoints to use. Currently only
-#'   defined for \code{"median"}.
+#'   defined for "median" and "mode".
 #'
 #' @param cols Hex values of the colors to be used to plot the time series.
 #'
@@ -309,7 +309,11 @@ pred_gamma_TS_plot <- function(x, selection = "median", cols, xlab){
   nrhos <- ncol(rhos)
   if (selection == "median"){
     spec_rhos <- apply(rhos, 2, median)
-  }  
+  } else if (selection == "mode"){
+    spec_rhos <- apply(rhos, 2, modalvalue)
+  } else {
+    stop("selection input not supported")
+  }
   seg_mods <- multinom_TS(x$data, x$formula, spec_rhos, x$weights, x$control)
   nsegs <- length(seg_mods[[1]])
   t1 <- min(x$data[, x$control$timename])

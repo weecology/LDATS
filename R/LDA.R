@@ -2,9 +2,9 @@
 #' 
 #' @description For a given dataset (counts of words across several 
 #'   documents), conduct multiple Latent Dirichlet Allocation (LDA) models
-#'   (using the Variational Expectation Maximization (VEM) algorithm; Blei et 
-#'   al.) to account for [1] uncertainty in the number of latent topics and
-#'   [2] the impact of intial values in the estimation procedure. 
+#'   (using the Variational Expectation Maximization (VEM) algorithm; Blei  
+#'   \emph{et al.}) to account for [1] uncertainty in the number of latent 
+#'   topics and [2] the impact of intial values in the estimation procedure. 
 #'
 #' This function is a wrapper of the \code{LDA} function
 #'   in the \code{topicmodels} package (Grun and Hornik 2011).
@@ -21,17 +21,19 @@
 #'   value of \code{topics}.
 #'
 #' @param control Class \code{LDA_controls} list of control parameters to be
-#'   used in \code{LDA} (note that "seed" will be overwritten).
+#'   used in \code{LDA} (note that \code{seed} will be overwritten).
 #' 
-#' @return List (class: \code{LDA_set}) of LDA models (class: 
-#'   "\code{LDA}").
+#' @return List (class: \code{LDA_set}) of LDA models (class: \code{LDA}).
 #' 
 #' @references 
 #'   Blei, D. M., A. Y. Ng, and M. I. Jordan. 2003. Latent Dirichlet
-#'   Allocation. Journal of Machine Learning Research 3:993-1022.
+#'   Allocation. \emph{Journal of Machine Learning Research} 
+#'   \strong{3}:993-1022.
+#'   \href{http://jmlr.csail.mit.edu/papers/v3/blei03a.html}{link}.
 #'
 #'   Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
-#'   Models. Journal of Statistical Software 40:13.
+#'   Models. \emph{Journal of Statistical Software} \strong{40}:13.
+#'   \href{https://www.jstatsoft.org/article/view/v040i13}{link}.
 #'
 #' @examples 
 #' \dontrun{
@@ -44,7 +46,7 @@
 #'
 LDA_set <- function(document_term_table, topics = 2, nseeds = 1, 
                     control = LDA_controls_list()){
-  check_LDA_set_inputs(document_term_table, topics, control)
+  check_LDA_set_inputs(document_term_table, topics, nseeds, control)
   mod_topics <- rep(topics, each = length(seq(2, nseeds * 2, 2)))
   mod_seeds <- rep(seq(2, nseeds * 2, 2), length(topics))
   nmods <- length(mod_topics)
@@ -73,7 +75,8 @@ LDA_set <- function(document_term_table, topics = 2, nseeds = 1,
 #'
 #' @references 
 #'   Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
-#'   Models. Journal of Statistical Software 40(13):1-30.
+#'   Models. \emph{Journal of Statistical Software} \strong{40}:13.
+#'   \href{https://www.jstatsoft.org/article/view/v040i13}{link}.
 #'
 #' @export
 #'
@@ -89,24 +92,27 @@ logLik.LDA_VEM <- function(object, ...){
 #' @title Verify that all of the inputs are proper for LDA_set 
 #' 
 #' @description Verify that the table of observations is conformable to
-#'   a matrix of integers, the number of topics is an integer, and the 
-#'   controls list is proper.
+#'   a matrix of integers, the number of topics is an integer, the number of 
+#'   seeds is an integer and the controls list is proper.
 #'   
 #' @param document_term_table Table of observation count data (rows: 
 #'   documents (\eqn{M}), columns: terms (\eqn{V})).
 #'
-#' @param topics Vector of the number of topics to evaluate.
+#' @param topics Vector of the number of topics (\eqn{k}) to evaluate.
+#'
+#' @param nseeds Integer number of seeds (replicate starts) to use for each 
+#'   value of \code{topics}.
 #'
 #' @param control Class \code{LDA_controls} list of control parameters to be
-#'   used in \code{LDA} (note that "seed" will be overwritten).
-#'
-#' @return Nothing.
+#'   used in \code{LDA} (note that \code{seed} will be overwritten).
 #' 
 #' @export
 #'
-check_LDA_set_inputs <- function(document_term_table, topics, control){
+check_LDA_set_inputs <- function(document_term_table, topics, nseeds, 
+                                 control){
   check_document_term_table(document_term_table)
   check_topics(topics)
+  check_seeds(nseeds)
   if(!("LDA_controls" %in% class(control))){
     stop("control must be of class LDA_controls")
   }
@@ -119,8 +125,6 @@ check_LDA_set_inputs <- function(document_term_table, topics, control){
 #'   
 #' @param document_term_table Table of observation count data (rows: 
 #'   documents (\eqn{M}), columns: terms (\eqn{V})).
-#'
-#' @return Nothing.
 #' 
 #' @export
 #'
@@ -138,10 +142,8 @@ check_document_term_table <- function(document_term_table){
 #' @description Verify that the vector of numbers of topics is conformable to
 #'   integers greater than 1.
 #'   
-#' @param topics Vector of the number of topics to evaluate.
+#' @param topics Vector of the number of topics to evaluate (\eqn{k}).
 #'
-#' @return Nothing.
-#' 
 #' @export
 #'
 check_topics <- function(topics){
@@ -150,6 +152,23 @@ check_topics <- function(topics){
   }
   if (any(topics < 2)){
     stop("minimum number of topics currently allowed is 2")
+  }
+}
+
+#' @title Verify that nseeds value or seeds vector is proper
+#' 
+#' @description Verify that the vector of numbers of seeds is conformable to
+#'   integers greater than 1.
+#'   
+#' @param seeds Value of the number of random seeds to evaluate.
+#'
+#' @return Nothing.
+#' 
+#' @export
+#'
+check_seeds <- function(seeds){
+  if (!is.numeric(seeds) || any(seeds %% 1 != 0)){
+    stop("topics vector must be integers")
   }
 }
 
@@ -238,12 +257,18 @@ select_LDA <- function(LDA_models = NULL, control = LDA_controls_list()){
 #' @param mod_seeds Vector of \code{integer} values corresponding to the 
 #'   seed used for each model.
 #'
-#' @return List (class: \code{LDA_set}) of LDA models (class: 
-#'   "\code{LDA}").
+#' @return List (class: \code{LDA_set}) of LDA models (class: \code{LDA}).
 #'
 #' @export
 #'
 package_LDA_set <- function(mods, mod_topics, mod_seeds){
+  if (!("LDA_VEM" %in% class(mods[[1]]))){
+    stop("mods not of class LDA_VEM")
+  }
+  check_topics(mod_topics)
+  if (!is.numeric(mod_seeds) || any(mod_seeds%% 1 != 0)){
+    stop("mod_seeds must be integers")
+  }
   names(mods) <- paste0("k: ", mod_topics, ", seed: ", mod_seeds)
   class(mods) <- c("LDA_set", "list")  
   mods
@@ -262,16 +287,18 @@ package_LDA_set <- function(mods, mod_topics, mod_seeds){
 #' @param control Class \code{LDA_controls} list of control parameters to be
 #'   used in \code{LDA} (note that "seed" will be overwritten).
 #'
-#' @return Nothing (message is printed, not returned).
-#'
 #' @export
 #'
 LDA_msg <- function(mod_topics, mod_seeds, control){
+  check_topics(mod_topics)
+  check_seeds(mod_seeds)
   topic_msg <- paste0("Running LDA with ", mod_topics, " topics ")
   seed_msg <- paste0("(seed ", mod_seeds, ")")
   qprint(paste0(topic_msg, seed_msg), "", control$quiet)
 }
 
+#' @title Create control list for LDA model
+#'
 #  @description This function provides a simple creation and definition of the
 #'   list used to control the set of LDA models. It is set up to be easy to 
 #'   work with the existing control capacity of the \code{LDA} function.

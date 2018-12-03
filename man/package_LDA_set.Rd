@@ -16,8 +16,7 @@ number of topics in each model.}
 seed used for each model.}
 }
 \value{
-List (class: \code{LDA_set}) of LDA models (class: 
-  "\code{LDA}").
+List (class: \code{LDA_set}) of LDA models (class: \code{LDA}).
 }
 \description{
 Name the elements (LDA models) and set the class 

@@ -16,7 +16,7 @@ x-axis (the time variable used to fit the model).}
 \item{xlab}{Label for the x-axis.}
 
 \item{selection}{Indicator of the changepoints to use. Currently only
-defined for \code{"median"}.}
+defined for "median" and "mode".}
 
 \item{cols}{\code{list} of elements used to define the colors for the two
 panels, as generated simply using \code{TS_summary_cols}. \code{cols}

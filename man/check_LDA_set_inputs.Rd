@@ -4,22 +4,22 @@
 \alias{check_LDA_set_inputs}
 \title{Verify that all of the inputs are proper for LDA_set}
 \usage{
-check_LDA_set_inputs(document_term_table, topics, control)
+check_LDA_set_inputs(document_term_table, topics, nseeds, control)
 }
 \arguments{
 \item{document_term_table}{Table of observation count data (rows: 
 documents (\eqn{M}), columns: terms (\eqn{V})).}
 
-\item{topics}{Vector of the number of topics to evaluate.}
+\item{topics}{Vector of the number of topics (\eqn{k}) to evaluate.}
+
+\item{nseeds}{Integer number of seeds (replicate starts) to use for each 
+value of \code{topics}.}
 
 \item{control}{Class \code{LDA_controls} list of control parameters to be
-used in \code{LDA} (note that "seed" will be overwritten).}
-}
-\value{
-Nothing.
+used in \code{LDA} (note that \code{seed} will be overwritten).}
 }
 \description{
 Verify that the table of observations is conformable to
-  a matrix of integers, the number of topics is an integer, and the 
-  controls list is proper.
+  a matrix of integers, the number of topics is an integer, the number of 
+  seeds is an integer and the controls list is proper.
 }

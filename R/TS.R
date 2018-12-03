@@ -35,7 +35,7 @@
 #'
 TS <- function(data, formula, nchangepoints, weights, 
                control = TS_controls_list()){
-
+  set.seed(control$seed)
   rho_dist <- est_changepts(data, formula, nchangepoints, weights, control)
   eta_dist <- est_regressors(rho_dist, data, formula, weights, control)
   summarize_TS(data, formula, weights, control, rho_dist, eta_dist)
@@ -1087,6 +1087,8 @@ check_formula <- function(data, formula){
 #' @param summary_prob Probability used for summarizing the posterior 
 #'   distributions (via the highest posterior density interval).
 #'
+#' @param seed Input to \code{set.seed} for replication purposes.
+#'
 #' @return List of class \code{TS_controls}.
 #'
 #' @export
@@ -1097,13 +1099,14 @@ TS_controls_list <- function(memoise = TRUE, response = "gamma",
                              penultimate_temp = 2^6, ultimate_temp = 1e10,
                              q = 0, nit = 1e4, magnitude = 12, 
                              quiet = FALSE, burnin = 0, thin_frac = 1,
-                             summary_prob = 0.95){
+                             summary_prob = 0.95, seed = NULL){
   out <- list(memoise = memoise, response = response, timename = timename,
               lambda = lambda, measurer = measurer, selector = selector,
               ntemps = ntemps, penultimate_temp = penultimate_temp,
               ultimate_temp = ultimate_temp, q = q, nit = nit,
               magnitude = magnitude, quiet = quiet, burnin = burnin,
-              thin_frac = thin_frac, summary_prob = summary_prob)
+              thin_frac = thin_frac, summary_prob = summary_prob,
+              seed = seed)
   class(out) <- c("TS_controls", "list")
   out
 }

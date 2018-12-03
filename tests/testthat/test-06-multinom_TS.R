@@ -23,6 +23,14 @@ test_that("check packaging of chunk fits", {
   expect_equal(round(packaged$logLik, 2), -516.58)
 })
 
+test_that("check logLik for multinom_TS_fit", {
+  mts <- multinom_TS(data = mts_data, formula = gamma~1, 
+           changepoints = c(20,50), weights = NULL, 
+           control = TS_controls_list())
+  expect_is(logLik(mts), "numeric")
+  expect_equal(round(as.numeric(logLik(mts))), -517)
+})
+
 test_that("check good output from multinom_TS", {
   mts <- multinom_TS(data = mts_data, formula = gamma~1, 
            changepoints = c(20,50), weights = NULL, 

@@ -16,9 +16,6 @@ the model.}
 \item{control}{Class \code{LDA_controls} list of control parameters to be
 used in \code{LDA} (note that "seed" will be overwritten).}
 }
-\value{
-Nothing (message is printed, not returned).
-}
 \description{
 Produce and print the message for a given LDA model.
 }

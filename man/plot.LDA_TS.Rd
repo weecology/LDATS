@@ -6,7 +6,7 @@
 \usage{
 \method{plot}{LDA_TS}(x, ..., control = LDA_TS_controls_list(),
   cols = LDA_TS_summary_cols(), bin_width = 1, xlab = NULL,
-  selection = "median")
+  selection = "median", interactive = TRUE)
 }
 \arguments{
 \item{x}{A \code{LDA_TS} object of a full LDATS model fit by
@@ -36,7 +36,10 @@ the model).}
 \item{xlab}{Label for the x-axis in the summary time series plot.}
 
 \item{selection}{Indicator of the changepoints to use in the timeseries
-summary plot. Currently only defined for \code{"median"}.}
+summary plot. Currently only defined for "median" and "mode".}
+
+\item{interactive}{\code{logical} indicator, should be set to \code{TRUE}
+currently (except for testing).}
 }
 \value{
 Nothing. Plots are generated in the active graphics device.
@@ -44,4 +47,19 @@ Nothing. Plots are generated in the active graphics device.
 \description{
 Generalization of the \code{plot} function to work on fitted
   LDA_TS model (class \code{LDA_TS}).
+}
+\examples{
+\dontrun{
+  data(rodents)
+  lda_data <- rodents$document_term_table
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  
+  mod <- LDA_TS(document_term_table, document_covariate_table,
+                topics = 2, nseeds = 1, formulas = ~ 1, nchangepoints = 1,
+                weights = document_weights(document_term_table), 
+                control = LDA_TS_controls_list())
+  plot(mod)
+}
+
 }

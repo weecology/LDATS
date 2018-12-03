@@ -2,7 +2,9 @@
 % Please edit documentation in R/LDA.R
 \name{LDA_controls_list}
 \alias{LDA_controls_list}
-\title{list used to control the set of LDA models. It is set up to be easy to 
+\title{Create control list for LDA model
+
+  list used to control the set of LDA models. It is set up to be easy to 
   work with the existing control capacity of the \code{LDA} function.}
 \usage{
 LDA_controls_list(quiet = FALSE, measurer = AIC, selector = min, ...)
@@ -23,6 +25,8 @@ pass on.}
 Class \code{LDA_controls} list for controlling the LDA model fit.
 }
 \description{
-list used to control the set of LDA models. It is set up to be easy to 
+Create control list for LDA model
+
+  list used to control the set of LDA models. It is set up to be easy to 
   work with the existing control capacity of the \code{LDA} function.
 }

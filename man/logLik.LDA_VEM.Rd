@@ -22,5 +22,6 @@ Imported calculations from topicmodels, as applied to
 }
 \references{
 Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
-  Models. Journal of Statistical Software 40(13):1-30.
+  Models. \emph{Journal of Statistical Software} \strong{40}:13.
+  \href{https://www.jstatsoft.org/article/view/v040i13}{link}.
 }

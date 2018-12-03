@@ -11,6 +11,9 @@
 #' @export 
 #'
 modalvalue <- function(x){
+  if (!is.numeric(x)){
+    stop("x must be numeric")
+  }
   as.numeric(names(sort(table(x), decreasing = TRUE))[1])
 }
 
@@ -31,6 +34,7 @@ modalvalue <- function(x){
 #' @export
 #'
 document_weights <- function(document_term_table){
+  check_document_term_table(document_term_table)
   sample_sizes <- apply(document_term_table, 1, sum)
   round(sample_sizes/max(sample_sizes), 3)  
 }
@@ -72,7 +76,11 @@ qprint <- function(msg, wrapper, quiet){
 #' @export
 #'
 mirror_vcov <- function(x){
-  vcv <- vcov(x)
+  
+  vcv <- tryCatch(vcov(x), error = function(x){NULL})
+  if (is.null(vcv)){
+    stop("`vcov` not defined for x")
+  }
   if (isSymmetric(vcv)){
     return(vcv)
   }
@@ -97,5 +105,8 @@ mirror_vcov <- function(x){
 #' @export 
 #'
 normalize <- function(x){
+  if (!is.numeric(x)){
+    stop("x must be numeric")
+  }
   (x - min(x)) / (max(x) - min(x))
 }
