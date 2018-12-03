@@ -5,7 +5,7 @@
 \title{Plot the results of an LDATS LDA model}
 \usage{
 \method{plot}{LDA}(x, ..., xtime = NULL, xname = NULL, cols = NULL,
-  option = "D")
+  option = "E")
 }
 \arguments{
 \item{x}{Object of class \code{LDA}}

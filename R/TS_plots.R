@@ -205,7 +205,7 @@ autocorr_plot <- function(x){
 #' @param rho_cols Colors to be used to plot the histograms of changepoints.
 #'
 #' @param rho_option A character string indicating the colormap option to use
-#'   if `cols == NULL`. Four options are available: "magma" (or "A"), 
+#'   if `rho_cols == NULL`. Four options are available: "magma" (or "A"), 
 #'   "inferno" (or "B"), "plasma" (or "C"), "viridis" (or "D", the default
 #'   option) and "cividis" (or "E").
 #'
@@ -216,9 +216,9 @@ autocorr_plot <- function(x){
 #'   proportions (gammas).
 #'
 #' @param gamma_option A character string indicating the colormap option to 
-#'   use if `cols == NULL`. Four options are available: "magma" (or "A"),
-#'   "inferno" (or "B", the default option), "plasma" (or "C"), "viridis" 
-#'   (or "D") and "cividis" (or "E")
+#'   use if `gamma_cols == NULL`. Four options are available: "magma" 
+#'   (or "A"), "inferno" (or "B", the default option), "plasma" (or "C"), 
+#'   "viridis" (or "D") and "cividis" (or "E")
 #'
 #' @param gamma_alpha Numeric value [0,1] that indicates the transparency of 
 #'   the colors used. Supported only on some devices, see \code{rgb}.
@@ -271,7 +271,7 @@ TS_summary_cols <- function(rho_cols = NULL, rho_option = "D",
 #' @export
 #'
 TS_summary_plot <- function(x, bin_width, xlab, selection = "median", 
-                            cols = TS_summary_cols()){
+                            cols = TS_summary_cols(), split_need = TRUE){
 
   par(mfrow = c(2, 1))
   rc <- cols$rho

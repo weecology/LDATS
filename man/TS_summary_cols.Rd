@@ -11,7 +11,7 @@ TS_summary_cols(rho_cols = NULL, rho_option = "D", rho_alpha = 0.4,
 \item{rho_cols}{Colors to be used to plot the histograms of changepoints.}
 
 \item{rho_option}{A character string indicating the colormap option to use
-if `cols == NULL`. Four options are available: "magma" (or "A"), 
+if `rho_cols == NULL`. Four options are available: "magma" (or "A"), 
 "inferno" (or "B"), "plasma" (or "C"), "viridis" (or "D", the default
 option) and "cividis" (or "E").}
 
@@ -22,9 +22,9 @@ colors used. Supported only on some devices, see \code{rgb}.}
 proportions (gammas).}
 
 \item{gamma_option}{A character string indicating the colormap option to 
-use if `cols == NULL`. Four options are available: "magma" (or "A"),
-"inferno" (or "B", the default option), "plasma" (or "C"), "viridis" 
-(or "D") and "cividis" (or "E")}
+use if `gamma_cols == NULL`. Four options are available: "magma" 
+(or "A"), "inferno" (or "B", the default option), "plasma" (or "C"), 
+"viridis" (or "D") and "cividis" (or "E")}
 
 \item{gamma_alpha}{Numeric value [0,1] that indicates the transparency of 
 the colors used. Supported only on some devices, see \code{rgb}.}

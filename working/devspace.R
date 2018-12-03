@@ -18,29 +18,6 @@ data(rodents)
 document_term_table <- rodents$document_term_table
 document_covariate_table <- rodents$document_covariate_table
 
-topics = 4
-nseeds = 1
-formulas = c(~ sin_year + cos_year)
-nchangepoints = 4
-weights = document_weights(document_term_table)
-control = LDA_TS_controls_list(TS_controls_list(nit = 1e4))
-LDAs <- LDA_set(document_term_table, topics, nseeds, control$LDA_control)
-LDA_models <- select_LDA(LDAs, control$LDA_control)
-
-control = TS_controls_list()
-
-x <- TS_on_LDA(LDA_models, document_covariate_table, formulas, nchangepoints,
-               weights, control)
-
-
-# into TS_on_LDA
-#
-#
-# 2. work through TS ugggh ok lets go
-
-save(x, file="ok2.RData")
-
-
 mods <- LDA_TS(document_term_table, document_covariate_table,
                topics = 2, nseeds = 1, formulas = c(~ 1), nchangepoints = 1, 
                weights = document_weights(document_term_table), 

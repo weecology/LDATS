@@ -5,7 +5,7 @@
 \title{Create the summary plot for a TS fit to an LDA model}
 \usage{
 TS_summary_plot(x, bin_width, xlab, selection = "median",
-  cols = TS_summary_cols())
+  cols = TS_summary_cols(), split_need = TRUE)
 }
 \arguments{
 \item{x}{Object of class \code{TS_fit}.}

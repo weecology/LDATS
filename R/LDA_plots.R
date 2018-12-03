@@ -64,7 +64,7 @@ plot.LDA_set <- function(x, ...){
 #' @export 
 #'
 plot.LDA <- function(x, ..., xtime = NULL, xname = NULL, cols = NULL, 
-                     option = "D"){
+                     option = "E"){
   cols <- set_LDA_plot_colors(x, cols, option)
   LDA_plot_top_panel(x, cols)
   LDA_plot_bottom_panel(x, xtime, xname, cols)
