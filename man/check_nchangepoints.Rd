@@ -9,9 +9,6 @@ check_nchangepoints(nchangepoints)
 \arguments{
 \item{nchangepoints}{Vector of the number of changepoints to evaluate.}
 }
-\value{
-Nothing.
-}
 \description{
 Verify that the vector of numbers of changepoints is 
   conformable to integers greater than 1.

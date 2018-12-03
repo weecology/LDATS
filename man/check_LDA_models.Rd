@@ -9,9 +9,6 @@ check_LDA_models(LDA_models)
 \arguments{
 \item{LDA_models}{List of LDA models or singular LDA model to evaluate.}
 }
-\value{
-Nothing.
-}
 \description{
 Verify that the \code{LDA_models} input is, in fact, LDA 
   models or a singular LDA model.

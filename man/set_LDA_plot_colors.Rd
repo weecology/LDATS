@@ -4,7 +4,7 @@
 \alias{set_LDA_plot_colors}
 \title{Prepare the colors to be used in the LDA plot}
 \usage{
-set_LDA_plot_colors(x, cols = NULL, option = "D")
+set_LDA_plot_colors(x, cols = NULL, option = "D", alpha = 0.8)
 }
 \arguments{
 \item{x}{Object of class \code{LDA}.}
@@ -15,6 +15,9 @@ set_LDA_plot_colors(x, cols = NULL, option = "D")
 `cols == NULL`. Four options are available: "magma" (or "A"), "inferno" 
 (or "B"), "plasma" (or "C"), "viridis" (or "D", the default option) and 
 "cividis" (or "E").}
+
+\item{alpha}{Numeric value [0,1] that indicates the transparency of the 
+colors used. Supported only on some devices, see \code{rgb}.}
 }
 \value{
 Vector of \code{character} hex codes indicating colors to use.

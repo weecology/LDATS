@@ -41,3 +41,19 @@ test_that("check normalize", {
   expect_equal(round(sd(normalize(xx)), 3), 0.289)
   expect_error(normalize("ok"))
 })
+
+test_that("check memoise_fun", {
+  expect_is(memoise_fun(sum, TRUE), "memoised")
+  expect_is(memoise_fun(sum, FALSE), "function")  
+  expect_error(memoise_fun(1, TRUE))
+  expect_error(memoise_fun(sum, 1))
+})
+
+test_that("check check_control", {
+  expect_silent(check_control(TS_controls_list(), "TS_controls"))
+  expect_silent(check_control(LDA_TS_controls_list(), "LDA_TS_controls"))
+  expect_silent(check_control(LDA_controls_list(), "LDA_controls"))
+  expect_error(check_control(TS_controls_list(), "LDA_controls"))
+  expect_error(check_control(LDA_controls_list(), "TS_controls"))
+  expect_error(check_control(LDA_TS_controls_list(), "LDA_controls"))
+})

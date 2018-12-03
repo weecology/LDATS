@@ -11,9 +11,6 @@
 
 \item{...}{Not used, simply included to maintain method compatability.}
 }
-\value{
-Nothing (names are printed, not returned).
-}
 \description{
 Convenience function to print only the names of a 
   \code{TS_on_LDA}-class object.

@@ -32,7 +32,7 @@
 #' 
 #' @export 
 #'
-plot.TS_fit <- function(x, ..., plot_type = "diagnostic", 
+plot.TS_fit <- function(x, ..., plot_type = "summary", 
                         cols = TS_summary_cols(),
                         bin_width = 1, xlab = NULL, selection = "median"){
   if (plot_type == "diagnostic"){
@@ -307,12 +307,16 @@ pred_gamma_TS_plot <- function(x, selection = "median", cols, xlab){
 
   rhos <- x$rhos
   nrhos <- ncol(rhos)
-  if (selection == "median"){
-    spec_rhos <- apply(rhos, 2, median)
-  } else if (selection == "mode"){
-    spec_rhos <- apply(rhos, 2, modalvalue)
-  } else {
-    stop("selection input not supported")
+  if (!is.null(nrhos)){
+    if (selection == "median"){
+      spec_rhos <- apply(rhos, 2, median)
+    } else if (selection == "mode"){
+      spec_rhos <- apply(rhos, 2, modalvalue)
+    } else {
+      stop("selection input not supported")
+    }
+  } else{
+    spec_rhos <- NULL
   }
   seg_mods <- multinom_TS(x$data, x$formula, spec_rhos, x$weights, x$control)
   nsegs <- length(seg_mods[[1]])
@@ -362,7 +366,7 @@ pred_gamma_TS_plot <- function(x, selection = "median", cols, xlab){
 #'
 rho_lines <- function(spec_rhos){
   if(is.null(spec_rhos)){
-    return(NULL)
+    return()
   }
   for (i in 1:length(spec_rhos)){
     points(rep(spec_rhos[i], 2), c(0, 1), type = "l", lwd = 4, 
@@ -404,17 +408,20 @@ rho_hist <- function(x, cols, bin_width, xlab = NULL){
   bin2 <- binsteps[2:(length(binsteps))] 
   nbins <- length(bin1)
 
-  hts <- matrix(NA, nbins, nrhos)
-  for(i in 1:nbins){
-    for(j in 1:nrhos){
-      hts[i,j]<- length(which(rhos[,j] >= bin1[i] & rhos[,j] < bin2[i]))
+  maxht <- 1
+  if (!is.null(nrhos)){
+    hts <- matrix(NA, nbins, nrhos)
+    for(i in 1:nbins){
+      for(j in 1:nrhos){
+        hts[i,j]<- length(which(rhos[,j] >= bin1[i] & rhos[,j] < bin2[i]))
+      }
     }
-  }
-
-  maxht <- max(hts) / niter
-  maxht <- ceiling(maxht * 100) / 100
-  if (is.null(xlab)){
-    xlab <- x$control$timename
+ 
+    maxht <- max(hts) / niter
+    maxht <- ceiling(maxht * 100) / 100
+    if (is.null(xlab)){
+      xlab <- x$control$timename
+    }
   }
   par(mar = c(1.5, 4, 1, 1))
   plot(1, 1, type = "n", bty = "L", xlab = xlab, ylab = "", xaxt = "n", 
@@ -422,15 +429,16 @@ rho_hist <- function(x, cols, bin_width, xlab = NULL){
   yax <- round(seq(0, maxht, length.out = 5), 3)
   axis(2, at = yax, las = 1)
   axis(1)
-  for (i in 1:nbins){
-    rho_ord <- order(hts[i,], decreasing = TRUE)
-    for(j in 1:nrhos){
-      ht_j <- hts[i, rho_ord[j]] / niter
-      col_j <- cols[rho_ord[j]]
-      rect(bin1[i], 0, bin2[i], ht_j, col = col_j)      
+  if (!is.null(nrhos)){
+    for (i in 1:nbins){
+      rho_ord <- order(hts[i,], decreasing = TRUE)
+      for(j in 1:nrhos){
+        ht_j <- hts[i, rho_ord[j]] / niter
+        col_j <- cols[rho_ord[j]]
+        rect(bin1[i], 0, bin2[i], ht_j, col = col_j)      
+      }
     }
   }
-
 }
 
 #' @title Prepare the colors to be used in the changepoint histogram
@@ -462,7 +470,7 @@ set_rho_hist_colors <- function(x, cols = NULL, option = "D", alpha = 1){
 
   nrhos <- ncol(x)
   if (length(cols) == 0){
-    cols <- viridis(nrhos, option = option, alpha = alpha)
+    cols <- viridis(nrhos, option = option, alpha = alpha, end = 0.9)
   }
   if (length(cols) == 1){
     if (cols == "greys" | cols == "grey" | cols == "grays" | cols == "gray"){
@@ -515,7 +523,7 @@ set_gamma_colors <- function(x, cols = NULL, option = "D", alpha = 1){
 
   ntopics <- ncol(as.matrix(x$data[x$control$response]))
   if (length(cols) == 0){
-    cols <- viridis(ntopics, option = option, alpha = alpha)
+    cols <- viridis(ntopics, option = option, alpha = alpha, end = 0.9)
   }
   if (length(cols) == 1){
     if (cols == "greys" | cols == "grey" | cols == "grays" | cols == "gray"){

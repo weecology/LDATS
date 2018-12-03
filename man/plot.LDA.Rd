@@ -5,7 +5,7 @@
 \title{Plot the results of an LDATS LDA model}
 \usage{
 \method{plot}{LDA}(x, ..., xtime = NULL, xname = NULL, cols = NULL,
-  option = "E")
+  option = "E", alpha = 0.8)
 }
 \arguments{
 \item{x}{Object of class \code{LDA}}
@@ -24,6 +24,9 @@ proportions (otherwise defaults to "Document").}
 `cols == NULL`. Four options are available: "magma" (or "A"), "inferno" 
 (or "B"), "plasma" (or "C"), "viridis" (or "D", the default option) and 
 "cividis" (or "E").}
+
+\item{alpha}{Numeric value [0,1] that indicates the transparency of the 
+colors used. Supported only on some devices, see \code{rgb}.}
 }
 \value{
 LDATS LDA model plots.

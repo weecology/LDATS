@@ -69,6 +69,9 @@ LDA_TS <- function(document_term_table, document_covariate_table,
                    topics = 2, nseeds = 1, formulas = ~ 1, nchangepoints = 0,
                    weights = document_weights(document_term_table), 
                    control = LDA_TS_controls_list()){
+  check_LDA_TS_inputs(document_term_table, document_covariate_table,
+                      topics, nseeds, formulas, nchangepoints, weights, 
+                      control)
   qprint("Latent Dirichlet Allocation", "----", control$quiet)
   LDAs <- LDA_set(document_term_table, topics, nseeds, control$LDA_control)
   sel_LDA <- select_LDA(LDAs, control$LDA_control)
@@ -77,6 +80,70 @@ LDA_TS <- function(document_term_table, document_covariate_table,
                    weights, control$TS_control)
   sel_TSs <- select_TS(TSs, control$TS_control)
   package_LDA_TS(LDAs, sel_LDA, TSs, sel_TSs)
+}
+
+#' @title Verify that all inputs to LDA_TS are proper
+#'
+#' @description Determines if the function has a complete proper set of inputs
+#'   for running the code within \code{LDA_TS}/. 
+#' 
+#' @param document_term_table Table of observation count data (rows: 
+#'   documents (\eqn{M}), columns: terms (\eqn{V})). May be a class 
+#'   \code{matrix} or \code{data.frame} but must be conformable to
+#'   a code of integers. This table is a document-level summary of the data 
+#'   noted as \eqn{w} (the word-level topic identity) in the math description. 
+#'
+#' @param document_covariate_table Document covariate table (rows:
+#'   documents (\code{M}), columns: time index and covariate options). 
+#'   Every model needs a covariate to describe the time value for each
+#'   document (in whatever relevant units), whose name in the table is input
+#'   via \code{timename}, that dictates the application of the changepoints. 
+#'   In addition, the table needs to include as columns all covariates named 
+#'   within the specific models described via the argument \code{formula} 
+#'   (if desired). Must be a conformable to a data table. 
+#'
+#' @param topics Vector of the number of topics to evaluate in the LDAs.
+#'
+#' @param nseeds Integer number of seeds (replicate starts) to use for each 
+#'   value of \code{topics} in the LDAs.
+#'
+#' @param formulas Vector of \code{formula}(s) for the continuous change. Any 
+#'   predictor variable included in a formula must also be a column in the
+#'   \code{document_covariate_table}. Each element (formula) in the vector
+#'   is evaluated for each number of change points and each LDA model.
+#'
+#' @param nchangepoints Vector of integers corresponding to the number of 
+#'   change points to include in the model. 0 is a valid input (corresponding
+#'   to no change points, so a singular time series model), and the current 
+#'   implementation can reasonably include up to 6 change points. Each element 
+#'   (number of change points) in the vector is used to dictate the
+#'   segementation of the data  for each continuous model and each LDA model.
+#'
+#' @param weights Optional class \code{numeric} vector of weights for each 
+#'   document. Corresponds to the vector \strong{\eqn{v}} in the math 
+#'   description. Defaults to value calculated by 
+#'   \code{\link{document_weights}}, but can be set as \code{NULL}.
+#' 
+#' @param control Class \code{LDA_TS_controls} list that contains 
+#'   \code{LDA_controls}, \code{TS_controls}, and the top-level \code{quiet}.
+#'
+#' @export
+#'
+check_LDA_TS_inputs <- function(document_term_table, document_covariate_table,
+                              topics = 2, nseeds = 1, formulas = ~ 1, 
+                              nchangepoints = 0,
+                              weights = document_weights(document_term_table), 
+                              control = LDA_TS_controls_list()){
+  check_document_covariate_table(document_covariate_table, 
+                                 document_term_table = document_term_table)
+  check_timename(document_covariate_table, control$TS_control$timename)
+  check_formulas(formulas, document_covariate_table, control$TS_control)  
+  check_nchangepoints(nchangepoints)
+  check_weights(weights)
+  check_control(control, "LDA_TS_controls")
+  check_document_term_table(document_term_table)
+  check_topics(topics)
+  check_seeds(nseeds)
 }
 
 #' @title Print the selected LDA and TS models of LDA_TS object
