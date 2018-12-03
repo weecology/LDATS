@@ -82,7 +82,8 @@ summarize_TS <- function(data, formula, weights, control, rho_dist,
   nchangepoints <- dim(rho_dist$cpts)[1]
   if (is.null(nchangepoints)){
     nchangepoints <- 0
-    mod <- multinom_TS(data, formula, changepoints = NULL, weights)[[1]][[1]]
+    mod <- multinom_TS(data, formula, changepoints = NULL, weights, control)
+    mod <- mod[[1]][[1]]
     lls <- as.numeric(logLik(mod))
     rhos <- NULL
   } else{
@@ -349,7 +350,8 @@ count_trips <- function(ids){
 est_regressors <- function(rho_dist, data, formula, weights, control){
 
   if (is.null(rho_dist)){
-    mod <- multinom_TS(data, formula, changepoints = NULL, weights)[[1]][[1]]
+    mod <- multinom_TS(data, formula, changepoints = NULL, weights, control)
+    mod <- mod[[1]][[1]]
     mv <- as.vector(t(coef(mod)))
     vcv <- vcov(mod)
     eta <- rmvnorm(control$nit, mv, vcv)
@@ -614,7 +616,7 @@ proposed_step_mods <- function(prop_changepts, inputs){
   weights <- inputs$weights
   TS_memo <- inputs$TS_memo
   ntemps <- length(inputs$temps)
-  control <- TS_controls_list()
+  control <- inputs$control
   out <- vector("list", length = ntemps)
   for (i in 1:ntemps){
     out[[i]] <- TS_memo(data, formula, prop_changepts[ , i], weights, control)
@@ -694,14 +696,14 @@ prep_ptMCMC_inputs <- function(data, formula, nchangepoints, weights,
                                control){
   check_timename(data, control$timename)
   check_formula(data, formula)
-  control$temps <- prep_temp_sequence(control)
-  control$pdist <- prep_proposal_dist(nchangepoints, control)
-  control$formula <- formula
-  control$weights <- weights
-  control$data <- data
-  control$TS_memo <- memoise_fun(multinom_TS, control$memoise)
-  class(control) <- c("ptMCMC_inputs", "list")
-  control
+  control$selector <- NULL
+  control$measurer <- NULL
+  out <- list(control = control, temps = prep_temp_sequence(control), 
+              pdist = prep_proposal_dist(nchangepoints, control),
+              formula = formula, weights = weights, data = data, 
+              TS_memo = memoise_fun(multinom_TS, control$memoise))
+  class(out) <- c("ptMCMC_inputs", "list")
+  out
 }
 
 #' @title Initialize and tick through the progress bar
