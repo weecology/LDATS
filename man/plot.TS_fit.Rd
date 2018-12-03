@@ -15,6 +15,8 @@
 \item{...}{Additional arguments to be passed to subfunctions. Not currently
 used, just retained for alignment with \code{plot}.}
 
+\item{plot_type}{"diagnostic" or "summary".}
+
 \item{cols}{\code{list} of elements used to define the colors for the two
 panels of the summary plot, as generated simply using 
 \code{TS_summary_cols}. \code{cols} has two elements \code{rho} and 

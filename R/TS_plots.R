@@ -9,6 +9,8 @@
 #' @param ... Additional arguments to be passed to subfunctions. Not currently
 #'   used, just retained for alignment with \code{plot}.
 #'
+#' @param plot_type "diagnostic" or "summary".
+#'
 #' @param bin_width Width of the bins used in the histograms of the summary 
 #'   timeseries plot, in units of the x-axis (the time variable used to fit 
 #'   the model).
