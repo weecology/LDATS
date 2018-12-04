@@ -1,10 +1,11 @@
 #' @title Run a set of Latent Dirichlet Allocation models
 #' 
-#' @description For a given dataset (counts of words across several 
-#'   documents), conduct multiple Latent Dirichlet Allocation (LDA) models
-#'   (using the Variational Expectation Maximization (VEM) algorithm; Blei  
-#'   \emph{et al.}) to account for [1] uncertainty in the number of latent 
-#'   topics and [2] the impact of intial values in the estimation procedure. 
+#' @description For a given corpus \eqn{D} (dataset consisting of counts of 
+#'   words across \eqn{M} documents), conduct multiple Latent Dirichlet 
+#'   Allocation (LDA) models (using the Variational Expectation 
+#'   Maximization (VEM) algorithm; Blei \emph{et al.}) to account for [1]  
+#'   uncertainty in the number of latent topics and [2] the impact of initial
+#'   values in the estimation procedure. 
 #'
 #' This function is a wrapper of the \code{LDA} function
 #'   in the \code{topicmodels} package (Grun and Hornik 2011).
@@ -15,7 +16,9 @@
 #'   a code of integers. This table is a document-level summary of the data 
 #'   noted as \eqn{w} (the word-level topic identity) in the math description. 
 #'
-#' @param topics Vector of the number of topics to evaluate.
+#' @param topics Vector of the number of topics to evaluate for each model
+#'   (\ifelse{html}{\out{<i>k<sub>m<sub>1</sub></sub></i>}}{\eqn{k_m_1}} 
+#'   topics for a model \ifelse{html}{\out{<i>m<sub>1</sub></i>}}{\eqn{m_1}}).
 #'
 #' @param nseeds Integer number of seeds (replicate starts) to use for each 
 #'   value of \code{topics}.
@@ -23,7 +26,7 @@
 #' @param control Class \code{LDA_controls} list of control parameters to be
 #'   used in \code{LDA} (note that \code{seed} will be overwritten).
 #' 
-#' @return List (class: \code{LDA_set}) of LDA models (class: \code{LDA}).
+#' @return List (class: \code{LDA_set}) of LDA models (class: \code{LDA_VEM}).
 #' 
 #' @references 
 #'   Blei, D. M., A. Y. Ng, and M. I. Jordan. 2003. Latent Dirichlet
@@ -62,16 +65,16 @@ LDA_set <- function(document_term_table, topics = 2, nseeds = 1,
 
 #' @title Calculate the log likelihood of a VEM LDA model fit
 #'
-#' @description Imported calculations from topicmodels, as applied to
+#' @description Imported calculations from topicmodels package, as applied to
 #'   Latent Dirichlet Allocation fit with Variational Expectation Maximization
-#'   via \code{LDA}. 
+#'   via \code{\link[topicmodels]{LDA}}. 
 #'
 #' @param object A \code{LDA_VEM}-class object.
 #'
 #' @param ... Not used, simply included to maintain method compatability.
 #'
-#' @return Log likelihood of the model, also with \code{df} (degrees of
-#'    freedom) and \code{nobs} (number of observations) values.
+#' @return Log likelihood of the model \code{logLik}, also with \code{df}
+#'   (degrees of freedom) and \code{nobs} (number of observations) values.
 #'
 #' @references 
 #'   Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic

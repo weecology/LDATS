@@ -14,7 +14,9 @@ documents (\eqn{M}), columns: terms (\eqn{V})). May be a class
 a code of integers. This table is a document-level summary of the data 
 noted as \eqn{w} (the word-level topic identity) in the math description.}
 
-\item{topics}{Vector of the number of topics to evaluate.}
+\item{topics}{Vector of the number of topics to evaluate for each model
+(\ifelse{html}{\out{<i>k<sub>m<sub>1</sub></sub></i>}}{\eqn{k_m_1}} 
+topics for a model \ifelse{html}{\out{<i>m<sub>1</sub></i>}}{\eqn{m_1}}).}
 
 \item{nseeds}{Integer number of seeds (replicate starts) to use for each 
 value of \code{topics}.}
@@ -23,14 +25,15 @@ value of \code{topics}.}
 used in \code{LDA} (note that \code{seed} will be overwritten).}
 }
 \value{
-List (class: \code{LDA_set}) of LDA models (class: \code{LDA}).
+List (class: \code{LDA_set}) of LDA models (class: \code{LDA_VEM}).
 }
 \description{
-For a given dataset (counts of words across several 
-  documents), conduct multiple Latent Dirichlet Allocation (LDA) models
-  (using the Variational Expectation Maximization (VEM) algorithm; Blei  
-  \emph{et al.}) to account for [1] uncertainty in the number of latent 
-  topics and [2] the impact of intial values in the estimation procedure. 
+For a given corpus \eqn{D} (dataset consisting of counts of 
+  words across \eqn{M} documents), conduct multiple Latent Dirichlet 
+  Allocation (LDA) models (using the Variational Expectation 
+  Maximization (VEM) algorithm; Blei \emph{et al.}) to account for [1]  
+  uncertainty in the number of latent topics and [2] the impact of initial
+  values in the estimation procedure. 
 
 This function is a wrapper of the \code{LDA} function
   in the \code{topicmodels} package (Grun and Hornik 2011).
