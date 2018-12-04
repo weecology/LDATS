@@ -18,34 +18,6 @@ test_that("check logLik for LDA_VEM", {
   expect_equal(round(as.numeric(logLik(lda[[1]]))), -47889)
 })
 
-test_that("check error catching of check_document_term_table", {
-  dtt <- "a"
-  expect_error(check_document_term_table(dtt))
-  dtt <- matrix(1:100, 10, 10)
-  expect_error(check_document_term_table(dtt, NA))
-  dtt <- data.frame("dummy" = 1:100)
-  expect_error(check_document_term_table(dtt, NA))
-})
-
-test_that("check error catching of check_topics", {
-  expect_error(check_topics("a"))
-  expect_error(check_topics(1.5))
-  expect_error(check_topics(1))
-  expect_error(check_topics(2), NA)
-  expect_error(check_topics(c(2, 3, 4)), NA)
-  expect_silent(check_topics(5))
-  expect_silent(check_topics(2:5))
-})
-
-test_that("check error catching of check_seeds", {
-  expect_error(check_seeds("a"))
-  expect_error(check_seeds(1.5))
-  expect_error(check_seeds(2), NA)
-  expect_error(check_seeds(c(2, 3, 4)), NA)
-  expect_silent(check_seeds(5))
-  expect_silent(check_seeds(1:5))
-})
-
 test_that("check output from prep_LDA_control", {
   expect_is(prep_LDA_control(1), "list")
   expect_equal(prep_LDA_control(1)$seed, 1)

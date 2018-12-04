@@ -7,7 +7,7 @@
 package_LDA_set(mods, mod_topics, mod_seeds)
 }
 \arguments{
-\item{mods}{Fitted models returned from \code{LDA}.}
+\item{mods}{Fitted models returned from \code{\link[topicmodels]{LDA}}.}
 
 \item{mod_topics}{Vector of \code{integer} values corresponding to the 
 number of topics in each model.}
@@ -16,9 +16,9 @@ number of topics in each model.}
 seed used for each model.}
 }
 \value{
-List (class: \code{LDA_set}) of LDA models (class: \code{LDA}).
+List (class: \code{LDA_set}) of LDA models (class: \code{LDA_VEM}).
 }
 \description{
 Name the elements (LDA models) and set the class 
-  (\code{LDA_set}) of the models returned by the \code{LDA_set} function.
+  (\code{LDA_set}) of the models returned by \code{\link{LDA_set}}.
 }

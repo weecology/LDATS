@@ -7,16 +7,16 @@
 prep_LDA_control(seed, control = NULL)
 }
 \arguments{
-\item{seed}{Integer number of seeds (replicate starts) to use for the 
+\item{seed}{\code{number} of seeds (replicate starts) to use for the 
 specific model.}
 
 \item{control}{Named list of control parameters to be used in 
-\code{LDA} (note that "seed" will be overwritten).}
+\code{\link[topicmodels]{LDA}} (note that "seed" will be overwritten).}
 }
 \value{
 List (class: "\code{list}") of controls to be used in the LDA.
 }
 \description{
-Update the control liste for the LDA model with the specific
+Update the control list for the LDA model with the specific
   seed as indicated.
 }

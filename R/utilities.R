@@ -158,3 +158,55 @@ check_control <- function(control, eclass = "TS_controls"){
 }
 
 
+#' @title Verify that document term table is proper
+#' 
+#' @description Verify that the table of observations is conformable to
+#'   a matrix of integers.
+#'   
+#' @param document_term_table Table of observation count data (rows: 
+#'   documents (\eqn{M}), columns: terms (\eqn{V})).
+#' 
+#' @export
+#'
+check_document_term_table <- function(document_term_table){
+  document_term_table_m <- as.matrix(document_term_table)
+  if(!is.integer(document_term_table_m[1, 1])){
+    dtt <- "document_term_table"
+    msg <- paste0(dtt, "is not conformable to a matrix of integers")
+    stop(msg)
+  }
+}
+
+#' @title Verify that topics vector is proper
+#' 
+#' @description Verify that the vector of numbers of topics is conformable to
+#'   integers greater than 1.
+#'   
+#' @param topics Vector of the number of topics to evaluate (\eqn{k}).
+#'
+#' @export
+#'
+check_topics <- function(topics){
+  if (!is.numeric(topics) || any(topics %% 1 != 0)){
+    stop("topics vector must be integers")
+  }
+  if (any(topics < 2)){
+    stop("minimum number of topics currently allowed is 2")
+  }
+}
+
+#' @title Verify that nseeds value or seeds vector is proper
+#' 
+#' @description Verify that the vector of numbers of seeds is conformable to
+#'   integers greater than 1.
+#'   
+#' @param seeds Value of the number of random seeds to evaluate.
+#' 
+#' @export
+#'
+check_seeds <- function(seeds){
+  if (!is.numeric(seeds) || any(seeds %% 1 != 0)){
+    stop("topics vector must be integers")
+  }
+}
+

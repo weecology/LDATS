@@ -7,7 +7,7 @@
 \method{plot}{LDA_set}(x, ...)
 }
 \arguments{
-\item{x}{An \code{LDA_list} object of LDA topic models.}
+\item{x}{An \code{LDA_set} object of LDA topic models.}
 
 \item{...}{Additional arguments to be passed to subfunctions.}
 }

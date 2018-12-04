@@ -5,7 +5,8 @@
 \title{Create control list for LDA model
 
   list used to control the set of LDA models. It is set up to be easy to 
-  work with the existing control capacity of the \code{LDA} function.}
+  work with the existing control capacity of 
+  \code{\link[topicmodels]{LDA}}.}
 \usage{
 LDA_controls_list(quiet = FALSE, measurer = AIC, selector = min, ...)
 }
@@ -18,8 +19,8 @@ models. \code{measurer} is used to create a value for each model
 and \code{selector} operates on the values to choose the model(s) to 
 pass on.}
 
-\item{...}{Additional arguments to be passed to \code{LDA} as a 
-\code{control} input.}
+\item{...}{Additional arguments to be passed to 
+\code{\link[topicmodels]{LDA}} as a \code{control} input.}
 }
 \value{
 Class \code{LDA_controls} list for controlling the LDA model fit.
@@ -28,5 +29,6 @@ Class \code{LDA_controls} list for controlling the LDA model fit.
 Create control list for LDA model
 
   list used to control the set of LDA models. It is set up to be easy to 
-  work with the existing control capacity of the \code{LDA} function.
+  work with the existing control capacity of 
+  \code{\link[topicmodels]{LDA}}.
 }

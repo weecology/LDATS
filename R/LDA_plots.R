@@ -3,7 +3,7 @@
 #' @description Generalization of the plot function to work on a list of LDA 
 #'   topic models (class \code{LDA_set}). 
 #' 
-#' @param x An \code{LDA_list} object of LDA topic models.
+#' @param x An \code{LDA_set} object of LDA topic models.
 #' 
 #' @param ... Additional arguments to be passed to subfunctions.
 #' 
@@ -31,29 +31,30 @@ plot.LDA_set <- function(x, ...){
 #'
 #' @description Create an LDATS LDA summary plot, with a top panel showing
 #'   the topic proportions for each word and a bottom panel showing the topic
-#'   proportions of each document/over time. 
+#'   proportions of each document/over time. The plot function is defined for
+#'   class \code{LDA_VEM} specifically (see \code{\link[topicmodels]{LDA}}).
 #' 
-#' @param x Object of class \code{LDA}
+#' @param x Object of class \code{LDA_VEM}.
 #'
-#' @param cols colors to be used to plot the topics
-#' 
 #' @param xtime Optional x values used to plot the topic proportions according
 #'   to a specific time value (rather than simply the order of observations).
 #'
 #' @param xname Optional name for the x values used in plotting the topic
 #'   proportions (otherwise defaults to "Document"). 
 #'
-#' @param option A character string indicating the colormap option to use if 
-#'   `cols == NULL`. Four options are available: "magma" (or "A"), "inferno" 
-#'   (or "B"), "plasma" (or "C"), "viridis" (or "D", the default option) and 
-#'   "cividis" (or "E").
+#' @param cols Colors to be used to plot the topics, or \code{NULL} to use
+#'   \code{\link[viridis]{viridis}} options.
+#'
+#' @param option A \code{character} string indicating the color option
+#'   from \code{\link[viridis]{viridis}} to use if `cols == NULL`. Four 
+#'   options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
+#'   (or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").
 #'
 #' @param alpha Numeric value [0,1] that indicates the transparency of the 
-#'   colors used. Supported only on some devices, see \code{rgb}.
+#'   colors used. Supported only on some devices, see 
+#'   \code{\link[grDevices]{rgb}}.
 #'
 #' @param ... Not used, retained for alignment with base function.
-#'
-#' @return LDATS LDA model plots.
 #' 
 #' @examples 
 #' \dontrun{
@@ -66,29 +67,23 @@ plot.LDA_set <- function(x, ...){
 #'
 #' @export 
 #'
-plot.LDA <- function(x, ..., xtime = NULL, xname = NULL, cols = NULL, 
+plot.LDA_VEM <- function(x, ..., xtime = NULL, xname = NULL, cols = NULL, 
                      option = "E", alpha = 0.8){
-  cols <- set_LDA_plot_colors(x, cols, option, alpha)
-  LDA_plot_top_panel(x, cols)
-  LDA_plot_bottom_panel(x, xtime, xname, cols)
+
+  LDA_plot_top_panel(x, cols, option, alpha)
+  LDA_plot_bottom_panel(x, xtime, xname, cols, option, alpha)
 }
 
-#' @title Plot the topic proportions of an LDATS LDA model for each of the
-#'   words
+#' @rdname plot.LDA_VEM 
 #'
-#' @description Create an LDATS LDA summary plot top panel showing the 
-#'   topic proportions word-by-word. 
+#' @description \code{LDA_plot_top_panel}: create an LDATS LDA summary plot 
+#'   top panel showing the topic proportions word-by-word. 
 #' 
-#' @param x Object of class \code{LDA}.
-#'
-#' @param cols Colors to be used to plot the topics.
-#'
-#' @return Top (bar plot) panel of an LDATS LDA plot. 
-#'
 #' @export 
 #'
-LDA_plot_top_panel <- function(x, cols){
+LDA_plot_top_panel <- function(x, cols, option, alpha){
 
+  cols <- set_LDA_plot_colors(x, cols, option, alpha)
   gamma <- x@gamma
   beta <- exp(x@beta)
   nobs <- nrow(gamma)
@@ -139,27 +134,16 @@ LDA_plot_top_panel <- function(x, cols){
   }
 }
 
-#' @title Plot the topic proportions of an LDATS LDA model over time
+#' @rdname plot.LDA_VEM
 #'
-#' @description Create an LDATS LDA summary plot bottom panel showing the 
-#'   topic proportions over time/documents. 
+#' @description \code{LDA_plot_bottom_panel}: create an LDATS LDA summary plot
+#'   bottom panel showing the topic proportions over time/documents. 
 #' 
-#' @param x Object of class \code{LDA}.
-#'
-#' @param cols Colors to be used to plot the topics.
-#' 
-#' @param xtime Optional x values used to plot the topic proportions according
-#'   to a specific time value (rather than simply the order of observations).
-#'
-#' @param xname Optional name for the x values used in plotting the topic
-#'   proportions (otherwise defaults to "Document"). 
-#'
-#' @return Bottom (time series) panel of an LDATS LDA plot. 
-#'
 #' @export 
 #'
-LDA_plot_bottom_panel <- function(x, xtime, xname, cols){
+LDA_plot_bottom_panel <- function(x, xtime, xname, cols, option, alpha){
 
+  cols <- set_LDA_plot_colors(x, cols, option, alpha)
   gamma <- x@gamma
   ntopics <- ncol(gamma)
 

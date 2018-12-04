@@ -7,14 +7,15 @@
 #'   uncertainty in the number of latent topics and [2] the impact of initial
 #'   values in the estimation procedure. 
 #'
-#' This function is a wrapper of the \code{LDA} function
+#' \code{LDA_set} is a list wrapper of \code{\link[topicmodels]{LDA}}
 #'   in the \code{topicmodels} package (Grun and Hornik 2011).
 #'   
 #' @param document_term_table Table of observation count data (rows: 
 #'   documents (\eqn{M}), columns: terms (\eqn{V})). May be a class 
 #'   \code{matrix} or \code{data.frame} but must be conformable to
 #'   a code of integers. This table is a document-level summary of the data 
-#'   noted as \eqn{w} (the word-level topic identity) in the math description. 
+#'   noted as \strong{\eqn{w}} (the word-level topic identity) in the math 
+#'   description. 
 #'
 #' @param topics Vector of the number of topics to evaluate for each model
 #'   (\ifelse{html}{\out{<i>k<sub>m<sub>1</sub></sub></i>}}{\eqn{k_m_1}} 
@@ -92,23 +93,13 @@ logLik.LDA_VEM <- function(object, ...){
   val
 }
 
-#' @title Verify that all of the inputs are proper for LDA_set 
+#' @rdname LDA_set
 #' 
-#' @description Verify that the table of observations is conformable to
-#'   a matrix of integers, the number of topics is an integer, the number of 
-#'   seeds is an integer and the controls list is proper.
+#' @description \code{check_LDA_set_inputs} verifies that all of the inputs 
+#'   are proper for \code{LDA_set} (that the table of observations is 
+#'   conformable to a matrix of integers, the number of topics is an integer, 
+#'   the number of seeds is an integer and the controls list is proper).
 #'   
-#' @param document_term_table Table of observation count data (rows: 
-#'   documents (\eqn{M}), columns: terms (\eqn{V})).
-#'
-#' @param topics Vector of the number of topics (\eqn{k}) to evaluate.
-#'
-#' @param nseeds Integer number of seeds (replicate starts) to use for each 
-#'   value of \code{topics}.
-#'
-#' @param control Class \code{LDA_controls} list of control parameters to be
-#'   used in \code{LDA} (note that \code{seed} will be overwritten).
-#' 
 #' @export
 #'
 check_LDA_set_inputs <- function(document_term_table, topics, nseeds, 
@@ -119,70 +110,16 @@ check_LDA_set_inputs <- function(document_term_table, topics, nseeds,
   check_control(control, "LDA_controls")
 }
 
-#' @title Verify that document term table is proper
-#' 
-#' @description Verify that the table of observations is conformable to
-#'   a matrix of integers
-#'   
-#' @param document_term_table Table of observation count data (rows: 
-#'   documents (\eqn{M}), columns: terms (\eqn{V})).
-#' 
-#' @export
-#'
-check_document_term_table <- function(document_term_table){
-  document_term_table_m <- as.matrix(document_term_table)
-  if(!is.integer(document_term_table_m[1, 1])){
-    dtt <- "document_term_table"
-    msg <- paste0(dtt, "is not conformable to a matrix of integers")
-    stop(msg)
-  }
-}
-
-#' @title Verify that topics vector is proper
-#' 
-#' @description Verify that the vector of numbers of topics is conformable to
-#'   integers greater than 1.
-#'   
-#' @param topics Vector of the number of topics to evaluate (\eqn{k}).
-#'
-#' @export
-#'
-check_topics <- function(topics){
-  if (!is.numeric(topics) || any(topics %% 1 != 0)){
-    stop("topics vector must be integers")
-  }
-  if (any(topics < 2)){
-    stop("minimum number of topics currently allowed is 2")
-  }
-}
-
-#' @title Verify that nseeds value or seeds vector is proper
-#' 
-#' @description Verify that the vector of numbers of seeds is conformable to
-#'   integers greater than 1.
-#'   
-#' @param seeds Value of the number of random seeds to evaluate.
-#'
-#' @return Nothing.
-#' 
-#' @export
-#'
-check_seeds <- function(seeds){
-  if (!is.numeric(seeds) || any(seeds %% 1 != 0)){
-    stop("topics vector must be integers")
-  }
-}
-
 #' @title Set the control inputs to include the seed
 #' 
-#' @description Update the control liste for the LDA model with the specific
+#' @description Update the control list for the LDA model with the specific
 #'   seed as indicated.
 #'   
-#' @param seed Integer number of seeds (replicate starts) to use for the 
+#' @param seed \code{number} of seeds (replicate starts) to use for the 
 #'   specific model.
 #'
 #' @param control Named list of control parameters to be used in 
-#'   \code{LDA} (note that "seed" will be overwritten).
+#'   \code{\link[topicmodels]{LDA}} (note that "seed" will be overwritten).
 #'
 #' @return List (class: "\code{list}") of controls to be used in the LDA. 
 #' 
@@ -209,7 +146,7 @@ prep_LDA_control <- function(seed, control = NULL){
 #'   functions default to choosing the model with the lowest AIC value.
 #'
 #' @param LDA_models An object of class \code{LDA_set} produced by
-#'   \code{LDA_set}.
+#'   \code{\link{LDA_set}}.
 #'
 #' @param control Class \code{LDA_controls} list including (named) elements
 #'   corresponding to the \code{measurer} and \code{evaluator} functions.
@@ -248,9 +185,9 @@ select_LDA <- function(LDA_models = NULL, control = LDA_controls_list()){
 #' @title Package the output from LDA_set
 #'
 #' @description Name the elements (LDA models) and set the class 
-#'   (\code{LDA_set}) of the models returned by the \code{LDA_set} function.
+#'   (\code{LDA_set}) of the models returned by \code{\link{LDA_set}}.
 #'
-#' @param mods Fitted models returned from \code{LDA}.
+#' @param mods Fitted models returned from \code{\link[topicmodels]{LDA}}.
 #'
 #' @param mod_topics Vector of \code{integer} values corresponding to the 
 #'   number of topics in each model.
@@ -258,7 +195,7 @@ select_LDA <- function(LDA_models = NULL, control = LDA_controls_list()){
 #' @param mod_seeds Vector of \code{integer} values corresponding to the 
 #'   seed used for each model.
 #'
-#' @return List (class: \code{LDA_set}) of LDA models (class: \code{LDA}).
+#' @return List (class: \code{LDA_set}) of LDA models (class: \code{LDA_VEM}).
 #'
 #' @export
 #'
@@ -302,7 +239,8 @@ LDA_msg <- function(mod_topics, mod_seeds, control){
 #'
 #  @description This function provides a simple creation and definition of the
 #'   list used to control the set of LDA models. It is set up to be easy to 
-#'   work with the existing control capacity of the \code{LDA} function.
+#'   work with the existing control capacity of 
+#'   \code{\link[topicmodels]{LDA}}.
 #'
 #' @param quiet \code{logical} indicator of whether the model should run 
 #'   quietly.
@@ -312,8 +250,8 @@ LDA_msg <- function(mod_topics, mod_seeds, control){
 #'   and \code{selector} operates on the values to choose the model(s) to 
 #'   pass on. 
 #'
-#' @param ... Additional arguments to be passed to \code{LDA} as a 
-#'   \code{control} input.
+#' @param ... Additional arguments to be passed to 
+#'   \code{\link[topicmodels]{LDA}} as a \code{control} input.
 #'
 #' @return Class \code{LDA_controls} list for controlling the LDA model fit.
 #'

@@ -2,6 +2,17 @@
 #   tidy up documentation
 #   full vignette
 #
+# working through documentation right now
+#  scripts to do
+#   LDA_TS 
+#   LDA_TS_plots
+#   LDATS
+#   multinom_TS
+#   ptMCMC
+#   TS
+#   TS_on_LDA
+#   TS_plots
+#   utilities
 
 devtools::load_all()
 data(rodents)

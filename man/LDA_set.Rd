@@ -2,17 +2,21 @@
 % Please edit documentation in R/LDA.R
 \name{LDA_set}
 \alias{LDA_set}
+\alias{check_LDA_set_inputs}
 \title{Run a set of Latent Dirichlet Allocation models}
 \usage{
 LDA_set(document_term_table, topics = 2, nseeds = 1,
   control = LDA_controls_list())
+
+check_LDA_set_inputs(document_term_table, topics, nseeds, control)
 }
 \arguments{
 \item{document_term_table}{Table of observation count data (rows: 
 documents (\eqn{M}), columns: terms (\eqn{V})). May be a class 
 \code{matrix} or \code{data.frame} but must be conformable to
 a code of integers. This table is a document-level summary of the data 
-noted as \eqn{w} (the word-level topic identity) in the math description.}
+noted as \strong{\eqn{w}} (the word-level topic identity) in the math 
+description.}
 
 \item{topics}{Vector of the number of topics to evaluate for each model
 (\ifelse{html}{\out{<i>k<sub>m<sub>1</sub></sub></i>}}{\eqn{k_m_1}} 
@@ -35,8 +39,13 @@ For a given corpus \eqn{D} (dataset consisting of counts of
   uncertainty in the number of latent topics and [2] the impact of initial
   values in the estimation procedure. 
 
-This function is a wrapper of the \code{LDA} function
+\code{LDA_set} is a list wrapper of \code{\link[topicmodels]{LDA}}
   in the \code{topicmodels} package (Grun and Hornik 2011).
+
+\code{check_LDA_set_inputs} verifies that all of the inputs 
+  are proper for \code{LDA_set} (that the table of observations is 
+  conformable to a matrix of integers, the number of topics is an integer, 
+  the number of seeds is an integer and the controls list is proper).
 }
 \examples{
 \dontrun{
