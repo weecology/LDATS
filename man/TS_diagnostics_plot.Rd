@@ -6,17 +6,17 @@
 \alias{rho_diagnostics_plots}
 \title{Plot the diagnostics of the parameters fit in a TS model}
 \usage{
-TS_diagnostics_plot(x)
+TS_diagnostics_plot(x, interactive = TRUE)
 
-eta_diagnostics_plots(x)
+eta_diagnostics_plots(x, interactive)
 
-rho_diagnostics_plots(x)
+rho_diagnostics_plots(x, interactive)
 }
 \arguments{
 \item{x}{Object of class \code{TS_fit} to have its diagnostics plotted.}
-}
-\value{
-Nothing. Plots sent to active graphics device.
+
+\item{interactive}{\code{logical} input, should be code{TRUE} unless
+testing.}
 }
 \description{
 Plot 4-panel figures (showing trace plots, posterior ECDF, 

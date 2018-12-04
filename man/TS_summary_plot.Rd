@@ -4,19 +4,11 @@
 \alias{TS_summary_plot}
 \title{Create the summary plot for a TS fit to an LDA model}
 \usage{
-TS_summary_plot(x, bin_width, xlab, selection = "median",
-  cols = TS_summary_cols())
+TS_summary_plot(x, cols = set_TS_summary_plot_cols(), bin_width, xlab,
+  selection = "median")
 }
 \arguments{
 \item{x}{Object of class \code{TS_fit}.}
-
-\item{bin_width}{Width of the bins used in the histograms, in units of the
-x-axis (the time variable used to fit the model).}
-
-\item{xlab}{Label for the x-axis.}
-
-\item{selection}{Indicator of the changepoints to use. Currently only
-defined for "median" and "mode".}
 
 \item{cols}{\code{list} of elements used to define the colors for the two
 panels, as generated simply using \code{TS_summary_cols}. \code{cols}
@@ -25,9 +17,14 @@ related panel, and each containing default values for entries named
 \code{cols}, \code{option}, and \code{alpha}. See
 \code{set_gamma_colors} and \code{set_rho_hist_colors} for
 details on usage.}
-}
-\value{
-Nothing. The plot is generated in the active graphics device.
+
+\item{bin_width}{Width of the bins used in the histograms, in units of the
+x-axis (the time variable used to fit the model).}
+
+\item{xlab}{Label for the x-axis.}
+
+\item{selection}{Indicator of the changepoints to use. Currently only
+defined for "median" and "mode".}
 }
 \description{
 Produces a two-panel figure of [1] the changepoint 

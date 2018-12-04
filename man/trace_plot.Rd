@@ -5,16 +5,13 @@
 \title{Produce the trace plot panel for the TS diagnostic plot of a 
   parameter}
 \usage{
-trace_plot(x, ylab)
+trace_plot(x, ylab = "parameter value")
 }
 \arguments{
 \item{x}{Vector of parameter values drawn from the posterior distribution,
 indexed to the iteration by the order of the vector.}
 
 \item{ylab}{\code{character} value used to label the y axis.}
-}
-\value{
-Nothing. Plot sent to active graphics device.
 }
 \description{
 Produce a trace plot for the parameter of interest (rho or 

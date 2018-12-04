@@ -19,14 +19,14 @@ test_that("check plot for LDA_TS", {
 })
 
 test_that("check color list creation function", {
-  expect_equal(length(LDA_TS_summary_cols()), 2)
-  expect_equal(names(LDA_TS_summary_cols()), c("LDA", "TS"))
-  expect_equal(length(LDA_TS_summary_cols()[[1]]), 3)
-  expect_equal(length(LDA_TS_summary_cols()[[2]]), 2)
-  expect_equal(names(LDA_TS_summary_cols()[[2]]), c("rho", "gamma"))
-  expect_equal(length(LDA_TS_summary_cols()[[2]][[1]]), 3)
-  expect_equal(names(LDA_TS_summary_cols()[[2]][[1]]), 
+  expect_equal(length(set_LDA_TS_plot_cols()), 2)
+  expect_equal(names(set_LDA_TS_plot_cols()), c("LDA", "TS"))
+  expect_equal(length(set_LDA_TS_plot_cols()[[1]]), 3)
+  expect_equal(length(set_LDA_TS_plot_cols()[[2]]), 2)
+  expect_equal(names(set_LDA_TS_plot_cols()[[2]]), c("rho", "gamma"))
+  expect_equal(length(set_LDA_TS_plot_cols()[[2]][[1]]), 3)
+  expect_equal(names(set_LDA_TS_plot_cols()[[2]][[1]]), 
                c("cols", "option", "alpha"))
-  expect_equal(names(LDA_TS_summary_cols()[[2]][[2]]), 
+  expect_equal(names(set_LDA_TS_plot_cols()[[2]][[2]]), 
                c("cols", "option", "alpha"))
 })
