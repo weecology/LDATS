@@ -11,9 +11,6 @@ autocorr_plot(x)
 \item{x}{Vector of parameter values drawn from the posterior distribution,
 indexed to the iteration by the order of the vector.}
 }
-\value{
-Nothing. Plot sent to active graphics device.
-}
 \description{
 Produce a vanilla ACF plot using \code{acf} for the parameter
   of interest (rho or eta).

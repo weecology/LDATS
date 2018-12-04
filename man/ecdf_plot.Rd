@@ -5,16 +5,13 @@
 \title{Produce the posterior distribution ECDF panel for the TS 
   diagnostic plot of a parameter}
 \usage{
-ecdf_plot(x, xlab)
+ecdf_plot(x, xlab = "parameter value")
 }
 \arguments{
 \item{x}{Vector of parameter values drawn from the posterior distribution,
 indexed to the iteration by the order of the vector.}
 
 \item{xlab}{\code{character} value used to label the x axis.}
-}
-\value{
-Nothing. Plot sent to active graphics device.
 }
 \description{
 Produce a vanilla ECDF (empirical cumulative distribution

@@ -7,7 +7,6 @@
 #  for tests, i'm just working through script-by-script
 #  still to do:
 #    ptMCMC
-#    TS
 #    TS_plots
 #
 

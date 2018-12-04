@@ -4,7 +4,7 @@
 \alias{rho_hist}
 \title{Create the changepoint histograms plot}
 \usage{
-rho_hist(x, cols, bin_width, xlab = NULL)
+rho_hist(x, cols, bin_width = 1, xlab = NULL)
 }
 \arguments{
 \item{x}{Object of class \code{TS_fit}.}
@@ -16,9 +16,6 @@ changepoints.}
 x-axis (the time variable used to fit the model).}
 
 \item{xlab}{Label for the x-axis.}
-}
-\value{
-Nothing. The plot is generated in the active graphics device.
 }
 \description{
 Produces a plot of the changepoint distributions as histograms

@@ -4,7 +4,7 @@
 \alias{pred_gamma_TS_plot}
 \title{Create the plot of fitted topic proportions over time}
 \usage{
-pred_gamma_TS_plot(x, selection = "median", cols, xlab)
+pred_gamma_TS_plot(x, selection = "median", cols, xlab = NULL)
 }
 \arguments{
 \item{x}{Object of class \code{TS_fit}.}
@@ -15,9 +15,6 @@ defined for "median" and "mode".}
 \item{cols}{Hex values of the colors to be used to plot the time series.}
 
 \item{xlab}{Label for the x-axis.}
-}
-\value{
-Nothing. The plot is generated in the active graphics device.
 }
 \description{
 Produces a time series of the fitted topic proportions 

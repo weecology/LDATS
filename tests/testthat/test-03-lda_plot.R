@@ -1,8 +1,5 @@
 context("Check LDA plot functions")
 
-# note: if the figure images need to be updated, delete the files, then run
-#  vdiffr::manage_cases() and validate everything 
-
 data(rodents)
 lda_data <- rodents$document_term_table
 ldas <- LDA_set(lda_data, c(2, 4), 2, LDA_controls_list(quiet = TRUE))

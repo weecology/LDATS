@@ -54,7 +54,7 @@
 #' @export 
 #'
 plot.LDA_TS <- function(x, ..., control = LDA_TS_controls_list(),
-                        cols = LDA_TS_summary_cols(),
+                        cols = set_LDA_TS_plot_cols(),
                         bin_width = 1, xlab = NULL, selection = "median",
                         interactive = TRUE){
   tname <- control$TS_control$timename
@@ -108,8 +108,7 @@ plot.LDA_TS <- function(x, ..., control = LDA_TS_controls_list(),
 #'   the colors used. Supported only on some devices, see \code{rgb}.
 #'
 #' @return cols \code{list} of elements used to define the colors for the two
-#'   panels of the summary plot, as generated simply using 
-#'   \code{LDA_TS_summary_cols}. \code{cols} has two elements \code{LDA} and
+#'   panels of the summary plot. \code{cols} has two elements \code{LDA} and
 #'   \code{TS}, each corresponding to its stage in the full model. 
 #'   \code{LDA} contains entries \code{cols} and \code{options} (see
 #'   \code{set_LDA_plot_colors} for details on usage. \code{TS} contains two
@@ -120,13 +119,16 @@ plot.LDA_TS <- function(x, ..., control = LDA_TS_controls_list(),
 #'
 #' @export
 #'
-LDA_TS_summary_cols <- function(rho_cols = NULL, rho_option = "D", 
-                                rho_alpha = 0.4, gamma_cols = NULL, 
-                                gamma_option = "C", gamma_alpha = 0.8){
+set_LDA_TS_plot_cols <- function(rho_cols = NULL, rho_option = "D", 
+                                 rho_alpha = 0.4, gamma_cols = NULL, 
+                                 gamma_option = "C", gamma_alpha = 0.8){
   list(
     LDA = list(cols = gamma_cols, option = gamma_option, alpha = gamma_alpha),
-    TS = TS_summary_cols(rho_cols = rho_cols, rho_option = rho_option, 
-              rho_alpha = rho_alpha, gamma_cols = gamma_cols, 
-              gamma_option = gamma_option, gamma_alpha = gamma_alpha)
+    TS = set_TS_summary_plot_cols(rho_cols = rho_cols, 
+                                  rho_option = rho_option, 
+                                  rho_alpha = rho_alpha, 
+                                  gamma_cols = gamma_cols, 
+                                  gamma_option = gamma_option,
+                                  gamma_alpha = gamma_alpha)
   )
 }

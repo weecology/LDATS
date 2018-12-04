@@ -5,7 +5,7 @@
 \title{Plot a LDATS full model}
 \usage{
 \method{plot}{LDA_TS}(x, ..., control = LDA_TS_controls_list(),
-  cols = LDA_TS_summary_cols(), bin_width = 1, xlab = NULL,
+  cols = set_LDA_TS_plot_cols(), bin_width = 1, xlab = NULL,
   selection = "median", interactive = TRUE)
 }
 \arguments{

@@ -28,17 +28,15 @@
 #'   and \code{alpha}. See \code{set_gamma_colors} and 
 #'   \code{set_rho_hist_colors} for details on usage.
 #' 
-#' @return Nothing. Plots are generated in the active graphics device.
-#' 
 #' @export 
 #'
 plot.TS_fit <- function(x, ..., plot_type = "summary", 
-                        cols = TS_summary_cols(),
+                        cols = set_TS_summary_plot_cols(),
                         bin_width = 1, xlab = NULL, selection = "median"){
   if (plot_type == "diagnostic"){
     TS_diagnostics_plot(x)
   } else if (plot_type == "summary"){
-    TS_summary_plot(x, bin_width, xlab, selection, cols)
+    TS_summary_plot(x, cols, bin_width, xlab, selection)
   }
 }
 
@@ -49,29 +47,31 @@ plot.TS_fit <- function(x, ..., plot_type = "summary",
 #'   parameters (changepoint locations and regressors) fitted within a 
 #'   multinomial time series model (fit by \code{multinom_TS})
 #'
-#' @param x Object of class \code{TS_fit} to have its diagnostics plotted.
+#' @param interactive \code{logical} input, should be code{TRUE} unless
+#'   testing.
 #'
-#' @return Nothing. Plots sent to active graphics device.
+#'
+#' @param x Object of class \code{TS_fit} to have its diagnostics plotted.
 #'
 #' @export 
 #'
-TS_diagnostics_plot <- function(x){
-  rho_diagnostics_plots(x)
-  eta_diagnostics_plots(x)
+TS_diagnostics_plot <- function(x, interactive = TRUE){
+  rho_diagnostics_plots(x, interactive)
+  eta_diagnostics_plots(x, interactive)
 }
 
 #' @rdname TS_diagnostics_plot
 #'
 #' @export 
 #'
-eta_diagnostics_plots <- function(x){
+eta_diagnostics_plots <- function(x, interactive){
   etas <- x$etas
   if (is.null(etas)){
     return()
   }
   netas <- ncol(etas) 
   for (i in 1:netas){
-    devAskNewPage(TRUE)
+    devAskNewPage(interactive)
     par(mfrow = c(2, 2), mar = c(5, 5, 1, 1))
     chead <- colnames(etas)[i]
     spl1 <- strsplit(chead, "_")[[1]]
@@ -92,14 +92,14 @@ eta_diagnostics_plots <- function(x){
 #'
 #' @export 
 #'
-rho_diagnostics_plots <- function(x){
+rho_diagnostics_plots <- function(x, interactive){
   rhos <- x$rhos
   if (is.null(rhos)){
     return()
   }
   nrhos <- ncol(rhos) 
   for (i in 1:nrhos){
-    devAskNewPage(TRUE)
+    devAskNewPage(interactive)
     par(mfrow = c(2, 2), mar = c(5, 5, 1, 1))
     lab <- paste0("Changepoint ", i, " location")
     trace_plot(rhos[ , i], lab)
@@ -121,11 +121,9 @@ rho_diagnostics_plots <- function(x){
 #'
 #' @param ylab \code{character} value used to label the y axis.
 #'
-#' @return Nothing. Plot sent to active graphics device.
-#'
 #' @export
 #'
-trace_plot <- function(x, ylab){
+trace_plot <- function(x, ylab = "parameter value"){
   plot(x, type = "l", lwd = 1, col = 0,
        xlab = "Iteration", ylab = ylab, las = 1, bty = "L")
   ext <- 0.01 * length(x)
@@ -146,11 +144,9 @@ trace_plot <- function(x, ylab){
 #'
 #' @param xlab \code{character} value used to label the x axis.
 #'
-#' @return Nothing. Plot sent to active graphics device.
-#'
 #' @export
 #'
-ecdf_plot <- function(x, xlab){
+ecdf_plot <- function(x, xlab = "parameter value"){
   ECDF <- ecdf(x)
   plot(ECDF, main = "", xlab = xlab, ylab = "%", las = 1, bty = "L")
   abline(a = 0.5, b = 0, lwd = 2, lty = 2)
@@ -168,11 +164,9 @@ ecdf_plot <- function(x, xlab){
 #'
 #' @param xlab \code{character} value used to label the x axis.
 #'
-#' @return Nothing. Plot sent to active graphics device.
-#'
 #' @export
 #'
-posterior_plot <- function(x, xlab){
+posterior_plot <- function(x, xlab = "parameter value"){
   hist(x, las = 1, main = "", xlab = xlab)
   points(rep(median(x), 2), c(0, 1e5), type = "l", lwd = 2, lty = 2)
 }
@@ -185,8 +179,6 @@ posterior_plot <- function(x, xlab){
 #'
 #' @param x Vector of parameter values drawn from the posterior distribution,
 #'   indexed to the iteration by the order of the vector.
-#'
-#' @return Nothing. Plot sent to active graphics device.
 #'
 #' @export
 #'
@@ -230,9 +222,9 @@ autocorr_plot <- function(x){
 #'
 #' @export
 #'
-TS_summary_cols <- function(rho_cols = NULL, rho_option = "D", 
-                            rho_alpha = 0.4, gamma_cols = NULL, 
-                            gamma_option = "C", gamma_alpha = 0.8){
+set_TS_summary_plot_cols <- function(rho_cols = NULL, rho_option = "D", 
+                                     rho_alpha = 0.4, gamma_cols = NULL, 
+                                     gamma_option = "C", gamma_alpha = 0.8){
   list(
     rho = list(cols = rho_cols, option = rho_option, alpha = rho_alpha),
     gamma = list(cols = gamma_cols, option = gamma_option, 
@@ -250,14 +242,6 @@ TS_summary_cols <- function(rho_cols = NULL, rho_option = "D",
 #'
 #' @param x Object of class \code{TS_fit}.
 #'
-#' @param bin_width Width of the bins used in the histograms, in units of the
-#'   x-axis (the time variable used to fit the model).
-#'
-#' @param xlab Label for the x-axis.
-#'
-#' @param selection Indicator of the changepoints to use. Currently only
-#'   defined for "median" and "mode".
-#'
 #' @param cols \code{list} of elements used to define the colors for the two
 #'   panels, as generated simply using \code{TS_summary_cols}. \code{cols}
 #'   has two elements \code{rho} and \code{gamma}, each corresponding to the
@@ -266,12 +250,18 @@ TS_summary_cols <- function(rho_cols = NULL, rho_option = "D",
 #'   \code{set_gamma_colors} and \code{set_rho_hist_colors} for
 #'   details on usage.
 #'
-#' @return Nothing. The plot is generated in the active graphics device.
+#' @param bin_width Width of the bins used in the histograms, in units of the
+#'   x-axis (the time variable used to fit the model).
+#'
+#' @param xlab Label for the x-axis.
+#'
+#' @param selection Indicator of the changepoints to use. Currently only
+#'   defined for "median" and "mode".
 #'
 #' @export
 #'
-TS_summary_plot <- function(x, bin_width, xlab, selection = "median", 
-                            cols = TS_summary_cols()){
+TS_summary_plot <- function(x, cols = set_TS_summary_plot_cols(), 
+                            bin_width, xlab, selection = "median"){
 
   par(mfrow = c(2, 1))
   rc <- cols$rho
@@ -299,11 +289,9 @@ TS_summary_plot <- function(x, bin_width, xlab, selection = "median",
 #'
 #' @param xlab Label for the x-axis.
 #'
-#' @return Nothing. The plot is generated in the active graphics device.
-#'
 #' @export
 #'
-pred_gamma_TS_plot <- function(x, selection = "median", cols, xlab){
+pred_gamma_TS_plot <- function(x, selection = "median", cols, xlab = NULL){
 
   rhos <- x$rhos
   nrhos <- ncol(rhos)
@@ -348,8 +336,9 @@ pred_gamma_TS_plot <- function(x, selection = "median", cols, xlab){
   for (i in 1:ntopics){
     points(time_obs, pred_vals[ , i], type = "l", lwd = 3, col = cols[i])
   }
-  rho_lines(spec_rhos)
-
+  if(!is.null(spec_rhos)){
+    rho_lines(spec_rhos)
+  }
 }
 
 #' @title Add changepoint location lines to the time series plot
@@ -359,8 +348,6 @@ pred_gamma_TS_plot <- function(x, selection = "median", cols, xlab){
 #'
 #' @param spec_rhos \code{numeric} vector indicating the locations along the
 #'   x axis where the specific changepoints being used are located.
-#'
-#' @return Nothing. Lines are added to the active plot object.
 #'
 #' @export
 #'
@@ -389,11 +376,9 @@ rho_lines <- function(spec_rhos){
 #'
 #' @param xlab Label for the x-axis.
 #'
-#' @return Nothing. The plot is generated in the active graphics device.
-#'
 #' @export
 #'
-rho_hist <- function(x, cols, bin_width, xlab = NULL){
+rho_hist <- function(x, cols, bin_width = 1, xlab = NULL){
 
   rhos <- x$rhos
   nrhos <- ncol(rhos)

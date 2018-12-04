@@ -10,9 +10,6 @@ rho_lines(spec_rhos)
 \item{spec_rhos}{\code{numeric} vector indicating the locations along the
 x axis where the specific changepoints being used are located.}
 }
-\value{
-Nothing. Lines are added to the active plot object.
-}
 \description{
 Adds vertical lines to the fitted gamma time series plot 
   associated with the changepoints of interest.

@@ -5,7 +5,7 @@
 \title{Plot a LDATS TS models}
 \usage{
 \method{plot}{TS_fit}(x, ..., plot_type = "summary",
-  cols = TS_summary_cols(), bin_width = 1, xlab = NULL,
+  cols = set_TS_summary_plot_cols(), bin_width = 1, xlab = NULL,
   selection = "median")
 }
 \arguments{
@@ -33,9 +33,6 @@ the model).}
 
 \item{selection}{Indicator of the changepoints to use in the timeseries
 summary plot. Currently only defined for "median" and "mode".}
-}
-\value{
-Nothing. Plots are generated in the active graphics device.
 }
 \description{
 Generalization of the \code{plot} function to work on fitted
