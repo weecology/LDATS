@@ -5,7 +5,7 @@
 \alias{measure_rho_vcov}
 \title{Summarize the rho distributions}
 \usage{
-summarize_rhos(rhos, control)
+summarize_rhos(rhos, control = TS_controls_list())
 
 measure_rho_vcov(rhos)
 }
