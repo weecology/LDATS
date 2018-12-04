@@ -244,6 +244,9 @@ proposed_step_mods <- function(prop_changepts, inputs){
 #' @export
 #'
 prep_ids <- function(control){
+  if (!is.numeric(control$ntemps) || any(control$ntemps %% 1 != 0)){
+    stop("ntemps must be integer-valued")
+  }
   1:control$ntemps
 }
 
@@ -299,6 +302,8 @@ prep_ptMCMC_inputs <- function(data, formula, nchangepoints, weights,
                                control){
   check_timename(data, control$timename)
   check_formula(data, formula)
+  check_weights(weights)
+  check_nchangepoints(nchangepoints)
   control$selector <- NULL
   control$measurer <- NULL
   out <- list(control = control, temps = prep_temp_sequence(control), 
@@ -342,7 +347,8 @@ prep_ptMCMC_inputs <- function(data, formula, nchangepoints, weights,
 #' @export
 #'
 prep_proposal_dist <- function(nchangepoints, control = TS_controls_list()){
-
+  check_nchangepoints(nchangepoints)
+  check_control(control, "TS_controls")
   ntemps <- control$ntemps
   nit <- control$nit
   if(nchangepoints == 0){
@@ -385,7 +391,8 @@ prep_proposal_dist <- function(nchangepoints, control = TS_controls_list()){
 #' @export
 #'
 prep_saves <- function(nchangepoints, control = TS_controls_list()){
-
+  check_nchangepoints(nchangepoints)
+  check_control(control, "TS_controls")
   ntemps <- control$ntemps
   nit <- control$nit
   cpts <- array(NA, c(nchangepoints, ntemps, nit))
@@ -482,6 +489,10 @@ process_saves <- function(saves, control){
 prep_cpts <- function(data, formula, nchangepoints, weights, 
                             control = TS_controls_list()){
 
+  check_formula(data, formula)
+  check_nchangepoints(nchangepoints)
+  check_weights(weights)
+  check_control(control, "TS_controls")
   temps <- prep_temp_sequence(control)
   ntemps <- length(temps)
   min_time <- min(data[ , control$timename])
