@@ -156,3 +156,5 @@ check_control <- function(control, eclass = "TS_controls"){
     stop(paste0("control is not of class ", eclass))
   }
 }
+
+

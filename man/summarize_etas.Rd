@@ -5,7 +5,7 @@
 \alias{measure_eta_vcov}
 \title{Summarize the eta distributions}
 \usage{
-summarize_etas(etas, control)
+summarize_etas(etas, control = TS_controls_list())
 
 measure_eta_vcov(etas)
 }
