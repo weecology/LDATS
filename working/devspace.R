@@ -1,15 +1,7 @@
 # to do:
-#   tests 
 #   tidy up documentation
 #   full vignette
 #
-#
-#  for tests, i'm just working through script-by-script
-#  still to do:
-#    ptMCMC
-#    TS_plots
-#
-
 
 devtools::load_all()
 data(rodents)
