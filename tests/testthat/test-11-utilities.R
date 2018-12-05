@@ -57,3 +57,33 @@ test_that("check check_control", {
   expect_error(check_control(LDA_controls_list(), "TS_controls"))
   expect_error(check_control(LDA_TS_controls_list(), "LDA_controls"))
 })
+
+
+test_that("check error catching of check_document_term_table", {
+  dtt <- "a"
+  expect_error(check_document_term_table(dtt))
+  dtt <- matrix(1:100, 10, 10)
+  expect_error(check_document_term_table(dtt, NA))
+  dtt <- data.frame("dummy" = 1:100)
+  expect_error(check_document_term_table(dtt, NA))
+})
+
+test_that("check error catching of check_topics", {
+  expect_error(check_topics("a"))
+  expect_error(check_topics(1.5))
+  expect_error(check_topics(1))
+  expect_error(check_topics(2), NA)
+  expect_error(check_topics(c(2, 3, 4)), NA)
+  expect_silent(check_topics(5))
+  expect_silent(check_topics(2:5))
+})
+
+test_that("check error catching of check_seeds", {
+  expect_error(check_seeds("a"))
+  expect_error(check_seeds(1.5))
+  expect_error(check_seeds(2), NA)
+  expect_error(check_seeds(c(2, 3, 4)), NA)
+  expect_silent(check_seeds(5))
+  expect_silent(check_seeds(1:5))
+})
+

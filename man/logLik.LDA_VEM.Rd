@@ -12,13 +12,13 @@
 \item{...}{Not used, simply included to maintain method compatability.}
 }
 \value{
-Log likelihood of the model, also with \code{df} (degrees of
-   freedom) and \code{nobs} (number of observations) values.
+Log likelihood of the model \code{logLik}, also with \code{df}
+  (degrees of freedom) and \code{nobs} (number of observations) values.
 }
 \description{
-Imported calculations from topicmodels, as applied to
+Imported calculations from topicmodels package, as applied to
   Latent Dirichlet Allocation fit with Variational Expectation Maximization
-  via \code{LDA}.
+  via \code{\link[topicmodels]{LDA}}.
 }
 \references{
 Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic

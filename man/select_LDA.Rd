@@ -8,7 +8,7 @@ select_LDA(LDA_models = NULL, control = LDA_controls_list())
 }
 \arguments{
 \item{LDA_models}{An object of class \code{LDA_set} produced by
-\code{LDA_set}.}
+\code{\link{LDA_set}}.}
 
 \item{control}{Class \code{LDA_controls} list including (named) elements
 corresponding to the \code{measurer} and \code{evaluator} functions.}
