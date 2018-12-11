@@ -2,7 +2,7 @@
 % Please edit documentation in R/LDA_plots.R
 \name{set_LDA_plot_colors}
 \alias{set_LDA_plot_colors}
-\title{Prepare the colors to be used in the LDA plot}
+\title{Prepare the colors to be used in the LDA plots}
 \usage{
 set_LDA_plot_colors(x, cols = NULL, option = "D", alpha = 0.8)
 }
@@ -29,5 +29,5 @@ Vector of \code{character} hex codes indicating colors to use.
 }
 \description{
 Based on the inputs, create the set of colors to be used in
-  the LDA plots.
+  the LDA plots made by \code{\link{plot.LDA_TS}}.
 }

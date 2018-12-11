@@ -168,10 +168,10 @@ LDA_plot_bottom_panel <- function(x, xtime, xname, cols, option, alpha){
 
 }
 
-#' @title Prepare the colors to be used in the LDA plot
+#' @title Prepare the colors to be used in the LDA plots
 #'
 #' @description Based on the inputs, create the set of colors to be used in
-#'   the LDA plots.
+#'   the LDA plots made by \code{\link{plot.LDA_TS}}.
 #' 
 #' @param x Object of class \code{LDA}.
 #'
