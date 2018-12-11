@@ -24,8 +24,11 @@ to a specific time value (rather than simply the order of observations).}
 \item{xname}{Optional name for the x values used in plotting the topic
 proportions (otherwise defaults to "Document").}
 
-\item{cols}{Colors to be used to plot the topics, or \code{NULL} to use
-\code{\link[viridis]{viridis}} options.}
+\item{cols}{Colors to be used to plot the topics.
+Any valid color values (\emph{e.g.}, see \code{\link[grDevices]{colors}},
+\code{\link[grDevices]{rgb}}) can be input as with a standard plot. 
+The default (\code{cols = NULL}) triggers use of 
+\code{\link[viridis]{viridis}} color options (see \code{option}).}
 
 \item{option}{A \code{character} string indicating the color option
 from \code{\link[viridis]{viridis}} to use if `cols == NULL`. Four 
