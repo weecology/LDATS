@@ -21,7 +21,7 @@ and downsampling analyes) are located within `/previous_work`.
 ## Mathematical background
 
 For a full description of the math underlying the `LDATS` package, see the
-*draft* [technical manuscript](https://github.com/weecology/LDATS/blob/master/working/ldats_ms.pdf).
+*draft* [technical manuscript](https://github.com/weecology/LDATS/blob/master/manuscript/simonis_et_al.pdf).
 
 ## Contributing
 

@@ -4,7 +4,6 @@
 #
 # working through documentation right now
 #  scripts to do
-#   LDATS
 #   multinom_TS
 #   ptMCMC
 #   TS
