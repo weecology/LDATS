@@ -238,8 +238,8 @@ LDA_msg <- function(mod_topics, mod_seeds, control){
 
 #' @title Create control list for LDA model
 #'
-#'  @description This function provides a simple creation and definition of 
-#'   the list used to control the set of LDA models. It is set up to be easy 
+#' @description This function provides a simple creation and definition of 
+#'   the list used to control the set of LDA models. It is set up to be easy
 #'   to work with the existing control capacity of 
 #'   \code{\link[topicmodels]{LDA}}.
 #'
