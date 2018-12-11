@@ -15,8 +15,9 @@ The package is currently *in development* by the [Weecology
 Team](https://www.weecology.org). As such, any output should be considered
 ***provisional***. 
 
-Previous versions of code and implementation (Christensen et al. manuscript
-and downsampling analyes) are located within `/previous_work`.
+Previous versions of code and implementation can be found in the 
+[repository for Christensen *et al.* 2018](https://github.com/emchristensen/Extreme-events-LDA)
+
 
 ## Mathematical background
 
@@ -28,11 +29,6 @@ For a full description of the math underlying the `LDATS` package, see the
 Folks interested in contributing to development, should see 
 [issues](https://github.com/weecology/LDATS/issues) for specific pre-package 
 development tasks.
-
-### Style
-For all code, please follow the [Weecology Code Style 
-Guide](https://github.com/weecology/lab-wiki/wiki/Programming:-Style-Guide-for-Code)
-(currently a private document).
 
 ## Installation
 
@@ -79,29 +75,33 @@ through [Grant GBMF4563](http://www.moore.org/grants/list/GBMF4563) to E. P.
 White. R. Diaz was supported in part by a [National Science 
 Foundation Graduate Research Fellowship](https://www.nsfgrfp.org/) 
 (No. [DGE-1315138](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1315138) 
-and DGE-1842473).
+and [DGE-1842473](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1842473)).
 
 ## Author Contributions
 
-J. L. Simonis provided insight on LDA applications and feedback on technical
-writing during development of the first version of the LDATS model and
-application, led the coding and mathematical development of the model into an
-R package, and led writing on the technical manuscript. E. M. Christensen led
-the project during development of the first version of the LDATS model and its
-application to the Portal data, specifically conceiving the project, coding
-the pipeline wrappers of the analysis, and writing and editing the first
-description of the model and its application (Christensen et al. 2018). D. J.
-Harris was involved in developing and applying the first version of the LDATS
-model, specifically suggesting the LDA and change point approaches, coding the
-first version of the change point model, and writing and editing the first
-description of the model (Christensen et al. 2018). R. Diaz contributed code
-to the LDATS package, provided insight into model development, and conducted
-end-user code application testing. H. Ye contributed code to the LDATS package 
-and insight into data structures and LDA algorithms. E. P. White helped design,
-troubleshoot, and supervise initial methods development and provided 
-big-picture feedback on development of the R package. S. K. Morgan Ernest 
-provided managerial oversight and feedback on the project in both the initial 
-and second stages of LDATS development, tested applications of the code to data
-sets, and assisted with writing and editing of the first description of the
-model and its application (Christensen et al. 2018).
+**J. L. Simonis** provided insight on LDA applications and feedback on 
+technical writing during development of the first version of the LDATS model
+and application, led the coding and mathematical development of the model into
+an R package, and led writing on the technical manuscript. 
+**E. M. Christensen** led the project during development of the first version
+of the LDATS model and its application to the Portal data, specifically 
+conceiving the project, coding the pipeline wrappers of the analysis, and 
+writing and editing the first description of the model and its application 
+([Christensen *et al.* 2018](https://doi.org/10.1002/ecy.2373)). **D. J.
+Harris** was involved in developing and applying the first version of the 
+LDATS model, specifically suggesting the LDA and change point approaches, 
+coding the first version of the change point model, and writing and editing 
+the first description of the model 
+([Christensen *et al.* 2018](https://doi.org/10.1002/ecy.2373)). **R. Diaz**
+contributed code to the LDATS package, provided insight into model 
+development, and conducted end-user code application testing. **H. Ye**
+contributed code to the LDATS package and insight into data structures and
+LDA algorithms. **E. P. White** helped design, troubleshoot, and supervise 
+initial methods development and provided big-picture feedback on 
+development of the R package. **S. K. Morgan Ernest** provided managerial
+oversight and feedback on the project in both the initial and second stages
+of LDATS development, tested applications of the code to data sets, and
+assisted with writing and editing of the first description of the
+model and its application 
+([Christensen *et al.* 2018](https://doi.org/10.1002/ecy.2373)).
 

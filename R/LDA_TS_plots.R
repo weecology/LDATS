@@ -25,7 +25,8 @@
 #'   no label printed, set \code{xlab = ""}.
 #'
 #' @param selection Indicator of the changepoints to use in the timeseries
-#'   summary plot. Currently only defined for "median" and "mode".
+#'   summary plot. Currently only defined for \code{"median"} and 
+#'   \code{"mode"}.
 #'
 #' @param cols \code{list} of elements used to define the colors for the two
 #'   panels of the summary plot, as generated simply using 
@@ -53,7 +54,7 @@
 #'                 topics = 2, nseeds = 1, formulas = ~ 1, nchangepoints = 1,
 #'                 weights = document_weights(document_term_table), 
 #'                 control = LDA_TS_controls_list())
-#'   plot(mod)
+#'   plot(mod, binwidth = 5, xlab = "New moon")
 #' }
 #'
 #' @export 

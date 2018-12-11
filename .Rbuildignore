@@ -1,6 +1,5 @@
-^previous_work$
 ^manuscript$
-^working$
+^devspace.R$
 ^.travis.yml$
 ^.*\.Rproj$
 ^\.Rproj\.user$
