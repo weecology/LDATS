@@ -35,7 +35,7 @@ List (class: \code{LDA_set}) of LDA models (class: \code{LDA_VEM}).
 For a given corpus \eqn{D} (dataset consisting of counts of 
   words across \eqn{M} documents), conduct multiple Latent Dirichlet 
   Allocation (LDA) models (using the Variational Expectation 
-  Maximization (VEM) algorithm; Blei \emph{et al.}) to account for [1]  
+  Maximization (VEM) algorithm; Blei \emph{et al.} 2003) to account for [1]  
   uncertainty in the number of latent topics and [2] the impact of initial
   values in the estimation procedure. 
 

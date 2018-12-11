@@ -1,54 +1,89 @@
-#' @title Run a full set of Latent Dirichlet Allocation models then Time 
+#' @title Run a full set of Latent Dirichlet Allocations and Time 
 #'   Series models
 #'
-#' @description This function runs a complete suite of Latent Dirichlet
-#'   Allocation (LDA) models (via \code{\link{LDA_set}}), selects the choice
-#'   LDA model(s) (via \code{\link{select_LDA}}), runs a complete set of Time 
-#'   Series (TS) models (via \code{\link{TS_on_LDA}}) on the choice LDA
-#'   model(s), then selects the best TS model (via \code{select_TS}). 
+#' @description Conduct a complete LDATS analysis (Christensen 
+#'   \emph{et al.} 2018), including running a suite of Latent Dirichlet
+#'   Allocation (LDA) models (Blei \emph{et al.} 2003, Grun and Hornik 2011) 
+#'   via \code{\link{LDA_set}}), selecting LDA model(s) via 
+#'   \code{\link{select_LDA}}, running a complete set of Bayesian Time Series
+#'   (TS) models (Western and Kleykamp 2004) via \code{\link{TS_on_LDA}} on
+#'   the chosen LDA model(s), and selecting the best TS model via 
+#'   \code{select_TS}.
 #' 
 #' @param document_term_table Table of observation count data (rows: 
-#'   documents (\eqn{M}), columns: terms (\eqn{V})). May be a class 
-#'   \code{matrix} or \code{data.frame} but must be conformable to
-#'   a code of integers. This table is a document-level summary of the data 
-#'   noted as \eqn{w} (the word-level topic identity) in the math description. 
+#'   documents (\eqn{M}), columns: terms (\eqn{V})). May be a 
+#'   \code{matrix} or \code{data.frame} but must be conformable to a matrix
+#'   of integers (as checked by \code{\link{check_document_term_table}}). 
+#'   This table is a document-level summary of the data noted as
+#'   \strong{\eqn{w}} (the word-level topic identity) in the math description. 
 #'
 #' @param document_covariate_table Document covariate table (rows:
-#'   documents (\code{M}), columns: time index and covariate options). 
+#'   documents (\eqn{M}), columns: time index and covariate options). 
 #'   Every model needs a covariate to describe the time value for each
 #'   document (in whatever relevant units), whose name in the table is input
-#'   via \code{timename}, that dictates the application of the changepoints. 
-#'   In addition, the table needs to include as columns all covariates named 
-#'   within the specific models described via the argument \code{formula} 
-#'   (if desired). Must be a conformable to a data table. 
+#'   in \code{control} (the \code{timename} entry), that dictates the 
+#'   application of the changepoints. 
+#'   In addition, all covariates named within specific models in
+#'   \code{formula} must be included. Must be a conformable to a data table,
+#'   as checked by \code{\link{check_document_covariate_table}}). 
 #'
-#' @param topics Vector of the number of topics to evaluate in the LDAs.
+#' @param topics Vector of the number of topics to evaluate in the LDAs. Must
+#'   be integer values.
 #'
 #' @param nseeds Integer number of seeds (replicate starts) to use for each 
 #'   value of \code{topics} in the LDAs.
 #'
-#' @param formulas Vector of \code{formula}(s) for the continuous change. Any 
+#' @param formulas Vector of \code{formula}(s) for the continuous 
+#'   (non-changepoint) component of the time series models. Any 
 #'   predictor variable included in a formula must also be a column in the
 #'   \code{document_covariate_table}. Each element (formula) in the vector
 #'   is evaluated for each number of change points and each LDA model.
 #'
 #' @param nchangepoints Vector of integers corresponding to the number of 
-#'   change points to include in the model. 0 is a valid input (corresponding
-#'   to no change points, so a singular time series model), and the current 
-#'   implementation can reasonably include up to 6 change points. Each element 
-#'   (number of change points) in the vector is used to dictate the
-#'   segementation of the data  for each continuous model and each LDA model.
+#'   change points to include in the time series models. 0 is a valid input 
+#'   corresponding to no change points (\emph{i.e.}, a singular time series
+#'   model), and the current implementation can reasonably include up to 6 
+#'   change points. Each element (number of change points included
+#'   corresponding to 
+#'   \ifelse{html}{\out{<i>P<sub>m<sub>2</sub></sub></i>}}{\eqn{P_m_2}} for
+#'   model \ifelse{html}{\out{<i>m<sub>2</sub></i>}}{\eqn{m_2}} in the math
+#'   description) in the vector is used to dictate the segementation of 
+#'   the data for each formula (entry in \code{formulas}) component of the 
+#'   TS model and for each of the chosen LDA models.
 #'
 #' @param weights Optional class \code{numeric} vector of weights for each 
 #'   document. Corresponds to the vector \strong{\eqn{v}} in the math 
 #'   description. Defaults to value calculated by 
 #'   \code{\link{document_weights}}, but can be set as \code{NULL}.
 #' 
-#' @param control Class \code{LDA_TS_controls} list that contains 
-#'   \code{LDA_controls}, \code{TS_controls}, and the top-level \code{quiet}.
+#' @param control Class \code{LDA_TS_controls} list (as generated by
+#'   \code{\link{LDA_TS_controls_list}} that contains 
+#'   \code{LDA_controls} (\code{\link{LDA_controls_list}}), 
+#'   \code{TS_controls} (\code{\link{TS_controls_list}}), and the single 
+#'   top-level control \code{quiet}.
 #'
 #' @return Class \code{LDA_TS} object including all fitted models and selected 
 #'   models specifically. 
+#' 
+#' @references 
+#'   Blei, D. M., A. Y. Ng, and M. I. Jordan. 2003. Latent Dirichlet
+#'   Allocation. \emph{Journal of Machine Learning Research} 
+#'   \strong{3}:993-1022.
+#'   \href{http://jmlr.csail.mit.edu/papers/v3/blei03a.html}{link}.
+#'
+#'   Christensen, E., D. J. Harris, and S. K. M. Ernest. 2018.
+#'   Long-term community change through multiple rapid transitions in a 
+#'   desert rodent community. \emph{Ecology} \strong{99}:1523-1529. 
+#'   \href{https://doi.org/10.1002/ecy.2373}{link}.
+#'
+#'   Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
+#'   Models. \emph{Journal of Statistical Software} \strong{40}:13.
+#'   \href{https://www.jstatsoft.org/article/view/v040i13}{link}.
+#'
+#'   Western, B. and M. Kleykamp. 2004. A Bayesian change point model for 
+#'   historical time series analysis. \emph{Political Analysis}
+#'   \strong{12}:354-374.
+#'   \href{https://doi.org/10.1093/pan/mph023}{link}.
 #'
 #' @examples 
 #' \dontrun{
@@ -82,51 +117,11 @@ LDA_TS <- function(document_term_table, document_covariate_table,
   package_LDA_TS(LDAs, sel_LDA, TSs, sel_TSs)
 }
 
-#' @title Verify that all inputs to LDA_TS are proper
+#' @rdname LDA_TS
 #'
-#' @description Determines if the function has a complete proper set of inputs
-#'   for running the code within \code{LDA_TS}/. 
+#' @description \code{check_LDA_TS_inputs} verifies that the inputs to 
+#'   \code{LDA_TS} are proper for a full analysis.
 #' 
-#' @param document_term_table Table of observation count data (rows: 
-#'   documents (\eqn{M}), columns: terms (\eqn{V})). May be a class 
-#'   \code{matrix} or \code{data.frame} but must be conformable to
-#'   a code of integers. This table is a document-level summary of the data 
-#'   noted as \eqn{w} (the word-level topic identity) in the math description. 
-#'
-#' @param document_covariate_table Document covariate table (rows:
-#'   documents (\code{M}), columns: time index and covariate options). 
-#'   Every model needs a covariate to describe the time value for each
-#'   document (in whatever relevant units), whose name in the table is input
-#'   via \code{timename}, that dictates the application of the changepoints. 
-#'   In addition, the table needs to include as columns all covariates named 
-#'   within the specific models described via the argument \code{formula} 
-#'   (if desired). Must be a conformable to a data table. 
-#'
-#' @param topics Vector of the number of topics to evaluate in the LDAs.
-#'
-#' @param nseeds Integer number of seeds (replicate starts) to use for each 
-#'   value of \code{topics} in the LDAs.
-#'
-#' @param formulas Vector of \code{formula}(s) for the continuous change. Any 
-#'   predictor variable included in a formula must also be a column in the
-#'   \code{document_covariate_table}. Each element (formula) in the vector
-#'   is evaluated for each number of change points and each LDA model.
-#'
-#' @param nchangepoints Vector of integers corresponding to the number of 
-#'   change points to include in the model. 0 is a valid input (corresponding
-#'   to no change points, so a singular time series model), and the current 
-#'   implementation can reasonably include up to 6 change points. Each element 
-#'   (number of change points) in the vector is used to dictate the
-#'   segementation of the data  for each continuous model and each LDA model.
-#'
-#' @param weights Optional class \code{numeric} vector of weights for each 
-#'   document. Corresponds to the vector \strong{\eqn{v}} in the math 
-#'   description. Defaults to value calculated by 
-#'   \code{\link{document_weights}}, but can be set as \code{NULL}.
-#' 
-#' @param control Class \code{LDA_TS_controls} list that contains 
-#'   \code{LDA_controls}, \code{TS_controls}, and the top-level \code{quiet}.
-#'
 #' @export
 #'
 check_LDA_TS_inputs <- function(document_term_table, document_covariate_table,
@@ -149,7 +144,7 @@ check_LDA_TS_inputs <- function(document_term_table, document_covariate_table,
 #' @title Print the selected LDA and TS models of LDA_TS object
 #'
 #' @description Convenience function to print only the selected elements of a 
-#'   \code{LDA_TS}-class object.
+#'   \code{LDA_TS}-class object returned by \code{\link{LDA_TS}}
 #'
 #' @param x Class \code{LDA_TS} object to be printed.
 #'
@@ -164,25 +159,29 @@ print.LDA_TS <- function(x, ...){
 
 #' @title Package the output of LDA_TS
 #'
-#' @description Combine the objects, name them as elements of the list, and
-#'   set the class of the list, for the return from \code{\link{LDA_TS}}.
+#' @description Combine the objects returned by \code{\link{LDA_set}},
+#'   \code{\link{select_LDA}}, \code{\link{TS_on_LDA}}, and
+#'   \code{\link{select_TS}}, name them as elements of the list, and
+#'   set the class of the list as \code{LDA_TS}, for the return from
+#'   \code{\link{LDA_TS}}.
 #'
 #' @param LDAs List (class: \code{LDA_set}) of LDA models (class: 
-#'   "\code{LDA}").
+#'   \code{LDA}), as returned by \code{\link{LDA_set}}.
 #'
 #' @param sel_LDA A reduced version of \code{LDAs} that only includes the 
-#'   selected LDA model(s). The returned object is still an object of
+#'   LDA model(s) selected by \code{\link{select_LDA}}. Still should be of
 #'   class \code{LDA_set}.
 #'
 #' @param TSs Class \code{TS_on_LDA} list of results from \code{\link{TS}} 
-#'   applied for each model on each LDA model input.
+#'   applied for each model on each LDA model input, as returned by 
+#'   \code{\link{TS_on_LDA}}.
 #'
-#' @param sel_TSs A reduced version of \code{TSs} that only includes the 
-#'   selected TS model. The returned object is still an object of
-#'   class \code{TS_fit}.
+#' @param sel_TSs A reduced version of \code{TSs} (of class \code{TS_fit})
+#'   that only includes the TS model chosen via \code{\link{select_TS}}. 
 #'
-#' @return Class \code{LDA_TS} object including all fitted models and selected 
-#'   models specifically. 
+#' @return Class \code{LDA_TS}-class object including all fitted models and 
+#'   selected models specifically, ready to be returned from 
+#'   \code{\link{LDA_TS}}.
 #'
 #' @export
 #'
@@ -208,20 +207,21 @@ package_LDA_TS <- function(LDAs, sel_LDA, TSs, sel_TSs){
 
 #' @title Create the controls list for the LDATS model
 #'
-#' @description This function provides a simple creation and definition of the
-#'   list used to control the LDATS model including the LDA and TS model 
-#'   specifically.
+#' @description Create and define a list of control options used to run the
+#'   LDATS model, as implemented by \code{\link{LDA_TS}}.
 #'
 #' @param LDA_control Named list of control parameters to be used in 
-#'   \code{LDA} (note that "seed" will be overwritten).
+#'   \code{\link{LDA_set}} and \code{\link[topicmodels]{LDA}},
+#'   as generally created by \code{\link{LDA_controls_list}}. Note that 
+#'   \code{seed} will be overwritten.
 #'
-#' @param TS_control Class \code{TS_controls} list, holding control parameters
+#' @param TS_control Class \code{TS_controls} list, a named list generally 
+#'   created by \code{\link{TS_controls_list}} that holds control parameters
 #'   for the Time Series model including the parallel tempering Markov Chain 
-#'   Monte Carlo (ptMCMC) controls, generated by 
-#'   \code{\link{TS_controls_list}}.
+#'   Monte Carlo (ptMCMC) controls.
 #'
 #' @param quiet \code{logical} indicator of whether the model should run 
-#'   quietly.
+#'   quietly at the top level.
 #' 
 #' @return control Class \code{LDA_TS_controls} list that contains 
 #'   \code{LDA_controls}, \code{TS_controls}, and the top-level \code{quiet}.
@@ -231,6 +231,15 @@ package_LDA_TS <- function(LDAs, sel_LDA, TSs, sel_TSs){
 LDA_TS_controls_list <- function(TS_control = TS_controls_list(),
                                  LDA_control = LDA_controls_list(),
                                  quiet = FALSE){
+  if (!("LDA_controls" %in% class(LDA_control))){
+    stop("LDA_control not of class LDA_controls")
+  }
+  if (!("TS_controls" %in% class(TS_control))){
+    stop("TS_control not of class TS_controls")
+  }
+  if (!("logical" %in% class(quiet))){
+    stop("quiet not of class logical")
+  }
   out <- list(LDA_control = LDA_control, TS_control = TS_control, 
               quiet = quiet)
   class(out) <- c("LDA_TS_controls", "list")

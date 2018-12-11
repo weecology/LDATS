@@ -1,6 +1,6 @@
 Package: LDATS
 Title: Latent Dirichlet Allocation coupled with Time Series analyses
-Version: 0.0.12
+Version: 0.0.13
 Authors@R: c(
 	person("Juniper", "Simonis", email = "juniper.simonis@weecology.org",
 	role = c("aut", "cre")),
@@ -11,8 +11,8 @@ Authors@R: c(
 	person("White", "Ethan", role = c("aut")),
     person("S. K. Morgan", "Ernest", role = c("aut"))
     )
-Description: Combines Latent Dirichlet Allocation and Multinomial Time Series
-    methods in a two-stage analysis to quantify dynamics in  
+Description: Combines Latent Dirichlet Allocation and Bayesian Multinomial 
+    Time Series methods in a two-stage analysis to quantify dynamics in  
 	high-dimensional temporal data.
 Depends: R (>= 3.2.3)
 License: MIT + file LICENSE

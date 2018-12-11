@@ -4,9 +4,6 @@
 #
 # working through documentation right now
 #  scripts to do
-#   LDA_TS 
-#   LDA_TS_plots
-#   LDATS
 #   multinom_TS
 #   ptMCMC
 #   TS

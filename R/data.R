@@ -1,10 +1,10 @@
-#' Portal rodent data 
+#' @title Portal rodent data 
 #'
-#' An example LDATS dataset, functionally that used in Christensen \emph{et 
-#'   al.} (2018). The data are counts of 21 rodent species across  
-#'   436 sampling events, with the count being the total number observed 
-#'   across 8 50 m x 50 m plots, each sampled using 49 live traps (Brown 1998, 
-#'   Ernest \emph{et al.} 2016).
+#' @description An example LDATS dataset, functionally that used in 
+#'   Christensen \emph{et al.} (2018). The data are counts of 21 rodent 
+#'   species across 436 sampling events, with the count being the total number 
+#'   observed across 8 50 m x 50 m plots, each sampled using 49 live traps 
+#'   (Brown 1998, Ernest \emph{et al.} 2016).
 #'
 #' @format A \code{list} of two \code{data.frame}-class objects with rows 
 #'   corresponding to documents (sampling events). One element is the

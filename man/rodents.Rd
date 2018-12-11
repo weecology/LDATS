@@ -18,11 +18,11 @@
 rodents
 }
 \description{
-An example LDATS dataset, functionally that used in Christensen \emph{et 
-  al.} (2018). The data are counts of 21 rodent species across  
-  436 sampling events, with the count being the total number observed 
-  across 8 50 m x 50 m plots, each sampled using 49 live traps (Brown 1998, 
-  Ernest \emph{et al.} 2016).
+An example LDATS dataset, functionally that used in 
+  Christensen \emph{et al.} (2018). The data are counts of 21 rodent 
+  species across 436 sampling events, with the count being the total number 
+  observed across 8 50 m x 50 m plots, each sampled using 49 live traps 
+  (Brown 1998, Ernest \emph{et al.} 2016).
 }
 \references{
 Brown, J. H. 1998. 

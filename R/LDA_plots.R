@@ -42,8 +42,11 @@ plot.LDA_set <- function(x, ...){
 #' @param xname Optional name for the x values used in plotting the topic
 #'   proportions (otherwise defaults to "Document"). 
 #'
-#' @param cols Colors to be used to plot the topics, or \code{NULL} to use
-#'   \code{\link[viridis]{viridis}} options.
+#' @param cols Colors to be used to plot the topics.
+#'   Any valid color values (\emph{e.g.}, see \code{\link[grDevices]{colors}},
+#'   \code{\link[grDevices]{rgb}}) can be input as with a standard plot. 
+#'   The default (\code{cols = NULL}) triggers use of 
+#'   \code{\link[viridis]{viridis}} color options (see \code{option}).
 #'
 #' @param option A \code{character} string indicating the color option
 #'   from \code{\link[viridis]{viridis}} to use if `cols == NULL`. Four 
@@ -173,14 +176,19 @@ LDA_plot_bottom_panel <- function(x, xtime, xname, cols, option, alpha){
 #' @param x Object of class \code{LDA}.
 #'
 #' @param cols Colors to be used to plot the topics.
-#' 
-#' @param option A character string indicating the colormap option to use if 
-#'   `cols == NULL`. Four options are available: "magma" (or "A"), "inferno" 
-#'   (or "B"), "plasma" (or "C"), "viridis" (or "D", the default option) and 
-#'   "cividis" (or "E").
+#'   Any valid color values (\emph{e.g.}, see \code{\link[grDevices]{colors}},
+#'   \code{\link[grDevices]{rgb}}) can be input as with a standard plot. 
+#'   The default (\code{cols = NULL}) triggers use of 
+#'   \code{\link[viridis]{viridis}} color options (see \code{option}).
+#'
+#' @param option A \code{character} string indicating the color option
+#'   from \code{\link[viridis]{viridis}} to use if `cols == NULL`. Four 
+#'   options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
+#'   (or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").
 #'
 #' @param alpha Numeric value [0,1] that indicates the transparency of the 
-#'   colors used. Supported only on some devices, see \code{rgb}.
+#'   colors used. Supported only on some devices, see 
+#'   \code{\link[grDevices]{rgb}}.
 #'
 #' @return Vector of \code{character} hex codes indicating colors to use.
 #'

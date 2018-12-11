@@ -15,12 +15,20 @@
 #' @importFrom viridis viridis
 #'
 
-#' @title Two-stage LDA and Time Series analyses
+#' @title Package to conduct two-stage analyses combining Latent Dirichlet 
+#'   Allocation with Bayesian Time Series models
 #'
 #' @description Performs two-stage analysis of multivariate temporal data
 #'   using a combination of Latent Dirichlet Allocation (Blei \emph{et al.}
-#'   2003) and multinomial time series models (Western and Kleykamp 2004)
-#'   following Christensen \emph{et al.} (2018).
+#'   2003) and Bayesian Time Series models (Western and Kleykamp 2004) that we
+#'   extend for multinomial data using softmax regression (Venables and Ripley
+#'   2002) following Christensen \emph{et al.} (2018).
+#'   \cr \cr  
+#'   \href{https://github.com/weecology/LDATS/blob/master/manuscript/simonis_et_al.pdf}{Technical mathematical manuscript}
+#'   \cr \cr 
+#'   \href{http://htmlpreview.github.io/?https://github.com/weecology/LDATS/blob/master/inst/doc/rodents-example.html}{End-user-focused vignette worked example}
+#'   \cr \cr 
+#'   \href{http://htmlpreview.github.io/?https://github.com/weecology/LDATS/blob/master/inst/doc/LDATS.html}{Computational pipeline vignette}
 #'
 #' @references 
 #'
@@ -33,6 +41,9 @@
 #'   Long-term community change through multiple rapid transitions in a 
 #'   desert rodent community. \emph{Ecology} \strong{99}:1523-1529. 
 #'   \href{https://doi.org/10.1002/ecy.2373}{link}.
+#'
+#'   Venables, W. N. and B. D. Ripley. 2002. \emph{Modern and Applied
+#'   Statistics with S}. Fourth Edition. Springer, New York, NY, USA.
 #'
 #'   Western, B. and M. Kleykamp. 2004. A Bayesian change point model for 
 #'   historical time series analysis. \emph{Political Analysis}
