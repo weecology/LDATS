@@ -32,13 +32,13 @@ in \code{control} (the \code{timename} entry), that dictates the
 application of the changepoints. 
 In addition, all covariates named within specific models in
 \code{formula} must be included. Must be a conformable to a data table,
-as verified by \code{\link{check_document_covariate_table}}).}
+as verified by \code{\link{check_document_covariate_table}}.}
 
 \item{topics}{Vector of the number of topics to evaluate in the LDAs. Must
 be integer values.}
 
-\item{nseeds}{Integer number of seeds (replicate starts) to use for each 
-value of \code{topics} in the LDAs.}
+\item{nseeds}{\code{integer} number of seeds (replicate starts) to use for 
+each value of \code{topics} in the LDAs.}
 
 \item{formulas}{Vector of \code{formula}(s) for the continuous 
 (non-changepoint) component of the time series models. Any 
@@ -46,17 +46,16 @@ predictor variable included in a formula must also be a column in the
 \code{document_covariate_table}. Each element (formula) in the vector
 is evaluated for each number of change points and each LDA model.}
 
-\item{nchangepoints}{Vector of integers corresponding to the number of 
-change points to include in the time series models. 0 is a valid input 
+\item{nchangepoints}{Vector of \code{integer}s corresponding to the number 
+of change points to include in the time series models. 0 is a valid input 
 corresponding to no change points (\emph{i.e.}, a singular time series
 model), and the current implementation can reasonably include up to 6 
-change points. Each element (number of change points included
-corresponding to 
-\ifelse{html}{\out{<i>P<sub>m<sub>2</sub></sub></i>}}{\eqn{P_m_2}} for
+change points. Each element in the vector is the number of change points 
+(\ifelse{html}{\out{<i>P<sub>m<sub>2</sub></sub></i>}}{\eqn{P_m_2}} for
 model \ifelse{html}{\out{<i>m<sub>2</sub></i>}}{\eqn{m_2}} in the math
-description) in the vector is used to dictate the segementation of 
+description) used to segement 
 the data for each formula (entry in \code{formulas}) component of the 
-TS model and for each of the chosen LDA models.}
+TS model, for each selected LDA model.}
 
 \item{weights}{Optional class \code{numeric} vector of weights for each 
 document. Corresponds to the vector \strong{\eqn{v}} in the math 
@@ -70,8 +69,12 @@ description. Defaults to value calculated by
 top-level control \code{quiet}.}
 }
 \value{
-Class \code{LDA_TS} object including all fitted models and selected 
-  models specifically.
+\code{LDATS} returns a class \code{LDA_TS} list object including all 
+  fitted LDA and TS models and selected models specifically as elements 
+  \code{"LDA models"} (from \code{\link{LDA_set}}),
+  \code{"Selected LDA model"} (from \code{\link{select_LDA}}), 
+  \code{"TS models"} (from \code{\link{TS_on_LDA}}), and
+  \code{"Selected TS model"} (from \code{\link{select_TS}}).
 }
 \description{
 Conduct a complete LDATS analysis (Christensen 
