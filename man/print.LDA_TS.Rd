@@ -13,5 +13,5 @@
 }
 \description{
 Convenience function to print only the selected elements of a 
-  \code{LDA_TS}-class object.
+  \code{LDA_TS}-class object returned by \code{\link{LDA_TS}}
 }
