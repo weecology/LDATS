@@ -15,7 +15,9 @@ env:
   matrix:
     - r: release
       not_cran: false
+      r_build_args: ""
       r_check_args: "--as--cran"
     - r: devel
       not_cran: false
+      r_build_args: ""
       r_check_args: "--as--cran"
