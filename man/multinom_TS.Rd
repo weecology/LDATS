@@ -2,10 +2,14 @@
 % Please edit documentation in R/multinom_TS.R
 \name{multinom_TS}
 \alias{multinom_TS}
+\alias{check_multinom_TS_inputs}
 \title{Fit a multinomial change point Time Series model}
 \usage{
 multinom_TS(data, formula, changepoints = NULL, weights = NULL,
   control = TS_controls_list())
+
+check_multinom_TS_inputs(data, formula, changepoints = NULL,
+  weights = NULL, control = TS_controls_list())
 }
 \arguments{
 \item{data}{\code{data.frame} including [1] the time variable (indicated 
@@ -17,7 +21,7 @@ and notated in the math description as
 \ifelse{html}{
    \out{<span style="text-decoration: overline"><b><i>&Gamma;
         </i></b></span>}}{\strong{\eqn{\overline{\Gamma}}}}
-as verified by \code{\link{check_timename}} and 
+) as verified by \code{\link{check_timename}} and 
 \code{\link{check_formula}}.
  Note that the response variables should be
 formatted as a \code{data.frame} object named as indicated by the 
@@ -52,6 +56,9 @@ Fit a set of multinomial regression models (via
   \code{\link[nnet]{multinom}}, Venables and Ripley 2002) to a time series
   of data divided into multiple segments (a.k.a. chunks) based on given 
   locations for a set of change points.
+
+\code{check_multinom_TS_inputs} verifies that the inputs to 
+  \code{multinom_TS} are of proper classes for an analysis.
 }
 \examples{
 \dontrun{

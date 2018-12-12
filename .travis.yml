@@ -3,6 +3,11 @@ cache: packages
 sudo: false
 warnings_are_errors: false
 
+env:
+  global:
+    - R_CHECK_ARGS="--no-build-vignettes"
+
+
 addons:
   apt:
     packages:

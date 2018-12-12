@@ -14,7 +14,7 @@
 #'   \ifelse{html}{
 #'      \out{<span style="text-decoration: overline"><b><i>&Gamma;
 #'           </i></b></span>}}{\strong{\eqn{\overline{\Gamma}}}}
-#'   as verified by \code{\link{check_timename}} and 
+#'   ) as verified by \code{\link{check_timename}} and 
 #'   \code{\link{check_formula}}.
 #'    Note that the response variables should be
 #'   formatted as a \code{data.frame} object named as indicated by the 
@@ -80,7 +80,7 @@ multinom_TS <- function(data, formula, changepoints = NULL,
   package_chunk_fits(chunks, fits)
 }
 
-#' @rdname LDA_TS
+#' @rdname multinom_TS
 #'
 #' @description \code{check_multinom_TS_inputs} verifies that the inputs to 
 #'   \code{multinom_TS} are of proper classes for an analysis.
