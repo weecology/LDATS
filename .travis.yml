@@ -5,7 +5,7 @@ warnings_are_errors: false
 
 env:
   global:
-    - R_CHECK_ARGS="--no-build-vignettes --manual"
+    - R_CHECK_ARGS="--no-build-vignettes"
 
 
 addons:
