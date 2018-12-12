@@ -1,6 +1,6 @@
 language: r
 cache: packages
-sudo: false
+sudo: required
 warnings_are_errors: false
 
 addons:
@@ -10,3 +10,7 @@ addons:
       - libgsl0-dev
       - libgsl0ldbl
     update: true
+
+r:
+  - release
+  - devel

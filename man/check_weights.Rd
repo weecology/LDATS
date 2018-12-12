@@ -2,7 +2,7 @@
 % Please edit documentation in R/TS_on_LDA.R
 \name{check_weights}
 \alias{check_weights}
-\title{Verify that weights vector is proper}
+\title{Check that weights vector is proper}
 \usage{
 check_weights(weights)
 }
@@ -10,7 +10,7 @@ check_weights(weights)
 \item{weights}{Vector of the document weights to evaluate.}
 }
 \description{
-Verify that the vector of document weights is numeric
+Check that the vector of document weights is numeric
   and inform the user if weights are outside the optimal range: 
   \eqn{(0,1]}.
 }

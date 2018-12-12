@@ -54,12 +54,13 @@ test_that("check failed output from multinom_TS", {
   expect_equal(mts$logLik, -Inf)
 })
 
-test_that("check bad changepoint catching of check_changepoints", {
-  expect_equal(check_changepoints(mts_data, -1), FALSE)
-  expect_equal(check_changepoints(mts_data, 1e5), FALSE)
-  expect_equal(check_changepoints(mts_data, NULL), TRUE)
-  expect_equal(check_changepoints(mts_data, 100), TRUE)
-  expect_equal(check_changepoints(mts_data, c(10, 50, 100)), TRUE)
+test_that("check bad change point location catching of 
+          verify_changepoint_locations", {
+  expect_equal(verify_changepoint_locations(mts_data, -1), FALSE)
+  expect_equal(verify_changepoint_locations(mts_data, 1e5), FALSE)
+  expect_equal(verify_changepoint_locations(mts_data, NULL), TRUE)
+  expect_equal(verify_changepoint_locations(mts_data, 100), TRUE)
+  expect_equal(verify_changepoint_locations(mts_data, c(10, 50, 100)), TRUE)
 })
 
 test_that("check memoization of multinom_TS_chunk", {

@@ -15,14 +15,15 @@
 #'   \code{matrix} or \code{data.frame} but must be conformable to a matrix
 #'   of integers (as verified by \code{\link{check_document_term_table}}). 
 #'   This table is a document-level summary of the data noted as
-#'   \strong{\eqn{w}} (the word-level topic identity) in the math description. 
+#'   \ifelse{html}{\out{<b><i>w</i></b>}}{\eqn{\mathbf{w}}}
+#'   (the word-level topic identity) in the math description. 
 #'
 #' @param document_covariate_table Document covariate table (rows:
 #'   documents (\eqn{M}), columns: time index and covariate options). 
 #'   Every model needs a covariate to describe the time value for each
 #'   document (in whatever relevant units), whose name in the table is input
 #'   in \code{control} (the \code{timename} entry), that dictates the 
-#'   application of the changepoints. 
+#'   application of the change points. 
 #'   In addition, all covariates named within specific models in
 #'   \code{formula} must be included. Must be a conformable to a data table,
 #'   as verified by \code{\link{check_document_covariate_table}}. 
@@ -44,14 +45,15 @@
 #'   corresponding to no change points (\emph{i.e.}, a singular time series
 #'   model), and the current implementation can reasonably include up to 6 
 #'   change points. Each element in the vector is the number of change points 
-#'   (\ifelse{html}{\out{<i>P<sub>m<sub>2</sub></sub></i>}}{\eqn{P_m_2}} for
+#'   (\ifelse{html}{\out{<i>P<sub>m<sub>2</sub></sub></i>}}{\eqn{P_{m_2}}} for
 #'   model \ifelse{html}{\out{<i>m<sub>2</sub></i>}}{\eqn{m_2}} in the math
 #'   description) used to segement 
 #'   the data for each formula (entry in \code{formulas}) component of the 
 #'   TS model, for each selected LDA model.
 #'
 #' @param weights Optional class \code{numeric} vector of weights for each 
-#'   document. Corresponds to the vector \strong{\eqn{v}} in the math 
+#'   document. Corresponds to the vector 
+#'   \ifelse{html}{\out{<b><i>v</i></b>}}{\eqn{\mathbf{v}}} in the math 
 #'   description. Defaults to value calculated by 
 #'   \code{\link{document_weights}}, but can be set as \code{NULL}.
 #' 
@@ -92,7 +94,6 @@
 #' @examples 
 #' \dontrun{
 #'   data(rodents)
-#'   lda_data <- rodents$document_term_table
 #'   document_term_table <- rodents$document_term_table
 #'   document_covariate_table <- rodents$document_covariate_table
 #'   
@@ -123,8 +124,8 @@ LDA_TS <- function(document_term_table, document_covariate_table,
 
 #' @rdname LDA_TS
 #'
-#' @description \code{check_LDA_TS_inputs} verifies that the inputs to 
-#'   \code{LDA_TS} are proper for a full analysis.
+#' @description \code{check_LDA_TS_inputs} checks that the inputs to 
+#'   \code{LDA_TS} are of proper classes for a full analysis.
 #' 
 #' @export
 #'

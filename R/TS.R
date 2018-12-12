@@ -44,7 +44,7 @@ TS <- function(data, formula, nchangepoints, weights,
 
 #' @title Check all of the inputs to TS
 #'
-#' @description Verify the inputs to (\code{\link{TS}}).
+#' @description Check the inputs to (\code{\link{TS}}).
 #'
 #' @param data Class \code{data.frame} object including [1] the time variable
 #'   (indicated in \code{control}), [2] the predictor variables (required by
@@ -530,9 +530,9 @@ update_pbar <- function(pbar, control = TS_controls_list()){
 }
 
 
-#' @title Verify that a formula is proper
+#' @title Check that a formula is proper
 #' 
-#' @description Verify that the formula is actually a formula and that the
+#' @description Check that the formula is actually a formula and that the
 #'   response and predictor variabless are all included in the data.
 #'   
 #' @param formula Formula to evaluate.
@@ -540,8 +540,6 @@ update_pbar <- function(pbar, control = TS_controls_list()){
 #' @param data Class \code{data.frame} object including [1] the time variable
 #'   (indicated in \code{control}), [2] the predictor variables (required by
 #'   \code{formula}) and [3], the multinomial response variable.
-#'
-#' @return Nothing.
 #' 
 #' @export
 #'

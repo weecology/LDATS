@@ -2,7 +2,7 @@
 % Please edit documentation in R/TS_on_LDA.R
 \name{check_formulas}
 \alias{check_formulas}
-\title{Verify that formulas vector is proper and append the response 
+\title{Check that formulas vector is proper and append the response 
   variable}
 \usage{
 check_formulas(formulas, document_covariate_table, control)
@@ -17,7 +17,7 @@ the availability of the data required by the formula inputs.}
 for the Time Series model.}
 }
 \description{
-Verify that the vector of formulas is actually formatted
+Check that the vector of formulas is actually formatted
   as a vector formula objects and that the predictor variables are all 
   included in the document covariate table.
 }

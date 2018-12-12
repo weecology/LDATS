@@ -56,7 +56,7 @@ r_LDATS <- LDATS::LDA_TS(dtt, dct, topics = 2:5, nseeds = 2,
 ## More Information 
 
 Based on inital work using [LDA to analyze time-series data at Portal by Erica
-Christensen, Dave Harris, and Morgan 
+M. Christensen, David J. Harris, and S. K. Morgan 
 Ernest](https://github.com/emchristensen/Extreme-events-LDA), which has been
 [published in *Ecology*](https://doi.org/10.1002/ecy.2373)
 

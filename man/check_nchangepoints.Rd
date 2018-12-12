@@ -2,7 +2,7 @@
 % Please edit documentation in R/TS_on_LDA.R
 \name{check_nchangepoints}
 \alias{check_nchangepoints}
-\title{Verify that nchangepoints vector is proper}
+\title{Check that nchangepoints vector is proper}
 \usage{
 check_nchangepoints(nchangepoints)
 }
@@ -10,6 +10,6 @@ check_nchangepoints(nchangepoints)
 \item{nchangepoints}{Vector of the number of changepoints to evaluate.}
 }
 \description{
-Verify that the vector of numbers of changepoints is 
+Check that the vector of numbers of changepoints is 
   conformable to integers greater than 1.
 }

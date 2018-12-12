@@ -2,7 +2,7 @@
 % Please edit documentation in R/TS_on_LDA.R
 \name{check_document_covariate_table}
 \alias{check_document_covariate_table}
-\title{Verify that the document covariate table is proper}
+\title{Check that the document covariate table is proper}
 \usage{
 check_document_covariate_table(document_covariate_table,
   LDA_models = NULL, document_term_table = NULL)
@@ -18,7 +18,7 @@ a \code{gamma} slot with the document-topic distribution.}
 \code{LDA_models} is \code{NULL}}
 }
 \description{
-Verify that the table of document-level covariates is 
+Check that the table of document-level covariates is 
   conformable to a data frame and of the right size (correct number of 
   documents) for the document-topic output from the LDA models.
 }

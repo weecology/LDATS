@@ -2,7 +2,7 @@
 % Please edit documentation in R/TS.R
 \name{check_formula}
 \alias{check_formula}
-\title{Verify that a formula is proper}
+\title{Check that a formula is proper}
 \usage{
 check_formula(data, formula)
 }
@@ -13,10 +13,7 @@ check_formula(data, formula)
 
 \item{formula}{Formula to evaluate.}
 }
-\value{
-Nothing.
-}
 \description{
-Verify that the formula is actually a formula and that the
+Check that the formula is actually a formula and that the
   response and predictor variabless are all included in the data.
 }

@@ -56,7 +56,6 @@ Generalization of the \code{plot} function to work on fitted
 \examples{
 \dontrun{
   data(rodents)
-  lda_data <- rodents$document_term_table
   document_term_table <- rodents$document_term_table
   document_covariate_table <- rodents$document_covariate_table
   
