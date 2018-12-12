@@ -11,8 +11,8 @@ addons:
       - libgsl0ldbl
     update: true
 
- env:
-   global:
+env:
+  global:
      - CRAN="http://cran.rstudio.com"
      - R_BUILD_ARGS=" "
      - R_CHECK_ARGS="--as-cran"
