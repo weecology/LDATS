@@ -22,7 +22,7 @@
 #'   Every model needs a covariate to describe the time value for each
 #'   document (in whatever relevant units), whose name in the table is input
 #'   in \code{control} (the \code{timename} entry), that dictates the 
-#'   application of the changepoints. 
+#'   application of the change points. 
 #'   In addition, all covariates named within specific models in
 #'   \code{formula} must be included. Must be a conformable to a data table,
 #'   as verified by \code{\link{check_document_covariate_table}}. 
@@ -92,7 +92,6 @@
 #' @examples 
 #' \dontrun{
 #'   data(rodents)
-#'   lda_data <- rodents$document_term_table
 #'   document_term_table <- rodents$document_term_table
 #'   document_covariate_table <- rodents$document_covariate_table
 #'   
@@ -124,7 +123,7 @@ LDA_TS <- function(document_term_table, document_covariate_table,
 #' @rdname LDA_TS
 #'
 #' @description \code{check_LDA_TS_inputs} verifies that the inputs to 
-#'   \code{LDA_TS} are proper for a full analysis.
+#'   \code{LDA_TS} are of proper classes for a full analysis.
 #' 
 #' @export
 #'

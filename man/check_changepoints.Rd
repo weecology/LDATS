@@ -2,28 +2,14 @@
 % Please edit documentation in R/multinom_TS.R
 \name{check_changepoints}
 \alias{check_changepoints}
-\title{Verify the change points of a multinomial time series model}
+\title{Verify that a set of change point locations is proper}
 \usage{
-check_changepoints(data, changepoints = NULL,
-  timename = TS_controls_list()$timename)
+check_changepoints(changepoints = NULL)
 }
 \arguments{
-\item{data}{Class \code{data.frame} object including the predictor and 
-response variables.}
-
-\item{changepoints}{Numeric vector indicating locations of the change 
-points.}
-
-\item{timename}{Character name of the column in the 
-\code{document_covariate_table} that contains the time index to use
-for assignment of the changepoints (corresponding to the vector 
-\strong{\eqn{t}} in the mathematical description of the model).}
-}
-\value{
-Logical indicator of the check passing \code{TRUE} or failing
-  \code{FALSE}.
+\item{changepoints}{Change point locations to evaluate.}
 }
 \description{
-Check to verify that a time series can be broken into a set 
-  of chunks based on input changepoints.
+Verify that the change point locations are \code{numeric}
+  and conformable to \code{interger} values.
 }

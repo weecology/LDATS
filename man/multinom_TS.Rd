@@ -8,21 +8,30 @@ multinom_TS(data, formula, changepoints = NULL, weights = NULL,
   control = TS_controls_list())
 }
 \arguments{
-\item{data}{Class \code{data.frame} object including [1] the time variable
-(indicated in \code{control}), [2] the predictor variables (required by
-\code{formula}) and [3], the multinomial response variable (indicated
-in \code{formula}). Note that the response variables should be formatted
-as a \code{data.frame} object named as indicated by the \code{response}
-entry in the \code{control} list, such as \code{gamma} for a standard
-TS analysis on LDA output.}
+\item{data}{\code{data.frame} including [1] the time variable (indicated 
+in \code{control$timename} and notated as \strong{\eqn{t}} in the math 
+description), [2] the predictor variables (required by
+\code{formula}, notated as \strong{\eqn{X}} in the math description) and
+[3], the multinomial response variable (indicated in \code{formula} 
+and notated in the math description as 
+\ifelse{html}{
+   \out{<span style="text-decoration: overline"><b><i>&Gamma;
+        </i></b></span>}}{\strong{\eqn{\overline{\Gamma}}}}
+as verified by \code{\link{check_timename}} and 
+\code{\link{check_formula}}.
+ Note that the response variables should be
+formatted as a \code{data.frame} object named as indicated by the 
+\code{response} entry in the \code{control} list, such as \code{gamma} 
+for a standard TS analysis on LDA output. See \code{Examples}.}
 
-\item{formula}{\code{formula} describing the continuous change. Any 
+\item{formula}{\code{formula} defining the regression relationship between
+the changepoints, see \code{\link[stats]{formula}}. Any 
 predictor variable included must also be a column in the
-\code{data}. Any (multinomial) response variable must also be a set of
-columns in \code{data}.}
+\code{data} and any (multinomial) response variable must be a set of
+columns in \code{data}, as verified by \code{\link{check_formula}}.}
 
 \item{changepoints}{Numeric vector indicating locations of the change 
-points.}
+points, validity verified by \code{\link{check_changepoints}}.}
 
 \item{weights}{Optional class \code{numeric} vector of weights for each 
 document. Corresponds to the vector \strong{\eqn{v}} in the math 
@@ -39,6 +48,23 @@ Object of class \code{multinom_TS_fit}, which is a list of [1]
   all chunks.
 }
 \description{
-Fit a set of multinomial regression models to a time series of
-  of data divided into multiple chunks based on change points.
+Fit a set of multinomial regression models (via
+  \code{\link[nnet]{multinom}}, Venables and Ripley 2002) to a time series
+  of data divided into multiple segments (a.k.a. chunks) based on given 
+  locations for a set of change points.
+}
+\examples{
+\dontrun{
+  data(rodents)
+  dtt <- rodents$document_term_table
+  lda <- LDA_set(dtt, 4, 1, LDA_controls_list(quiet = TRUE))
+  dct <- rodents$document_covariate_table
+  dct$gamma <- lda[[1]]@gamma
+  mts <- multinom_TS(dct, formula = gamma ~ 1, changepoints = c(20,50)) 
+}
+
+}
+\references{
+Venables, W. N. and B. D. Ripley. 2002. \emph{Modern and Applied
+  Statistics with S}. Fourth Edition. Springer, New York, NY, USA.
 }

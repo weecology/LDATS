@@ -13,9 +13,6 @@ check_formula(data, formula)
 
 \item{formula}{Formula to evaluate.}
 }
-\value{
-Nothing.
-}
 \description{
 Verify that the formula is actually a formula and that the
   response and predictor variabless are all included in the data.

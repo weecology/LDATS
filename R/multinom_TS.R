@@ -1,23 +1,34 @@
 #' @title Fit a multinomial change point Time Series model
 #'
-#' @description Fit a set of multinomial regression models to a time series of
-#'   of data divided into multiple chunks based on change points. 
+#' @description Fit a set of multinomial regression models (via
+#'   \code{\link[nnet]{multinom}}, Venables and Ripley 2002) to a time series
+#'   of data divided into multiple segments (a.k.a. chunks) based on given 
+#'   locations for a set of change points. 
 #'
-#' @param data Class \code{data.frame} object including [1] the time variable
-#'   (indicated in \code{control}), [2] the predictor variables (required by
-#'   \code{formula}) and [3], the multinomial response variable (indicated
-#'   in \code{formula}). Note that the response variables should be formatted
-#'   as a \code{data.frame} object named as indicated by the \code{response}
-#'   entry in the \code{control} list, such as \code{gamma} for a standard
-#'   TS analysis on LDA output. 
+#' @param data \code{data.frame} including [1] the time variable (indicated 
+#'   in \code{control$timename} and notated as \strong{\eqn{t}} in the math 
+#'   description), [2] the predictor variables (required by
+#'   \code{formula}, notated as \strong{\eqn{X}} in the math description) and
+#'   [3], the multinomial response variable (indicated in \code{formula} 
+#'   and notated in the math description as 
+#'   \ifelse{html}{
+#'      \out{<span style="text-decoration: overline"><b><i>&Gamma;
+#'           </i></b></span>}}{\strong{\eqn{\overline{\Gamma}}}}
+#'   as verified by \code{\link{check_timename}} and 
+#'   \code{\link{check_formula}}.
+#'    Note that the response variables should be
+#'   formatted as a \code{data.frame} object named as indicated by the 
+#'   \code{response} entry in the \code{control} list, such as \code{gamma} 
+#'   for a standard TS analysis on LDA output. See \code{Examples}.
 #'
-#' @param formula \code{formula} describing the continuous change. Any 
+#' @param formula \code{formula} defining the regression relationship between
+#'   the changepoints, see \code{\link[stats]{formula}}. Any 
 #'   predictor variable included must also be a column in the
-#'   \code{data}. Any (multinomial) response variable must also be a set of
-#'   columns in \code{data}. 
+#'   \code{data} and any (multinomial) response variable must be a set of
+#'   columns in \code{data}, as verified by \code{\link{check_formula}}.
 #'
 #' @param changepoints Numeric vector indicating locations of the change 
-#'   points.
+#'   points, validity verified by \code{\link{check_changepoints}}.
 #'
 #' @param weights Optional class \code{numeric} vector of weights for each 
 #'   document. Corresponds to the vector \strong{\eqn{v}} in the math 
@@ -32,12 +43,27 @@
 #'   chunk-level model fits and [2] the total log likelihood combined across 
 #'   all chunks.
 #'
+#' @references
+#'   Venables, W. N. and B. D. Ripley. 2002. \emph{Modern and Applied
+#'   Statistics with S}. Fourth Edition. Springer, New York, NY, USA.
+#'
+#' @examples 
+#' \dontrun{
+#'   data(rodents)
+#'   dtt <- rodents$document_term_table
+#'   lda <- LDA_set(dtt, 4, 1, LDA_controls_list(quiet = TRUE))
+#'   dct <- rodents$document_covariate_table
+#'   dct$gamma <- lda[[1]]@gamma
+#'   mts <- multinom_TS(dct, formula = gamma ~ 1, changepoints = c(20,50)) 
+#' }
+#'
 #' @export 
 #'
 multinom_TS <- function(data, formula, changepoints = NULL, 
                         weights = NULL, control = TS_controls_list()){
 
-  if (!check_changepoints(data, changepoints, control$timename)){
+  check_multinom_TS_inputs(data, formula, changepoints, weights, control)
+  if (!verify_changepoint_locations(data, changepoints, control$timename)){
     out <- list("chunk models" = NA, "logLik" = -Inf, "chunks" = NA)
     class(out) <- c("multinom_TS_fit", "list")
     return(out)
@@ -52,6 +78,41 @@ multinom_TS <- function(data, formula, changepoints = NULL,
     fits[[i]] <- TS_chunk_memo(data, formula, chunks[i, ], weights, control)
   }
   package_chunk_fits(chunks, fits)
+}
+
+#' @rdname LDA_TS
+#'
+#' @description \code{check_multinom_TS_inputs} verifies that the inputs to 
+#'   \code{multinom_TS} are of proper classes for an analysis.
+#' 
+#' @export
+#'
+check_multinom_TS_inputs <- function(data, formula, changepoints = NULL, 
+                                     weights = NULL, 
+                                     control = TS_controls_list()){
+  check_changepoints(changepoints)
+  check_weights(weights)
+  check_formula(data, formula)
+  check_timename(data, control$timename)
+  check_control(control, "TS_controls")
+}
+
+#' @title Verify that a set of change point locations is proper
+#' 
+#' @description Verify that the change point locations are \code{numeric}
+#'   and conformable to \code{interger} values. 
+#'   
+#' @param changepoints Change point locations to evaluate.
+#' 
+#' @export
+#'
+check_changepoints <- function(changepoints = NULL){
+  if (is.null(changepoints)){
+    return()
+  }
+  if (!is.numeric(changepoints) || any(changepoints %% 1 != 0)){
+    stop("changepoints must be integer-valued")
+  }
 }
 
 #' @title Log likelihood of a multinomial TS model
@@ -156,7 +217,7 @@ prep_chunks <- function(data, changepoints = NULL,
 #'
 #' @export 
 #'
-check_changepoints <- function(data, changepoints = NULL, 
+verify_changepoint_locations <- function(data, changepoints = NULL, 
                                timename = TS_controls_list()$timename){
 
   if (is.null(changepoints)){
