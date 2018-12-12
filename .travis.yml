@@ -3,9 +3,21 @@ cache: packages
 sudo: required
 warnings_are_errors: false
 
-before_install:
-  - sudo apt-get update -qq
+addons:
+  apt:
+    packages:
+      - libgsl0-dbg
+      - libgsl0-dev
+      - libgsl0ldbl
+    update: true
 
-r:
-  - release
-  - devel
+env:
+  matrix:
+    - r: release
+      not_cran: false
+      r_build_args: ""
+      r_check_args: "--as--cran"
+    - r: devel
+      not_cran: false
+      r_build_args: ""
+      r_check_args: "--as--cran"
