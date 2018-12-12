@@ -24,6 +24,6 @@ Logical indicator of the check passing \code{TRUE} or failing
   \code{FALSE}.
 }
 \description{
-Check to verify that a time series can be broken into a set 
+Verify that a time series can be broken into a set 
   of chunks based on input changepoints.
 }

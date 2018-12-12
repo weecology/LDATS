@@ -2,7 +2,7 @@
 % Please edit documentation in R/TS_on_LDA.R
 \name{check_LDA_models}
 \alias{check_LDA_models}
-\title{Verify that LDA model input is proper}
+\title{Check that LDA model input is proper}
 \usage{
 check_LDA_models(LDA_models)
 }
@@ -10,6 +10,6 @@ check_LDA_models(LDA_models)
 \item{LDA_models}{List of LDA models or singular LDA model to evaluate.}
 }
 \description{
-Verify that the \code{LDA_models} input is, in fact, LDA 
+Check that the \code{LDA_models} input is, in fact, LDA 
   models or a singular LDA model.
 }

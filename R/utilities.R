@@ -141,9 +141,9 @@ memoise_fun <- function(fun, memoise_fun){
 }
 
 
-#' @title Verify that a control list is proper
+#' @title Check that a control list is proper
 #' 
-#' @description Verify that a list of controls is of the right class.
+#' @description Check that a list of controls is of the right class.
 #'   
 #' @param control Control list to evaluate.
 #' 
@@ -158,9 +158,9 @@ check_control <- function(control, eclass = "TS_controls"){
 }
 
 
-#' @title Verify that document term table is proper
+#' @title Check that document term table is proper
 #' 
-#' @description Verify that the table of observations is conformable to
+#' @description Check that the table of observations is conformable to
 #'   a matrix of integers.
 #'   
 #' @param document_term_table Table of observation count data (rows: 
@@ -177,9 +177,9 @@ check_document_term_table <- function(document_term_table){
   }
 }
 
-#' @title Verify that topics vector is proper
+#' @title Check that topics vector is proper
 #' 
-#' @description Verify that the vector of numbers of topics is conformable to
+#' @description Check that the vector of numbers of topics is conformable to
 #'   integers greater than 1.
 #'   
 #' @param topics Vector of the number of topics to evaluate (\eqn{k}).
@@ -195,9 +195,9 @@ check_topics <- function(topics){
   }
 }
 
-#' @title Verify that nseeds value or seeds vector is proper
+#' @title Check that nseeds value or seeds vector is proper
 #' 
-#' @description Verify that the vector of numbers of seeds is conformable to
+#' @description Check that the vector of numbers of seeds is conformable to
 #'   integers greater than 1.
 #'   
 #' @param seeds Value of the number of random seeds to evaluate.

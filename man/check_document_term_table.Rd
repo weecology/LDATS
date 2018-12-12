@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilities.R
 \name{check_document_term_table}
 \alias{check_document_term_table}
-\title{Verify that document term table is proper}
+\title{Check that document term table is proper}
 \usage{
 check_document_term_table(document_term_table)
 }
@@ -11,6 +11,6 @@ check_document_term_table(document_term_table)
 documents (\eqn{M}), columns: terms (\eqn{V})).}
 }
 \description{
-Verify that the table of observations is conformable to
+Check that the table of observations is conformable to
   a matrix of integers.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/multinom_TS.R
 \name{check_changepoints}
 \alias{check_changepoints}
-\title{Verify that a set of change point locations is proper}
+\title{Check that a set of change point locations is proper}
 \usage{
 check_changepoints(changepoints = NULL)
 }
@@ -10,6 +10,6 @@ check_changepoints(changepoints = NULL)
 \item{changepoints}{Change point locations to evaluate.}
 }
 \description{
-Verify that the change point locations are \code{numeric}
+Check that the change point locations are \code{numeric}
   and conformable to \code{interger} values.
 }

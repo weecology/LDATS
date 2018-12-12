@@ -6,15 +6,18 @@
 #'   locations for a set of change points. 
 #'
 #' @param data \code{data.frame} including [1] the time variable (indicated 
-#'   in \code{control$timename} and notated as \strong{\eqn{t}} in the math 
+#'   in \code{control$timename} and notated as 
+#'   \ifelse{html}{\out{<b><i>t</i></b>}}{\eqn{\mathbf{t}}} in the math 
 #'   description), [2] the predictor variables (required by
-#'   \code{formula}, notated as \strong{\eqn{X}} in the math description) and
+#'   \code{formula}, notated as 
+#'   \ifelse{html}{\out{<b><i>X</i></b>}}{\eqn{\mathbf{X}}}
+#'   in the math description) and
 #'   [3], the multinomial response variable (indicated in \code{formula} 
 #'   and notated in the math description as 
 #'   \ifelse{html}{
 #'      \out{<span style="text-decoration: overline"><b><i>&Gamma;
-#'           </i></b></span>}}{\strong{\eqn{\overline{\Gamma}}}}
-#'   ) as verified by \code{\link{check_timename}} and 
+#'           </i></b></span>}}{\eqn{\overline{\boldsymbol{\Gamma}}}})
+#'   as verified by \code{\link{check_timename}} and 
 #'   \code{\link{check_formula}}.
 #'    Note that the response variables should be
 #'   formatted as a \code{data.frame} object named as indicated by the 
@@ -23,16 +26,28 @@
 #'
 #' @param formula \code{formula} defining the regression relationship between
 #'   the changepoints, see \code{\link[stats]{formula}}. Any 
-#'   predictor variable included must also be a column in the
+#'   predictor variable included must also be a column in 
 #'   \code{data} and any (multinomial) response variable must be a set of
 #'   columns in \code{data}, as verified by \code{\link{check_formula}}.
 #'
 #' @param changepoints Numeric vector indicating locations of the change 
-#'   points, validity verified by \code{\link{check_changepoints}}.
+#'   points, noted as \ifelse{html}{
+#'       \out{<i><b>&rho;</b><sub>m<sub>2</sub><sup>r</sup></sub></i>}
+#'       }{\eqn{\boldsymbol{\rho}_{m^r_2}}} in the math description.
+#'   Validity verified by \code{\link{check_changepoints}}.
 #'
 #' @param weights Optional class \code{numeric} vector of weights for each 
 #'   document. Corresponds to the vector \strong{\eqn{v}} in the math 
-#'   description.
+#'   description. Defaults to \code{NULL}, translating to an equal weight for
+#'   each document. When using \code{multinom_TS} in a standard LDATS 
+#'   analysis, it is advisable to weight the documents by their total size,
+#'   as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
+#'   proportions (\ifelse{html}{
+#'      \out{<span style="text-decoration: overline"><b><i>&Gamma;
+#'           </i></b></span>}}{\eqn{\overline{\boldsymbol{\Gamma}}}}), which 
+#'   does not account for size differences among documents. For most models,
+#'   a scaling of the weights (so that the maximum is 1) is most appropriate,
+#'   and this is accomplished using \code{document_weights}
 #'
 #' @param control Class \code{TS_controls} list, holding control parameters
 #'   for the Time Series model including the parallel tempering Markov Chain 
@@ -40,8 +55,10 @@
 #'   \code{\link{TS_controls_list}}.
 #'
 #' @return Object of class \code{multinom_TS_fit}, which is a list of [1]
-#'   chunk-level model fits and [2] the total log likelihood combined across 
-#'   all chunks.
+#'   chunk-level model fits (\code{"chunk models"}), [2] the total log 
+#'   likelihood combined across all chunks (\code{"logLik"}), and [3] a 
+#'   \code{data.frame} of chunk beginning and ending times (\code{"logLik"}
+#'   with columns \code{"start"} and \code{"end"}).
 #'
 #' @references
 #'   Venables, W. N. and B. D. Ripley. 2002. \emph{Modern and Applied
@@ -54,7 +71,9 @@
 #'   lda <- LDA_set(dtt, 4, 1, LDA_controls_list(quiet = TRUE))
 #'   dct <- rodents$document_covariate_table
 #'   dct$gamma <- lda[[1]]@gamma
-#'   mts <- multinom_TS(dct, formula = gamma ~ 1, changepoints = c(20,50)) 
+#'   weights <- document_weights(dtt)
+#'   mts <- multinom_TS(dct, formula = gamma ~ 1, changepoints = c(20,50),
+#'                      weights = weights) 
 #' }
 #'
 #' @export 
@@ -82,7 +101,7 @@ multinom_TS <- function(data, formula, changepoints = NULL,
 
 #' @rdname multinom_TS
 #'
-#' @description \code{check_multinom_TS_inputs} verifies that the inputs to 
+#' @description \code{check_multinom_TS_inputs} checks that the inputs to 
 #'   \code{multinom_TS} are of proper classes for an analysis.
 #' 
 #' @export
@@ -97,9 +116,9 @@ check_multinom_TS_inputs <- function(data, formula, changepoints = NULL,
   check_control(control, "TS_controls")
 }
 
-#' @title Verify that a set of change point locations is proper
+#' @title Check that a set of change point locations is proper
 #' 
-#' @description Verify that the change point locations are \code{numeric}
+#' @description Check that the change point locations are \code{numeric}
 #'   and conformable to \code{interger} values. 
 #'   
 #' @param changepoints Change point locations to evaluate.
@@ -198,7 +217,7 @@ prep_chunks <- function(data, changepoints = NULL,
 
 #' @title Verify the change points of a multinomial time series model
 #'
-#' @description Check to verify that a time series can be broken into a set 
+#' @description Verify that a time series can be broken into a set 
 #'   of chunks based on input changepoints. 
 #'
 #' @param data Class \code{data.frame} object including the predictor and 

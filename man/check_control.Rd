@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilities.R
 \name{check_control}
 \alias{check_control}
-\title{Verify that a control list is proper}
+\title{Check that a control list is proper}
 \usage{
 check_control(control, eclass = "TS_controls")
 }
@@ -12,5 +12,5 @@ check_control(control, eclass = "TS_controls")
 \item{eclass}{Expected class of the list to be evaluated.}
 }
 \description{
-Verify that a list of controls is of the right class.
+Check that a list of controls is of the right class.
 }

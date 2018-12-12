@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilities.R
 \name{check_topics}
 \alias{check_topics}
-\title{Verify that topics vector is proper}
+\title{Check that topics vector is proper}
 \usage{
 check_topics(topics)
 }
@@ -10,6 +10,6 @@ check_topics(topics)
 \item{topics}{Vector of the number of topics to evaluate (\eqn{k}).}
 }
 \description{
-Verify that the vector of numbers of topics is conformable to
+Check that the vector of numbers of topics is conformable to
   integers greater than 1.
 }

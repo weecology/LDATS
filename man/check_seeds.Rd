@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilities.R
 \name{check_seeds}
 \alias{check_seeds}
-\title{Verify that nseeds value or seeds vector is proper}
+\title{Check that nseeds value or seeds vector is proper}
 \usage{
 check_seeds(seeds)
 }
@@ -10,6 +10,6 @@ check_seeds(seeds)
 \item{seeds}{Value of the number of random seeds to evaluate.}
 }
 \description{
-Verify that the vector of numbers of seeds is conformable to
+Check that the vector of numbers of seeds is conformable to
   integers greater than 1.
 }

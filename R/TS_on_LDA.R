@@ -284,9 +284,9 @@ expand_TS <- function(LDA_models, formulas, nchangepoints){
   out
 }
 
-#' @title Verify that nchangepoints vector is proper
+#' @title Check that nchangepoints vector is proper
 #' 
-#' @description Verify that the vector of numbers of changepoints is 
+#' @description Check that the vector of numbers of changepoints is 
 #'   conformable to integers greater than 1.
 #'   
 #' @param nchangepoints Vector of the number of changepoints to evaluate.
@@ -302,9 +302,9 @@ check_nchangepoints <- function(nchangepoints){
   }
 }
 
-#' @title Verify that weights vector is proper
+#' @title Check that weights vector is proper
 #' 
-#' @description Verify that the vector of document weights is numeric
+#' @description Check that the vector of document weights is numeric
 #'   and inform the user if weights are outside the optimal range: 
 #'   \eqn{(0,1]}.
 #'   
@@ -326,9 +326,9 @@ check_weights <- function(weights){
   }
 }
 
-#' @title Verify that LDA model input is proper
+#' @title Check that LDA model input is proper
 #' 
-#' @description Verify that the \code{LDA_models} input is, in fact, LDA 
+#' @description Check that the \code{LDA_models} input is, in fact, LDA 
 #'   models or a singular LDA model. 
 #'   
 #' @param LDA_models List of LDA models or singular LDA model to evaluate.
@@ -343,9 +343,9 @@ check_LDA_models <- function(LDA_models){
   }
 }
 
-#' @title Verify that the document covariate table is proper
+#' @title Check that the document covariate table is proper
 #' 
-#' @description Verify that the table of document-level covariates is 
+#' @description Check that the table of document-level covariates is 
 #'   conformable to a data frame and of the right size (correct number of 
 #'   documents) for the document-topic output from the LDA models.
 #'   
@@ -381,9 +381,9 @@ check_document_covariate_table <- function(document_covariate_table,
   }
 }
 
-#' @title Verify that the time vector is proper
+#' @title Check that the time vector is proper
 #' 
-#' @description Verify that the vector of time values is included in the 
+#' @description Check that the vector of time values is included in the 
 #'   document covariate table and that it is either numeric or a date.
 #'   
 #' @param document_covariate_table Document covariate table used to query
@@ -410,10 +410,10 @@ check_timename <- function(document_covariate_table, timename){
   }
 }
 
-#' @title Verify that formulas vector is proper and append the response 
+#' @title Check that formulas vector is proper and append the response 
 #'   variable
 #' 
-#' @description Verify that the vector of formulas is actually formatted
+#' @description Check that the vector of formulas is actually formatted
 #'   as a vector formula objects and that the predictor variables are all 
 #'   included in the document covariate table. 
 #'   
@@ -458,7 +458,7 @@ check_formulas <- function(formulas, document_covariate_table, control){
 
 #' @title Check all of the inputs to TS_on_LDA
 #'
-#' @description Verify the inputs to (\code{\link{TS_on_LDA}}).
+#' @description Check the inputs to (\code{\link{TS_on_LDA}}).
 #'
 #' @param LDA_models List of LDA models (class \code{LDA_set}) or a singular
 #'   LDA model (class \code{LDA}).

@@ -2,7 +2,7 @@
 % Please edit documentation in R/TS_on_LDA.R
 \name{check_timename}
 \alias{check_timename}
-\title{Verify that the time vector is proper}
+\title{Check that the time vector is proper}
 \usage{
 check_timename(document_covariate_table, timename)
 }
@@ -13,6 +13,6 @@ for the time column.}
 \item{timename}{Column name for the time variable to evaluate.}
 }
 \description{
-Verify that the vector of time values is included in the 
+Check that the vector of time values is included in the 
   document covariate table and that it is either numeric or a date.
 }

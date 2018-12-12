@@ -15,11 +15,12 @@ check_LDA_set_inputs(document_term_table, topics, nseeds, control)
 documents (\eqn{M}), columns: terms (\eqn{V})). May be a class 
 \code{matrix} or \code{data.frame} but must be conformable to
 a code of integers. This table is a document-level summary of the data 
-noted as \strong{\eqn{w}} (the word-level topic identity) in the math 
-description.}
+noted as 
+\ifelse{html}{\out{<b><i>w</i></b>}}{\eqn{\mathbf{w}}}
+(the word-level topic identity) in the math description.}
 
 \item{topics}{Vector of the number of topics to evaluate for each model
-(\ifelse{html}{\out{<i>k<sub>m<sub>1</sub></sub></i>}}{\eqn{k_m_1}} 
+(\ifelse{html}{\out{<i>k<sub>m<sub>1</sub></sub></i>}}{\eqn{k_{m_1}}} 
 topics for a model \ifelse{html}{\out{<i>m<sub>1</sub></i>}}{\eqn{m_1}}).}
 
 \item{nseeds}{Integer number of seeds (replicate starts) to use for each 
@@ -42,7 +43,7 @@ For a given corpus \eqn{D} (dataset consisting of counts of
 \code{LDA_set} is a list wrapper of \code{\link[topicmodels]{LDA}}
   in the \code{topicmodels} package (Grun and Hornik 2011).
 
-\code{check_LDA_set_inputs} verifies that all of the inputs 
+\code{check_LDA_set_inputs} checks that all of the inputs 
   are proper for \code{LDA_set} (that the table of observations is 
   conformable to a matrix of integers, the number of topics is an integer, 
   the number of seeds is an integer and the controls list is proper).
