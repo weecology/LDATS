@@ -1,0 +1,86 @@
+---
+title: "Comparison with Christensen paper"
+author: "Renata Diaz"
+date: "12/13/2018"
+output: github_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Side-by-side comparison of LDATS results (and Portal rodents vignette) with analysis from Christensen et al 2018. 
+
+## LDATS Installation
+
+To obtain the most recent version of **LDATS**, install the most recent 
+version from GitHub:
+
+```{r, eval=FALSE}
+install.packages("devtools")
+devtools::install_github("weecology/LDATS")
+```
+
+```{r, eval = T}
+library(LDATS)
+```
+
+## Christensen 2018 analysis
+
+Download Christensen 2018 analysis scripts & data files from [Extreme-events-LDA repo:](https://github.com/emchristensen/Extreme-events-LDA)
+
+Main Analysis Scripts:
+
+  * rodent_LDA_analysis.R main script for analyzing rodent community change using LDA
+  
+  * rodent_data_for_LDA.R contains a function that creates the rodent data table used in analyses
+  
+  * AIC_model_selection.R contains functions for calculating AIC for different candidate LDA models
+  
+  * changepointmodel.r contains change-point model code
+  
+  * LDA-distance.R function for computing Hellinger distance analyses
+    
+Data:
+
+  * Rodent_table_dat.csv table of rodent data, created by rodent_data_for_LDA.R
+
+Figure scripts:
+
+  * LDA_figure_scripts.R contains functions for making main plots in manuscript (Fig 1). Called from rodent_LDA_analysis.R
+
+
+```{r download Christensen, eval = FALSE}
+
+files_to_download <- c('rodent_LDA_analysis.r', 'rodent_data_for_LDA.r', 'AIC_model_selection.R', 'changepointmodel.r', 'LDA-distance.R', 'Rodent_table_dat.csv', 'LDA_figure_scripts.R')
+
+for(i in 1:length(files_to_download)) {
+  download.file(url = paste0("https://raw.githubusercontent.com/emchristensen/Extreme-events-LDA/master/", files_to_download[i]),
+                destfile = paste0('christensen-ecology/', files_to_download[i]))
+}
+
+rm(files_to_download)
+rm(i)
+
+```
+
+
+## Data
+
+The Portal rodents control data is included in the LDATS package:
+
+```{r LDATS data}
+
+data(rodents)
+
+ldats_dat <- rodents[[1]]
+
+head(ldats_dat)
+
+```
+
+Load the data used in Christensen et al: 
+
+
