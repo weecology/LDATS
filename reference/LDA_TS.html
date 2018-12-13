@@ -136,11 +136,11 @@ check_LDA_TS_inputs checks that the inputs to
     <p>Conduct a complete LDATS analysis (Christensen 
   <em>et al.</em> 2018), including running a suite of Latent Dirichlet
   Allocation (LDA) models (Blei <em>et al.</em> 2003, Grun and Hornik 2011) 
-  via <code>LDA_set</code>, selecting LDA model(s) via 
-  <code>select_LDA</code>, running a complete set of Bayesian Time Series
-  (TS) models (Western and Kleykamp 2004) via <code>TS_on_LDA</code> on
+  via <code><a href='LDA_set.html'>LDA_set</a></code>, selecting LDA model(s) via 
+  <code><a href='select_LDA.html'>select_LDA</a></code>, running a complete set of Bayesian Time Series
+  (TS) models (Western and Kleykamp 2004) via <code><a href='TS_on_LDA.html'>TS_on_LDA</a></code> on
   the chosen LDA model(s), and selecting the best TS model via 
-  <code>select_TS</code>.</p>
+  <code><a href='select_TS.html'>select_TS</a></code>.</p>
 <p><code>check_LDA_TS_inputs</code> checks that the inputs to 
   <code>LDA_TS</code> are of proper classes for a full analysis.</p>
     
@@ -148,13 +148,13 @@ check_LDA_TS_inputs checks that the inputs to
 
     <pre class="usage"><span class='fu'>LDA_TS</span>(<span class='no'>document_term_table</span>, <span class='no'>document_covariate_table</span>, <span class='kw'>topics</span> <span class='kw'>=</span> <span class='fl'>2</span>,
   <span class='kw'>nseeds</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>formulas</span> <span class='kw'>=</span> ~<span class='fl'>1</span>, <span class='kw'>nchangepoints</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>weights</span> <span class='kw'>=</span> <span class='fu'>document_weights</span>(<span class='no'>document_term_table</span>),
-  <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'>LDA_TS_controls_list</span>())
+  <span class='kw'>weights</span> <span class='kw'>=</span> <span class='fu'><a href='document_weights.html'>document_weights</a></span>(<span class='no'>document_term_table</span>),
+  <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='LDA_TS_controls_list.html'>LDA_TS_controls_list</a></span>())
 
 <span class='fu'>check_LDA_TS_inputs</span>(<span class='no'>document_term_table</span>, <span class='no'>document_covariate_table</span>,
   <span class='kw'>topics</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>nseeds</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>formulas</span> <span class='kw'>=</span> ~<span class='fl'>1</span>, <span class='kw'>nchangepoints</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>weights</span> <span class='kw'>=</span> <span class='fu'>document_weights</span>(<span class='no'>document_term_table</span>),
-  <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'>LDA_TS_controls_list</span>())</pre>
+  <span class='kw'>weights</span> <span class='kw'>=</span> <span class='fu'><a href='document_weights.html'>document_weights</a></span>(<span class='no'>document_term_table</span>),
+  <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='LDA_TS_controls_list.html'>LDA_TS_controls_list</a></span>())</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -164,7 +164,7 @@ check_LDA_TS_inputs checks that the inputs to
       <td><p>Table of observation count data (rows: 
 documents (\(M\)), columns: terms (\(V\))). May be a 
 <code>matrix</code> or <code>data.frame</code> but must be conformable to a matrix
-of integers (as verified by <code>check_document_term_table</code>). 
+of integers (as verified by <code><a href='check_document_term_table.html'>check_document_term_table</a></code>). 
 This table is a document-level summary of the data noted as
 <b><i>w</i></b>
 (the word-level topic identity) in the math description.</p></td>
@@ -179,7 +179,7 @@ in <code>control</code> (the <code>timename</code> entry), that dictates the
 application of the change points. 
 In addition, all covariates named within specific models in
 <code>formula</code> must be included. Must be a conformable to a data table,
-as verified by <code>check_document_covariate_table</code>.</p></td>
+as verified by <code><a href='check_document_covariate_table.html'>check_document_covariate_table</a></code>.</p></td>
     </tr>
     <tr>
       <th>topics</th>
@@ -218,14 +218,14 @@ TS model, for each selected LDA model.</p></td>
 document. Corresponds to the vector 
 <b><i>v</i></b> in the math 
 description. Defaults to value calculated by 
-<code>document_weights</code>, but can be set as <code>NULL</code>.</p></td>
+<code><a href='document_weights.html'>document_weights</a></code>, but can be set as <code>NULL</code>.</p></td>
     </tr>
     <tr>
       <th>control</th>
       <td><p>Class <code>LDA_TS_controls</code> list (as generated by
-<code>LDA_TS_controls_list</code>) that contains 
-<code>LDA_controls</code> (<code>LDA_controls_list</code>), 
-<code>TS_controls</code> (<code>TS_controls_list</code>), and the single 
+<code><a href='LDA_TS_controls_list.html'>LDA_TS_controls_list</a></code>) that contains 
+<code>LDA_controls</code> (<code><a href='LDA_controls_list.html'>LDA_controls_list</a></code>), 
+<code>TS_controls</code> (<code><a href='TS_controls_list.html'>TS_controls_list</a></code>), and the single 
 top-level control <code>quiet</code>.</p></td>
     </tr>
     </table>
@@ -234,10 +234,10 @@ top-level control <code>quiet</code>.</p></td>
 
     <p><code>LDATS</code> returns a class <code>LDA_TS</code> list object including all 
   fitted LDA and TS models and selected models specifically as elements 
-  <code>"LDA models"</code> (from <code>LDA_set</code>),
-  <code>"Selected LDA model"</code> (from <code>select_LDA</code>), 
-  <code>"TS models"</code> (from <code>TS_on_LDA</code>), and
-  <code>"Selected TS model"</code> (from <code>select_TS</code>).</p>
+  <code>"LDA models"</code> (from <code><a href='LDA_set.html'>LDA_set</a></code>),
+  <code>"Selected LDA model"</code> (from <code><a href='select_LDA.html'>select_LDA</a></code>), 
+  <code>"TS models"</code> (from <code><a href='TS_on_LDA.html'>TS_on_LDA</a></code>), and
+  <code>"Selected TS model"</code> (from <code><a href='select_TS.html'>select_TS</a></code>).</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -266,8 +266,8 @@ top-level control <code>quiet</code>.</p></td>
 
   <span class='no'>mod</span> <span class='kw'>&lt;-</span> <span class='fu'>LDA_TS</span>(<span class='no'>document_term_table</span>, <span class='no'>document_covariate_table</span>,
                 <span class='kw'>topics</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>nseeds</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>formulas</span> <span class='kw'>=</span> ~ <span class='fl'>1</span>, <span class='kw'>nchangepoints</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-                <span class='kw'>weights</span> <span class='kw'>=</span> <span class='fu'>document_weights</span>(<span class='no'>document_term_table</span>),
-                <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'>LDA_TS_controls_list</span>())
+                <span class='kw'>weights</span> <span class='kw'>=</span> <span class='fu'><a href='document_weights.html'>document_weights</a></span>(<span class='no'>document_term_table</span>),
+                <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='LDA_TS_controls_list.html'>LDA_TS_controls_list</a></span>())
 <span class='co'># }</span><div class='input'>
 </div></pre>
   </div>
