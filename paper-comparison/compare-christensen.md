@@ -191,6 +191,8 @@ which(compare_rows == F)
 which(nplots$x < 8)
 ```
 
+I added an argument 'diagnose' to the create\_rodent\_table() function. If T, returns the raw table & \# of plots tables as well as the adjusted table.
+
 The lines that are different are the lines that were adjusted; if you don't adjust the paper data you get the same table as the LDATS data.
 
 For now I will use the *adjusted rodent table* because this will avoid artificially low abundances for incompletely trapped periods.
