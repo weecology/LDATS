@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.14</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.15</span>
       </span>
     </div>
 
@@ -62,6 +62,9 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -89,22 +92,12 @@
 <h2 class="hasAnchor">
 <a href="#overview" class="anchor"></a>Overview</h2>
 <p>The <code>LDATS</code> package provides functionality for analyzing time series of high-dimensional data using a two-stage approach comprised of Latent Dirichlet Allocation (LDA) and Bayesian time series (TS) analyses.</p>
+<p>For a full description of the math underlying the <code>LDATS</code> package, see the <a href="https://github.com/weecology/LDATS/blob/master/manuscript/simonis_et_al.pdf"><em>draft</em> technical manuscript</a>.</p>
 </div>
 <div id="status-in-development" class="section level2">
 <h2 class="hasAnchor">
 <a href="#status-in-development" class="anchor"></a>Status: In Development</h2>
 <p>The package is currently in active development by the <a href="https://www.weecology.org">Weecology Team</a>, in advance of submission to CRAN. The API is well defined at this point and should not change substantially, but we are presently engaged in testing and documentation, and further edits may occur before submission to CRAN. Therefore, any output should still be considered <strong><em>provisional</em></strong>.</p>
-<p>Previous versions of code and implementation can be found in the <a href="https://github.com/emchristensen/Extreme-events-LDA">repository for Christensen <em>et al.</em> 2018</a></p>
-</div>
-<div id="mathematical-background" class="section level2">
-<h2 class="hasAnchor">
-<a href="#mathematical-background" class="anchor"></a>Mathematical background</h2>
-<p>For a full description of the math underlying the <code>LDATS</code> package, see the <em>draft</em> <a href="https://github.com/weecology/LDATS/blob/master/manuscript/simonis_et_al.pdf">technical manuscript</a>.</p>
-</div>
-<div id="contributing" class="section level2">
-<h2 class="hasAnchor">
-<a href="#contributing" class="anchor"></a>Contributing</h2>
-<p>Folks interested in contributing to development, should see <a href="https://github.com/weecology/LDATS/issues">issues</a> for specific pre-package development tasks.</p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -112,18 +105,16 @@
 <p>Install the <code>devtools</code> package and then run:</p>
 <pre><code><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">devtools::install_github("weecology/LDATS")</a></code></pre>
 </div>
-<div id="current-usage" class="section level2">
+<div id="usage" class="section level2">
 <h2 class="hasAnchor">
-<a href="#current-usage" class="anchor"></a>Current Usage</h2>
-<p>Here is an example of an LDA and an LDATS using the Portal rodent data:</p>
-<pre><code><a href="https://www.rdocumentation.org/packages/utils/topics/data">data(rodents)
+<a href="#usage" class="anchor"></a>Usage</h2>
+<p>Here is an example of a full LDA-TS analysis using the <a href="https://github.com/weecology/PortalData">Portal rodent data</a>:</p>
+<pre><code>data(rodents)
 dtt &lt;- rodents$document_term_table
 dct &lt;- rodents$document_covariate_table
 
-r_LDA &lt;- LDATS::LDA_set(dtt, topics = 2:5, nseeds = 2)
 r_LDATS &lt;- LDATS::LDA_TS(dtt, dct, topics = 2:5, nseeds = 2, 
-                         formulas = ~ 1, nchangepoints = 1)
-</a></code></pre>
+                         formulas = c(~1, ~newmoon) nchangepoints = 0:2)</code></pre>
 </div>
 <div id="more-information" class="section level2">
 <h2 class="hasAnchor">
