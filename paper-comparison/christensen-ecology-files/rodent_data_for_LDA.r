@@ -19,7 +19,7 @@ library(dplyr)
 #                              selected_species = c('BA','DM','DO','DS','NA','OL','OT','PB','PE','PF','PH','PI','PL','PM','PP','RF','RM','RO','SF','SH','SO'))
 #'
 
-create_rodent_table = function(period_first,period_last,selected_plots,selected_species) {
+create_rodent_table = function(period_first,period_last,selected_plots,selected_species,diagnose = NULL) {
   
   # retrieve current version of rodent data
   rodents = read.csv(text=getURL("https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent.csv"),
@@ -46,6 +46,10 @@ create_rodent_table = function(period_first,period_last,selected_plots,selected_
   }
   
   #write.table(r_table_adjusted,'Rodent_table_dat.csv',sep=',',row.names = F)
+  if(diagnose == T) {
+    outputs <- list(r_table_adjusted, r_table, nplots_controls)
+    return(outputs)
+  }
   return(r_table_adjusted)
 }
 
