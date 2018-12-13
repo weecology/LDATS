@@ -11,6 +11,9 @@ The `LDATS` package provides functionality for analyzing time series of
 high-dimensional data using a two-stage approach comprised of Latent 
 Dirichlet Allocation (LDA) and Bayesian time series (TS) analyses.
 
+For a full description of the math underlying the `LDATS` package, see the
+[*draft* technical manuscript](https://github.com/weecology/LDATS/blob/master/manuscript/simonis_et_al.pdf).
+
 ## Status: In Development
 
 The package is currently in active development by the 
@@ -20,21 +23,6 @@ substantially, but we are presently engaged in testing and documentation,
 and further edits may occur before submission to CRAN. Therefore, any 
 output should still be considered ***provisional***. 
 
-Previous versions of code and implementation can be found in the 
-[repository for Christensen *et al.* 2018](https://github.com/emchristensen/Extreme-events-LDA)
-
-
-## Mathematical background
-
-For a full description of the math underlying the `LDATS` package, see the
-*draft* [technical manuscript](https://github.com/weecology/LDATS/blob/master/manuscript/simonis_et_al.pdf).
-
-## Contributing
-
-Folks interested in contributing to development, should see 
-[issues](https://github.com/weecology/LDATS/issues) for specific pre-package 
-development tasks.
-
 ## Installation
 
 Install the `devtools` package and then run:
@@ -43,19 +31,18 @@ Install the `devtools` package and then run:
 devtools::install_github("weecology/LDATS")
 ```
 
-## Current Usage
+## Usage
 
-Here is an example of an LDA and an LDATS using the Portal rodent data:
+Here is an example of a full LDA-TS analysis using the 
+[Portal rodent data](https://github.com/weecology/PortalData):
 
 ```
 data(rodents)
 dtt <- rodents$document_term_table
 dct <- rodents$document_covariate_table
 
-r_LDA <- LDATS::LDA_set(dtt, topics = 2:5, nseeds = 2)
 r_LDATS <- LDATS::LDA_TS(dtt, dct, topics = 2:5, nseeds = 2, 
-                         formulas = ~ 1, nchangepoints = 1)
-
+                         formulas = c(~1, ~newmoon) nchangepoints = 0:2)
 ```
 
 ## More Information 
