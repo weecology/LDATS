@@ -20,7 +20,7 @@ Authors@R: c(
 Description: Combines Latent Dirichlet Allocation and Bayesian Multinomial 
     Time Series methods in a two-stage analysis to quantify dynamics in  
 	high-dimensional temporal data.
-URL: https://github.com/weecology/LDATS
+URL: https://weecology.github.io/LDATS, https://github.com/weecology/LDATS
 BugReports: https://github.com/weecology/LDATS/issues
 Depends: R (>= 3.2.3)
 License: MIT + file LICENSE

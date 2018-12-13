@@ -1,7 +1,8 @@
-# Two-Stage Latent Dirichlet Allocation - Time Series Analyses
+# Latent Dirichlet Allocation coupled with Bayesian Time Series analyses
 
 [![Build Status](https://travis-ci.org/weecology/LDATS.svg?branch=master)](https://travis-ci.org/weecology/LDATS)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/weecology/LDATS/master/LICENSE)
+[![Lifecycle:maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 
 ## Overview
 
@@ -11,9 +12,12 @@ Dirichlet Allocation (LDA) and Bayesian time series (TS) analyses.
 
 ## Status: In Development
 
-The package is currently *in development* by the [Weecology 
-Team](https://www.weecology.org). As such, any output should be considered
-***provisional***. 
+The package is currently in active development by the 
+[Weecology Team](https://www.weecology.org), in advance of submission to 
+CRAN. The API is well defined at this point and should not change 
+substantially, but we are presently engaged in testing and documentation,
+and further edits may occur before submission to CRAN. Therefore, any 
+output should still be considered ***provisional***. 
 
 Previous versions of code and implementation can be found in the 
 [repository for Christensen *et al.* 2018](https://github.com/emchristensen/Extreme-events-LDA)

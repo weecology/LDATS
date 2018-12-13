@@ -11,11 +11,16 @@ addons:
       - libgsl0ldbl
     update: true
 
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install texlive-latex-base
+
 r:
   - release
   - devel
  
 after_success:
+  - R CMD INSTALL .
   - Rscript -e 'pkgdown::build_site()'
 
 deploy:
