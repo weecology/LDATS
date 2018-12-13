@@ -15,6 +15,9 @@ before_install:
   - sudo apt-get update -qq
   - sudo apt-get install texlive-latex-base
 
+r_packages:
+  - covr
+
 r:
   - release
   - devel
@@ -22,6 +25,7 @@ r:
 after_success:
   - R CMD INSTALL .
   - Rscript -e 'pkgdown::build_site()'
+  - Rscript -e 'library(covr); codecov()'
 
 deploy:
   provider: pages

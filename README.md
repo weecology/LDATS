@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/weecology/LDATS.svg?branch=master)](https://travis-ci.org/weecology/LDATS)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/weecology/LDATS/master/LICENSE)
 [![Lifecycle:maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+[![Codecov test coverage](https://img.shields.io/codecov/c/github/weecology/LDATS/master.svg)](https://codecov.io/github/weecology/LDATS?branch=master)
 
 ## Overview
 
