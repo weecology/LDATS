@@ -43,6 +43,7 @@ Imports:
     viridis
 Suggests:
     knitr,
+    pkgdown,
     rmarkdown,
     testthat,
     vdiffr
