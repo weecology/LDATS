@@ -154,6 +154,8 @@ which(nplots$x < 8)
 
 ```
 
+I added an argument 'diagnose' to the create_rodent_table() function. If T, returns the raw table & # of plots tables as well as the adjusted table. 
+
 The lines that are different are the lines that were adjusted; if you don't adjust the paper data you get the same table as the LDATS data. 
 
 ```{r data adjustment cleanup, include = FALSE}
@@ -169,4 +171,5 @@ ldats_dat <- ch_dat
 rodents$document_term_table <- ch_dat
 
 ```
+
 
