@@ -12,7 +12,7 @@ package_chunk_fits(chunks, fits)
 chunk (row).}
 
 \item{fits}{List of chunk-level fits returned by \code{TS_chunk_memo},
-(the memoised version of \code{\link{multinom_TS_chunk}}}
+the memoised version of \code{\link{multinom_TS_chunk}}.}
 }
 \value{
 Object of class \code{multinom_TS_fit}, which is a list of [1]
