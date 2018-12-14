@@ -218,10 +218,17 @@ TS model, for each selected LDA model.</p></td>
     <tr>
       <th>weights</th>
       <td><p>Optional class <code>numeric</code> vector of weights for each 
-document. Corresponds to the vector 
-<b><i>v</i></b> in the math 
-description. Defaults to value calculated by 
-<code><a href='document_weights.html'>document_weights</a></code>, but can be set as <code>NULL</code>.</p></td>
+document. Corresponds to the vector <strong>\(u\)</strong> in the math 
+description. Defaults to <code>NULL</code>, translating to an equal weight for
+each document. When using <code>multinom_TS</code> in a standard LDATS 
+analysis, it is advisable to weight the documents by their total size,
+as the result of <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code> is a matrix of 
+proportions (
+   <span style="text-decoration: overline"><b><i>&Gamma;
+        </i></b></span>), which 
+does not account for size differences among documents. For most models,
+a scaling of the weights (so that the average is 1) is most appropriate,
+and this is accomplished using <code>document_weights</code></p></td>
     </tr>
     <tr>
       <th>control</th>

@@ -33,7 +33,9 @@
 <meta property="og:title" content="Log likelihood of a multinomial TS model — logLik.multinom_TS_fit" />
 
 <meta property="og:description" content="Convenience function to simply extract the logLik
-  element from a multinom_TS_fit-class object." />
+  element (and df and nobs) from a multinom_TS_fit
+  object. Extends logLik from 
+  multinom to multinom_TS_fit objects." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -126,7 +128,9 @@
     <div class="ref-description">
     
     <p>Convenience function to simply extract the <code>logLik</code>
-  element from a <code>multinom_TS_fit</code>-class object.</p>
+  element (and <code>df</code> and <code>nobs</code>) from a <code>multinom_TS_fit</code>
+  object. Extends <code><a href='https://www.rdocumentation.org/packages/stats/topics/logLik'>logLik</a></code> from 
+  <code><a href='https://www.rdocumentation.org/packages/nnet/topics/multinom'>multinom</a></code> to <code>multinom_TS_fit</code> objects.</p>
     
     </div>
 
@@ -148,7 +152,9 @@
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Log likelihood of the model.</p>
+    <p>Log likelihood of the model, as class <code>logLik</code>, with 
+  attributes <code>df</code> (degrees of freedom) and <code>nobs</code> (the number of
+  weighted observations, accounting for size differences among documents).</p>
     
 
   </div>

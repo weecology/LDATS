@@ -187,7 +187,7 @@ Validity verified by <code><a href='check_changepoints.html'>check_changepoints<
     <tr>
       <th>weights</th>
       <td><p>Optional class <code>numeric</code> vector of weights for each 
-document. Corresponds to the vector <strong>\(v\)</strong> in the math 
+document. Corresponds to the vector <strong>\(u\)</strong> in the math 
 description. Defaults to <code>NULL</code>, translating to an equal weight for
 each document. When using <code>multinom_TS</code> in a standard LDATS 
 analysis, it is advisable to weight the documents by their total size,
@@ -196,7 +196,7 @@ proportions (
    <span style="text-decoration: overline"><b><i>&Gamma;
         </i></b></span>), which 
 does not account for size differences among documents. For most models,
-a scaling of the weights (so that the maximum is 1) is most appropriate,
+a scaling of the weights (so that the average is 1) is most appropriate,
 and this is accomplished using <code>document_weights</code></p></td>
     </tr>
     <tr>
