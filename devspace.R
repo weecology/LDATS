@@ -28,30 +28,3 @@ xx <- LDA_TS(document_term_table, document_covariate_table,
                    control = LDA_TS_controls_list(
                              TS_control = TS_controls_list(nit = 1e3)))
 
-
-\ifelse{html}{\out{<b><i></i></b>}}{\eqn{\mathbf{}}}
-\ifelse{html}{\out{}}{\eqn{\boldsymbol{}}}
-
-#'   (\ifelse{html}{\out{<i>k<sub>m<sub>1</sub></sub></i>}}{\eqn{k_{m_1}}} 
-#'   (\ifelse{html}{\out{<i>P<sub>m<sub>2</sub></sub></i>}}{\eqn{P_{m_2}}} 
-
-#'   \ifelse{html}{
-#'      \out{<i>&rho;<sub>m<sub>2</sub></sub></i>}}{
-#'      \eqn{\boldsymbol{\rho}_{m_2}}} 
-#'
-
-
-#'   \ifelse{html}{\out{<b><i>t</i></b>}}{\eqn{\mathbf{t}}} 
-
-#'   \ifelse{html}{\out{<b><i>v</i></b>}}{\eqn{\mathbf{v}}} 
-
-#'   \ifelse{html}{\out{<b><i>t</i></b>}}{\eqn{\mathbf{t}}}
-#'   \ifelse{html}{\out{<b><i>X</i></b>}}{\eqn{\mathbf{X}}}
-
-#'   \ifelse{html}{
-#'      \out{<span style="text-decoration: overline"><b><i>&Gamma;
-#'           </i></b></span>}}{\eqn{\overline{\boldsymbol{\Gamma}}}}
-
-#'   \ifelse{html}{
-#'      \out{<span style="text-decoration: overbrace"><b><i>&rho;
-#'           </i></b></span>}}{\eqn{\overbrace{\boldsymbol{\rho}}}}

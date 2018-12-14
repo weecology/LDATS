@@ -6,20 +6,10 @@
 #'   locations for a set of change points. 
 #'
 #' @param data \code{data.frame} including [1] the time variable (indicated 
-#'   in \code{control$timename} and notated as 
-#'   \ifelse{html}{\out{<b><i>t</i></b>}}{\eqn{\mathbf{t}}} in the math 
-#'   description), [2] the predictor variables (required by
-#'   \code{formula}, notated as 
-#'   \ifelse{html}{\out{<b><i>X</i></b>}}{\eqn{\mathbf{X}}}
-#'   in the math description) and
-#'   [3], the multinomial response variable (indicated in \code{formula} 
-#'   and notated in the math description as 
-#'   \ifelse{html}{
-#'      \out{<span style="text-decoration: overline"><b><i>&Gamma;
-#'           </i></b></span>}}{\eqn{\overline{\boldsymbol{\Gamma}}}})
-#'   as verified by \code{\link{check_timename}} and 
-#'   \code{\link{check_formula}}.
-#'    Note that the response variables should be
+#'   in \code{control$timename}), [2] the predictor variables (required by
+#'   \code{formula}) and [3], the multinomial response variable (indicated in
+#'   \code{formula}) as verified by \code{\link{check_timename}} and 
+#'   \code{\link{check_formula}}. Note that the response variables should be
 #'   formatted as a \code{data.frame} object named as indicated by the 
 #'   \code{response} entry in the \code{control} list, such as \code{gamma} 
 #'   for a standard TS analysis on LDA output. See \code{Examples}.
@@ -31,23 +21,18 @@
 #'   columns in \code{data}, as verified by \code{\link{check_formula}}.
 #'
 #' @param changepoints Numeric vector indicating locations of the change 
-#'   points, noted as \ifelse{html}{
-#'       \out{<i><b>&rho;</b><sub>m<sub>2</sub><sup>r</sup></sub></i>}
-#'       }{\eqn{\boldsymbol{\rho}_{m^r_2}}} in the math description.
-#'   Validity verified by \code{\link{check_changepoints}}.
+#'   points. Must be conformable to \code{integer} values. Validity 
+#'   checked by \code{\link{check_changepoints}} and
+#'   \code{\link{verify_changepoint_locations}}.
 #'
 #' @param weights Optional class \code{numeric} vector of weights for each 
-#'   document. Corresponds to the vector \strong{\eqn{u}} in the math 
-#'   description. Defaults to \code{NULL}, translating to an equal weight for
+#'   document. Defaults to \code{NULL}, translating to an equal weight for
 #'   each document. When using \code{multinom_TS} in a standard LDATS 
 #'   analysis, it is advisable to weight the documents by their total size,
 #'   as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
-#'   proportions (\ifelse{html}{
-#'      \out{<span style="text-decoration: overline"><b><i>&Gamma;
-#'           </i></b></span>}}{\eqn{\overline{\boldsymbol{\Gamma}}}}), which 
-#'   does not account for size differences among documents. For most models,
-#'   a scaling of the weights (so that the average is 1) is most appropriate,
-#'   and this is accomplished using \code{document_weights}
+#'   proportions, which does not account for size differences among documents.
+#'   For most models, a scaling of the weights (so that the average is 1) is
+#'   most appropriate, and this is accomplished using \code{document_weights}.
 #'
 #' @param control Class \code{TS_controls} list, holding control parameters
 #'   for the Time Series model including the parallel tempering Markov Chain 
@@ -213,10 +198,7 @@ package_chunk_fits <- function(chunks, fits){
 #'   by the \code{timename} input. 
 #'
 #' @param changepoints Numeric vector indicating locations of the change 
-#'   points, noted as \ifelse{html}{
-#'       \out{<i><b>&rho;</b><sub>m<sub>2</sub><sup>r</sup></sub></i>}
-#'       }{\eqn{\boldsymbol{\rho}_{m^r_2}}} in the math description.
-#'   Validity verified by \code{\link{check_changepoints}}.
+#'   points. Must be conformable to \code{integer} values. 
 #'
 #' @param timename The name of the column containing the time variable used 
 #'   to chunk out the time series. Generally contained in the \code{control}
@@ -243,15 +225,11 @@ prep_chunks <- function(data, changepoints = NULL,
 #'   response variables.
 #'
 #' @param changepoints Numeric vector indicating locations of the change 
-#'   points, noted as \ifelse{html}{
-#'       \out{<i><b>&rho;</b><sub>m<sub>2</sub><sup>r</sup></sub></i>}
-#'       }{\eqn{\boldsymbol{\rho}_{m^r_2}}} in the math description.
+#'   points. Must be conformable to \code{integer} values. 
 #'
 #' @param timename \code{character} name of the column in the 
 #'   \code{document_covariate_table} that contains the time index to use
-#'   for assignment of the changepoints (corresponding to the vector 
-#'   \ifelse{html}{\out{<b><i>t</i></b>}}{\eqn{\mathbf{t}}} 
-#'   in the mathematical description of the model). 
+#'   for assignment of the changepoints. 
 #'
 #' @return Logical indicator of the check passing \code{TRUE} or failing
 #'   \code{FALSE}.
@@ -277,7 +255,7 @@ verify_changepoint_locations <- function(data, changepoints = NULL,
 #'
 #' @description Fit a multinomial regression model (via
 #'   \code{\link[nnet]{multinom}}, Ripley 1996, Venables and Ripley 2002)
-#'   to a defined chunk of time (a.k.a. segment, noted as \eqn{s})
+#'   to a defined chunk of time (a.k.a. segment)
 #'   \code{[chunk$start, chunk$end]} within a time series.
 #'
 #' @param data Class \code{data.frame} object including the predictor and 
@@ -290,17 +268,13 @@ verify_changepoint_locations <- function(data, changepoints = NULL,
 #'   for the chunk and [2] \code{end}, the end time for the chunk.
 #'
 #' @param weights Optional class \code{numeric} vector of weights for each 
-#'   document. Corresponds to the vector \strong{\eqn{u}} in the math 
-#'   description. Defaults to \code{NULL}, translating to an equal weight for
+#'   document. Defaults to \code{NULL}, translating to an equal weight for
 #'   each document. When using \code{multinom_TS} in a standard LDATS 
 #'   analysis, it is advisable to weight the documents by their total size,
 #'   as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
-#'   proportions (\ifelse{html}{
-#'      \out{<span style="text-decoration: overline"><b><i>&Gamma;
-#'           </i></b></span>}}{\eqn{\overline{\boldsymbol{\Gamma}}}}), which 
-#'   does not account for size differences among documents. For most models,
-#'   a scaling of the weights (so that the average is 1) is most appropriate,
-#'   as can be accomplished using \code{document_weights}
+#'   proportions, which does not account for size differences among documents.
+#'   For most models, a scaling of the weights (so that the average is 1) is
+#'   most appropriate, and this is accomplished using \code{document_weights}.
 #'
 #' @param control Class \code{TS_controls} list, holding control parameters
 #'   for the Time Series model, generated by \code{\link{TS_controls_list}}.

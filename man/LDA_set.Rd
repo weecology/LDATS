@@ -12,19 +12,15 @@ check_LDA_set_inputs(document_term_table, topics, nseeds, control)
 }
 \arguments{
 \item{document_term_table}{Table of observation count data (rows: 
-documents (\eqn{M}), columns: terms (\eqn{V})). May be a class 
-\code{matrix} or \code{data.frame} but must be conformable to
-a code of integers. This table is a document-level summary of the data 
-noted as 
-\ifelse{html}{\out{<b><i>w</i></b>}}{\eqn{\mathbf{w}}}
-(the word-level topic identity) in the math description.}
+documents, columns: terms. May be a class \code{matrix} or 
+\code{data.frame} but must be conformable to a matrix of integers,
+as verified by \code{\link{check_document_term_table}}.}
 
-\item{topics}{Vector of the number of topics to evaluate for each model
-(\ifelse{html}{\out{<i>k<sub>m<sub>1</sub></sub></i>}}{\eqn{k_{m_1}}} 
-topics for a model \ifelse{html}{\out{<i>m<sub>1</sub></i>}}{\eqn{m_1}}).}
+\item{topics}{Vector of the number of topics to evaluate for each model.
+Must be conformable to \code{integer} values.}
 
-\item{nseeds}{Integer number of seeds (replicate starts) to use for each 
-value of \code{topics}.}
+\item{nseeds}{Number of seeds (replicate starts) to use for each 
+value of \code{topics}. Must be conformable to \code{integer} value.}
 
 \item{control}{Class \code{LDA_controls} list of control parameters to be
 used in \code{LDA} (note that \code{seed} will be overwritten).}
@@ -33,8 +29,8 @@ used in \code{LDA} (note that \code{seed} will be overwritten).}
 List (class: \code{LDA_set}) of LDA models (class: \code{LDA_VEM}).
 }
 \description{
-For a given corpus \eqn{D} (dataset consisting of counts of 
-  words across \eqn{M} documents), conduct multiple Latent Dirichlet 
+For a given dataset consisting of counts of words across 
+  multiple documents in a corpus, conduct multiple Latent Dirichlet 
   Allocation (LDA) models (using the Variational Expectation 
   Maximization (VEM) algorithm; Blei \emph{et al.} 2003) to account for [1]  
   uncertainty in the number of latent topics and [2] the impact of initial
