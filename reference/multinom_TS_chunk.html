@@ -34,7 +34,7 @@
 
 <meta property="og:description" content="Fit a multinomial regression model (via
   multinom, Ripley 1996, Venables and Ripley 2002)
-  to a defined chunk of time (a.k.a. segment, noted as \(s\))
+  to a defined chunk of time (a.k.a. segment)
   [chunk$start, chunk$end] within a time series." />
 <meta name="twitter:card" content="summary" />
 
@@ -66,7 +66,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.15</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16</span>
       </span>
     </div>
 
@@ -129,7 +129,7 @@
     
     <p>Fit a multinomial regression model (via
   <code><a href='https://www.rdocumentation.org/packages/nnet/topics/multinom'>multinom</a></code>, Ripley 1996, Venables and Ripley 2002)
-  to a defined chunk of time (a.k.a. segment, noted as \(s\))
+  to a defined chunk of time (a.k.a. segment)
   <code>[chunk$start, chunk$end]</code> within a time series.</p>
     
     </div>
@@ -158,17 +158,13 @@ for the chunk and [2] <code>end</code>, the end time for the chunk.</p></td>
     <tr>
       <th>weights</th>
       <td><p>Optional class <code>numeric</code> vector of weights for each 
-document. Corresponds to the vector <strong>\(u\)</strong> in the math 
-description. Defaults to <code>NULL</code>, translating to an equal weight for
+document. Defaults to <code>NULL</code>, translating to an equal weight for
 each document. When using <code>multinom_TS</code> in a standard LDATS 
 analysis, it is advisable to weight the documents by their total size,
 as the result of <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code> is a matrix of 
-proportions (
-   <span style="text-decoration: overline"><b><i>&Gamma;
-        </i></b></span>), which 
-does not account for size differences among documents. For most models,
-a scaling of the weights (so that the average is 1) is most appropriate,
-as can be accomplished using <code>document_weights</code></p></td>
+proportions, which does not account for size differences among documents.
+For most models, a scaling of the weights (so that the average is 1) is
+most appropriate, and this is accomplished using <code>document_weights</code>.</p></td>
     </tr>
     <tr>
       <th>control</th>

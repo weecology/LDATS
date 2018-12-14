@@ -74,7 +74,7 @@ check_LDA_TS_inputs checks that the inputs to
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.15</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16</span>
       </span>
     </div>
 
@@ -165,34 +165,31 @@ check_LDA_TS_inputs checks that the inputs to
     <tr>
       <th>document_term_table</th>
       <td><p>Table of observation count data (rows: 
-documents (\(M\)), columns: terms (\(V\))). May be a 
-<code>matrix</code> or <code>data.frame</code> but must be conformable to a matrix
-of integers (as verified by <code><a href='check_document_term_table.html'>check_document_term_table</a></code>). 
-This table is a document-level summary of the data noted as
-<b><i>w</i></b>
-(the word-level topic identity) in the math description.</p></td>
+documents, columns: terms. May be a class <code>matrix</code> or 
+<code>data.frame</code> but must be conformable to a matrix of integers,
+as verified by <code><a href='check_document_term_table.html'>check_document_term_table</a></code>.</p></td>
     </tr>
     <tr>
       <th>document_covariate_table</th>
-      <td><p>Document covariate table (rows:
-documents (\(M\)), columns: time index and covariate options). 
-Every model needs a covariate to describe the time value for each
-document (in whatever relevant units), whose name in the table is input
-in <code>control</code> (the <code>timename</code> entry), that dictates the 
-application of the change points. 
+      <td><p>Document covariate table (rows: documents,
+columns: time index and covariate options). Every model needs a
+covariate to describe the time value for each document (in whatever 
+units and whose name in the table is input in <code>control$timename</code>)
+that dictates the application of the change points. 
 In addition, all covariates named within specific models in
 <code>formula</code> must be included. Must be a conformable to a data table,
 as verified by <code><a href='check_document_covariate_table.html'>check_document_covariate_table</a></code>.</p></td>
     </tr>
     <tr>
       <th>topics</th>
-      <td><p>Vector of the number of topics to evaluate in the LDAs. Must
-be integer values.</p></td>
+      <td><p>Vector of the number of topics to evaluate for each model.
+Must be conformable to <code>integer</code> values.</p></td>
     </tr>
     <tr>
       <th>nseeds</th>
       <td><p><code>integer</code> number of seeds (replicate starts) to use for 
-each value of <code>topics</code> in the LDAs.</p></td>
+each value of <code>topics</code> in the LDAs. Must be conformable to 
+<code>integer</code> value.</p></td>
     </tr>
     <tr>
       <th>formulas</th>
@@ -209,26 +206,19 @@ of change points to include in the time series models. 0 is a valid input
 corresponding to no change points (<em>i.e.</em>, a singular time series
 model), and the current implementation can reasonably include up to 6 
 change points. Each element in the vector is the number of change points 
-(<i>P<sub>m<sub>2</sub></sub></i> for
-model <i>m<sub>2</sub></i> in the math
-description) used to segement 
-the data for each formula (entry in <code>formulas</code>) component of the 
-TS model, for each selected LDA model.</p></td>
+used to segement the data for each formula (entry in <code>formulas</code>) 
+component of the TS model, for each selected LDA model.</p></td>
     </tr>
     <tr>
       <th>weights</th>
       <td><p>Optional class <code>numeric</code> vector of weights for each 
-document. Corresponds to the vector <strong>\(u\)</strong> in the math 
-description. Defaults to <code>NULL</code>, translating to an equal weight for
+document. Defaults to <code>NULL</code>, translating to an equal weight for
 each document. When using <code>multinom_TS</code> in a standard LDATS 
 analysis, it is advisable to weight the documents by their total size,
 as the result of <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code> is a matrix of 
-proportions (
-   <span style="text-decoration: overline"><b><i>&Gamma;
-        </i></b></span>), which 
-does not account for size differences among documents. For most models,
-a scaling of the weights (so that the average is 1) is most appropriate,
-and this is accomplished using <code>document_weights</code></p></td>
+proportions, which does not account for size differences among documents.
+For most models, a scaling of the weights (so that the average is 1) is
+most appropriate, and this is accomplished using <code>document_weights</code>.</p></td>
     </tr>
     <tr>
       <th>control</th>

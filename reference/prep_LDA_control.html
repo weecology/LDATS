@@ -64,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.15</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16</span>
       </span>
     </div>
 
@@ -143,13 +143,15 @@ specific model.</p></td>
     <tr>
       <th>control</th>
       <td><p>Named list of control parameters to be used in 
-<code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code> (note that "seed" will be overwritten).</p></td>
+<code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code> Note that is <code>control</code> has an 
+element named <code>seed</code> it will be overwritten by the <code>seed</code> 
+argument of <code>prep_LDA_control</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>List (class: "<code>list</code>") of controls to be used in the LDA.</p>
+    <p>List (class: <code>list</code>) of controls to be used in the LDA.</p>
     
 
   </div>

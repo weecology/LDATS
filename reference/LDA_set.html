@@ -32,8 +32,8 @@
 
 <meta property="og:title" content="Run a set of Latent Dirichlet Allocation models — LDA_set" />
 
-<meta property="og:description" content="For a given corpus \(D\) (dataset consisting of counts of 
-  words across \(M\) documents), conduct multiple Latent Dirichlet 
+<meta property="og:description" content="For a given dataset consisting of counts of words across 
+  multiple documents in a corpus, conduct multiple Latent Dirichlet 
   Allocation (LDA) models (using the Variational Expectation 
   Maximization (VEM) algorithm; Blei et al. 2003) to account for [1]  
   uncertainty in the number of latent topics and [2] the impact of initial
@@ -74,7 +74,7 @@ check_LDA_set_inputs checks that all of the inputs
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.15</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16</span>
       </span>
     </div>
 
@@ -135,8 +135,8 @@ check_LDA_set_inputs checks that all of the inputs
 
     <div class="ref-description">
     
-    <p>For a given corpus \(D\) (dataset consisting of counts of 
-  words across \(M\) documents), conduct multiple Latent Dirichlet 
+    <p>For a given dataset consisting of counts of words across 
+  multiple documents in a corpus, conduct multiple Latent Dirichlet 
   Allocation (LDA) models (using the Variational Expectation 
   Maximization (VEM) algorithm; Blei <em>et al.</em> 2003) to account for [1]  
   uncertainty in the number of latent topics and [2] the impact of initial
@@ -161,23 +161,19 @@ check_LDA_set_inputs checks that all of the inputs
     <tr>
       <th>document_term_table</th>
       <td><p>Table of observation count data (rows: 
-documents (\(M\)), columns: terms (\(V\))). May be a class 
-<code>matrix</code> or <code>data.frame</code> but must be conformable to
-a code of integers. This table is a document-level summary of the data 
-noted as 
-<b><i>w</i></b>
-(the word-level topic identity) in the math description.</p></td>
+documents, columns: terms. May be a class <code>matrix</code> or 
+<code>data.frame</code> but must be conformable to a matrix of integers,
+as verified by <code><a href='check_document_term_table.html'>check_document_term_table</a></code>.</p></td>
     </tr>
     <tr>
       <th>topics</th>
-      <td><p>Vector of the number of topics to evaluate for each model
-(<i>k<sub>m<sub>1</sub></sub></i> 
-topics for a model <i>m<sub>1</sub></i>).</p></td>
+      <td><p>Vector of the number of topics to evaluate for each model.
+Must be conformable to <code>integer</code> values.</p></td>
     </tr>
     <tr>
       <th>nseeds</th>
-      <td><p>Integer number of seeds (replicate starts) to use for each 
-value of <code>topics</code>.</p></td>
+      <td><p>Number of seeds (replicate starts) to use for each 
+value of <code>topics</code>. Must be conformable to <code>integer</code> value.</p></td>
     </tr>
     <tr>
       <th>control</th>
