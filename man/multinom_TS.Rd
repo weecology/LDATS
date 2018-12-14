@@ -44,7 +44,7 @@ points, noted as \ifelse{html}{
 Validity verified by \code{\link{check_changepoints}}.}
 
 \item{weights}{Optional class \code{numeric} vector of weights for each 
-document. Corresponds to the vector \strong{\eqn{v}} in the math 
+document. Corresponds to the vector \strong{\eqn{u}} in the math 
 description. Defaults to \code{NULL}, translating to an equal weight for
 each document. When using \code{multinom_TS} in a standard LDATS 
 analysis, it is advisable to weight the documents by their total size,
@@ -53,7 +53,7 @@ proportions (\ifelse{html}{
    \out{<span style="text-decoration: overline"><b><i>&Gamma;
         </i></b></span>}}{\eqn{\overline{\boldsymbol{\Gamma}}}}), which 
 does not account for size differences among documents. For most models,
-a scaling of the weights (so that the maximum is 1) is most appropriate,
+a scaling of the weights (so that the average is 1) is most appropriate,
 and this is accomplished using \code{document_weights}}
 
 \item{control}{Class \code{TS_controls} list, holding control parameters

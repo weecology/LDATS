@@ -305,8 +305,7 @@ check_nchangepoints <- function(nchangepoints){
 #' @title Check that weights vector is proper
 #' 
 #' @description Check that the vector of document weights is numeric
-#'   and inform the user if weights are outside the optimal range: 
-#'   \eqn{(0,1]}.
+#'   and inform the user if the average weight isn't 1. 
 #'   
 #' @param weights Vector of the document weights to evaluate.
 #' 
@@ -317,11 +316,8 @@ check_weights <- function(weights){
     if (!is.numeric(weights)){
       stop("weights vector must be numeric")
     }
-    if (min(weights) <= 0 | max(weights) > 1){
-      ideal <- "weights should be scaled to (0,1]; "
-      wrange <- paste0("min: ", min(weights), ", max: ", max(weights), "; ")
-      warn <- "fit may be unstable"
-      warning(paste0(ideal, wrange, warn))
+    if (round(mean(weights)) != 1){
+      warning("weights should have a mean of 1, fit may be unstable")
     }
   }
 }

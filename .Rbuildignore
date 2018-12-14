@@ -1,3 +1,5 @@
+^Meta$
+^doc$
 ^manuscript$
 ^devspace.R$
 ^.travis.yml$

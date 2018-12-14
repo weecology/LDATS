@@ -70,7 +70,7 @@ test_that("check update_ids", {
   steps <- step_chains(1, cpts, inputs)
   swaps <- swap_chains(steps, inputs, ids)
   ids <- update_ids(ids, swaps)
-  expect_equal(ids, c(1, 4, 2, 3, 6, 5))
+  expect_equal(ids, c(1, 3, 2, 4, 6, 5))
 })
 
 
@@ -91,7 +91,7 @@ test_that("check proposed_step_mods", {
   expect_is(mods[[1]], "multinom_TS_fit")
   expect_is(mods[[1]][[1]], "list")
   expect_is(mods[[1]][[1]][[1]], "multinom")
-  expect_equal(round(mods[[1]][[1]][[1]]$deviance, 1), 39.1)
+  expect_equal(round(mods[[1]][[1]][[1]]$deviance, 1), 138.6)
 })
 
 test_that("check propose_step", {
@@ -128,7 +128,7 @@ test_that("check swap_chains", {
   swaps <- swap_chains(steps, inputs, ids)
   expect_equal(length(swaps), 4)
   expect_equal(names(swaps), c("changepts", "lls", "ids", "accept_swap"))
-  expect_equal(swaps[[3]][3], 6)
+  expect_equal(swaps[[3]][3], 4)
 })
 
 test_that("check count_trips", {
@@ -136,7 +136,7 @@ test_that("check count_trips", {
   expect_equal(length(count_trips(rho_dist$ids)), 2)
   expect_equal(names(count_trips(rho_dist$ids)), 
                c("trip_counts", "trip_rates"))
-  expect_equal(count_trips(rho_dist$ids)[[1]][[3]], 8)
+  expect_equal(count_trips(rho_dist$ids)[[1]][[3]], 13)
 })
 
 test_that("check diagnose_ptMCMC", {
@@ -146,7 +146,7 @@ test_that("check diagnose_ptMCMC", {
   expect_equal(names(diagnose_ptMCMC(rho_dist)), 
     c("step_acceptance_rate", "swap_acceptance_rate", "trip_counts",
       "trip_rates"))
-  expect_equal(diagnose_ptMCMC(rho_dist)[[1]][1], 0.477)
+  expect_equal(diagnose_ptMCMC(rho_dist)[[1]][1], 0.223)
 })
 
 test_that("check prep_saves", {
@@ -189,7 +189,7 @@ test_that("check process_saves", {
   expect_equal(length(out), 5)
   expect_equal(dim(out[[1]]), c(1, 6, 1000))
   expect_equal(out[[1]][1, 1, 1], 272)
-  expect_equal(out[[1]][1, 1, 1000], 260)
+  expect_equal(out[[1]][1, 1, 1000], 272)
 })
 
 test_that("check prep_cpts", {

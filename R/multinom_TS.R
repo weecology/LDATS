@@ -37,7 +37,7 @@
 #'   Validity verified by \code{\link{check_changepoints}}.
 #'
 #' @param weights Optional class \code{numeric} vector of weights for each 
-#'   document. Corresponds to the vector \strong{\eqn{v}} in the math 
+#'   document. Corresponds to the vector \strong{\eqn{u}} in the math 
 #'   description. Defaults to \code{NULL}, translating to an equal weight for
 #'   each document. When using \code{multinom_TS} in a standard LDATS 
 #'   analysis, it is advisable to weight the documents by their total size,
@@ -46,7 +46,7 @@
 #'      \out{<span style="text-decoration: overline"><b><i>&Gamma;
 #'           </i></b></span>}}{\eqn{\overline{\boldsymbol{\Gamma}}}}), which 
 #'   does not account for size differences among documents. For most models,
-#'   a scaling of the weights (so that the maximum is 1) is most appropriate,
+#'   a scaling of the weights (so that the average is 1) is most appropriate,
 #'   and this is accomplished using \code{document_weights}
 #'
 #' @param control Class \code{TS_controls} list, holding control parameters
@@ -137,18 +137,34 @@ check_changepoints <- function(changepoints = NULL){
 #' @title Log likelihood of a multinomial TS model
 #' 
 #' @description Convenience function to simply extract the \code{logLik}
-#'   element from a \code{multinom_TS_fit}-class object.
+#'   element (and \code{df} and \code{nobs}) from a \code{multinom_TS_fit}
+#'   object. Extends \code{\link[stats]{logLik}} from 
+#'   \code{\link[nnet]{multinom}} to \code{multinom_TS_fit} objects.
 #'
 #' @param object A \code{multinom_TS_fit}-class object.
 #'
 #' @param ... Not used, simply included to maintain method compatability.
 #'
-#' @return Log likelihood of the model.
+#' @return Log likelihood of the model, as class \code{logLik}, with 
+#'   attributes \code{df} (degrees of freedom) and \code{nobs} (the number of
+#'   weighted observations, accounting for size differences among documents). 
 #'
 #' @export
 #'
 logLik.multinom_TS_fit <- function(object, ...){
-  object$logLik
+  ll <- object$logLik
+  df <- NA
+  nobs <- NA
+  if (object$logLik != -Inf){
+    nchunks <- nrow(object$chunks)
+    dfperchunk <- length(coef(object$"chunk models"[[1]]))
+    df <- nchunks - 1 + dfperchunk * nchunks
+    nobs <- 0
+    for(i in 1:nchunks){
+      nobs <- nobs + sum(object$"chunk models"[[i]]$weights)
+    }
+  }
+  structure(ll, df = df, nobs = nobs, class = "logLik")  
 }
 
 #' @title Package the output of the chunk-level multinomial models into a
