@@ -2,7 +2,7 @@
 #'
 #' @description Find the most common entry in a vector. Ties are not included,
 #'   the first value encountered within the modal set if there are ties is
-#'   deemed the mode.
+#'   deemed the mode. 
 #'
 #' @param x \code{numeric} vector.
 #'

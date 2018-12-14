@@ -4,7 +4,6 @@
 #
 # working through documentation right now
 #  scripts to do
-#   multinom_TS
 #   ptMCMC
 #   TS
 #   TS_on_LDA
@@ -42,6 +41,8 @@ xx <- LDA_TS(document_term_table, document_covariate_table,
 #'
 
 
+#'   \ifelse{html}{\out{<b><i>t</i></b>}}{\eqn{\mathbf{t}}} 
+
 #'   \ifelse{html}{\out{<b><i>v</i></b>}}{\eqn{\mathbf{v}}} 
 
 #'   \ifelse{html}{\out{<b><i>t</i></b>}}{\eqn{\mathbf{t}}}
@@ -50,3 +51,7 @@ xx <- LDA_TS(document_term_table, document_covariate_table,
 #'   \ifelse{html}{
 #'      \out{<span style="text-decoration: overline"><b><i>&Gamma;
 #'           </i></b></span>}}{\eqn{\overline{\boldsymbol{\Gamma}}}}
+
+#'   \ifelse{html}{
+#'      \out{<span style="text-decoration: overbrace"><b><i>&rho;
+#'           </i></b></span>}}{\eqn{\overbrace{\boldsymbol{\rho}}}}
