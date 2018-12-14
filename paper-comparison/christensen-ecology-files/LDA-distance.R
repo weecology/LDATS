@@ -56,7 +56,7 @@ calculate_LDA_distance = function(ldas,seeds) {
   # Calculate a bunch of LDAs with 4 topics
   k = 4
   ldas = purrr::map(seeds, 
-                    ~LDA(dat, k = k, method = "VEM", control = list(seed = .x)))
+                    ~LDA(ch_dat, k = k, method = "VEM", control = list(seed = .x)))
   
   # Log-likelihoods for each lda
   lls = purrr:::map_dbl(ldas, logLik)
@@ -81,22 +81,22 @@ calculate_LDA_distance = function(ldas,seeds) {
   
   # Re-order the rows of the "farthest" model so it matches the "best" model
   assignment = min_H(best_ps, farthest_ps, k)$assignment
-  
-  # plot results
-  # "best" is in black, "farthest" is in red
-  par(mfrow = c(2, 2))
-  for (row in 1:k) {
-    plot(NULL, xlim = c(1, 21), ylim = c(0, 1),
-         axes = FALSE, main = paste("topic", row), ylab = "", xlab = "",
-         yaxs = "i")
-    abline(v = 1:ncol(dat), col = scales::alpha(1, .05))
-    points(best_ps[row, ], col = 1, pch = 16)
-    points(farthest_ps[assignment[row], ], col = 2, lwd = 2)
-    axis(2)
-    axis(1, 1:ncol(dat), colnames(dat), las = 2)
-  }
-  par(mfrow = c(1, 1))
-  
+  # 
+  # # plot results
+  # # "best" is in black, "farthest" is in red
+  # par(mfrow = c(2, 2))
+  # for (row in 1:k) {
+  #   plot(NULL, xlim = c(1, 21), ylim = c(0, 1),
+  #        axes = FALSE, main = paste("topic", row), ylab = "", xlab = "",
+  #        yaxs = "i")
+  #   abline(v = 1:ncol(dat), col = scales::alpha(1, .05))
+  #   points(best_ps[row, ], col = 1, pch = 16)
+  #   points(farthest_ps[assignment[row], ], col = 2, lwd = 2)
+  #   axis(2)
+  #   axis(1, 1:ncol(dat), colnames(dat), las = 2)
+  # }
+  # par(mfrow = c(1, 1))
+  # 
   # average distance between "best" model and others
   mean_distance = mean(unlist(lapply(minimum_distances,'[[','min_cost')))
   # maximum distance; between best model and worst
