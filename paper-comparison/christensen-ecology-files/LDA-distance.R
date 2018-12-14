@@ -56,7 +56,7 @@ calculate_LDA_distance = function(ldas,seeds) {
   # Calculate a bunch of LDAs with 4 topics
   k = 4
   ldas = purrr::map(seeds, 
-                    ~LDA(ch_dat, k = k, method = "VEM", control = list(seed = .x)))
+                    ~LDA(rodents[[1]], k = k, method = "VEM", control = list(seed = .x)))
   
   # Log-likelihoods for each lda
   lls = purrr:::map_dbl(ldas, logLik)
