@@ -2,7 +2,7 @@
 #'
 #' @description Find the most common entry in a vector. Ties are not included,
 #'   the first value encountered within the modal set if there are ties is
-#'   deemed the mode. \cr \if{html}{\out{My mother has <span>blue<span> ok</span></span> eyes.} }
+#'   deemed the mode. 
 #'
 #' @param x \code{numeric} vector.
 #'

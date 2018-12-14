@@ -28,6 +28,7 @@ test_that("check selection via select_LDA", {
   expect_is(select_LDA(lda), "LDA_set")
   expect_equal(length(select_LDA(lda)), 1)
   expect_equal(select_LDA(lda)[1], lda[3])
+  expect_error(select_LDA("ok"))
 })
 
 test_that("check check_LDA_set_inputs", {

@@ -34,7 +34,9 @@ test_that("check prep_proposal_dist", {
   pd <- prep_proposal_dist(nchangepoints, control)
   expect_equal(length(pd), 2)
   expect_equal(dim(pd[[1]]), c(1000, 6))
-
+  pd2 <- prep_proposal_dist(0, control)
+  expect_equal(length(pd2), 2)
+  expect_equal(dim(pd2[[1]]), c(1000, 6))
   expect_error(prep_proposal_dist("ok", control))
   expect_error(prep_proposal_dist(nchangepoints, "ok"))
 })
@@ -64,6 +66,7 @@ test_that("check prep_ptMCMC_inputs", {
 test_that("check prep_ids", {
   expect_equal(prep_ids(TS_controls_list()), 1:6)
   expect_error(prep_ids("ok"))
+  expect_error(prep_ids(list(ntemps = 0.3)))
 })
 test_that("check update_ids", {
   set.seed(1)
@@ -137,6 +140,8 @@ test_that("check count_trips", {
   expect_equal(names(count_trips(rho_dist$ids)), 
                c("trip_counts", "trip_rates"))
   expect_equal(count_trips(rho_dist$ids)[[1]][[3]], 13)
+
+  expect_equal(count_trips(matrix(1, 6, 100))[[1]][3], 0)
 })
 
 test_that("check diagnose_ptMCMC", {
@@ -171,6 +176,7 @@ test_that("check update_saves", {
   expect_equal(dim(saves[[1]]), c(1, 6, 1000))
   expect_equal(saves[[1]][1, 1, 1], 272)
 })
+
 test_that("check process_saves", {
   set.seed(1)
   saves <- prep_saves(nchangepoints, control)
@@ -190,6 +196,12 @@ test_that("check process_saves", {
   expect_equal(dim(out[[1]]), c(1, 6, 1000))
   expect_equal(out[[1]][1, 1, 1], 272)
   expect_equal(out[[1]][1, 1, 1000], 272)
+  out2 <- process_saves(saves, TS_controls_list(burnin = 10, nit = 1e3))
+  expect_is(out2, "list")
+  expect_equal(length(out2), 5)
+  expect_equal(dim(out2[[1]]), c(1, 6, 990))
+  expect_equal(out2[[1]][1, 1, 1], 272)
+  expect_equal(out2[[1]][1, 1, 990], 274)
 })
 
 test_that("check prep_cpts", {

@@ -51,6 +51,7 @@ test_that("check summarize_etas", {
   sum_e <- summarize_etas(eta_dist)
   expect_is(sum_e, "data.frame")
   expect_equal(round(sum_e[1, 1], 2), 2.13)
+  expect_equal(summarize_etas(eta_dist[1:3, ])$AC10[1], as.factor("-"))
   expect_error(summarize_etas("ok"))
   expect_error(summarize_etas(eta_dist, LDA_controls_list()))
 })
@@ -100,17 +101,25 @@ test_that("check est_regressors", {
   set.seed(1)
   rhos <- est_changepts(data, formula, nchangepoints, weights, control)
   etas <- est_regressors(rhos, data, formula, weights, control)
+  set.seed(1)
+  rhos2 <- est_changepts(data, formula, nchangepoints = 2, weights, 
+                         TS_controls_list(nit = 1e2, seed = 1))
+  etas2 <- est_regressors(rhos2, data, formula, weights, 
+                          TS_controls_list(nit = 1e2, seed = 1))
 
   expect_is(etas, "matrix")
   expect_equal(colnames(etas), c("1_2:(Intercept)", "2_2:(Intercept)"))
   expect_equal(dim(etas), c(1000, 2))
   expect_equal(round(sum(etas[ , 1], 1)), 2133)
-
+  expect_equal(round(sum(etas2[ , 1], 1)), 288)
   expect_error(est_regressors("ok", data, formula, weights, control))
   expect_error(est_regressors(rhos, data, formula, weights, "ok"))
   expect_error(est_regressors(rhos, data, formula, "ok", control))
   expect_error(est_regressors(rhos, data, "ok", weights, control))
   expect_error(est_regressors(rhos, "ok", formula, weights, control))
+  rhosx <- rhos
+  names(rhosx)[1] <- "ok"
+  expect_error(est_regressors(rhosx, data, formula, weights, control))
 })
 
 test_that("check summarize_TS", {
@@ -157,8 +166,12 @@ test_that("check progress bar functions", {
   expect_is(prep_pbar(), "progress_bar")
   expect_silent(prep_pbar(TS_controls_list(quiet = TRUE)))
   expect_error(prep_pbar(LDA_controls_list()))
+  expect_error(prep_pbar(TS_controls_list(), "ok"))
+  expect_error(prep_pbar(nr = 0.5))
   pp <- prep_pbar()
   expect_is(update_pbar(pp), "progress_bar")
+  expect_silent(update_pbar(pp, TS_controls_list(quiet = TRUE)))
+
   expect_error(update_pbar(pp, LDA_controls_list()))
   expect_error(update_pbar("ok", TS_controls_list()))
 })
@@ -171,6 +184,7 @@ test_that("check AIC for TS_fit", {
 test_that("check check_formula", {
   expect_silent(check_formula(data, formula))
   expect_error(check_formula(data, ~1))
+  expect_error(check_formula(data, ~ok))
   expect_error(check_formula(document_covariate_table, formula))
 })
 
