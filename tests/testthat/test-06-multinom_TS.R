@@ -43,6 +43,13 @@ test_that("check good output from multinom_TS", {
   expect_is(mts$logLik, "numeric")
 })
 
+test_that("check check_changepoints", {
+  expect_silent(check_changepoints())
+  expect_silent(check_changepoints(1))
+  expect_error(check_changepoints("ok"))
+  expect_error(check_changepoints(0.3))
+})
+
 test_that("check failed output from multinom_TS", {
   mts <- multinom_TS(data = mts_data, formula = gamma~1, 
            changepoints = c(50,40), weights = NULL, 

@@ -343,14 +343,14 @@ est_regressors <- function(rho_dist, data, formula, weights, control){
   check_control(control, "TS_controls")
   if (!is.null(rho_dist)){
     if (any(names(rho_dist)[1:3] != c("cpts", "lls", "ids"))){
-      stop("expecting rho_dist to have elements cpts, lls, ids...")
+      stop("expecting rho_dist to have elements cpts, lls, ids")
     }
   }
   if (is.null(rho_dist)){
     mod <- multinom_TS(data, formula, changepoints = NULL, weights, control)
     mod <- mod[[1]][[1]]
     mv <- as.vector(t(coef(mod)))
-    vcv <- vcov(mod)
+    vcv <- mirror_vcov(mod)
     eta <- rmvnorm(control$nit, mv, vcv)
     seg_names <- rep(1, ncol(vcv))
     coef_names <- colnames(vcv)
@@ -387,7 +387,7 @@ est_regressors <- function(rho_dist, data, formula, weights, control){
       colindex2 <- colindex1 + n_eta_segment - 1
       seg_mod <- mods[[1]][[j]]
       mv <- as.vector(t(coef(seg_mod)))
-      vcv <- vcov(seg_mod)
+      vcv <- mirror_vcov(seg_mod)
       drawn <- rmvnorm(ndraws, mv, vcv)    
       rows_in <- which(collapsedrho == unique_r[i])
       cols_in <- colindex1:colindex2

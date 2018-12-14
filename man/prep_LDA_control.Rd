@@ -11,10 +11,12 @@ prep_LDA_control(seed, control = NULL)
 specific model.}
 
 \item{control}{Named list of control parameters to be used in 
-\code{\link[topicmodels]{LDA}} (note that "seed" will be overwritten).}
+\code{\link[topicmodels]{LDA}} Note that is \code{control} has an 
+element named \code{seed} it will be overwritten by the \code{seed} 
+argument of \code{prep_LDA_control}.}
 }
 \value{
-List (class: "\code{list}") of controls to be used in the LDA.
+List (class: \code{list}) of controls to be used in the LDA.
 }
 \description{
 Update the control list for the LDA model with the specific

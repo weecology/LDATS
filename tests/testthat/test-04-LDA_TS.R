@@ -38,6 +38,9 @@ test_that("check print on LDA_TS", {
 test_that("Check LDA_TS_controls_list", {
   expect_is(LDA_TS_controls_list(), "LDA_TS_controls")
   expect_equal(length(LDA_TS_controls_list()), 3)
+  expect_error(LDA_TS_controls_list(LDA_control = "ok"))
+  expect_error(LDA_TS_controls_list(TS_control = "ok"))
+  expect_error(LDA_TS_controls_list(quiet = "ok"))
 })
 
 test_that("Check package_LDA_TS", {
@@ -56,5 +59,8 @@ test_that("Check package_LDA_TS", {
   expect_is(package_LDA_TS(LDAs, sel_LDA, TSs, sel_TSs), "LDA_TS")
   expect_equal(length(package_LDA_TS(LDAs, sel_LDA, TSs, sel_TSs)), 4)
   expect_error(package_LDA_TS())
-  expect_error(package_LDA_TS("ok"))
+  expect_error(package_LDA_TS("ok", sel_LDA, TSs, sel_TSs))
+  expect_error(package_LDA_TS(LDAs, "ok", TSs, sel_TSs))
+  expect_error(package_LDA_TS(LDAs, sel_LDA, "ok", sel_TSs))
+  expect_error(package_LDA_TS(LDAs, sel_LDA, TSs, "ok"))
 })

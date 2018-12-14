@@ -32,6 +32,29 @@ test_that("check mirror_vcov", {
   vcv <- mirror_vcov(mod)  
   expect_equal(isSymmetric(vcv), TRUE)
   expect_error(mirror_vcov("ok"))
+
+  data(rodents)
+  lda_data <- rodents$document_term_table
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  topics <- 2
+  nseeds <- 1
+  formulas <- ~ newmoon
+  nchangepoints <- 2
+  weights <- document_weights(document_term_table)
+  control <- LDA_TS_controls_list()
+  LDAs <- LDA_set(document_term_table, topics, nseeds, control$LDA_control)
+  LDA_models <- select_LDA(LDAs, control$LDA_control)
+  control <- TS_controls_list(nit = 1e2, seed = 1)
+  mods <- expand_TS(LDA_models, formulas, nchangepoints)
+  formula <- mods$formula[[1]]
+  nchangepoints <- mods$nchangepoints[1]
+  data <- prep_TS_data(document_covariate_table, LDA_models, mods, 1)
+  rho_dist <- est_changepts(data, formula, nchangepoints, weights, control)
+  mod <- multinom_TS(data, formula, changepoints = NULL, weights, control)
+  expect_equal(isSymmetric(vcov(mod[[1]][[1]])), FALSE)
+  expect_equal(isSymmetric(mirror_vcov(mod[[1]][[1]])), TRUE)
+
 })
 
 test_that("check normalize", {

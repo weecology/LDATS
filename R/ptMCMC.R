@@ -438,7 +438,8 @@ process_saves <- function(saves, control){
   niters <- length(iters)
   thin_interval <- ceiling(1/control$thin_frac)
   iters_thinned <- seq(1, niters, by = thin_interval)
-  saves$cpts <- array(saves$cpts[ , , iters_thinned], dim = dim(saves$cpts))
+  dims <- c(dim(saves$cpts)[1:2], length(iters_thinned))
+  saves$cpts <- array(saves$cpts[ , , iters_thinned], dim = dims)
   saves$lls <- saves$lls[, iters_thinned]
   saves$ids <- saves$ids[, iters_thinned]
   saves$step_accepts <- saves$step_accepts[ , iters_thinned]

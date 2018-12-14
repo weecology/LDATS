@@ -13,20 +13,10 @@ check_multinom_TS_inputs(data, formula, changepoints = NULL,
 }
 \arguments{
 \item{data}{\code{data.frame} including [1] the time variable (indicated 
-in \code{control$timename} and notated as 
-\ifelse{html}{\out{<b><i>t</i></b>}}{\eqn{\mathbf{t}}} in the math 
-description), [2] the predictor variables (required by
-\code{formula}, notated as 
-\ifelse{html}{\out{<b><i>X</i></b>}}{\eqn{\mathbf{X}}}
-in the math description) and
-[3], the multinomial response variable (indicated in \code{formula} 
-and notated in the math description as 
-\ifelse{html}{
-   \out{<span style="text-decoration: overline"><b><i>&Gamma;
-        </i></b></span>}}{\eqn{\overline{\boldsymbol{\Gamma}}}})
-as verified by \code{\link{check_timename}} and 
-\code{\link{check_formula}}.
- Note that the response variables should be
+in \code{control$timename}), [2] the predictor variables (required by
+\code{formula}) and [3], the multinomial response variable (indicated in
+\code{formula}) as verified by \code{\link{check_timename}} and 
+\code{\link{check_formula}}. Note that the response variables should be
 formatted as a \code{data.frame} object named as indicated by the 
 \code{response} entry in the \code{control} list, such as \code{gamma} 
 for a standard TS analysis on LDA output. See \code{Examples}.}
@@ -38,23 +28,18 @@ predictor variable included must also be a column in
 columns in \code{data}, as verified by \code{\link{check_formula}}.}
 
 \item{changepoints}{Numeric vector indicating locations of the change 
-points, noted as \ifelse{html}{
-    \out{<i><b>&rho;</b><sub>m<sub>2</sub><sup>r</sup></sub></i>}
-    }{\eqn{\boldsymbol{\rho}_{m^r_2}}} in the math description.
-Validity verified by \code{\link{check_changepoints}}.}
+points. Must be conformable to \code{integer} values. Validity 
+checked by \code{\link{check_changepoints}} and
+\code{\link{verify_changepoint_locations}}.}
 
 \item{weights}{Optional class \code{numeric} vector of weights for each 
-document. Corresponds to the vector \strong{\eqn{u}} in the math 
-description. Defaults to \code{NULL}, translating to an equal weight for
+document. Defaults to \code{NULL}, translating to an equal weight for
 each document. When using \code{multinom_TS} in a standard LDATS 
 analysis, it is advisable to weight the documents by their total size,
 as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
-proportions (\ifelse{html}{
-   \out{<span style="text-decoration: overline"><b><i>&Gamma;
-        </i></b></span>}}{\eqn{\overline{\boldsymbol{\Gamma}}}}), which 
-does not account for size differences among documents. For most models,
-a scaling of the weights (so that the average is 1) is most appropriate,
-and this is accomplished using \code{document_weights}}
+proportions, which does not account for size differences among documents.
+For most models, a scaling of the weights (so that the average is 1) is
+most appropriate, and this is accomplished using \code{document_weights}.}
 
 \item{control}{Class \code{TS_controls} list, holding control parameters
 for the Time Series model including the parallel tempering Markov Chain 

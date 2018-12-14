@@ -14,10 +14,7 @@ response variables, but specifically here containing the column indicated
 by the \code{timename} input.}
 
 \item{changepoints}{Numeric vector indicating locations of the change 
-points, noted as \ifelse{html}{
-    \out{<i><b>&rho;</b><sub>m<sub>2</sub><sup>r</sup></sub></i>}
-    }{\eqn{\boldsymbol{\rho}_{m^r_2}}} in the math description.
-Validity verified by \code{\link{check_changepoints}}.}
+points. Must be conformable to \code{integer} values.}
 
 \item{timename}{The name of the column containing the time variable used 
 to chunk out the time series. Generally contained in the \code{control}

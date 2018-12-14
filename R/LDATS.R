@@ -26,9 +26,9 @@
 #'   \cr \cr  
 #'   \href{https://github.com/weecology/LDATS/blob/master/manuscript/simonis_et_al.pdf}{Technical mathematical manuscript}
 #'   \cr \cr 
-#'   \href{http://htmlpreview.github.io/?https://github.com/weecology/LDATS/blob/master/inst/doc/rodents-example.html}{End-user-focused vignette worked example}
+#'   \href{https://weecology.github.io/LDATS/articles/rodents-example.html}{End-user-focused vignette worked example}
 #'   \cr \cr 
-#'   \href{http://htmlpreview.github.io/?https://github.com/weecology/LDATS/blob/master/inst/doc/LDATS.html}{Computational pipeline vignette}
+#'   \href{https://weecology.github.io/LDATS/articles/LDATS_codebase.html}{Computational pipeline vignette}
 #'
 #' @references 
 #'

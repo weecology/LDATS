@@ -12,15 +12,11 @@ verify_changepoint_locations(data, changepoints = NULL,
 response variables.}
 
 \item{changepoints}{Numeric vector indicating locations of the change 
-points, noted as \ifelse{html}{
-    \out{<i><b>&rho;</b><sub>m<sub>2</sub><sup>r</sup></sub></i>}
-    }{\eqn{\boldsymbol{\rho}_{m^r_2}}} in the math description.}
+points. Must be conformable to \code{integer} values.}
 
 \item{timename}{\code{character} name of the column in the 
 \code{document_covariate_table} that contains the time index to use
-for assignment of the changepoints (corresponding to the vector 
-\ifelse{html}{\out{<b><i>t</i></b>}}{\eqn{\mathbf{t}}} 
-in the mathematical description of the model).}
+for assignment of the changepoints.}
 }
 \value{
 Logical indicator of the check passing \code{TRUE} or failing
