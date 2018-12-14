@@ -11,6 +11,5 @@ check_weights(weights)
 }
 \description{
 Check that the vector of document weights is numeric
-  and inform the user if weights are outside the optimal range: 
-  \eqn{(0,1]}.
+  and inform the user if the average weight isn't 1.
 }

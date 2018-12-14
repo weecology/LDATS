@@ -14,10 +14,10 @@ a code of integers. This table is a document-level summary of the data
 noted as \eqn{w} (the word-level topic identity) in the math description.}
 }
 \value{
-Vector of weights, one for each document, with the largest sample
+Vector of weights, one for each document, with the average sample
   receiving a weight of 1.0.
 }
 \description{
-Simple calculation of document weights based on the maximum 
-  number of words in a document within the corpus (max value = 1).
+Simple calculation of document weights based on the average
+  number of words in a document within the corpus (mean value = 1).
 }

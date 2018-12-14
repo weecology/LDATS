@@ -10,7 +10,9 @@ test_that("check document_weights", {
   data(rodents)
   lda_data <- rodents$document_term_table
   doc_weights <- document_weights(lda_data)
-  expect_equal(round(mean(doc_weights), 3), 0.282)
+  expect_equal(round(mean(doc_weights), 3), 1)
+  expect_equal(round(max(doc_weights), 3), 3.543)
+  expect_equal(round(min(doc_weights), 3), 0.151)
   expect_equal(length(doc_weights), 436)
   expect_error(document_weights("ok"))
 })

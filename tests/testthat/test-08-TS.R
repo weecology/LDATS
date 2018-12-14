@@ -24,11 +24,12 @@ eta_dist <- est_regressors(rho_dist, data, formula, weights, control)
 set.seed(1)
 test_that("check measure_eta_vcov", {
   expect_is(measure_eta_vcov(eta_dist), "matrix")
-  expect_equal(round(measure_eta_vcov(eta_dist)[1, 1], 1), 0.2)
+  expect_equal(round(measure_eta_vcov(eta_dist)[1, 1], 2), 0.05)
   expect_error(measure_eta_vcov("ok"))
 })
 
 test_that("check measure_rho_vcov", {
+  set.seed(1)
   nchangepoints <- dim(rho_dist$cpts)[1]
   if (is.null(nchangepoints)){
     nchangepoints <- 0
@@ -41,7 +42,7 @@ test_that("check measure_rho_vcov", {
     rhos <- t(array(rho_dist$cpts[ , 1, ], dim = dim(rho_dist$cpts)[c(1, 3)]))
   }
   expect_is(measure_rho_vcov(rhos), "matrix")
-  expect_equal(round(measure_rho_vcov(rhos)[1, 1], 1), 127.6)
+  expect_equal(round(measure_rho_vcov(rhos)[1, 1], 1), 12.8)
   expect_error(measure_rho_vcov("ok"))
 })
 
@@ -49,13 +50,13 @@ test_that("check measure_rho_vcov", {
 test_that("check summarize_etas", {
   sum_e <- summarize_etas(eta_dist)
   expect_is(sum_e, "data.frame")
-  expect_equal(round(sum_e[1, 1], 2), 2.2)
+  expect_equal(round(sum_e[1, 1], 2), 2.13)
   expect_error(summarize_etas("ok"))
   expect_error(summarize_etas(eta_dist, LDA_controls_list()))
 })
 
 test_that("check summarize_rhos", {
-
+  set.seed(1)
   nchangepoints <- dim(rho_dist$cpts)[1]
   if (is.null(nchangepoints)){
     nchangepoints <- 0
@@ -70,7 +71,7 @@ test_that("check summarize_rhos", {
 
   sum_r <- summarize_rhos(rhos)
   expect_is(sum_r, "data.frame")
-  expect_equal(round(sum_r[1, 1], 2), 266.4)
+  expect_equal(round(sum_r[1, 1], 2), 271.52)
   expect_error(summarize_rhos("ok"))
   expect_error(summarize_rhos(rhos, LDA_controls_list()))
 })
@@ -85,7 +86,7 @@ test_that("check est_changepts", {
   expect_equal(names(rhos), 
                c("cpts", "lls", "ids", "step_accepts", "swap_accepts"))
   expect_equal(dim(rhos[[1]]), c(1, 6, 1000))
-  expect_equal(round(sum(rhos$lls), 1), -374437.7)
+  expect_equal(round(sum(rhos$lls), 1), -1253579.6)
 
   expect_error(est_changepts(data, formula, nchangepoints, weights, "ok"))
   expect_error(est_changepts(data, formula, nchangepoints, "ok", control))
@@ -103,7 +104,7 @@ test_that("check est_regressors", {
   expect_is(etas, "matrix")
   expect_equal(colnames(etas), c("1_2:(Intercept)", "2_2:(Intercept)"))
   expect_equal(dim(etas), c(1000, 2))
-  expect_equal(round(sum(etas[ , 1], 1)), 2206)
+  expect_equal(round(sum(etas[ , 1], 1)), 2133)
 
   expect_error(est_regressors("ok", data, formula, weights, control))
   expect_error(est_regressors(rhos, data, formula, weights, "ok"))
@@ -164,7 +165,7 @@ test_that("check progress bar functions", {
 
 
 test_that("check AIC for TS_fit", {
-  expect_equal(round(AIC(TSmod), 1), 112.3)
+  expect_equal(round(AIC(TSmod), 1), 378.5)
 })
 
 test_that("check check_formula", {

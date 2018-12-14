@@ -19,8 +19,8 @@ modalvalue <- function(x){
 
 #' @title Calculate document weights on maximum number of words
 #'
-#' @description Simple calculation of document weights based on the maximum 
-#'   number of words in a document within the corpus (max value = 1).
+#' @description Simple calculation of document weights based on the average
+#'   number of words in a document within the corpus (mean value = 1).
 #'
 #' @param document_term_table Table of observation count data (rows: 
 #'   documents (\eqn{M}), columns: terms (\eqn{V})). May be a class 
@@ -28,7 +28,7 @@ modalvalue <- function(x){
 #'   a code of integers. This table is a document-level summary of the data 
 #'   noted as \eqn{w} (the word-level topic identity) in the math description. 
 #'
-#' @return Vector of weights, one for each document, with the largest sample
+#' @return Vector of weights, one for each document, with the average sample
 #'   receiving a weight of 1.0.
 #'
 #' @export
@@ -36,7 +36,7 @@ modalvalue <- function(x){
 document_weights <- function(document_term_table){
   check_document_term_table(document_term_table)
   sample_sizes <- apply(document_term_table, 1, sum)
-  round(sample_sizes/max(sample_sizes), 3)  
+  round(sample_sizes/mean(sample_sizes), 3)  
 }
 
 #' @title Print with quieting
