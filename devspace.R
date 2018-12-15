@@ -7,7 +7,6 @@
 #   TS
 #   TS_on_LDA
 #   TS_plots
-#   utilities
 
 devtools::load_all()
 data(rodents)

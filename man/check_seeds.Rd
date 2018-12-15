@@ -7,9 +7,11 @@
 check_seeds(seeds)
 }
 \arguments{
-\item{seeds}{Value of the number of random seeds to evaluate.}
+\item{nseeds}{\code{integer} number of seeds (replicate starts) to use for 
+each value of \code{topics} in the LDAs. Must be conformable to a  
+positive \code{integer} value.}
 }
 \description{
 Check that the vector of numbers of seeds is conformable to
-  integers greater than 1.
+  integers greater than 0.
 }

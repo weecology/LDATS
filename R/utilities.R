@@ -1,6 +1,6 @@
 #' @title Determine the mode of a distribution
 #'
-#' @description Find the most common entry in a vector. Ties are not included,
+#' @description Find the most common entry in a vector. Ties are not allowed,
 #'   the first value encountered within the modal set if there are ties is
 #'   deemed the mode. 
 #'
@@ -17,16 +17,15 @@ modalvalue <- function(x){
   as.numeric(names(sort(table(x), decreasing = TRUE))[1])
 }
 
-#' @title Calculate document weights on maximum number of words
+#' @title Calculate document weights for a corpus
 #'
 #' @description Simple calculation of document weights based on the average
 #'   number of words in a document within the corpus (mean value = 1).
 #'
 #' @param document_term_table Table of observation count data (rows: 
-#'   documents (\eqn{M}), columns: terms (\eqn{V})). May be a class 
-#'   \code{matrix} or \code{data.frame} but must be conformable to
-#'   a code of integers. This table is a document-level summary of the data 
-#'   noted as \eqn{w} (the word-level topic identity) in the math description. 
+#'   documents, columns: terms. May be a class \code{matrix} or 
+#'   \code{data.frame} but must be conformable to a matrix of integers,
+#'   as verified by \code{\link{check_document_term_table}}.   
 #'
 #' @return Vector of weights, one for each document, with the average sample
 #'   receiving a weight of 1.0.
@@ -41,8 +40,8 @@ document_weights <- function(document_term_table){
 
 #' @title Print with quieting
 #'
-#' @description Print a message (via \code{cat}) wrapped as in 
-#'   \code{<wrapper><msg><wrapper>}.
+#' @description Print a message (via \code{\link{cat}}) wrapped as in 
+#'   \code{<wrapper><msg><wrapper>}, if desired.
 #'
 #' @param msg Message to be printed. \code{character}-class element.
 #'
@@ -50,8 +49,6 @@ document_weights <- function(document_term_table){
 #'
 #' @param quiet \code{logical} indicator of whether the message should be 
 #'   printed.
-#'
-#' @return Nothing (message is printed, not returned).
 #'
 #' @export
 #'
@@ -63,13 +60,17 @@ qprint <- function(msg, wrapper, quiet){
 }
 
 
-#' @title Create a properly symmetrix variance covariance matrix
+#' @title Create a properly symmetric variance covariance matrix
 #'
-#' @description If the default matrix returned by \code{vcov} is not, in fact,
-#'   symmetric (as occurs occasionally in the \code{multinom} function from
-#'   \code{nnet}), make the matrix symmetric by mirroring the lower triangle.
+#' @description A wrapper on \code{\link[stats]{vcov}} to produce a symmetric
+#'   matrix. If the defauly matrix returned by \code{\link[stats]{vcov}} is
+#'   symmetric it is returned simply. If it is not, in fact, symmetric
+#'   (as occurs occasionally with \code{\link[nnet]{multinom}} applied to 
+#'   proportions), the matrix is made symmetric by mirroring the lower
+#'   triangle.
 #'
-#' @param x Model object that has a defined method for \code{vcov}.
+#' @param x Model object that has a defined method for 
+#'   \code{\link[stats]{vcov}}.
 #'
 #' @return Properly symmetric variance covariance matrix.
 #'
@@ -120,21 +121,21 @@ normalize <- function(x){
 #'
 #' @param fun Function name to (potentially) be memoised.
 #'
-#' @param memoise_fun \code{logical} value indicatiing if \code{fun} should be 
+#' @param memoise_tf \code{logical} value indicatiing if \code{fun} should be 
 #'   memoised.
 #'
 #' @return \code{fun}, memoised if desired.
 #'
 #' @export
 #'
-memoise_fun <- function(fun, memoise_fun){
+memoise_fun <- function(fun, memoise_tf){
   if (!("function" %in% class(fun))){
     stop("fun is not a function")
   }
-  if (!("logical" %in% class(memoise_fun))){
-    stop("memoise_fun is not logical")
+  if (!("logical" %in% class(memoise_tf))){
+    stop("memoise_tf is not logical")
   }
-  if (memoise_fun){
+  if (memoise_tf){
     fun <- memoise(fun)
   }
   fun
@@ -164,7 +165,9 @@ check_control <- function(control, eclass = "TS_controls"){
 #'   a matrix of integers.
 #'   
 #' @param document_term_table Table of observation count data (rows: 
-#'   documents (\eqn{M}), columns: terms (\eqn{V})).
+#'   documents, columns: terms. May be a class \code{matrix} or 
+#'   \code{data.frame} but must be conformable to a matrix of integers,
+#'   as verified by \code{\link{check_document_term_table}}. 
 #' 
 #' @export
 #'
@@ -182,7 +185,8 @@ check_document_term_table <- function(document_term_table){
 #' @description Check that the vector of numbers of topics is conformable to
 #'   integers greater than 1.
 #'   
-#' @param topics Vector of the number of topics to evaluate (\eqn{k}).
+#' @param topics Vector of the number of topics to evaluate for each model.
+#'   Must be conformable to \code{integer} values.
 #'
 #' @export
 #'
@@ -198,9 +202,11 @@ check_topics <- function(topics){
 #' @title Check that nseeds value or seeds vector is proper
 #' 
 #' @description Check that the vector of numbers of seeds is conformable to
-#'   integers greater than 1.
+#'   integers greater than 0.
 #'   
-#' @param seeds Value of the number of random seeds to evaluate.
+#' @param nseeds \code{integer} number of seeds (replicate starts) to use for 
+#'   each value of \code{topics} in the LDAs. Must be conformable to a  
+#'   positive \code{integer} value.
 #' 
 #' @export
 #'

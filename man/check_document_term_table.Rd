@@ -8,7 +8,9 @@ check_document_term_table(document_term_table)
 }
 \arguments{
 \item{document_term_table}{Table of observation count data (rows: 
-documents (\eqn{M}), columns: terms (\eqn{V})).}
+documents, columns: terms. May be a class \code{matrix} or 
+\code{data.frame} but must be conformable to a matrix of integers,
+as verified by \code{\link{check_document_term_table}}.}
 }
 \description{
 Check that the table of observations is conformable to

@@ -14,10 +14,7 @@ qprint(msg, wrapper, quiet)
 \item{quiet}{\code{logical} indicator of whether the message should be 
 printed.}
 }
-\value{
-Nothing (message is printed, not returned).
-}
 \description{
-Print a message (via \code{cat}) wrapped as in 
-  \code{<wrapper><msg><wrapper>}.
+Print a message (via \code{\link{cat}}) wrapped as in 
+  \code{<wrapper><msg><wrapper>}, if desired.
 }
