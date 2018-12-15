@@ -3,7 +3,7 @@
 \name{prep_ids}
 \alias{prep_ids}
 \alias{update_ids}
-\title{Initialize and update the chain ids}
+\title{Initialize and update the chain ids throughout the ptMCMC algorithm}
 \usage{
 prep_ids(control)
 
@@ -24,6 +24,12 @@ The vector of chain ids.
 }
 \description{
 \code{prep_ids} creates and \code{update_ids} updates 
-  the active vectort of identities (ids) for each of the chains in the 
-  ptMCMC algorithm.
+  the active vector of identities (ids) for each of the chains in the 
+  ptMCMC algorithm. These ids are used to track trips of the particles
+  among chains.
+  \cr \cr
+  These functions were designed to work within \code{\link{TS}} and 
+  specifically \code{\link{est_changepts}}, but have been generalized
+  and would work within any general ptMCMC as long as \code{control},
+  \code{ids}, and \code{swaps} are formatted properly.
 }

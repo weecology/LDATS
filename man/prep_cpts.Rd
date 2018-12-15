@@ -12,17 +12,22 @@ prep_cpts(data, formula, nchangepoints, weights,
 update_cpts(cpts, swaps)
 }
 \arguments{
-\item{data}{Class \code{data.frame} object including [1] the time variable
-(indicated in \code{control}), [2] the predictor variables (required by
-\code{formula}) and [3], the multinomial response variable (indicated
-in \code{formula}).}
+\item{data}{\code{data.frame} including [1] the time variable (indicated 
+in \code{control$timename}), [2] the predictor variables (required by
+\code{formula}) and [3], the multinomial response variable (indicated in
+\code{formula}) as verified by \code{\link{check_timename}} and 
+\code{\link{check_formula}}. Note that the response variables should be
+formatted as a \code{data.frame} object named as indicated by the 
+\code{response} entry in the \code{control} list, such as \code{gamma} 
+for a standard TS analysis on LDA output.}
 
-\item{formula}{\code{formula} describing the continuous change. Any 
-predictor variable included must also be a column in the
-\code{data}.  Any (multinomial) response variable must also be a set of
-columns in \code{data}.}
+\item{formula}{\code{formula} defining the regression relationship between
+the changepoints, see \code{\link[stats]{formula}}. Any 
+predictor variable included must also be a column in 
+\code{data} and any (multinomial) response variable must be a set of
+columns in \code{data}, as verified by \code{\link{check_formula}}.}
 
-\item{nchangepoints}{Integer corresponding to the number of 
+\item{nchangepoints}{\code{integer} corresponding to the number of 
 change points to include in the model. 0 is a valid input (corresponding
 to no change points, so a singular time series model), and the current 
 implementation can reasonably include up to 6 change points. The 
@@ -30,8 +35,14 @@ number of change points is used to dictate the segementation of the data
 for each continuous model and each LDA model.}
 
 \item{weights}{Optional class \code{numeric} vector of weights for each 
-document. Corresponds to the vector \strong{\eqn{v}} in the math 
-description.}
+document. Defaults to \code{NULL}, translating to an equal weight for
+each document. When using \code{multinom_TS} in a standard LDATS 
+analysis, it is advisable to weight the documents by their total size,
+as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
+proportions, which does not account for size differences among documents.
+For most models, a scaling of the weights (so that the average is 1) is
+most appropriate, and this is accomplished using 
+\code{\link{document_weights}}.}
 
 \item{control}{Class \code{TS_controls} list, holding control parameters
 for the Time Series model including the parallel tempering Markov Chain 

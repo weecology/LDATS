@@ -4,7 +4,6 @@
 #
 # working through documentation right now
 #  scripts to do
-#   ptMCMC
 #   TS
 #   TS_on_LDA
 #   TS_plots
@@ -32,3 +31,8 @@ xx <- LDA_TS(document_term_table, document_covariate_table,
 #'   the output of \code{\link{est_changepts}}, but has been generalized
 #'   and would work with any output from a ptMCMC as long as \code{ptMCMCout}
 #'   is formatted properly.
+
+#'   This function was designed to work within \code{\link{TS}} and 
+#'   specifically \code{\link{est_changepts}}. It is still hardcoded to do
+#'   so, but has the capacity to be generalized to work with any estimation
+#'   via ptMCMC with additional coding work.
