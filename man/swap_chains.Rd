@@ -4,10 +4,10 @@
 \alias{swap_chains}
 \title{Conduct a set of among-chain swaps for the ptMCMC algorithm}
 \usage{
-swap_chains(steps, inputs, ids)
+swap_chains(chainsin, inputs, ids)
 }
 \arguments{
-\item{steps}{Chain configuration after within-temperature steps.}
+\item{chainsin}{Chain configuration to be evaluated for swapping.}
 
 \item{inputs}{Class \code{ptMCMC_inputs} list, containing the static inputs
 for use within the ptMCMC algorithm.}
@@ -20,5 +20,39 @@ List of updated changepoints, log-likelihoods, and chain ids, as
 }
 \description{
 This function handles the among-chain swapping based on 
-  temperature and likelihood differential.
+  temperatures and likelihood differentials.  
+  \cr \cr
+  This function was designed to work within \code{\link{TS}} and 
+  specifically \code{\link{est_changepts}}. It is still hardcoded to do
+  so, but has the capacity to be generalized to work with any estimation
+  via ptMCMC with additional coding work.
+}
+\details{
+The ptMCMC algorithm couples the chains (which are 
+  taking their own walks on the distribution surface) through "swaps", 
+  where neighboring chains exchange configurations (Geyer 1991, Falcioni 
+  and Deem 1999) following the Metropolis criterion (Metropolis 
+  \emph{et al.} 1953). This allows them to share information and search the
+  surface in combination (Earl and Deem 2005).
+}
+\references{
+Earl, D. J. and M. W. Deem. 2005. Parallel tempering: theory, 
+  applications, and new perspectives. \emph{Physical Chemistry Chemical 
+  Physics} \strong{7}: 3910-3916.
+  \href{https://pubs.rsc.org/en/content/articlelanding/2005/cp/b509983h}{link}.
+
+  Falcioni, M. and M. W. Deem. 1999. A biased Monte Carlo scheme for 
+  zeolite structure solution.  \emph{Journal of Chemical Physics}
+  \strong{110}: 1754-1766.
+  \href{https://aip.scitation.org/doi/10.1063/1.477812}{link}.
+
+  Geyer, C. J. 1991. Markov Chain Monte Carlo maximum likelihood. \emph{In
+  Computing Science and Statistics: Proceedings of the 23rd Symposium on 
+  the Interface}. pp 156-163. American Statistical Association, New York,
+  USA. \href{https://www.stat.umn.edu/geyer/f05/8931/c.pdf}{link}.
+ 
+  Metropolis, N., A. W. Rosenbluth, M. N. Rosenbluth, A. H. Teller, and E.
+  Teller. 1953. Equations of state calculations by fast computing machines.
+  \emph{Journal of Chemical Physics} \strong{21}: 1087-1092.
+  \href{https://bayes.wustl.edu/Manual/EquationOfState.pdf}{link}.
 }

@@ -32,7 +32,8 @@
 #'   as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
 #'   proportions, which does not account for size differences among documents.
 #'   For most models, a scaling of the weights (so that the average is 1) is
-#'   most appropriate, and this is accomplished using \code{document_weights}.
+#'   most appropriate, and this is accomplished using 
+#'   \code{\link{document_weights}}.
 #'
 #' @param control Class \code{TS_controls} list, holding control parameters
 #'   for the Time Series model including the parallel tempering Markov Chain 

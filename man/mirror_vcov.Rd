@@ -2,18 +2,22 @@
 % Please edit documentation in R/utilities.R
 \name{mirror_vcov}
 \alias{mirror_vcov}
-\title{Create a properly symmetrix variance covariance matrix}
+\title{Create a properly symmetric variance covariance matrix}
 \usage{
 mirror_vcov(x)
 }
 \arguments{
-\item{x}{Model object that has a defined method for \code{vcov}.}
+\item{x}{Model object that has a defined method for 
+\code{\link[stats]{vcov}}.}
 }
 \value{
 Properly symmetric variance covariance matrix.
 }
 \description{
-If the default matrix returned by \code{vcov} is not, in fact,
-  symmetric (as occurs occasionally in the \code{multinom} function from
-  \code{nnet}), make the matrix symmetric by mirroring the lower triangle.
+A wrapper on \code{\link[stats]{vcov}} to produce a symmetric
+  matrix. If the defauly matrix returned by \code{\link[stats]{vcov}} is
+  symmetric it is returned simply. If it is not, in fact, symmetric
+  (as occurs occasionally with \code{\link[nnet]{multinom}} applied to 
+  proportions), the matrix is made symmetric by mirroring the lower
+  triangle.
 }

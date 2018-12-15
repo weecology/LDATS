@@ -7,7 +7,8 @@
 check_topics(topics)
 }
 \arguments{
-\item{topics}{Vector of the number of topics to evaluate (\eqn{k}).}
+\item{topics}{Vector of the number of topics to evaluate for each model.
+Must be conformable to \code{integer} values.}
 }
 \description{
 Check that the vector of numbers of topics is conformable to

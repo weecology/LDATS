@@ -3,20 +3,23 @@
 \name{proposed_step_mods}
 \alias{proposed_step_mods}
 \title{Fit the chunk-level models to a time series, given a set of 
-  proposed changepoints.}
+  proposed changepoints within the ptMCMC algorithm}
 \usage{
 proposed_step_mods(prop_changepts, inputs)
 }
 \arguments{
-\item{prop_changepts}{Matrix of proposed changepoints across chains.}
+\item{prop_changepts}{\code{matrix} of proposed changepoints across chains.}
 
 \item{inputs}{Class \code{ptMCMC_inputs} list, containing the static inputs
 for use within the ptMCMC algorithm.}
 }
 \value{
-List of models associated with the proposed step.
+List of models associated with the proposed step, with an element
+  for each chain.
 }
 \description{
-This function wraps around \code{TS_memo} to provide simpler
-  interface within the ptMCMC algorithm.
+This function wraps around \code{TS_memo} 
+  (optionally memoised \code{\link{multinom_TS}}) to provide a
+  simpler interface within the ptMCMC algorithm and is implemented within
+  \code{\link{propose_step}}.
 }

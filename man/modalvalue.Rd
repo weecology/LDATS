@@ -13,7 +13,7 @@ modalvalue(x)
 Numeric value of the mode.
 }
 \description{
-Find the most common entry in a vector. Ties are not included,
+Find the most common entry in a vector. Ties are not allowed,
   the first value encountered within the modal set if there are ties is
   deemed the mode.
 }

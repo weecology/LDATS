@@ -7,15 +7,29 @@
 count_trips(ids)
 }
 \arguments{
-\item{ids}{Matrix of identifiers of the particles in each chain for each
-iteration of the ptMCMC algorithm.}
+\item{ids}{\code{matrix} of identifiers of the particles in each chain for 
+each iteration of the ptMCMC algorithm (rows: chains, 
+columns: iterations).}
 }
 \value{
-List of [1] vector of counts of trips and [2] vector of rates of 
-  trips by temperature.
+\code{list} of [1] \code{vector} of within particle trip counts 
+  (\code{$trip_counts}), and [2] \code{vector} of within-particle average 
+  trip rates (\code{$trip_rates}).
 }
 \description{
 Count the full trips (from one extreme temperature chain to
-  the other and back again) for each of the ptMCMC particles, as identified
-  by their id on initialization.
+  the other and back again; Katzgraber \emph{et al.} 2006) for each of the
+  ptMCMC particles, as identified by their id on initialization.
+  \cr \cr
+  This function was designed to work within \code{\link{TS}} and process
+  the output of \code{\link{est_changepts}} as a component of 
+  \code{\link{diagnose_ptMCMC}}, but has been generalized
+  and would work with any output from a ptMCMC as long as \code{ids}
+  is formatted properly.
+}
+\references{
+Katzgraber, H. G., S. Trebst, D. A. Huse. And M. Troyer. 2006. 
+  Feedback-optimized parallel tempering Monte Carlo. \emph{Journal of 
+  Statistical Mechanics: Theory and Experiment} \strong{3}:P03018
+  \href{http://iopscience.iop.org/article/10.1088/1742-5468/2006/03/P03018}{link}.
 }

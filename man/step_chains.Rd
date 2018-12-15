@@ -16,7 +16,7 @@ eval_step(i, cpts, prop_step, inputs)
 take_step(cpts, prop_step, accept_step)
 }
 \arguments{
-\item{i}{Integer iteration index.}
+\item{i}{\code{integer} iteration index.}
 
 \item{cpts}{Matrix of changepoint locations across chains.}
 
@@ -45,5 +45,34 @@ This set of functions steps the chains forward one iteration
   of the within-chain component of the ptMCMC algorithm. \code{step_chains}
   is the main function, comprised of a proposal (made by \code{prop_step}),
   an evaluation of that proposal (made by \code{eval_step}), and then an 
-  update of the configuration (made by \code{take_step}).
+  update of the configuration (made by \code{take_step}). 
+  \cr \cr
+  This set of functions was designed to work within \code{\link{TS}} and 
+  specifically \code{\link{est_changepts}}. They are still hardcoded to do
+  so, but have the capacity to be generalized to work with any estimation
+  via ptMCMC with additional coding work.
+}
+\details{
+For each iteration of the ptMCMC algorithm, all of the chains
+  have the potential to take a step. The possible step is proposed under
+  a proposal distribution (here for changepoints we use a symmetric
+  geometric distribution), the proposed step is then evaluated and either
+  accepted or not (following the Metropolis-Hastings rule; Metropolis,
+  \emph{et al.} 1953, Hasting 1960, Gupta \emph{et al.} 2018), and then
+  acordingly taken or not (the configurations are updated).
+}
+\references{
+Gupta, S., L. Hainsworth, J. S. Hogg, R. E. C. Lee, and J. R. Faeder. 
+  2018. Evaluation of parallel tempering to accelerate Bayesian parameter
+  estimation in systems biology. 
+  \href{https://arxiv.org/abs/1801.09831}{link}.
+
+  Hastings, W. K. 1970. Monte Carlo sampling methods using Markov Chains
+  and their applications. \emph{Biometrika} \strong{57}:97-109.
+  \href{https://www.jstor.org/stable/2334940}{link}.
+ 
+  Metropolis, N., A. W. Rosenbluth, M. N. Rosenbluth, A. H. Teller, and E.
+  Teller. 1953. Equations of state calculations by fast computing machines.
+  \emph{Journal of Chemical Physics} \strong{21}: 1087-1092.
+  \href{https://bayes.wustl.edu/Manual/EquationOfState.pdf}{link}.
 }

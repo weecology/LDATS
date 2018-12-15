@@ -1,40 +1,82 @@
 
-#' @title Summarize the ptMCMC diagnostics
+#' @title Calculate ptMCMC summary diagnostics
 #'
-#' @description Summarize the acceptance rates and trip metrics from 
-#'   the saved output from the ptMCMC.
+#' @description Summarize the step and swap acceptance rates as well as trip
+#'   metrics from the saved output of a ptMCMC estimation. 
 #'
-#' @param rho_dist List of saved data objects from the ptMCMC estimation of
-#'   changepoint locations (unless \code{nchangepoints} is 0, then 
-#'   \code{NULL}).
+#' @details Within-chain step acceptance rates are averaged for each of the
+#'   chains from the raw step acceptance histories 
+#'   (\code{ptMCMCout$step_accepts}) and between-chain swap acceptance rates
+#'   are similarly averaged for each of the neighboring pairs of chains from
+#'   the raw swap acceptance histories (\code{ptMCMCout$swap_accepts}).
+#'   Trips are defined as movement from one extreme chain to the other and
+#'   back again (Katzgraber \emph{et al.} 2006). Trips are counted and turned 
+#'   to per-iteration rates using \code{\link{count_trips}}.
+#'   \cr \cr 
+#'   This function was first designed to work within \code{\link{TS}} and 
+#'   process the output of \code{\link{est_changepts}}, but has been 
+#'   generalized and would work with any output from a ptMCMC as long as 
+#'   \code{ptMCMCout} is formatted properly.
 #'
-#' @return List of [1] step acceptance rates, [2] swap acceptance rates, [3]
-#'   trip counts, and [4] trip rates.
+#' @param ptMCMCout Named \code{list} of saved data objects from a ptMCMC 
+#'   estimation including elements named \code{step_accepts} (matrix of 
+#'   \code{logical} outcomes of each step; rows: chains, columns: iterations),
+#'   \code{swap_accepts} (matrix of \code{logical} outcomes of each swap;
+#'   rows: chain pairs, columns: iterations), and \code{ids} (matrix of 
+#'   particle identifiers; rows: chains, columns: iterations). 
+#'   \code{ptMCMCout = NULL} indicates no use of ptMCMC and so the function
+#'   returns \code{NULL}.
+#'
+#' @return \code{list} of [1] within-chain average step acceptance rates 
+#'   (\code{$step_acceptance_rate}), [2] average between-chain swap acceptance
+#'   rates (\code{$swap_acceptance_rate}), [3] within particle trip counts 
+#'   (\code{$trip_counts}), and [4] within-particle average trip rates 
+#'   (\code{$trip_rates}).
+#' 
+#' @references 
+#'   Katzgraber, H. G., S. Trebst, D. A. Huse. And M. Troyer. 2006. 
+#'   Feedback-optimized parallel tempering Monte Carlo. \emph{Journal of 
+#'   Statistical Mechanics: Theory and Experiment} \strong{3}:P03018
+#'   \href{http://iopscience.iop.org/article/10.1088/1742-5468/2006/03/P03018}{link}.
 #' 
 #' @export 
 #'
-diagnose_ptMCMC <- function(rho_dist){
-  if(is.null(rho_dist)){
+diagnose_ptMCMC <- function(ptMCMCout){
+  if(is.null(ptMCMCout)){
     return(NULL)
   }
-  trips <- count_trips(rho_dist$ids)
-  list(step_acceptance_rate = rowMeans(rho_dist$step_accepts), 
-       swap_acceptance_rate = rowMeans(rho_dist$swap_accepts), 
+  trips <- count_trips(ptMCMCout$ids)
+  list(step_acceptance_rate = rowMeans(ptMCMCout$step_accepts), 
+       swap_acceptance_rate = rowMeans(ptMCMCout$swap_accepts), 
        trip_counts = trips$trip_counts, trip_rates = trips$trip_rates)
 }
 
 #' @title Count trips of the ptMCMC particles
 #'
 #' @description Count the full trips (from one extreme temperature chain to
-#'   the other and back again) for each of the ptMCMC particles, as identified
-#'   by their id on initialization.
+#'   the other and back again; Katzgraber \emph{et al.} 2006) for each of the
+#'   ptMCMC particles, as identified by their id on initialization.
+#'   \cr \cr
+#'   This function was designed to work within \code{\link{TS}} and process
+#'   the output of \code{\link{est_changepts}} as a component of 
+#'   \code{\link{diagnose_ptMCMC}}, but has been generalized
+#'   and would work with any output from a ptMCMC as long as \code{ids}
+#'   is formatted properly.
 #'
-#' @param ids Matrix of identifiers of the particles in each chain for each
-#'   iteration of the ptMCMC algorithm.
+#' @param ids \code{matrix} of identifiers of the particles in each chain for 
+#'   each iteration of the ptMCMC algorithm (rows: chains, 
+#'   columns: iterations).
 #'
-#' @return List of [1] vector of counts of trips and [2] vector of rates of 
-#'   trips by temperature.
+#' @return \code{list} of [1] \code{vector} of within particle trip counts 
+#'   (\code{$trip_counts}), and [2] \code{vector} of within-particle average 
+#'   trip rates (\code{$trip_rates}).
 #' 
+#' @references 
+#'   Katzgraber, H. G., S. Trebst, D. A. Huse. And M. Troyer. 2006. 
+#'   Feedback-optimized parallel tempering Monte Carlo. \emph{Journal of 
+#'   Statistical Mechanics: Theory and Experiment} \strong{3}:P03018
+#'   \href{http://iopscience.iop.org/article/10.1088/1742-5468/2006/03/P03018}{link}.
+#'
 #' @export 
 #'
 count_trips <- function(ids){
@@ -69,9 +111,21 @@ count_trips <- function(ids){
 #' @title Conduct a set of among-chain swaps for the ptMCMC algorithm
 #'
 #' @description This function handles the among-chain swapping based on 
-#'   temperature and likelihood differential. 
+#'   temperatures and likelihood differentials.  
+#'   \cr \cr
+#'   This function was designed to work within \code{\link{TS}} and 
+#'   specifically \code{\link{est_changepts}}. It is still hardcoded to do
+#'   so, but has the capacity to be generalized to work with any estimation
+#'   via ptMCMC with additional coding work.
 #'
-#' @param steps Chain configuration after within-temperature steps.
+#' @details The ptMCMC algorithm couples the chains (which are 
+#'   taking their own walks on the distribution surface) through "swaps", 
+#'   where neighboring chains exchange configurations (Geyer 1991, Falcioni 
+#'   and Deem 1999) following the Metropolis criterion (Metropolis 
+#'   \emph{et al.} 1953). This allows them to share information and search the
+#'   surface in combination (Earl and Deem 2005). 
+#'
+#' @param chainsin Chain configuration to be evaluated for swapping.
 #'
 #' @param inputs Class \code{ptMCMC_inputs} list, containing the static inputs
 #'   for use within the ptMCMC algorithm.
@@ -81,15 +135,36 @@ count_trips <- function(ids){
 #' @return List of updated changepoints, log-likelihoods, and chain ids, as 
 #'   well as a vector of acceptance indicators for each swap.
 #'
+#' @references
+#'   Earl, D. J. and M. W. Deem. 2005. Parallel tempering: theory, 
+#'   applications, and new perspectives. \emph{Physical Chemistry Chemical 
+#'   Physics} \strong{7}: 3910-3916.
+#'   \href{https://pubs.rsc.org/en/content/articlelanding/2005/cp/b509983h}{link}.
+#'
+#'   Falcioni, M. and M. W. Deem. 1999. A biased Monte Carlo scheme for 
+#'   zeolite structure solution.  \emph{Journal of Chemical Physics}
+#'   \strong{110}: 1754-1766.
+#'   \href{https://aip.scitation.org/doi/10.1063/1.477812}{link}.
+#' 
+#'   Geyer, C. J. 1991. Markov Chain Monte Carlo maximum likelihood. \emph{In
+#'   Computing Science and Statistics: Proceedings of the 23rd Symposium on 
+#'   the Interface}. pp 156-163. American Statistical Association, New York,
+#'   USA. \href{https://www.stat.umn.edu/geyer/f05/8931/c.pdf}{link}.
+#'  
+#'   Metropolis, N., A. W. Rosenbluth, M. N. Rosenbluth, A. H. Teller, and E.
+#'   Teller. 1953. Equations of state calculations by fast computing machines.
+#'   \emph{Journal of Chemical Physics} \strong{21}: 1087-1092.
+#'   \href{https://bayes.wustl.edu/Manual/EquationOfState.pdf}{link}.
+#'
 #' @export
 #'
-swap_chains <- function(steps, inputs, ids){
+swap_chains <- function(chainsin, inputs, ids){
   temps <- inputs$temps
   itemps <- 1/temps
   ntemps <- length(temps)
   revtemps <- seq(ntemps - 1, 1)
-  lls <- steps$lls
-  changepts <- steps$changepts
+  lls <- chainsin$lls
+  changepts <- chainsin$changepts
   accept_swap <- rep(FALSE, ntemps - 1)
 
   for (j in revtemps){
@@ -121,8 +196,21 @@ swap_chains <- function(steps, inputs, ids){
 #'   is the main function, comprised of a proposal (made by \code{prop_step}),
 #'   an evaluation of that proposal (made by \code{eval_step}), and then an 
 #'   update of the configuration (made by \code{take_step}). 
+#'   \cr \cr
+#'   This set of functions was designed to work within \code{\link{TS}} and 
+#'   specifically \code{\link{est_changepts}}. They are still hardcoded to do
+#'   so, but have the capacity to be generalized to work with any estimation
+#'   via ptMCMC with additional coding work.
 #'
-#' @param i Integer iteration index.
+#' @details For each iteration of the ptMCMC algorithm, all of the chains
+#'   have the potential to take a step. The possible step is proposed under
+#'   a proposal distribution (here for changepoints we use a symmetric
+#'   geometric distribution), the proposed step is then evaluated and either
+#'   accepted or not (following the Metropolis-Hastings rule; Metropolis,
+#'   \emph{et al.} 1953, Hasting 1960, Gupta \emph{et al.} 2018), and then
+#'   acordingly taken or not (the configurations are updated). 
+#'
+#' @param i \code{integer} iteration index.
 #'
 #' @param cpts Matrix of changepoint locations across chains.
 #'
@@ -130,6 +218,21 @@ swap_chains <- function(steps, inputs, ids){
 #'   for use within the ptMCMC algorithm.
 #'
 #' @return \code{step_chains}: the initialized progress bar object.
+#'
+#' @references
+#'   Gupta, S., L. Hainsworth, J. S. Hogg, R. E. C. Lee, and J. R. Faeder. 
+#'   2018. Evaluation of parallel tempering to accelerate Bayesian parameter
+#'   estimation in systems biology. 
+#'   \href{https://arxiv.org/abs/1801.09831}{link}.
+#'
+#'   Hastings, W. K. 1970. Monte Carlo sampling methods using Markov Chains
+#'   and their applications. \emph{Biometrika} \strong{57}:97-109.
+#'   \href{https://www.jstor.org/stable/2334940}{link}.
+#'  
+#'   Metropolis, N., A. W. Rosenbluth, M. N. Rosenbluth, A. H. Teller, and E.
+#'   Teller. 1953. Equations of state calculations by fast computing machines.
+#'   \emph{Journal of Chemical Physics} \strong{21}: 1087-1092.
+#'   \href{https://bayes.wustl.edu/Manual/EquationOfState.pdf}{link}.
 #'
 #' @export
 #'
@@ -198,17 +301,20 @@ take_step <- function(cpts, prop_step, accept_step){
 }
 
 #' @title Fit the chunk-level models to a time series, given a set of 
-#'   proposed changepoints.
+#'   proposed changepoints within the ptMCMC algorithm
 #'
-#' @description This function wraps around \code{TS_memo} to provide simpler
-#'   interface within the ptMCMC algorithm. 
+#' @description This function wraps around \code{TS_memo} 
+#'   (optionally memoised \code{\link{multinom_TS}}) to provide a
+#'   simpler interface within the ptMCMC algorithm and is implemented within
+#'   \code{\link{propose_step}}. 
 #'
-#' @param prop_changepts Matrix of proposed changepoints across chains.
+#' @param prop_changepts \code{matrix} of proposed changepoints across chains.
 #'
 #' @param inputs Class \code{ptMCMC_inputs} list, containing the static inputs
 #'   for use within the ptMCMC algorithm.
 #'
-#' @return List of models associated with the proposed step.
+#' @return List of models associated with the proposed step, with an element
+#'   for each chain.
 #'
 #' @export
 #'
@@ -228,11 +334,17 @@ proposed_step_mods <- function(prop_changepts, inputs){
 }
 
 
-#' @title Initialize and update the chain ids
+#' @title Initialize and update the chain ids throughout the ptMCMC algorithm
 #'
 #' @description \code{prep_ids} creates and \code{update_ids} updates 
-#'   the active vectort of identities (ids) for each of the chains in the 
-#'   ptMCMC algorithm.
+#'   the active vector of identities (ids) for each of the chains in the 
+#'   ptMCMC algorithm. These ids are used to track trips of the particles
+#'   among chains.
+#'   \cr \cr
+#'   These functions were designed to work within \code{\link{TS}} and 
+#'   specifically \code{\link{est_changepts}}, but have been generalized
+#'   and would work within any general ptMCMC as long as \code{control},
+#'   \code{ids}, and \code{swaps} are formatted properly.
 #'
 #' @param control Class \code{TS_controls} list, holding control parameters
 #'   for the Time Series model including the parallel tempering Markov Chain 
@@ -262,10 +374,16 @@ update_ids <- function(ids, swaps){
   swaps$ids
 }
 
-#' @title Prepare the inputs for the ptMCMC algorithm
+#' @title Prepare the inputs for the ptMCMC algorithm estimation of 
+#'   changepoints
 #'
 #' @description Package the static inputs (controls and data structures) used
-#'   by the ptMCMC algorithm.
+#'   by the ptMCMC algorithm in the context of estimating changepoints. 
+#'   \cr \cr
+#'   This function was designed to work within \code{\link{TS}} and 
+#'   specifically \code{\link{est_changepts}}. It is still hardcoded to do
+#'   so, but has the capacity to be generalized to work with any estimation
+#'   via ptMCMC with additional coding work.
 #'
 #' @param data Class \code{data.frame} object including [1] the time variable
 #'   (indicated in \code{control}), [2] the predictor variables (required by
@@ -285,8 +403,14 @@ update_ids <- function(ids, swaps){
 #'   for each continuous model and each LDA model.
 #'
 #' @param weights Optional class \code{numeric} vector of weights for each 
-#'   document. Corresponds to the vector \strong{\eqn{v}} in the math 
-#'   description.
+#'   document. Defaults to \code{NULL}, translating to an equal weight for
+#'   each document. When using \code{multinom_TS} in a standard LDATS 
+#'   analysis, it is advisable to weight the documents by their total size,
+#'   as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
+#'   proportions, which does not account for size differences among documents.
+#'   For most models, a scaling of the weights (so that the average is 1) is
+#'   most appropriate, and this is accomplished using 
+#'   \code{\link{document_weights}}.
 #'
 #' @param control Class \code{TS_controls} list, holding control parameters
 #'   for the Time Series model including the parallel tempering Markov Chain 
@@ -294,7 +418,7 @@ update_ids <- function(ids, swaps){
 #'   \code{\link{TS_controls_list}}.
 #'
 #' @return Class \code{ptMCMC_inputs} list, containing the static inputs for
-#'   use within the ptMCMC algorithm.
+#'   use within the ptMCMC algorithm for estimating changepoints. 
 #'
 #' @export
 #'
@@ -315,7 +439,8 @@ prep_ptMCMC_inputs <- function(data, formula, nchangepoints, weights,
 }
 
 
-#' @title Pre-claculate the proposal distribution for the ptMCMC algorithm
+#' @title Pre-claculate the changepoint proposal distribution for the ptMCMC 
+#'   algorithm
 #'
 #' @description Calculate the proposal distribution in advance of actually
 #'   running the ptMCMC algorithm in order to decrease computation time.
@@ -336,12 +461,11 @@ prep_ptMCMC_inputs <- function(data, formula, nchangepoints, weights,
 #'   for the Time Series model including the parallel tempering Markov Chain 
 #'   Monte Carlo (ptMCMC) controls, generated by 
 #'   \code{\link{TS_controls_list}}. Currently relevant here is 
-#'   \code{magnitude} (referenced as \eqn{\kappa} in the math description),
-#'   which controls the magnitude of the step size (is the average of the
-#'   geometric distribution). 
+#'   \code{magnitude}, which controls the magnitude of the step size (is the 
+#'   average of the geometric distribution). 
 #'
 #' @return List of two matrices: [1] the size of the proposed step for each
-#'   iteration of each chain, [2] the identity of the change point location 
+#'   iteration of each chain and [2] the identity of the change point location 
 #'   to be shifted by the step for each iteration of each chain.
 #'
 #' @export
@@ -372,8 +496,13 @@ prep_proposal_dist <- function(nchangepoints, control = TS_controls_list()){
 #'   \code{update_saves}. Once the ptMCMC is complete, the saved data objects
 #'   are then processed (burnin iterations are dropped and the remaining
 #'   iterations are thinned) via \code{process_saves}.
+#'   \cr \cr
+#'   This set of functions was designed to work within \code{\link{TS}} and 
+#'   specifically \code{\link{est_changepts}}. They are still hardcoded to do
+#'   so, but have the capacity to be generalized to work with any estimation
+#'   via ptMCMC with additional coding work.
 #'
-#' @param nchangepoints Integer corresponding to the number of 
+#' @param nchangepoints \code{integer} corresponding to the number of 
 #'   change points to include in the model. 0 is a valid input (corresponding
 #'   to no change points, so a singular time series model), and the current 
 #'   implementation can reasonably include up to 6 change points. The 
@@ -385,8 +514,9 @@ prep_proposal_dist <- function(nchangepoints, control = TS_controls_list()){
 #'   Monte Carlo (ptMCMC) controls, generated by 
 #'   \code{\link{TS_controls_list}}.
 #'
-#' @return List of saved ptMCMC objects: changepoints, log-likelihoods, 
-#'   chain ids, step acceptances, and swap acceptances.
+#' @return List of saved ptMCMC objects: changepoints (\code{$cpts}), 
+#'   log-likelihoods (\code{$lls}), chain ids (\code{$ids}), step acceptances
+#'   (\code{$step_accepts}), and swap acceptances (\code{$swap_accepts}).
 #'
 #' @export
 #'
@@ -406,7 +536,7 @@ prep_saves <- function(nchangepoints, control = TS_controls_list()){
 
 #' @rdname prep_saves
 #'
-#' @param i Integer iteration index. 
+#' @param i \code{integer} iteration index. 
 #'
 #' @param saves The existing list of saved data objects.
 #'
@@ -456,17 +586,22 @@ process_saves <- function(saves, control){
 #'   worse fit placed into the subsequently hotter chain. \code{update_cpts}
 #'   updates the changepoints after every iteration in the ptMCMC algorithm.
 #'
-#' @param data Class \code{data.frame} object including [1] the time variable
-#'   (indicated in \code{control}), [2] the predictor variables (required by
-#'   \code{formula}) and [3], the multinomial response variable (indicated
-#'   in \code{formula}). 
+#' @param data \code{data.frame} including [1] the time variable (indicated 
+#'   in \code{control$timename}), [2] the predictor variables (required by
+#'   \code{formula}) and [3], the multinomial response variable (indicated in
+#'   \code{formula}) as verified by \code{\link{check_timename}} and 
+#'   \code{\link{check_formula}}. Note that the response variables should be
+#'   formatted as a \code{data.frame} object named as indicated by the 
+#'   \code{response} entry in the \code{control} list, such as \code{gamma} 
+#'   for a standard TS analysis on LDA output.  
 #'
-#' @param formula \code{formula} describing the continuous change. Any 
-#'   predictor variable included must also be a column in the
-#'   \code{data}.  Any (multinomial) response variable must also be a set of
-#'   columns in \code{data}. 
+#' @param formula \code{formula} defining the regression relationship between
+#'   the changepoints, see \code{\link[stats]{formula}}. Any 
+#'   predictor variable included must also be a column in 
+#'   \code{data} and any (multinomial) response variable must be a set of
+#'   columns in \code{data}, as verified by \code{\link{check_formula}}.
 #'
-#' @param nchangepoints Integer corresponding to the number of 
+#' @param nchangepoints \code{integer} corresponding to the number of 
 #'   change points to include in the model. 0 is a valid input (corresponding
 #'   to no change points, so a singular time series model), and the current 
 #'   implementation can reasonably include up to 6 change points. The 
@@ -474,8 +609,14 @@ process_saves <- function(saves, control){
 #'   for each continuous model and each LDA model.
 #'
 #' @param weights Optional class \code{numeric} vector of weights for each 
-#'   document. Corresponds to the vector \strong{\eqn{v}} in the math 
-#'   description.
+#'   document. Defaults to \code{NULL}, translating to an equal weight for
+#'   each document. When using \code{multinom_TS} in a standard LDATS 
+#'   analysis, it is advisable to weight the documents by their total size,
+#'   as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
+#'   proportions, which does not account for size differences among documents.
+#'   For most models, a scaling of the weights (so that the average is 1) is
+#'   most appropriate, and this is accomplished using 
+#'   \code{\link{document_weights}}.
 #'
 #' @param control Class \code{TS_controls} list, holding control parameters
 #'   for the Time Series model including the parallel tempering Markov Chain 
@@ -493,6 +634,7 @@ prep_cpts <- function(data, formula, nchangepoints, weights,
   check_formula(data, formula)
   check_nchangepoints(nchangepoints)
   check_weights(weights)
+  check_timename(data, control$timename)
   check_control(control, "TS_controls")
   temps <- prep_temp_sequence(control)
   ntemps <- length(temps)
@@ -531,7 +673,14 @@ update_cpts <- function(cpts, swaps){
 
 #' @title Prepare the ptMCMC temperature sequence
 #'
-#' @description Create the series of temperatures used in the ptMCMC algorithm
+#' @description Create the series of temperatures used in the ptMCMC 
+#'   algorithm.
+#'   \cr \cr
+#'   This function was designed to work within \code{\link{TS}} and 
+#'   \code{\link{est_changepts}} specifically, but has been generalized
+#'   and would work with any ptMCMC model as long as \code{control}
+#'   includes the relevant control parameters (and provided that the 
+#'   \code{\link{check_control}} function and its use here are generalized).
 #'
 #' @param control Class \code{TS_controls} list, holding control parameters
 #'   for the Time Series model including the parallel tempering Markov Chain 

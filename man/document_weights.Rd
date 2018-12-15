@@ -2,16 +2,15 @@
 % Please edit documentation in R/utilities.R
 \name{document_weights}
 \alias{document_weights}
-\title{Calculate document weights on maximum number of words}
+\title{Calculate document weights for a corpus}
 \usage{
 document_weights(document_term_table)
 }
 \arguments{
 \item{document_term_table}{Table of observation count data (rows: 
-documents (\eqn{M}), columns: terms (\eqn{V})). May be a class 
-\code{matrix} or \code{data.frame} but must be conformable to
-a code of integers. This table is a document-level summary of the data 
-noted as \eqn{w} (the word-level topic identity) in the math description.}
+documents, columns: terms. May be a class \code{matrix} or 
+\code{data.frame} but must be conformable to a matrix of integers,
+as verified by \code{\link{check_document_term_table}}.}
 }
 \value{
 Vector of weights, one for each document, with the average sample
