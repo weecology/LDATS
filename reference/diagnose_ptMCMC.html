@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Summarize the ptMCMC diagnostics — diagnose_ptMCMC • LDATS</title>
+<title>Calculate ptMCMC summary diagnostics — diagnose_ptMCMC • LDATS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,10 @@
 
 
 
-<meta property="og:title" content="Summarize the ptMCMC diagnostics — diagnose_ptMCMC" />
+<meta property="og:title" content="Calculate ptMCMC summary diagnostics — diagnose_ptMCMC" />
 
-<meta property="og:description" content="Summarize the acceptance rates and trip metrics from 
-  the saved output from the ptMCMC." />
+<meta property="og:description" content="Summarize the step and swap acceptance rates as well as trip
+  metrics from the saved output of a ptMCMC estimation." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -118,35 +118,66 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Summarize the ptMCMC diagnostics</h1>
+    <h1>Calculate ptMCMC summary diagnostics</h1>
     <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/ptMCMC.R'><code>R/ptMCMC.R</code></a></small>
     <div class="hidden name"><code>diagnose_ptMCMC.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Summarize the acceptance rates and trip metrics from 
-  the saved output from the ptMCMC.</p>
+    <p>Summarize the step and swap acceptance rates as well as trip
+  metrics from the saved output of a ptMCMC estimation.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>diagnose_ptMCMC</span>(<span class='no'>rho_dist</span>)</pre>
+    <pre class="usage"><span class='fu'>diagnose_ptMCMC</span>(<span class='no'>ptMCMCout</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>rho_dist</th>
-      <td><p>List of saved data objects from the ptMCMC estimation of
-changepoint locations (unless <code>nchangepoints</code> is 0, then 
-<code>NULL</code>).</p></td>
+      <th>ptMCMCout</th>
+      <td><p>Named <code>list</code> of saved data objects from a ptMCMC 
+estimation including elements named <code>step_accepts</code> (matrix of 
+<code>logical</code> outcomes of each step; rows: chains, columns: iterations),
+<code>swap_accepts</code> (matrix of <code>logical</code> outcomes of each swap;
+rows: chain pairs, columns: iterations), and <code>ids</code> (matrix of 
+particle identifiers; rows: chains, columns: iterations). 
+<code>ptMCMCout = NULL</code> indicates no use of ptMCMC and so the function
+returns <code>NULL</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>List of [1] step acceptance rates, [2] swap acceptance rates, [3]
-  trip counts, and [4] trip rates.</p>
+    <p><code>list</code> of [1] within-chain average step acceptance rates 
+  (<code>$step_acceptance_rate</code>), [2] average between-chain swap acceptance
+  rates (<code>$swap_acceptance_rate</code>), [3] within particle trip counts 
+  (<code>$trip_counts</code>), and [4] within-particle average trip rates 
+  (<code>$trip_rates</code>).</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Within-chain step acceptance rates are averaged for each of the
+  chains from the raw step acceptance histories 
+  (<code>ptMCMCout$step_accepts</code>) and between-chain swap acceptance rates
+  are similarly averaged for each of the neighboring pairs of chains from
+  the raw swap acceptance histories (<code>ptMCMCout$swap_accepts</code>).
+  Trips are defined as movement from one extreme chain to the other and
+  back again (Katzgraber <em>et al.</em> 2006). Trips are counted and turned 
+  to per-iteration rates using <code><a href='count_trips.html'>count_trips</a></code>.
+  <br /> <br /> 
+  This function was first designed to work within <code><a href='TS.html'>TS</a></code> and 
+  process the output of <code><a href='est_changepts.html'>est_changepts</a></code>, but has been 
+  generalized and would work with any output from a ptMCMC as long as 
+  <code>ptMCMCout</code> is formatted properly.</p>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Katzgraber, H. G., S. Trebst, D. A. Huse. And M. Troyer. 2006. 
+  Feedback-optimized parallel tempering Monte Carlo. <em>Journal of 
+  Statistical Mechanics: Theory and Experiment</em> <strong>3</strong>:P03018
+  <a href='http://iopscience.iop.org/article/10.1088/1742-5468/2006/03/P03018'>link</a>.</p>
     
 
   </div>
@@ -156,6 +187,10 @@ changepoint locations (unless <code>nchangepoints</code> is 0, then
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
+
+      <li><a href="#references">References</a></li>
           </ul>
 
   </div>

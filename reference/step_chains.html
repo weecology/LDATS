@@ -36,7 +36,12 @@
   of the within-chain component of the ptMCMC algorithm. step_chains
   is the main function, comprised of a proposal (made by prop_step),
   an evaluation of that proposal (made by eval_step), and then an 
-  update of the configuration (made by take_step)." />
+  update of the configuration (made by take_step). 
+   
+  This set of functions was designed to work within TS and 
+  specifically est_changepts. They are still hardcoded to do
+  so, but have the capacity to be generalized to work with any estimation
+  via ptMCMC with additional coding work." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -132,7 +137,12 @@
   of the within-chain component of the ptMCMC algorithm. <code>step_chains</code>
   is the main function, comprised of a proposal (made by <code>prop_step</code>),
   an evaluation of that proposal (made by <code>eval_step</code>), and then an 
-  update of the configuration (made by <code>take_step</code>).</p>
+  update of the configuration (made by <code>take_step</code>). 
+  <br /> <br />
+  This set of functions was designed to work within <code><a href='TS.html'>TS</a></code> and 
+  specifically <code><a href='est_changepts.html'>est_changepts</a></code>. They are still hardcoded to do
+  so, but have the capacity to be generalized to work with any estimation
+  via ptMCMC with additional coding work.</p>
     
     </div>
 
@@ -149,7 +159,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>i</th>
-      <td><p>Integer iteration index.</p></td>
+      <td><p><code>integer</code> iteration index.</p></td>
     </tr>
     <tr>
       <th>cpts</th>
@@ -181,6 +191,30 @@ proposed step.</p></td>
 <p><code>take_step</code>: list of changepoints, log-likelihoods, and
   logical indicators of acceptance for each chain.</p>
     
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>For each iteration of the ptMCMC algorithm, all of the chains
+  have the potential to take a step. The possible step is proposed under
+  a proposal distribution (here for changepoints we use a symmetric
+  geometric distribution), the proposed step is then evaluated and either
+  accepted or not (following the Metropolis-Hastings rule; Metropolis,
+  <em>et al.</em> 1953, Hasting 1960, Gupta <em>et al.</em> 2018), and then
+  acordingly taken or not (the configurations are updated).</p>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Gupta, S., L. Hainsworth, J. S. Hogg, R. E. C. Lee, and J. R. Faeder. 
+  2018. Evaluation of parallel tempering to accelerate Bayesian parameter
+  estimation in systems biology. 
+  <a href='https://arxiv.org/abs/1801.09831'>link</a>.</p>
+<p>Hastings, W. K. 1970. Monte Carlo sampling methods using Markov Chains
+  and their applications. <em>Biometrika</em> <strong>57</strong>:97-109.
+  <a href='https://www.jstor.org/stable/2334940'>link</a>.</p> 
+<p>Metropolis, N., A. W. Rosenbluth, M. N. Rosenbluth, A. H. Teller, and E.
+  Teller. 1953. Equations of state calculations by fast computing machines.
+  <em>Journal of Chemical Physics</em> <strong>21</strong>: 1087-1092.
+  <a href='https://bayes.wustl.edu/Manual/EquationOfState.pdf'>link</a>.</p>
+    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -189,6 +223,10 @@ proposed step.</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
+
+      <li><a href="#references">References</a></li>
           </ul>
 
   </div>

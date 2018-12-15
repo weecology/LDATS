@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculate document weights on maximum number of words — document_weights • LDATS</title>
+<title>Calculate document weights for a corpus — document_weights • LDATS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,7 +30,7 @@
 
 
 
-<meta property="og:title" content="Calculate document weights on maximum number of words — document_weights" />
+<meta property="og:title" content="Calculate document weights for a corpus — document_weights" />
 
 <meta property="og:description" content="Simple calculation of document weights based on the average
   number of words in a document within the corpus (mean value = 1)." />
@@ -118,7 +118,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Calculate document weights on maximum number of words</h1>
+    <h1>Calculate document weights for a corpus</h1>
     <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/utilities.R'><code>R/utilities.R</code></a></small>
     <div class="hidden name"><code>document_weights.Rd</code></div>
     </div>
@@ -138,10 +138,9 @@
     <tr>
       <th>document_term_table</th>
       <td><p>Table of observation count data (rows: 
-documents (\(M\)), columns: terms (\(V\))). May be a class 
-<code>matrix</code> or <code>data.frame</code> but must be conformable to
-a code of integers. This table is a document-level summary of the data 
-noted as \(w\) (the word-level topic identity) in the math description.</p></td>
+documents, columns: terms. May be a class <code>matrix</code> or 
+<code>data.frame</code> but must be conformable to a matrix of integers,
+as verified by <code><a href='check_document_term_table.html'>check_document_term_table</a></code>.</p></td>
     </tr>
     </table>
     

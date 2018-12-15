@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Fit the chunk-level models to a time series, given a set of 
-  proposed changepoints. — proposed_step_mods • LDATS</title>
+  proposed changepoints within the ptMCMC algorithm — proposed_step_mods • LDATS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,10 +32,12 @@
 
 
 <meta property="og:title" content="Fit the chunk-level models to a time series, given a set of 
-  proposed changepoints. — proposed_step_mods" />
+  proposed changepoints within the ptMCMC algorithm — proposed_step_mods" />
 
-<meta property="og:description" content="This function wraps around TS_memo to provide simpler
-  interface within the ptMCMC algorithm." />
+<meta property="og:description" content="This function wraps around TS_memo 
+  (optionally memoised multinom_TS) to provide a
+  simpler interface within the ptMCMC algorithm and is implemented within
+  propose_step." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -121,15 +123,17 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Fit the chunk-level models to a time series, given a set of 
-  proposed changepoints.</h1>
+  proposed changepoints within the ptMCMC algorithm</h1>
     <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/ptMCMC.R'><code>R/ptMCMC.R</code></a></small>
     <div class="hidden name"><code>proposed_step_mods.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function wraps around <code>TS_memo</code> to provide simpler
-  interface within the ptMCMC algorithm.</p>
+    <p>This function wraps around <code>TS_memo</code> 
+  (optionally memoised <code><a href='multinom_TS.html'>multinom_TS</a></code>) to provide a
+  simpler interface within the ptMCMC algorithm and is implemented within
+  <code><a href='step_chains.html'>propose_step</a></code>.</p>
     
     </div>
 
@@ -140,7 +144,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>prop_changepts</th>
-      <td><p>Matrix of proposed changepoints across chains.</p></td>
+      <td><p><code>matrix</code> of proposed changepoints across chains.</p></td>
     </tr>
     <tr>
       <th>inputs</th>
@@ -151,7 +155,8 @@ for use within the ptMCMC algorithm.</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>List of models associated with the proposed step.</p>
+    <p>List of models associated with the proposed step, with an element
+  for each chain.</p>
     
 
   </div>

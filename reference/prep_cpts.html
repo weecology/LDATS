@@ -149,21 +149,26 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>Class <code>data.frame</code> object including [1] the time variable
-(indicated in <code>control</code>), [2] the predictor variables (required by
-<code>formula</code>) and [3], the multinomial response variable (indicated
-in <code>formula</code>).</p></td>
+      <td><p><code>data.frame</code> including [1] the time variable (indicated 
+in <code>control$timename</code>), [2] the predictor variables (required by
+<code>formula</code>) and [3], the multinomial response variable (indicated in
+<code>formula</code>) as verified by <code><a href='check_timename.html'>check_timename</a></code> and 
+<code><a href='check_formula.html'>check_formula</a></code>. Note that the response variables should be
+formatted as a <code>data.frame</code> object named as indicated by the 
+<code>response</code> entry in the <code>control</code> list, such as <code>gamma</code> 
+for a standard TS analysis on LDA output.</p></td>
     </tr>
     <tr>
       <th>formula</th>
-      <td><p><code>formula</code> describing the continuous change. Any 
-predictor variable included must also be a column in the
-<code>data</code>.  Any (multinomial) response variable must also be a set of
-columns in <code>data</code>.</p></td>
+      <td><p><code>formula</code> defining the regression relationship between
+the changepoints, see <code><a href='https://www.rdocumentation.org/packages/stats/topics/formula'>formula</a></code>. Any 
+predictor variable included must also be a column in 
+<code>data</code> and any (multinomial) response variable must be a set of
+columns in <code>data</code>, as verified by <code><a href='check_formula.html'>check_formula</a></code>.</p></td>
     </tr>
     <tr>
       <th>nchangepoints</th>
-      <td><p>Integer corresponding to the number of 
+      <td><p><code>integer</code> corresponding to the number of 
 change points to include in the model. 0 is a valid input (corresponding
 to no change points, so a singular time series model), and the current 
 implementation can reasonably include up to 6 change points. The 
@@ -173,8 +178,14 @@ for each continuous model and each LDA model.</p></td>
     <tr>
       <th>weights</th>
       <td><p>Optional class <code>numeric</code> vector of weights for each 
-document. Corresponds to the vector <strong>\(v\)</strong> in the math 
-description.</p></td>
+document. Defaults to <code>NULL</code>, translating to an equal weight for
+each document. When using <code>multinom_TS</code> in a standard LDATS 
+analysis, it is advisable to weight the documents by their total size,
+as the result of <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code> is a matrix of 
+proportions, which does not account for size differences among documents.
+For most models, a scaling of the weights (so that the average is 1) is
+most appropriate, and this is accomplished using 
+<code><a href='document_weights.html'>document_weights</a></code>.</p></td>
     </tr>
     <tr>
       <th>control</th>

@@ -33,8 +33,14 @@
 <meta property="og:title" content="Count trips of the ptMCMC particles — count_trips" />
 
 <meta property="og:description" content="Count the full trips (from one extreme temperature chain to
-  the other and back again) for each of the ptMCMC particles, as identified
-  by their id on initialization." />
+  the other and back again; Katzgraber et al. 2006) for each of the
+  ptMCMC particles, as identified by their id on initialization.
+   
+  This function was designed to work within TS and process
+  the output of est_changepts as a component of 
+  diagnose_ptMCMC, but has been generalized
+  and would work with any output from a ptMCMC as long as ids
+  is formatted properly." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -127,8 +133,14 @@
     <div class="ref-description">
     
     <p>Count the full trips (from one extreme temperature chain to
-  the other and back again) for each of the ptMCMC particles, as identified
-  by their id on initialization.</p>
+  the other and back again; Katzgraber <em>et al.</em> 2006) for each of the
+  ptMCMC particles, as identified by their id on initialization.
+  <br /> <br />
+  This function was designed to work within <code><a href='TS.html'>TS</a></code> and process
+  the output of <code><a href='est_changepts.html'>est_changepts</a></code> as a component of 
+  <code><a href='diagnose_ptMCMC.html'>diagnose_ptMCMC</a></code>, but has been generalized
+  and would work with any output from a ptMCMC as long as <code>ids</code>
+  is formatted properly.</p>
     
     </div>
 
@@ -139,15 +151,24 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>ids</th>
-      <td><p>Matrix of identifiers of the particles in each chain for each
-iteration of the ptMCMC algorithm.</p></td>
+      <td><p><code>matrix</code> of identifiers of the particles in each chain for 
+each iteration of the ptMCMC algorithm (rows: chains, 
+columns: iterations).</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>List of [1] vector of counts of trips and [2] vector of rates of 
-  trips by temperature.</p>
+    <p><code>list</code> of [1] <code>vector</code> of within particle trip counts 
+  (<code>$trip_counts</code>), and [2] <code>vector</code> of within-particle average 
+  trip rates (<code>$trip_rates</code>).</p>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Katzgraber, H. G., S. Trebst, D. A. Huse. And M. Troyer. 2006. 
+  Feedback-optimized parallel tempering Monte Carlo. <em>Journal of 
+  Statistical Mechanics: Theory and Experiment</em> <strong>3</strong>:P03018
+  <a href='http://iopscience.iop.org/article/10.1088/1742-5468/2006/03/P03018'>link</a>.</p>
     
 
   </div>
@@ -157,6 +178,8 @@ iteration of the ptMCMC algorithm.</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#references">References</a></li>
           </ul>
 
   </div>

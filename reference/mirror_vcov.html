@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a properly symmetrix variance covariance matrix — mirror_vcov • LDATS</title>
+<title>Create a properly symmetric variance covariance matrix — mirror_vcov • LDATS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,11 +30,14 @@
 
 
 
-<meta property="og:title" content="Create a properly symmetrix variance covariance matrix — mirror_vcov" />
+<meta property="og:title" content="Create a properly symmetric variance covariance matrix — mirror_vcov" />
 
-<meta property="og:description" content="If the default matrix returned by vcov is not, in fact,
-  symmetric (as occurs occasionally in the multinom function from
-  nnet), make the matrix symmetric by mirroring the lower triangle." />
+<meta property="og:description" content="A wrapper on vcov to produce a symmetric
+  matrix. If the defauly matrix returned by vcov is
+  symmetric it is returned simply. If it is not, in fact, symmetric
+  (as occurs occasionally with multinom applied to 
+  proportions), the matrix is made symmetric by mirroring the lower
+  triangle." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -119,16 +122,19 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a properly symmetrix variance covariance matrix</h1>
+    <h1>Create a properly symmetric variance covariance matrix</h1>
     <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/utilities.R'><code>R/utilities.R</code></a></small>
     <div class="hidden name"><code>mirror_vcov.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>If the default matrix returned by <code>vcov</code> is not, in fact,
-  symmetric (as occurs occasionally in the <code>multinom</code> function from
-  <code>nnet</code>), make the matrix symmetric by mirroring the lower triangle.</p>
+    <p>A wrapper on <code><a href='https://www.rdocumentation.org/packages/stats/topics/vcov'>vcov</a></code> to produce a symmetric
+  matrix. If the defauly matrix returned by <code><a href='https://www.rdocumentation.org/packages/stats/topics/vcov'>vcov</a></code> is
+  symmetric it is returned simply. If it is not, in fact, symmetric
+  (as occurs occasionally with <code><a href='https://www.rdocumentation.org/packages/nnet/topics/multinom'>multinom</a></code> applied to 
+  proportions), the matrix is made symmetric by mirroring the lower
+  triangle.</p>
     
     </div>
 
@@ -139,7 +145,8 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>Model object that has a defined method for <code>vcov</code>.</p></td>
+      <td><p>Model object that has a defined method for 
+<code><a href='https://www.rdocumentation.org/packages/stats/topics/vcov'>vcov</a></code>.</p></td>
     </tr>
     </table>
     

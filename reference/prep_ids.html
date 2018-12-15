@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Initialize and update the chain ids — prep_ids • LDATS</title>
+<title>Initialize and update the chain ids throughout the ptMCMC algorithm — prep_ids • LDATS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,11 +30,17 @@
 
 
 
-<meta property="og:title" content="Initialize and update the chain ids — prep_ids" />
+<meta property="og:title" content="Initialize and update the chain ids throughout the ptMCMC algorithm — prep_ids" />
 
 <meta property="og:description" content="prep_ids creates and update_ids updates 
-  the active vectort of identities (ids) for each of the chains in the 
-  ptMCMC algorithm." />
+  the active vector of identities (ids) for each of the chains in the 
+  ptMCMC algorithm. These ids are used to track trips of the particles
+  among chains.
+   
+  These functions were designed to work within TS and 
+  specifically est_changepts, but have been generalized
+  and would work within any general ptMCMC as long as control,
+  ids, and swaps are formatted properly." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -119,7 +125,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Initialize and update the chain ids</h1>
+    <h1>Initialize and update the chain ids throughout the ptMCMC algorithm</h1>
     <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/ptMCMC.R'><code>R/ptMCMC.R</code></a></small>
     <div class="hidden name"><code>prep_ids.Rd</code></div>
     </div>
@@ -127,8 +133,14 @@
     <div class="ref-description">
     
     <p><code>prep_ids</code> creates and <code>update_ids</code> updates 
-  the active vectort of identities (ids) for each of the chains in the 
-  ptMCMC algorithm.</p>
+  the active vector of identities (ids) for each of the chains in the 
+  ptMCMC algorithm. These ids are used to track trips of the particles
+  among chains.
+  <br /> <br />
+  These functions were designed to work within <code><a href='TS.html'>TS</a></code> and 
+  specifically <code><a href='est_changepts.html'>est_changepts</a></code>, but have been generalized
+  and would work within any general ptMCMC as long as <code>control</code>,
+  <code>ids</code>, and <code>swaps</code> are formatted properly.</p>
     
     </div>
 

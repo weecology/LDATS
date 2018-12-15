@@ -33,7 +33,7 @@
 <meta property="og:title" content="Check that nseeds value or seeds vector is proper — check_seeds" />
 
 <meta property="og:description" content="Check that the vector of numbers of seeds is conformable to
-  integers greater than 1." />
+  integers greater than 0." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -126,18 +126,20 @@
     <div class="ref-description">
     
     <p>Check that the vector of numbers of seeds is conformable to
-  integers greater than 1.</p>
+  integers greater than 0.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>check_seeds</span>(<span class='no'>seeds</span>)</pre>
+    <pre class="usage"><span class='fu'>check_seeds</span>(<span class='no'>nseeds</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>seeds</th>
-      <td><p>Value of the number of random seeds to evaluate.</p></td>
+      <th>nseeds</th>
+      <td><p><code>integer</code> number of seeds (replicate starts) to use for 
+each value of <code>topics</code> in the LDAs. Must be conformable to a  
+positive <code>integer</code> value.</p></td>
     </tr>
     </table>
     
