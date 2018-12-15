@@ -28,3 +28,7 @@ xx <- LDA_TS(document_term_table, document_covariate_table,
                    control = LDA_TS_controls_list(
                              TS_control = TS_controls_list(nit = 1e3)))
 
+#'   This function was designed to work within \code{\link{TS}} and process
+#'   the output of \code{\link{est_changepts}}, but has been generalized
+#'   and would work with any output from a ptMCMC as long as \code{ptMCMCout}
+#'   is formatted properly.

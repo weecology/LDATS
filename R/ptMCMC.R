@@ -1,40 +1,84 @@
 
-#' @title Summarize the ptMCMC diagnostics
+#' @title Calculate ptMCMC summary diagnostics
 #'
-#' @description Summarize the acceptance rates and trip metrics from 
-#'   the saved output from the ptMCMC.
+#' @description Summarize the step and swap acceptance rates as well as trip
+#'   metrics from the saved output of a ptMCMC estimation. 
 #'
-#' @param rho_dist List of saved data objects from the ptMCMC estimation of
-#'   changepoint locations (unless \code{nchangepoints} is 0, then 
-#'   \code{NULL}).
+#' @details Within-chain step acceptance rates are averaged for each of the
+#'   chains from the raw step acceptance histories 
+#'   (\code{ptMCMCout$step_accepts}) and between-chain swap acceptance rates
+#'   are similarly averaged for each of the neighboring pairs of chains from
+#'   the raw swap acceptance histories (\code{ptMCMCout$swap_accepts}).
+#'   Trips are defined as movement from one extreme chain to the other and
+#'   back again (Katzgraber \emph{et al.} 2006). Trips are counted and turned 
+#'   to per-iteration rates using \code{\link{count_trips}}.
+#'   \cr \cr 
+#'   This function was first designed to work within \code{\link{TS}} and 
+#'   process the output of \code{\link{est_changepts}}, but has been 
+#'   generalized and would work with any output from a ptMCMC as long as 
+#'   \code{ptMCMCout} is formatted properly.
 #'
-#' @return List of [1] step acceptance rates, [2] swap acceptance rates, [3]
-#'   trip counts, and [4] trip rates.
+#' @param ptMCMCout Named \code{list} of saved data objects from a ptMCMC 
+#'   estimation including elements named \code{step_accepts} (matrix of 
+#'   \code{logical} outcomes of each step; rows: chains, columns: iterations),
+#'   \code{swap_accepts} (matrix of \code{logical} outcomes of each swap;
+#'   rows: chain pairs, columns: iterations), and \code{ids} (matrix of 
+#'   particle identifiers; rows: chains, columns: iterations). 
+#'   \code{ptMCMCout = NULL} indicates no use of ptMCMC and so the function
+#'   returns \code{NULL}.
+#'
+#' @return \code{list} of [1] within-chain average step acceptance rates 
+#'   (\code{$step_acceptance_rate}), [2] average between-chain swap acceptance
+#'   rates (\code{$swap_acceptance_rate}), [3] within particle trip counts 
+#'   (\code{$trip_counts}), and [4] within-particle average trip rates 
+#'   (\code{$trip_rates}).
+#' 
+#' @references 
+#'   Katzgraber, H. G., S. Trebst, D. A. Huse. And M. Troyer. 2006. 
+#'   Feedback-optimized parallel tempering Monte Carlo. \emph{Journal of 
+#'   Statistical Mechanics: Theory and Experiment} \strong{3}:P03018
+#'   \href{http://iopscience.iop.org/article/10.1088/1742-5468/2006/03/P03018
+#'         }{link}.
 #' 
 #' @export 
 #'
-diagnose_ptMCMC <- function(rho_dist){
-  if(is.null(rho_dist)){
+diagnose_ptMCMC <- function(ptMCMCout){
+  if(is.null(ptMCMCout)){
     return(NULL)
   }
-  trips <- count_trips(rho_dist$ids)
-  list(step_acceptance_rate = rowMeans(rho_dist$step_accepts), 
-       swap_acceptance_rate = rowMeans(rho_dist$swap_accepts), 
+  trips <- count_trips(ptMCMCout$ids)
+  list(step_acceptance_rate = rowMeans(ptMCMCout$step_accepts), 
+       swap_acceptance_rate = rowMeans(ptMCMCout$swap_accepts), 
        trip_counts = trips$trip_counts, trip_rates = trips$trip_rates)
 }
 
 #' @title Count trips of the ptMCMC particles
 #'
 #' @description Count the full trips (from one extreme temperature chain to
-#'   the other and back again) for each of the ptMCMC particles, as identified
-#'   by their id on initialization.
+#'   the other and back again; Katzgraber \emph{et al.} 2006) for each of the
+#'   ptMCMC particles, as identified by their id on initialization.
+#'   \cr \cr
+#'   This function was designed to work within \code{\link{TS}} and process
+#'   the output of \code{\link{est_changepts}} as a component of 
+#'   \code{\link{diagnose_ptMCMC}}, but has been generalized
+#'   and would work with any output from a ptMCMC as long as \code{ids}
+#'   is formatted properly.
 #'
-#' @param ids Matrix of identifiers of the particles in each chain for each
-#'   iteration of the ptMCMC algorithm.
+#' @param ids \code{matrix} of identifiers of the particles in each chain for 
+#'   each iteration of the ptMCMC algorithm (rows: chains, 
+#'   columns: iterations).
 #'
-#' @return List of [1] vector of counts of trips and [2] vector of rates of 
-#'   trips by temperature.
+#' @return \code{list} of [1] \code{vector} of within particle trip counts 
+#'   (\code{$trip_counts}), and [2] \code{vector} of within-particle average 
+#'   trip rates (\code{$trip_rates}).
 #' 
+#' @references 
+#'   Katzgraber, H. G., S. Trebst, D. A. Huse. And M. Troyer. 2006. 
+#'   Feedback-optimized parallel tempering Monte Carlo. \emph{Journal of 
+#'   Statistical Mechanics: Theory and Experiment} \strong{3}:P03018
+#'   \href{http://iopscience.iop.org/article/10.1088/1742-5468/2006/03/P03018
+#'         }{link}.
+#'
 #' @export 
 #'
 count_trips <- function(ids){
