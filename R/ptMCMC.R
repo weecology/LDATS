@@ -37,8 +37,7 @@
 #'   Katzgraber, H. G., S. Trebst, D. A. Huse. And M. Troyer. 2006. 
 #'   Feedback-optimized parallel tempering Monte Carlo. \emph{Journal of 
 #'   Statistical Mechanics: Theory and Experiment} \strong{3}:P03018
-#'   \href{http://iopscience.iop.org/article/10.1088/1742-5468/2006/03/P03018
-#'         }{link}.
+#'   \href{http://iopscience.iop.org/article/10.1088/1742-5468/2006/03/P03018}{link}.
 #' 
 #' @export 
 #'
@@ -76,8 +75,7 @@ diagnose_ptMCMC <- function(ptMCMCout){
 #'   Katzgraber, H. G., S. Trebst, D. A. Huse. And M. Troyer. 2006. 
 #'   Feedback-optimized parallel tempering Monte Carlo. \emph{Journal of 
 #'   Statistical Mechanics: Theory and Experiment} \strong{3}:P03018
-#'   \href{http://iopscience.iop.org/article/10.1088/1742-5468/2006/03/P03018
-#'         }{link}.
+#'   \href{http://iopscience.iop.org/article/10.1088/1742-5468/2006/03/P03018}{link}.
 #'
 #' @export 
 #'
@@ -141,8 +139,7 @@ count_trips <- function(ids){
 #'   Earl, D. J. and M. W. Deem. 2005. Parallel tempering: theory, 
 #'   applications, and new perspectives. \emph{Physical Chemistry Chemical 
 #'   Physics} \strong{7}: 3910-3916.
-#'   \href{https://pubs.rsc.org/en/content/articlelanding/2005/cp/b509983h
-#'         }{link}.
+#'   \href{https://pubs.rsc.org/en/content/articlelanding/2005/cp/b509983h}{link}.
 #'
 #'   Falcioni, M. and M. W. Deem. 1999. A biased Monte Carlo scheme for 
 #'   zeolite structure solution.  \emph{Journal of Chemical Physics}
@@ -306,7 +303,8 @@ take_step <- function(cpts, prop_step, accept_step){
 #' @title Fit the chunk-level models to a time series, given a set of 
 #'   proposed changepoints within the ptMCMC algorithm
 #'
-#' @description This function wraps around \code{\link{TS_memo}} to provide a
+#' @description This function wraps around \code{TS_memo} 
+#'   (optionally memoised \code{\link{multinom_TS}}) to provide a
 #'   simpler interface within the ptMCMC algorithm and is implemented within
 #'   \code{\link{propose_step}}. 
 #'

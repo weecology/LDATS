@@ -4,7 +4,7 @@
 \alias{check_seeds}
 \title{Check that nseeds value or seeds vector is proper}
 \usage{
-check_seeds(seeds)
+check_seeds(nseeds)
 }
 \arguments{
 \item{nseeds}{\code{integer} number of seeds (replicate starts) to use for 

@@ -210,9 +210,9 @@ check_topics <- function(topics){
 #' 
 #' @export
 #'
-check_seeds <- function(seeds){
-  if (!is.numeric(seeds) || any(seeds %% 1 != 0)){
-    stop("topics vector must be integers")
+check_seeds <- function(nseeds){
+  if (!is.numeric(nseeds) || any(nseeds %% 1 != 0)){
+    stop("nseeds vector must be integers")
   }
 }
 

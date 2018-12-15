@@ -18,7 +18,8 @@ List of models associated with the proposed step, with an element
   for each chain.
 }
 \description{
-This function wraps around \code{\link{TS_memo}} to provide a
+This function wraps around \code{TS_memo} 
+  (optionally memoised \code{\link{multinom_TS}}) to provide a
   simpler interface within the ptMCMC algorithm and is implemented within
   \code{\link{propose_step}}.
 }
