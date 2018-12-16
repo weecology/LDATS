@@ -1,7 +1,6 @@
 ^Meta$
 ^doc$
 ^manuscript$
-^devspace.R$
 ^.travis.yml$
 ^.*\.Rproj$
 ^\.Rproj\.user$
