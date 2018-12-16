@@ -74,7 +74,7 @@ check_LDA_TS_inputs checks that the inputs to
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.17</span>
       </span>
     </div>
 
@@ -193,8 +193,8 @@ each value of <code>topics</code> in the LDAs. Must be conformable to
     </tr>
     <tr>
       <th>formulas</th>
-      <td><p>Vector of <code>formula</code>(s) for the continuous 
-(non-changepoint) component of the time series models. Any 
+      <td><p>Vector of <code><a href='https://www.rdocumentation.org/packages/stats/topics/formula'>formula</a></code>(s) for the 
+continuous (non-change point) component of the time series models. Any 
 predictor variable included in a formula must also be a column in the
 <code>document_covariate_table</code>. Each element (formula) in the vector
 is evaluated for each number of change points and each LDA model.</p></td>

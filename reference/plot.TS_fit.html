@@ -32,8 +32,9 @@
 
 <meta property="og:title" content="Plot a LDATS TS models — plot.TS_fit" />
 
-<meta property="og:description" content="Generalization of the plot function to work on fitted
-  TS model (class TS_fit)." />
+<meta property="og:description" content="Generalization of the plot function to 
+  work on fitted TS model objects (class TS_fit) returned from 
+  TS." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -64,7 +65,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.17</span>
       </span>
     </div>
 
@@ -125,15 +126,16 @@
 
     <div class="ref-description">
     
-    <p>Generalization of the <code>plot</code> function to work on fitted
-  TS model (class <code>TS_fit</code>).</p>
+    <p>Generalization of the <code><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></code> function to 
+  work on fitted TS model objects (class <code>TS_fit</code>) returned from 
+  <code><a href='TS.html'>TS</a></code>.</p>
     
     </div>
 
     <pre class="usage"><span class='co'># S3 method for TS_fit</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>plot_type</span> <span class='kw'>=</span> <span class='st'>"summary"</span>,
-  <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fu'><a href='set_TS_summary_plot_cols.html'>set_TS_summary_plot_cols</a></span>(), <span class='kw'>bin_width</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>selection</span> <span class='kw'>=</span> <span class='st'>"median"</span>)</pre>
+  <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fu'><a href='set_TS_summary_plot_cols.html'>set_TS_summary_plot_cols</a></span>(),
+  <span class='kw'>bin_width</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>selection</span> <span class='kw'>=</span> <span class='st'>"median"</span>, <span class='kw'>LDATS</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -141,26 +143,31 @@
     <tr>
       <th>x</th>
       <td><p>A <code>TS_fit</code> object of a multinomial time series model fit by
-<code>multinom_TS</code>.</p></td>
+<code><a href='TS.html'>TS</a></code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
       <td><p>Additional arguments to be passed to subfunctions. Not currently
-used, just retained for alignment with <code>plot</code>.</p></td>
+used, just retained for alignment with <code><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></code>.</p></td>
     </tr>
     <tr>
       <th>plot_type</th>
       <td><p>"diagnostic" or "summary".</p></td>
     </tr>
     <tr>
+      <th>interactive</th>
+      <td><p><code>logical</code> input, should be codeTRUE unless
+testing.</p></td>
+    </tr>
+    <tr>
       <th>cols</th>
       <td><p><code>list</code> of elements used to define the colors for the two
 panels of the summary plot, as generated simply using 
-<code>TS_summary_cols</code>. <code>cols</code> has two elements <code>rho</code> and 
-<code>gamma</code>, each corresponding to the related panel, and each 
-containing default values for entries named <code>cols</code>, <code>option</code>, 
-and <code>alpha</code>. See <code>set_gamma_colors</code> and 
-<code>set_rho_hist_colors</code> for details on usage.</p></td>
+<code><a href='set_TS_summary_plot_cols.html'>set_TS_summary_plot_cols</a></code>. <code>cols</code> has two elements 
+<code>rho</code> and <code>gamma</code>, each corresponding to the related panel, 
+and each containing default values for entries named <code>cols</code>,
+<code>option</code>, and <code>alpha</code>. See <code><a href='set_gamma_colors.html'>set_gamma_colors</a></code> and 
+<code><a href='set_rho_hist_colors.html'>set_rho_hist_colors</a></code> for details on usage.</p></td>
     </tr>
     <tr>
       <th>bin_width</th>
@@ -174,8 +181,14 @@ the model).</p></td>
     </tr>
     <tr>
       <th>selection</th>
-      <td><p>Indicator of the changepoints to use in the timeseries
-summary plot. Currently only defined for "median" and "mode".</p></td>
+      <td><p>Indicator of the change points to use in the timeseries
+summary plot. Currently only defined for <code>"median"</code> and 
+<code>"mode"</code>.</p></td>
+    </tr>
+    <tr>
+      <th>LDATS</th>
+      <td><p><code>logical</code> indicating if the plot is part of a larger 
+LDATS plot output.</p></td>
     </tr>
     </table>
     

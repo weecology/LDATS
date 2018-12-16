@@ -70,7 +70,7 @@ LDA_plot_bottom_panel: create an LDATS LDA summary plot
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.17</span>
       </span>
     </div>
 
@@ -144,11 +144,12 @@ LDA_plot_bottom_panel: create an LDATS LDA summary plot
 
     <pre class="usage"><span class='co'># S3 method for LDA_VEM</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>xtime</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>xname</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"E"</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.8</span>)
+  <span class='kw'>cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"E"</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.8</span>, <span class='kw'>LDATS</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-<span class='fu'>LDA_plot_top_panel</span>(<span class='no'>x</span>, <span class='no'>cols</span>, <span class='no'>option</span>, <span class='no'>alpha</span>)
+<span class='fu'>LDA_plot_top_panel</span>(<span class='no'>x</span>, <span class='no'>cols</span>, <span class='no'>option</span>, <span class='no'>alpha</span>, <span class='kw'>LDATS</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-<span class='fu'>LDA_plot_bottom_panel</span>(<span class='no'>x</span>, <span class='no'>xtime</span>, <span class='no'>xname</span>, <span class='no'>cols</span>, <span class='no'>option</span>, <span class='no'>alpha</span>)</pre>
+<span class='fu'>LDA_plot_bottom_panel</span>(<span class='no'>x</span>, <span class='no'>xtime</span>, <span class='no'>xname</span>, <span class='no'>cols</span>, <span class='no'>option</span>, <span class='no'>alpha</span>,
+  <span class='kw'>LDATS</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -191,6 +192,11 @@ options are available: "magma" (or "A"), "inferno" (or "B"), "plasma"
       <td><p>Numeric value [0,1] that indicates the transparency of the 
 colors used. Supported only on some devices, see 
 <code><a href='https://www.rdocumentation.org/packages/grDevices/topics/rgb'>rgb</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>LDATS</th>
+      <td><p><code>logical</code> indicating if the plot is part of a larger 
+LDATS plot output.</p></td>
     </tr>
     </table>
     

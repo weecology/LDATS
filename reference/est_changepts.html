@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Use ptMCMC to estimate the distribution of changepoint locations — est_changepts • LDATS</title>
+<title>Use ptMCMC to estimate the distribution of change point locations — est_changepts • LDATS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,10 @@
 
 
 
-<meta property="og:title" content="Use ptMCMC to estimate the distribution of changepoint locations — est_changepts" />
+<meta property="og:title" content="Use ptMCMC to estimate the distribution of change point locations — est_changepts" />
 
-<meta property="og:description" content="This function executes the ptMCMC estimation of the 
-  changepoint location distributions for the Time Series analyses." />
+<meta property="og:description" content="This function executes ptMCMC-based estimation of the 
+  change point location distributions for multinomial Time Series analyses." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -64,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.17</span>
       </span>
     </div>
 
@@ -118,15 +118,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Use ptMCMC to estimate the distribution of changepoint locations</h1>
+    <h1>Use ptMCMC to estimate the distribution of change point locations</h1>
     <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/TS.R'><code>R/TS.R</code></a></small>
     <div class="hidden name"><code>est_changepts.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function executes the ptMCMC estimation of the 
-  changepoint location distributions for the Time Series analyses.</p>
+    <p>This function executes ptMCMC-based estimation of the 
+  change point location distributions for multinomial Time Series analyses.</p>
     
     </div>
 
@@ -137,32 +137,43 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>Class <code>data.frame</code> object including [1] the time variable
-(indicated in <code>control</code>), [2] the predictor variables (required by
-<code>formula</code>) and [3], the multinomial response variable (indicated
-in <code>formula</code>).</p></td>
+      <td><p><code>data.frame</code> including [1] the time variable (indicated 
+in <code>control$timename</code>), [2] the predictor variables (required by
+<code>formula</code>) and [3], the multinomial response variable (indicated in
+<code>formula</code>) as verified by <code><a href='check_timename.html'>check_timename</a></code> and 
+<code><a href='check_formula.html'>check_formula</a></code>. Note that the response variables should be
+formatted as a <code>data.frame</code> object named as indicated by the 
+<code>response</code> entry in the <code>control</code> list, such as <code>gamma</code> 
+for a standard TS analysis on LDA output.</p></td>
     </tr>
     <tr>
       <th>formula</th>
-      <td><p><code>formula</code> describing the continuous change. Any 
-predictor variable included must also be a column in the
-<code>data</code>.  Any (multinomial) response variable must also be a set of
-columns in <code>data</code>.</p></td>
+      <td><p><code><a href='https://www.rdocumentation.org/packages/stats/topics/formula'>formula</a></code> defining the regression between
+relationship the change points. Any 
+predictor variable included must also be a column in 
+<code>data</code> and any (multinomial) response variable must be a set of
+columns in <code>data</code>, as verified by <code><a href='check_formula.html'>check_formula</a></code>.</p></td>
     </tr>
     <tr>
       <th>nchangepoints</th>
-      <td><p>Integer corresponding to the number of 
+      <td><p><code>integer</code> corresponding to the number of 
 change points to include in the model. 0 is a valid input (corresponding
 to no change points, so a singular time series model), and the current 
 implementation can reasonably include up to 6 change points. The 
-number of change points is used to dictate the segementation of the data  
-for each continuous model and each LDA model.</p></td>
+number of change points is used to dictate the segementation of the 
+time series into chunks fit with separate models dictated by 
+<code>formula</code>.</p></td>
     </tr>
     <tr>
       <th>weights</th>
       <td><p>Optional class <code>numeric</code> vector of weights for each 
-document. Corresponds to the vector <strong>\(v\)</strong> in the math 
-description.</p></td>
+document. Defaults to <code>NULL</code>, translating to an equal weight for
+each document. When using <code>multinom_TS</code> in a standard LDATS 
+analysis, it is advisable to weight the documents by their total size,
+as the result of <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code> is a matrix of 
+proportions, which does not account for size differences among documents.
+For most models, a scaling of the weights (so that the average is 1) is
+most appropriate, and this is accomplished using <code>document_weights</code>.</p></td>
     </tr>
     <tr>
       <th>control</th>
@@ -176,7 +187,7 @@ Monte Carlo (ptMCMC) controls, generated by
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>List of saved data objects from the ptMCMC estimation of
-  changepoint locations (unless <code>nchangepoints</code> is 0, then 
+  change point locations (unless <code>nchangepoints</code> is 0, then 
   <code>NULL</code> is returned).</p>
     
 

@@ -6,8 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Expand the TS models needed across the factorial combination of
-  LDA models, continuous formulas, and number of change points — expand_TS • LDATS</title>
+<title>Expand the TS models across the factorial combination of
+  LDA models, formulas, and number of change points — expand_TS • LDATS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -31,11 +31,11 @@
 
 
 
-<meta property="og:title" content="Expand the TS models needed across the factorial combination of
-  LDA models, continuous formulas, and number of change points — expand_TS" />
+<meta property="og:title" content="Expand the TS models across the factorial combination of
+  LDA models, formulas, and number of change points — expand_TS" />
 
 <meta property="og:description" content="Expand the completely crossed combination of model inputs: 
-  LDA model results, continuous formulas" />
+  LDA model results, formulas, and number of change points." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -66,7 +66,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.17</span>
       </span>
     </div>
 
@@ -120,8 +120,8 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Expand the TS models needed across the factorial combination of
-  LDA models, continuous formulas, and number of change points</h1>
+    <h1>Expand the TS models across the factorial combination of
+  LDA models, formulas, and number of change points</h1>
     <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/TS_on_LDA.R'><code>R/TS_on_LDA.R</code></a></small>
     <div class="hidden name"><code>expand_TS.Rd</code></div>
     </div>
@@ -129,7 +129,7 @@
     <div class="ref-description">
     
     <p>Expand the completely crossed combination of model inputs: 
-  LDA model results, continuous formulas</p>
+  LDA model results, formulas, and number of change points.</p>
     
     </div>
 
@@ -140,23 +140,36 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>LDA_models</th>
-      <td><p><code>LDA_set</code>-class object of LDA models.</p></td>
+      <td><p>List of LDA models (class <code>LDA_set</code>, produced by
+<code><a href='LDA_set.html'>LDA_set</a></code>) or a singular LDA model (class <code>LDA</code>,
+produced by <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code>).</p></td>
     </tr>
     <tr>
       <th>formulas</th>
-      <td><p>Vector of the continuous formulas.</p></td>
+      <td><p>Vector of <code><a href='https://www.rdocumentation.org/packages/stats/topics/formula'>formula</a></code>(s) for the 
+continuous (non-change point) component of the time series models. Any 
+predictor variable included in a formula must also be a column in the
+<code>document_covariate_table</code>. Each element (formula) in the vector
+is evaluated for each number of change points and each LDA model.</p></td>
     </tr>
     <tr>
       <th>nchangepoints</th>
-      <td><p>Vector of the number of changepoints.</p></td>
+      <td><p>Vector of <code>integer</code>s corresponding to the number 
+of change points to include in the time series models. 0 is a valid input 
+corresponding to no change points (<em>i.e.</em>, a singular time series
+model), and the current implementation can reasonably include up to 6 
+change points. Each element in the vector is the number of change points 
+used to segement the data for each formula (entry in <code>formulas</code>) 
+component of the TS model, for each selected LDA model.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Expanded table of the three values: [1] the LDA model (indicated
-  as a numeric element reference to the <code>LDA_set</code> object), [2] the 
-  continuous formula, and [3] the number of changepoints.</p>
+    <p>Expanded <code>data.frame</code> table of the three values (columns) for
+  each unique model run (rows): [1] the LDA model (indicated
+  as a numeric element reference to the <code>LDA_models</code> object), [2] the 
+  regressor formula, and [3] the number of changepoints.</p>
     
 
   </div>

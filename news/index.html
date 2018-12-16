@@ -60,7 +60,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.17</span>
       </span>
     </div>
 
@@ -125,14 +125,45 @@
 <h2 class="hasAnchor">
 <a href="#code-structure" class="anchor"></a>Code structure</h2>
 <ul>
-<li>Creation of a <a href="https://weecology.github.io/LDATS/articles/LDATS_codebase.html">standard API and code pipeline</a> for all components of the LDATS analysis</li>
+<li>Creation of a <a href="https://weecology.github.io/LDATS/articles/LDATS_codebase.html">standard API and code pipeline</a> for all components of the LDATS analysis.</li>
+<li>Substantial refactor of the underlying code from hardcoded to generalized functions.</li>
+<li>Development of checking functions used to run the basic structural checks on the function inputs.</li>
+<li>Inclusion of control options lists for the LDA stage, TS stage, and overall to reduce the length of input lists.</li>
+</ul>
+</div>
+<div id="lda-model-aic-calculation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#lda-model-aic-calculation" class="anchor"></a>LDA Model AIC calculation</h2>
+<ul>
+<li>
+<code>AIC.LDA_VEM</code> now uses the number of parameters as reported from <code>logLik</code> to calculate AIC.</li>
+<li>Previous by-hand calculations of AIC included variational parameters that are integrated out of the model in the total parameter count.</li>
+</ul>
+</div>
+<div id="regressor-estimates" class="section level2">
+<h2 class="hasAnchor">
+<a href="#regressor-estimates" class="anchor"></a>Regressor estimates</h2>
+<ul>
+<li>The time series model code now also includes estimation of the parameters defining the between-change point regressions (<em>i.e.</em>, the regressors).</li>
+<li>Regressor estimates come as marginal posterior distributions, and are calculated by unconditioning the estimates generated under known change points.</li>
+</ul>
+</div>
+<div id="plotting-functions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#plotting-functions" class="anchor"></a>Plotting functions</h2>
+<ul>
+<li>
+<code>LDA_set</code>, <code>LDA_TS</code>, and <code>TS</code> now all have default plotting options on their outputs.</li>
+<li>
+<code>TS</code> provides MCMC diagnostic plots and summary plots.</li>
+<li>
+<code>LDA_TS</code> plots produce the combination of plots.</li>
 </ul>
 </div>
 </div>
-    <div id="ldats-0-0-1" class="section level1">
+    <div id="ldats-0-0-1-2017-11-16" class="section level1">
 <h1 class="page-header">
-<a href="#ldats-0-0-1" class="anchor"></a><a href="https://github.com/weecology/LDATS/commit/326506b9d7fb3e0223948d0245381963f83a2b37">LDATS 0.0.1</a>
-</h1>
+<a href="#ldats-0-0-1-2017-11-16" class="anchor"></a><a href="https://github.com/weecology/LDATS/commit/326506b9d7fb3e0223948d0245381963f83a2b37">LDATS 0.0.1</a> 2017-11-16</h1>
 <ul>
 <li>Beginning initial development of package from <a href="(https://github.com/emchristensen/Extreme-events-LDA)">original code</a> used in <a href="https://doi.org/10.1002/ecy.2373">Christensen <em>et al.</em> (2018)</a>.</li>
 </ul>
@@ -144,7 +175,7 @@
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
         <li><a href="#ldats-0-1-0">0.1.0</a></li>
-        <li><a href="#ldats-0-0-1">0.0.1</a></li>
+        <li><a href="#ldats-0-0-1-2017-11-16">0.0.1</a></li>
       </ul>
     </div>
   </div>

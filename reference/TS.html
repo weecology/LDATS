@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Conduct a single Time Series analyses on a set of LDA models — TS • LDATS</title>
+<title>Conduct a single multinomial Bayesian Time Series analysis — TS • LDATS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,20 @@
 
 
 
-<meta property="og:title" content="Conduct a single Time Series analyses on a set of LDA models — TS" />
+<meta property="og:title" content="Conduct a single multinomial Bayesian Time Series analysis — TS" />
 
-<meta property="og:description" content="This is the main interface function for the Time Series 
-  analyses." />
+<meta property="og:description" content="This is the main interface function for the LDATS application
+  of Bayesian change point Time Series analyses (Christensen et al.
+  2018), which extends the model of Western and Kleykamp (2004;
+  see also Ruggieri 2013) to multinomial (proportional) response data using
+  softmax regression (Ripley 1996, Venables and Ripley 2002, Bishop 2006) 
+  using a generalized linear modeling approach (McCullagh and Nelder 1989).
+  The models are fit using parallel tempering Markov Chain Monte Carlo
+  (ptMCMC) methods (Earl and Deem 2005) to locate change points and 
+  neural networks (Ripley 1996, Venables and Ripley 2002, Bishop 2006) to
+  estimate regressors.
+check_TS_inputs checks that the inputs to 
+  TS are of proper classes for a full analysis." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -64,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.17</span>
       </span>
     </div>
 
@@ -118,51 +128,74 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Conduct a single Time Series analyses on a set of LDA models</h1>
+    <h1>Conduct a single multinomial Bayesian Time Series analysis</h1>
     <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/TS.R'><code>R/TS.R</code></a></small>
     <div class="hidden name"><code>TS.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This is the main interface function for the Time Series 
-  analyses.</p>
+    <p>This is the main interface function for the LDATS application
+  of Bayesian change point Time Series analyses (Christensen <em>et al.</em>
+  2018), which extends the model of Western and Kleykamp (2004;
+  see also Ruggieri 2013) to multinomial (proportional) response data using
+  softmax regression (Ripley 1996, Venables and Ripley 2002, Bishop 2006) 
+  using a generalized linear modeling approach (McCullagh and Nelder 1989).
+  The models are fit using parallel tempering Markov Chain Monte Carlo
+  (ptMCMC) methods (Earl and Deem 2005) to locate change points and 
+  neural networks (Ripley 1996, Venables and Ripley 2002, Bishop 2006) to
+  estimate regressors.</p>
+<p><code>check_TS_inputs</code> checks that the inputs to 
+  <code>TS</code> are of proper classes for a full analysis.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>TS</span>(<span class='no'>data</span>, <span class='no'>formula</span>, <span class='no'>nchangepoints</span>, <span class='no'>weights</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='TS_controls_list.html'>TS_controls_list</a></span>())</pre>
+    <pre class="usage"><span class='fu'>TS</span>(<span class='no'>data</span>, <span class='no'>formula</span>, <span class='no'>nchangepoints</span>, <span class='no'>weights</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='TS_controls_list.html'>TS_controls_list</a></span>())
+
+<span class='fu'>check_TS_inputs</span>(<span class='no'>data</span>, <span class='no'>formula</span>, <span class='no'>nchangepoints</span>, <span class='no'>weights</span>, <span class='no'>control</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>Class <code>data.frame</code> object including [1] the time variable
-(indicated in <code>control</code>), [2] the predictor variables (required by
-<code>formula</code>) and [3], the multinomial response variable (indicated
-in <code>formula</code>).</p></td>
+      <td><p><code>data.frame</code> including [1] the time variable (indicated 
+in <code>control$timename</code>), [2] the predictor variables (required by
+<code>formula</code>) and [3], the multinomial response variable (indicated in
+<code>formula</code>) as verified by <code><a href='check_timename.html'>check_timename</a></code> and 
+<code><a href='check_formula.html'>check_formula</a></code>. Note that the response variables should be
+formatted as a <code>data.frame</code> object named as indicated by the 
+<code>response</code> entry in the <code>control</code> list, such as <code>gamma</code> 
+for a standard TS analysis on LDA output. See <code>Examples</code>.</p></td>
     </tr>
     <tr>
       <th>formula</th>
-      <td><p><code>formula</code> describing the continuous change. Any 
-predictor variable included must also be a column in the
-<code>data</code>.  Any (multinomial) response variable must also be a set of
-columns in <code>data</code>.</p></td>
+      <td><p><code><a href='https://www.rdocumentation.org/packages/stats/topics/formula'>formula</a></code> defining the regression between
+relationship the change points. Any 
+predictor variable included must also be a column in 
+<code>data</code> and any (multinomial) response variable must be a set of
+columns in <code>data</code>, as verified by <code><a href='check_formula.html'>check_formula</a></code>.</p></td>
     </tr>
     <tr>
       <th>nchangepoints</th>
-      <td><p>Integer corresponding to the number of 
+      <td><p><code>integer</code> corresponding to the number of 
 change points to include in the model. 0 is a valid input (corresponding
 to no change points, so a singular time series model), and the current 
 implementation can reasonably include up to 6 change points. The 
-number of change points is used to dictate the segementation of the data  
-for each continuous model and each LDA model.</p></td>
+number of change points is used to dictate the segementation of the 
+time series into chunks fit with separate models dictated by 
+<code>formula</code>.</p></td>
     </tr>
     <tr>
       <th>weights</th>
       <td><p>Optional class <code>numeric</code> vector of weights for each 
-document. Corresponds to the vector <strong>\(v\)</strong> in the math 
-description.</p></td>
+document. Defaults to <code>NULL</code>, translating to an equal weight for
+each document. When using <code>multinom_TS</code> in a standard LDATS 
+analysis, it is advisable to weight the documents by their total size,
+as the result of <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code> is a matrix of 
+proportions, which does not account for size differences among documents.
+For most models, a scaling of the weights (so that the average is 1) is
+most appropriate, and this is accomplished using <code>document_weights</code>.</p></td>
     </tr>
     <tr>
       <th>control</th>
@@ -175,9 +208,84 @@ Monte Carlo (ptMCMC) controls, generated by
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Set of results from TS.</p>
+    <p><code>TS_fit</code>-class list containing the following elements, many of
+  which are hidden for <code>print</code>ing, but are accessible:</p><dl class='dl-horizontal'>
+    <dt>data</dt><dd><p><code>data</code> input to the function.</p></dd>
+    <dt>formula</dt><dd><p><code><a href='https://www.rdocumentation.org/packages/stats/topics/formula'>formula</a></code> input to the function.</p></dd>
+    <dt>nchangepoints</dt><dd><p><code>nchangepoints</code> input to the function.</p></dd>
+    <dt>weights</dt><dd><p><code>weights</code> input to the function.</p></dd>
+    <dt>control</dt><dd><p><code>control</code> input to the function.</p></dd>
+    <dt>lls</dt><dd><p>Iteration-by-iteration 
+               <a href='logLik.multinom_TS_fit.html'>logLik</a> values for the
+                full time series fit by <code><a href='multinom_TS.html'>multinom_TS</a></code>.</p></dd>
+    <dt>rhos</dt><dd><p>Iteration-by-iteration change point estimates from
+                <code><a href='est_changepts.html'>est_changepts</a></code>.</p></dd>
+    <dt>etas</dt><dd><p>Iteration-by-iteration marginal regressor estimates from
+                <code><a href='est_regressors.html'>est_regressors</a></code>, which have been 
+                unconditioned with respect to the change point locations.</p></dd>
+    <dt>ptMCMC_diagnostics</dt><dd><p>ptMCMC diagnostics, 
+                               see <code><a href='diagnose_ptMCMC.html'>diagnose_ptMCMC</a></code></p></dd>
+    <dt>rho_summary</dt><dd><p>Summary table describing <code>rhos</code> (the change
+                       point locations), 
+                       see <code><a href='summarize_rhos.html'>summarize_rhos</a></code>.</p></dd>
+    <dt>rho_vcov</dt><dd><p>Variance-covariance matrix for the estimates of
+                     <code>rhos</code> (the change point locations), see 
+                     <code><a href='summarize_rhos.html'>measure_rho_vcov</a></code>.</p></dd>
+    <dt>eta_summary</dt><dd><p>Summary table describing <code>ets</code> (the 
+                       regressors), 
+                       see <code><a href='summarize_etas.html'>summarize_etas</a></code>.</p></dd>
+    <dt>eta_vcov</dt><dd><p>Variance-covariance matrix for the estimates of
+                     <code>etas</code> (the regressors), see 
+                     <code><a href='summarize_etas.html'>measure_eta_vcov</a></code>.</p></dd>
+    <dt>logLik</dt><dd><p>Across-iteration average of log-likelihoods 
+                   (<code>lls</code>).</p></dd>
+    <dt>nparams</dt><dd><p>Total number of parameters in the full model,
+                   including the change point locations and regressors.</p></dd>
+    <dt>deviance</dt><dd><p>Penalized negative log-likelihood, based on 
+                    <code>logLik</code> and <code>nparams</code>.</p></dd>
+  </dl>
+
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Bishop, C. M. 2006. <em>Pattern Recognition and Machine Learning</em>. 
+   Springer, New York, NY, USA.</p>
+<p>Christensen, E., D. J. Harris, and S. K. M. Ernest. 2018.
+  Long-term community change through multiple rapid transitions in a 
+  desert rodent community. <em>Ecology</em> <strong>99</strong>:1523-1529. 
+  <a href='https://doi.org/10.1002/ecy.2373'>link</a>.</p>
+<p>Earl, D. J. and M. W. Deem. 2005. Parallel tempering: theory, 
+  applications, and new perspectives. <em>Physical Chemistry Chemical 
+  Physics</em> <strong>7</strong>: 3910-3916.
+  <a href='https://doi.org/10.1039/B509983H'>link</a>.</p>
+<p>McCullagh, P. and J. A. Nelder. 1989. <em>Generalized Linear Models</em>.
+  2nd Edition. Chapman and Hall, New York, NY, USA.</p>
+<p>Ripley, B. D. 1996. <em>Pattern Recognition and Neural Networks</em>. 
+  Cambridge University Press, Cambridge, UK.</p>
+<p>Ruggieri, E. 2013. A Bayesian approach to detecting change points in 
+  climactic records. <em>International Journal of Climatology</em>
+  <strong>33</strong>:520-528.
+  <a href='https://doi.org/10.1002/joc.3447'>link</a>.</p>
+<p>Venables, W. N. and B. D. Ripley. 2002. <em>Modern and Applied
+  Statistics with S</em>. Fourth Edition. Springer, New York, NY, USA.</p>
+<p>Western, B. and M. Kleykamp. 2004. A Bayesian change point model for 
+  historical time series analysis. <em>Political Analysis</em>
+  <strong>12</strong>:354-374.
+  <a href='https://doi.org/10.1093/pan/mph023'>link</a>.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>rodents</span>)
+  <span class='no'>document_term_table</span> <span class='kw'>&lt;-</span> <span class='no'>rodents</span>$<span class='no'>document_term_table</span>
+  <span class='no'>document_covariate_table</span> <span class='kw'>&lt;-</span> <span class='no'>rodents</span>$<span class='no'>document_covariate_table</span>
+  <span class='no'>LDA_models</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='LDA_set.html'>LDA_set</a></span>(<span class='no'>document_term_table</span>, <span class='kw'>topics</span> <span class='kw'>=</span> <span class='fl'>2</span>)<span class='kw'>[[</span><span class='fl'>1</span>]]
+  <span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='no'>document_covariate_table</span>
+  <span class='no'>data</span>$<span class='no'>gamma</span> <span class='kw'>&lt;-</span> <span class='no'>LDA_model</span>@<span class='kw'>gamma</span>
+  <span class='no'>weights</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='document_weights.html'>document_weights</a></span>(<span class='no'>document_term_table</span>)
+  <span class='no'>TSmod</span> <span class='kw'>&lt;-</span> <span class='fu'>TS</span>(<span class='no'>data</span>, <span class='no'>gamma</span> ~ <span class='fl'>1</span>, <span class='kw'>nchangepoints</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>weights</span>)
+<span class='co'># }</span><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -185,7 +293,11 @@ Monte Carlo (ptMCMC) controls, generated by
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+
+      <li><a href="#references">References</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

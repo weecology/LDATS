@@ -32,8 +32,9 @@
 
 <meta property="og:title" content="Check that a formula is proper — check_formula" />
 
-<meta property="og:description" content="Check that the formula is actually a formula and that the
-  response and predictor variabless are all included in the data." />
+<meta property="og:description" content="Check that formula is actually a 
+  formula and that the
+  response and predictor variabless are all included in data." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -64,7 +65,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.17</span>
       </span>
     </div>
 
@@ -125,8 +126,9 @@
 
     <div class="ref-description">
     
-    <p>Check that the formula is actually a formula and that the
-  response and predictor variabless are all included in the data.</p>
+    <p>Check that <code>formula</code> is actually a 
+  <code><a href='https://www.rdocumentation.org/packages/stats/topics/formula'>formula</a></code> and that the
+  response and predictor variabless are all included in <code>data</code>.</p>
     
     </div>
 
@@ -137,13 +139,18 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>Class <code>data.frame</code> object including [1] the time variable
-(indicated in <code>control</code>), [2] the predictor variables (required by
-<code>formula</code>) and [3], the multinomial response variable.</p></td>
+      <td><p><code>data.frame</code> including [1] the time variable (indicated 
+in <code>control$timename</code>), [2] the predictor variables (required by
+<code>formula</code>) and [3], the multinomial response variable (indicated in
+<code>formula</code>) as verified by <code><a href='check_timename.html'>check_timename</a></code> and 
+<code>check_formula</code>. Note that the response variables should be
+formatted as a <code>data.frame</code> object named as indicated by the 
+<code>response</code> entry in the <code>control</code> list, such as <code>gamma</code> 
+for a standard TS analysis on LDA output.</p></td>
     </tr>
     <tr>
       <th>formula</th>
-      <td><p>Formula to evaluate.</p></td>
+      <td><p><code>formula</code> to evaluate.</p></td>
     </tr>
     </table>
     

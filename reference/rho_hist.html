@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create the changepoint histograms plot — rho_hist • LDATS</title>
+<title>Create the change point histograms plot — rho_hist • LDATS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,10 @@
 
 
 
-<meta property="og:title" content="Create the changepoint histograms plot — rho_hist" />
+<meta property="og:title" content="Create the change point histograms plot — rho_hist" />
 
-<meta property="og:description" content="Produces a plot of the changepoint distributions as histograms
-  over time." />
+<meta property="og:description" content="Produces a plot of the change point distributions as 
+  histograms over time." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -64,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.17</span>
       </span>
     </div>
 
@@ -118,15 +118,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create the changepoint histograms plot</h1>
+    <h1>Create the change point histograms plot</h1>
     <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/TS_plots.R'><code>R/TS_plots.R</code></a></small>
     <div class="hidden name"><code>rho_hist.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Produces a plot of the changepoint distributions as histograms
-  over time.</p>
+    <p>Produces a plot of the change point distributions as 
+  histograms over time.</p>
     
     </div>
 
@@ -137,12 +137,13 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>Object of class <code>TS_fit</code>.</p></td>
+      <td><p>Object of class <code>TS_fit</code> produced by <code><a href='TS.html'>TS</a></code>.</p></td>
     </tr>
     <tr>
       <th>cols</th>
-      <td><p>Hex values of the colors to be used to plot the histograms of 
-changepoints.</p></td>
+      <td><p>Colors to be used to plot the histograms of change points.
+Any valid color values (<em>e.g.</em>, see <code><a href='https://www.rdocumentation.org/packages/grDevices/topics/colors'>colors</a></code>,
+<code><a href='https://www.rdocumentation.org/packages/grDevices/topics/rgb'>rgb</a></code>) can be input as with a standard plot.</p></td>
     </tr>
     <tr>
       <th>bin_width</th>
@@ -151,7 +152,7 @@ x-axis (the time variable used to fit the model).</p></td>
     </tr>
     <tr>
       <th>xlab</th>
-      <td><p>Label for the x-axis.</p></td>
+      <td><p>Label for the x-axis (time).</p></td>
     </tr>
     </table>
     

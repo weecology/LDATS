@@ -60,7 +60,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.17</span>
       </span>
     </div>
 
@@ -137,7 +137,7 @@
         <td>
           <p><code><a href="AIC.TS_fit.html">AIC(<i>&lt;TS_fit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Determine the AIC (deviance) value of a TS model</p></td>
+        <td><p>Determine the AIC (deviance) value of a Time Series model</p></td>
       </tr><tr>
         
         <td>
@@ -179,9 +179,9 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="TS.html">TS()</a></code> </p>
+          <p><code><a href="TS.html">TS()</a></code> <code><a href="TS.html">check_TS_inputs()</a></code> </p>
         </td>
-        <td><p>Conduct a single Time Series analyses on a set of LDA models</p></td>
+        <td><p>Conduct a single multinomial Bayesian Time Series analysis</p></td>
       </tr><tr>
         
         <td>
@@ -197,7 +197,7 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="TS_on_LDA.html">TS_on_LDA()</a></code> </p>
+          <p><code><a href="TS_on_LDA.html">TS_on_LDA()</a></code> <code><a href="TS_on_LDA.html">check_TS_on_LDA_inputs()</a></code> </p>
         </td>
         <td><p>Conduct a set of Time Series analyses on a set of LDA models</p></td>
       </tr><tr>
@@ -219,18 +219,6 @@
           <p><code><a href="check_LDA_models.html">check_LDA_models()</a></code> </p>
         </td>
         <td><p>Check that LDA model input is proper</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="check_TS_inputs.html">check_TS_inputs()</a></code> </p>
-        </td>
-        <td><p>Check all of the inputs to TS</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="check_TS_on_LDA_inputs.html">check_TS_on_LDA_inputs()</a></code> </p>
-        </td>
-        <td><p>Check all of the inputs to TS_on_LDA</p></td>
       </tr><tr>
         
         <td>
@@ -328,21 +316,21 @@
         <td>
           <p><code><a href="est_changepts.html">est_changepts()</a></code> </p>
         </td>
-        <td><p>Use ptMCMC to estimate the distribution of changepoint locations</p></td>
+        <td><p>Use ptMCMC to estimate the distribution of change point locations</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="est_regressors.html">est_regressors()</a></code> </p>
         </td>
         <td><p>Estimate the distribution of regressors, unconditional on the
-  changepoint locations</p></td>
+  change point locations</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="expand_TS.html">expand_TS()</a></code> </p>
         </td>
-        <td><p>Expand the TS models needed across the factorial combination of
-  LDA models, continuous formulas, and number of change points</p></td>
+        <td><p>Expand the TS models across the factorial combination of
+  LDA models, formulas, and number of change points</p></td>
       </tr><tr>
         
         <td>
@@ -464,7 +452,8 @@
         <td>
           <p><code><a href="prep_TS_data.html">prep_TS_data()</a></code> </p>
         </td>
-        <td><p>Prepare the model-specific data to be used in the TS analysis</p></td>
+        <td><p>Prepare the model-specific data to be used in the TS analysis
+  of LDA output</p></td>
       </tr><tr>
         
         <td>
@@ -477,7 +466,7 @@
         <td>
           <p><code><a href="prep_cpts.html">prep_cpts()</a></code> <code><a href="prep_cpts.html">update_cpts()</a></code> </p>
         </td>
-        <td><p>Initialize and update the changepoint matrix used in the ptMCMC
+        <td><p>Initialize and update the change point matrix used in the ptMCMC
   algorithm</p></td>
       </tr><tr>
         
@@ -496,7 +485,7 @@
         <td>
           <p><code><a href="prep_proposal_dist.html">prep_proposal_dist()</a></code> </p>
         </td>
-        <td><p>Pre-claculate the changepoint proposal distribution for the ptMCMC 
+        <td><p>Pre-claculate the change point proposal distribution for the ptMCMC 
   algorithm</p></td>
       </tr><tr>
         
@@ -504,7 +493,7 @@
           <p><code><a href="prep_ptMCMC_inputs.html">prep_ptMCMC_inputs()</a></code> </p>
         </td>
         <td><p>Prepare the inputs for the ptMCMC algorithm estimation of 
-  changepoints</p></td>
+  change points</p></td>
       </tr><tr>
         
         <td>
@@ -540,15 +529,15 @@
         <td>
           <p><code><a href="print_model_run_message.html">print_model_run_message()</a></code> </p>
         </td>
-        <td><p>Print the message to the console about which combination of TS
-  and LDA is being run</p></td>
+        <td><p>Print the message to the console about which combination of the 
+  Time Series and LDA models is being run</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="proposed_step_mods.html">proposed_step_mods()</a></code> </p>
         </td>
         <td><p>Fit the chunk-level models to a time series, given a set of 
-  proposed changepoints within the ptMCMC algorithm</p></td>
+  proposed change points within the ptMCMC algorithm</p></td>
       </tr><tr>
         
         <td>
@@ -560,13 +549,13 @@
         <td>
           <p><code><a href="rho_hist.html">rho_hist()</a></code> </p>
         </td>
-        <td><p>Create the changepoint histograms plot</p></td>
+        <td><p>Create the change point histograms plot</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="rho_lines.html">rho_lines()</a></code> </p>
         </td>
-        <td><p>Add changepoint location lines to the time series plot</p></td>
+        <td><p>Add change point location lines to the time series plot</p></td>
       </tr><tr>
         
         <td>
@@ -614,7 +603,7 @@
         <td>
           <p><code><a href="set_rho_hist_colors.html">set_rho_hist_colors()</a></code> </p>
         </td>
-        <td><p>Prepare the colors to be used in the changepoint histogram</p></td>
+        <td><p>Prepare the colors to be used in the change point histogram</p></td>
       </tr><tr>
         
         <td>
@@ -632,7 +621,7 @@
         <td>
           <p><code><a href="summarize_etas.html">summarize_etas()</a></code> <code><a href="summarize_etas.html">measure_eta_vcov()</a></code> </p>
         </td>
-        <td><p>Summarize the eta distributions</p></td>
+        <td><p>Summarize the regressor (eta) distributions</p></td>
       </tr><tr>
         
         <td>

@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Prepare the model-specific data to be used in the TS analysis — prep_TS_data • LDATS</title>
+<title>Prepare the model-specific data to be used in the TS analysis
+  of LDA output — prep_TS_data • LDATS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,11 +31,12 @@
 
 
 
-<meta property="og:title" content="Prepare the model-specific data to be used in the TS analysis — prep_TS_data" />
+<meta property="og:title" content="Prepare the model-specific data to be used in the TS analysis
+  of LDA output — prep_TS_data" />
 
-<meta property="og:description" content="Append the estimated topic proportions (\(\gamma\)) values 
-  from a fitted LDA model to the document covariate table to create the
-  data structure needed for TS." />
+<meta property="og:description" content="Append the estimated topic proportions from a fitted LDA model 
+  to the document covariate table to create the data structure needed for 
+  TS." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -65,7 +67,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.17</span>
       </span>
     </div>
 
@@ -119,16 +121,17 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Prepare the model-specific data to be used in the TS analysis</h1>
+    <h1>Prepare the model-specific data to be used in the TS analysis
+  of LDA output</h1>
     <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/TS_on_LDA.R'><code>R/TS_on_LDA.R</code></a></small>
     <div class="hidden name"><code>prep_TS_data.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Append the estimated topic proportions (\(\gamma\)) values 
-  from a fitted LDA model to the document covariate table to create the
-  data structure needed for <code>TS</code>.</p>
+    <p>Append the estimated topic proportions from a fitted LDA model 
+  to the document covariate table to create the data structure needed for 
+  <code><a href='TS.html'>TS</a></code>.</p>
     
     </div>
 
@@ -139,25 +142,27 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>document_covariate_table</th>
-      <td><p>Document covariate table (rows:
-documents (<code>M</code>), columns: time index and covariate options). 
-Every model needs a covariate to describe the time value for each
-document (in whatever relevant units), whose name in the table is input
-via <code>timename</code>, that dictates the application of the changepoints. 
-In addition, the table needs to include as columns all covariates named 
-within the specific models described via the argument <code>formula</code> 
-(if desired). Must be a conformable to a data table.</p></td>
+      <td><p>Document covariate table (rows: documents,
+columns: time index and covariate options). Every model needs a
+covariate to describe the time value for each document (in whatever 
+units and whose name in the table is input in <code>control$timename</code>)
+that dictates the application of the change points. 
+In addition, all covariates named within specific models in
+<code>formula</code> must be included. Must be a conformable to a data table,
+as verified by <code><a href='check_document_covariate_table.html'>check_document_covariate_table</a></code>.</p></td>
     </tr>
     <tr>
       <th>LDA_models</th>
-      <td><p>List of LDA models (class <code>LDA_set</code>) or a singular
-LDA model (class <code>LDA</code>).</p></td>
+      <td><p>List of LDA models (class <code>LDA_set</code>, produced by
+<code><a href='LDA_set.html'>LDA_set</a></code>) or a singular LDA model (class <code>LDA</code>,
+produced by <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code>).</p></td>
     </tr>
     <tr>
       <th>mods</th>
-      <td><p>The <code>data.table</code> created by <code>expand_TS</code> the contains
-each of the models (defined by the LDA model to use and the formula and
-number of changepoints for the TS model). Indexded here by <code>i</code>.</p></td>
+      <td><p>The <code>data.table</code> created by <code><a href='expand_TS.html'>expand_TS</a></code> that 
+contains each of the models (defined by the LDA model to use and the and
+formula number of changepoints for the TS model). Indexded here by 
+<code>i</code>.</p></td>
     </tr>
     <tr>
       <th>i</th>

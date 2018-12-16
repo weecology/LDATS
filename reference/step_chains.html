@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.17</span>
       </span>
     </div>
 
@@ -163,7 +163,7 @@
     </tr>
     <tr>
       <th>cpts</th>
-      <td><p>Matrix of changepoint locations across chains.</p></td>
+      <td><p>Matrix of change point locations across chains.</p></td>
     </tr>
     <tr>
       <th>inputs</th>
@@ -184,18 +184,18 @@ proposed step.</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p><code>step_chains</code>: the initialized progress bar object.</p>
-<p><code>propose_step</code>: List of changepoints and log-likelihood values
-  for the proposal.</p>
+<p><code>propose_step</code>: List of change points and log-likelihood 
+  values for the proposal.</p>
 <p><code>propose_step</code>: <code>logical</code> vector indicating if each 
   chain's proposal was accepted.</p>
-<p><code>take_step</code>: list of changepoints, log-likelihoods, and
+<p><code>take_step</code>: list of change points, log-likelihoods, and
   logical indicators of acceptance for each chain.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>For each iteration of the ptMCMC algorithm, all of the chains
   have the potential to take a step. The possible step is proposed under
-  a proposal distribution (here for changepoints we use a symmetric
+  a proposal distribution (here for change points we use a symmetric
   geometric distribution), the proposed step is then evaluated and either
   accepted or not (following the Metropolis-Hastings rule; Metropolis,
   <em>et al.</em> 1953, Hasting 1960, Gupta <em>et al.</em> 2018), and then

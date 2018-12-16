@@ -67,7 +67,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.17</span>
       </span>
     </div>
 
@@ -131,7 +131,7 @@
     <p>A default list generator function that produces the options
   for the colors controlling the panels of the TS summary plots, so needed
   because the panels should be in different color schemes. See 
-  <code>set_gamma_colors</code> and <code>set_rho_hist_colors</code> for
+  <code><a href='set_gamma_colors.html'>set_gamma_colors</a></code> and <code><a href='set_rho_hist_colors.html'>set_rho_hist_colors</a></code> for
   specific details on usage.</p>
     
     </div>
@@ -145,36 +145,47 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>rho_cols</th>
-      <td><p>Colors to be used to plot the histograms of changepoints.</p></td>
+      <td><p>Colors to be used to plot the histograms of change points.
+Any valid color values (<em>e.g.</em>, see <code><a href='https://www.rdocumentation.org/packages/grDevices/topics/colors'>colors</a></code>,
+<code><a href='https://www.rdocumentation.org/packages/grDevices/topics/rgb'>rgb</a></code>) can be input as with a standard plot. 
+The default (<code>rho_cols = NULL</code>) triggers use of 
+<code><a href='https://www.rdocumentation.org/packages/viridis/topics/reexports'>viridis</a></code> color options (see <code>rho_option</code>).</p></td>
     </tr>
     <tr>
       <th>rho_option</th>
-      <td><p>A character string indicating the colormap option to use
-if `rho_cols == NULL`. Four options are available: "magma" (or "A"), 
-"inferno" (or "B"), "plasma" (or "C"), "viridis" (or "D", the default
-option) and "cividis" (or "E").</p></td>
+      <td><p>A <code>character</code> string indicating the color option
+from <code><a href='https://www.rdocumentation.org/packages/viridis/topics/reexports'>viridis</a></code> to use if `rho_cols == NULL`. Four 
+options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
+(or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").</p></td>
     </tr>
     <tr>
       <th>rho_alpha</th>
       <td><p>Numeric value [0,1] that indicates the transparency of the 
-colors used. Supported only on some devices, see <code>rgb</code>.</p></td>
+colors used. Supported only on some devices, see 
+<code><a href='https://www.rdocumentation.org/packages/grDevices/topics/rgb'>rgb</a></code>.</p></td>
     </tr>
     <tr>
       <th>gamma_cols</th>
-      <td><p>Colors to be used to plot the time series of fitted topic 
-proportions (gammas).</p></td>
+      <td><p>Colors to be used to plot the LDA topic proportions,
+time series of observed topic proportions, and time series of fitted 
+topic proportions. Any valid color values (<em>e.g.</em>, see 
+<code><a href='https://www.rdocumentation.org/packages/grDevices/topics/colors'>colors</a></code>, <code><a href='https://www.rdocumentation.org/packages/grDevices/topics/rgb'>rgb</a></code>) can be 
+input as with a standard plot. The default (<code>gamma_cols = NULL</code>)
+triggers use of <code><a href='https://www.rdocumentation.org/packages/viridis/topics/reexports'>viridis</a></code> color options (see 
+<code>gamma_option</code>).</p></td>
     </tr>
     <tr>
       <th>gamma_option</th>
-      <td><p>A character string indicating the colormap option to 
-use if `gamma_cols == NULL`. Four options are available: "magma" 
-(or "A"), "inferno" (or "B", the default option), "plasma" (or "C"), 
-"viridis" (or "D") and "cividis" (or "E")</p></td>
+      <td><p>A <code>character</code> string indicating the color option
+from <code><a href='https://www.rdocumentation.org/packages/viridis/topics/reexports'>viridis</a></code> to use if gamma_cols == NULL`. Four 
+options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
+(or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").</p></td>
     </tr>
     <tr>
       <th>gamma_alpha</th>
       <td><p>Numeric value [0,1] that indicates the transparency of 
-the colors used. Supported only on some devices, see <code>rgb</code>.</p></td>
+the colors used. Supported only on some devices, see 
+<code><a href='https://www.rdocumentation.org/packages/grDevices/topics/rgb'>rgb</a></code>.</p></td>
     </tr>
     </table>
     

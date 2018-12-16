@@ -32,10 +32,10 @@
 
 <meta property="og:title" content="Create the summary plot for a TS fit to an LDA model — TS_summary_plot" />
 
-<meta property="og:description" content="Produces a two-panel figure of [1] the changepoint 
+<meta property="og:description" content="Produces a two-panel figure of [1] the change point 
   distributions as histograms over time and [2] the time series of the 
-  fitted topic proportions (gamma values) over time, based on a selected 
-  set of changepoint locations." />
+  fitted topic proportions over time, based on a selected set of 
+  change point locations." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -66,7 +66,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.17</span>
       </span>
     </div>
 
@@ -127,31 +127,31 @@
 
     <div class="ref-description">
     
-    <p>Produces a two-panel figure of [1] the changepoint 
+    <p>Produces a two-panel figure of [1] the change point 
   distributions as histograms over time and [2] the time series of the 
-  fitted topic proportions (gamma values) over time, based on a selected 
-  set of changepoint locations.</p>
+  fitted topic proportions over time, based on a selected set of 
+  change point locations.</p>
     
     </div>
 
     <pre class="usage"><span class='fu'>TS_summary_plot</span>(<span class='no'>x</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fu'><a href='set_TS_summary_plot_cols.html'>set_TS_summary_plot_cols</a></span>(), <span class='no'>bin_width</span>, <span class='no'>xlab</span>,
-  <span class='kw'>selection</span> <span class='kw'>=</span> <span class='st'>"median"</span>)</pre>
+  <span class='kw'>selection</span> <span class='kw'>=</span> <span class='st'>"median"</span>, <span class='kw'>LDATS</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>Object of class <code>TS_fit</code>.</p></td>
+      <td><p>Object of class <code>TS_fit</code> produced by <code><a href='TS.html'>TS</a></code>.</p></td>
     </tr>
     <tr>
       <th>cols</th>
       <td><p><code>list</code> of elements used to define the colors for the two
-panels, as generated simply using <code>TS_summary_cols</code>. <code>cols</code>
-has two elements <code>rho</code> and <code>gamma</code>, each corresponding to the
+panels, as generated simply using <code><a href='set_TS_summary_plot_cols.html'>set_TS_summary_plot_cols</a></code>. 
+Has two elements <code>rho</code> and <code>gamma</code>, each corresponding to the
 related panel, and each containing default values for entries named
 <code>cols</code>, <code>option</code>, and <code>alpha</code>. See
-<code>set_gamma_colors</code> and <code>set_rho_hist_colors</code> for
+<code><a href='set_gamma_colors.html'>set_gamma_colors</a></code> and <code><a href='set_rho_hist_colors.html'>set_rho_hist_colors</a></code> for
 details on usage.</p></td>
     </tr>
     <tr>
@@ -161,12 +161,17 @@ x-axis (the time variable used to fit the model).</p></td>
     </tr>
     <tr>
       <th>xlab</th>
-      <td><p>Label for the x-axis.</p></td>
+      <td><p>Label for the x-axis (time).</p></td>
     </tr>
     <tr>
       <th>selection</th>
-      <td><p>Indicator of the changepoints to use. Currently only
+      <td><p>Indicator of the change points to use. Currently only
 defined for "median" and "mode".</p></td>
+    </tr>
+    <tr>
+      <th>LDATS</th>
+      <td><p><code>logical</code> indicating if the plot is part of a larger 
+LDATS plot output.</p></td>
     </tr>
     </table>
     

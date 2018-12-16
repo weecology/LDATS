@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Estimate the distribution of regressors, unconditional on the
-  changepoint locations — est_regressors • LDATS</title>
+  change point locations — est_regressors • LDATS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,11 +32,15 @@
 
 
 <meta property="og:title" content="Estimate the distribution of regressors, unconditional on the
-  changepoint locations — est_regressors" />
+  change point locations — est_regressors" />
 
-<meta property="og:description" content="This function uses the estimated changepoint locations to 
-  estimate the marginal distribution of the regression coefficients for
-  the chunk-level models, unconditional on the changepoint locations." />
+<meta property="og:description" content="This function uses the marginal posterior distributions of
+  the change point locations (estimated by est_changepts) in
+  combination with the conditional (on the change point locations) 
+  posterior distributions of the regressors (estimated by
+  multinom_TS) to estimate the marginal posterior 
+  distribution of the regressors, unconditional on the change point 
+  locations." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -67,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.17</span>
       </span>
     </div>
 
@@ -122,16 +126,20 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Estimate the distribution of regressors, unconditional on the
-  changepoint locations</h1>
+  change point locations</h1>
     <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/TS.R'><code>R/TS.R</code></a></small>
     <div class="hidden name"><code>est_regressors.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function uses the estimated changepoint locations to 
-  estimate the marginal distribution of the regression coefficients for
-  the chunk-level models, unconditional on the changepoint locations.</p>
+    <p>This function uses the marginal posterior distributions of
+  the change point locations (estimated by <code><a href='est_changepts.html'>est_changepts</a></code>) in
+  combination with the conditional (on the change point locations) 
+  posterior distributions of the regressors (estimated by
+  <code><a href='multinom_TS.html'>multinom_TS</a></code>) to estimate the marginal posterior 
+  distribution of the regressors, unconditional on the change point 
+  locations.</p>
     
     </div>
 
@@ -143,28 +151,38 @@
     <tr>
       <th>rho_dist</th>
       <td><p>List of saved data objects from the ptMCMC estimation of
-changepoint locations (unless <code>nchangepoints</code> is 0, then 
-<code>NULL</code>).</p></td>
+change point locations (unless <code>nchangepoints</code> is 0, then 
+<code>NULL</code>) returned from <code><a href='est_changepts.html'>est_changepts</a></code>.</p></td>
     </tr>
     <tr>
       <th>data</th>
-      <td><p>Class <code>data.frame</code> object including [1] the time variable
-(indicated in <code>control</code>), [2] the predictor variables (required by
-<code>formula</code>) and [3], the multinomial response variable (indicated
-in <code>formula</code>).</p></td>
+      <td><p><code>data.frame</code> including [1] the time variable (indicated 
+in <code>control$timename</code>), [2] the predictor variables (required by
+<code>formula</code>) and [3], the multinomial response variable (indicated in
+<code>formula</code>) as verified by <code><a href='check_timename.html'>check_timename</a></code> and 
+<code><a href='check_formula.html'>check_formula</a></code>. Note that the response variables should be
+formatted as a <code>data.frame</code> object named as indicated by the 
+<code>response</code> entry in the <code>control</code> list, such as <code>gamma</code> 
+for a standard TS analysis on LDA output. See <code>Examples</code>.</p></td>
     </tr>
     <tr>
       <th>formula</th>
-      <td><p><code>formula</code> describing the continuous change. Any 
-predictor variable included must also be a column in the
-<code>data</code>.  Any (multinomial) response variable must also be a set of
-columns in <code>data</code>.</p></td>
+      <td><p><code><a href='https://www.rdocumentation.org/packages/stats/topics/formula'>formula</a></code> defining the regression between
+relationship the change points. Any 
+predictor variable included must also be a column in 
+<code>data</code> and any (multinomial) response variable must be a set of
+columns in <code>data</code>, as verified by <code><a href='check_formula.html'>check_formula</a></code>.</p></td>
     </tr>
     <tr>
       <th>weights</th>
       <td><p>Optional class <code>numeric</code> vector of weights for each 
-document. Corresponds to the vector <strong>\(v\)</strong> in the math 
-description.</p></td>
+document. Defaults to <code>NULL</code>, translating to an equal weight for
+each document. When using <code>multinom_TS</code> in a standard LDATS 
+analysis, it is advisable to weight the documents by their total size,
+as the result of <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code> is a matrix of 
+proportions, which does not account for size differences among documents.
+For most models, a scaling of the weights (so that the average is 1) is
+most appropriate, and this is accomplished using <code>document_weights</code>.</p></td>
     </tr>
     <tr>
       <th>control</th>
@@ -180,6 +198,33 @@ Monte Carlo (ptMCMC) controls, generated by
     <p>Matrix of draws (rows) from the marginal posteriors of the 
   coefficients across the segments (columns).</p>
     
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The general approach follows that of Western and Kleykamp
+  (2004), although we note some important differences. Our regression
+  models are fit indpendently for each chunk (segment of time), and 
+  therefore the variance-covariance matrix for the full model 
+  has <code>0</code> entries for covariances between regressors in different
+  chunks of the time series. Further, because the regression model here
+  is a standard (non-hierarchical) softmax (Ripley 1996, Venables and 
+  Ripley 2002, Bishop 2006), there is no error term in the regression  
+  (as there is in the normal model used by Western and Kleykamp 2004), 
+  and so the posterior distribution used here is a multivariate normal,
+  as opposed to a multivariate t, as used by Western and Kleykamp (2004).</p>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Bishop, C. M. 2006. <em>Pattern Recognition and Machine Learning</em>. 
+   Springer, New York, NY, USA.</p>
+<p>Ripley, B. D. 1996. <em>Pattern Recognition and Neural Networks</em>. 
+  Cambridge University Press, Cambridge, UK.</p>
+<p>Venables, W. N. and B. D. Ripley. 2002. <em>Modern and Applied
+  Statistics with S</em>. Fourth Edition. Springer, New York, NY, USA.</p>
+<p>Western, B. and M. Kleykamp. 2004. A Bayesian change point model for 
+  historical time series analysis. <em>Political Analysis</em>
+  <strong>12</strong>:354-374.
+  <a href='https://doi.org/10.1093/pan/mph023'>link</a>.</p>
+    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -188,6 +233,10 @@ Monte Carlo (ptMCMC) controls, generated by
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
+
+      <li><a href="#references">References</a></li>
           </ul>
 
   </div>

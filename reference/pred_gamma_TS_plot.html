@@ -33,8 +33,7 @@
 <meta property="og:title" content="Create the plot of fitted topic proportions over time — pred_gamma_TS_plot" />
 
 <meta property="og:description" content="Produces a time series of the fitted topic proportions 
-  (gamma values) over time, based on a selected set of changepoint 
-  locations." />
+  over time, based on a selected set of change point locations." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -65,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.17</span>
       </span>
     </div>
 
@@ -127,8 +126,7 @@
     <div class="ref-description">
     
     <p>Produces a time series of the fitted topic proportions 
-  (gamma values) over time, based on a selected set of changepoint 
-  locations.</p>
+  over time, based on a selected set of change point locations.</p>
     
     </div>
 
@@ -139,20 +137,26 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>Object of class <code>TS_fit</code>.</p></td>
+      <td><p>Object of class <code>TS_fit</code> produced by <code><a href='TS.html'>TS</a></code>.</p></td>
     </tr>
     <tr>
       <th>selection</th>
-      <td><p>Indicator of the changepoints to use. Currently only
+      <td><p>Indicator of the change points to use. Currently only
 defined for "median" and "mode".</p></td>
     </tr>
     <tr>
       <th>cols</th>
-      <td><p>Hex values of the colors to be used to plot the time series.</p></td>
+      <td><p><code>list</code> of elements used to define the colors for the two
+panels, as generated simply using <code><a href='set_TS_summary_plot_cols.html'>set_TS_summary_plot_cols</a></code>. 
+Has two elements <code>rho</code> and <code>gamma</code>, each corresponding to the
+related panel, and each containing default values for entries named
+<code>cols</code>, <code>option</code>, and <code>alpha</code>. See
+<code><a href='set_gamma_colors.html'>set_gamma_colors</a></code> and <code><a href='set_rho_hist_colors.html'>set_rho_hist_colors</a></code> for
+details on usage.</p></td>
     </tr>
     <tr>
       <th>xlab</th>
-      <td><p>Label for the x-axis.</p></td>
+      <td><p>Label for the x-axis (time).</p></td>
     </tr>
     </table>
     

@@ -32,8 +32,9 @@
 
 <meta property="og:title" content="Plot the key results from a full LDATS analysis — plot.LDA_TS" />
 
-<meta property="og:description" content="Generalization of the plot function to work on fitted
-  LDA_TS model (class LDA_TS, result of LDA_TS)." />
+<meta property="og:description" content="Generalization of the plot function to
+  work on fitted LDA_TS model objects (class LDA_TS) returned by 
+  LDA_TS)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -64,7 +65,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.17</span>
       </span>
     </div>
 
@@ -125,15 +126,16 @@
 
     <div class="ref-description">
     
-    <p>Generalization of the <code>plot</code> function to work on fitted
-  LDA_TS model (class <code>LDA_TS</code>, result of <code><a href='LDA_TS.html'>LDA_TS</a></code>).</p>
+    <p>Generalization of the <code><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></code> function to
+  work on fitted LDA_TS model objects (class <code>LDA_TS</code>) returned by 
+  <code><a href='LDA_TS.html'>LDA_TS</a></code>).</p>
     
     </div>
 
     <pre class="usage"><span class='co'># S3 method for LDA_TS</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='LDA_TS_controls_list.html'>LDA_TS_controls_list</a></span>(),
   <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fu'><a href='set_LDA_TS_plot_cols.html'>set_LDA_TS_plot_cols</a></span>(), <span class='kw'>bin_width</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>selection</span> <span class='kw'>=</span> <span class='st'>"median"</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>selection</span> <span class='kw'>=</span> <span class='st'>"median"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -141,7 +143,7 @@
     <tr>
       <th>x</th>
       <td><p>A <code>LDA_TS</code> object of a full LDATS model fit by
-<code>LDA_TS</code>.</p></td>
+<code><a href='LDA_TS.html'>LDA_TS</a></code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -185,14 +187,9 @@ no label printed, set <code>xlab = ""</code>.</p></td>
     </tr>
     <tr>
       <th>selection</th>
-      <td><p>Indicator of the changepoints to use in the timeseries
+      <td><p>Indicator of the change points to use in the timeseries
 summary plot. Currently only defined for <code>"median"</code> and 
 <code>"mode"</code>.</p></td>
-    </tr>
-    <tr>
-      <th>interactive</th>
-      <td><p><code>logical</code> indicator, should be set to <code>TRUE</code>
-currently (except for testing).</p></td>
     </tr>
     </table>
     

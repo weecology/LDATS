@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Prepare the colors to be used in the changepoint histogram — set_rho_hist_colors • LDATS</title>
+<title>Prepare the colors to be used in the change point histogram — set_rho_hist_colors • LDATS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,10 @@
 
 
 
-<meta property="og:title" content="Prepare the colors to be used in the changepoint histogram — set_rho_hist_colors" />
+<meta property="og:title" content="Prepare the colors to be used in the change point histogram — set_rho_hist_colors" />
 
 <meta property="og:description" content="Based on the inputs, create the set of colors to be used in
-  the changepoint histogram." />
+  the change point histogram." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -64,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.17</span>
       </span>
     </div>
 
@@ -118,7 +118,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Prepare the colors to be used in the changepoint histogram</h1>
+    <h1>Prepare the colors to be used in the change point histogram</h1>
     <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/TS_plots.R'><code>R/TS_plots.R</code></a></small>
     <div class="hidden name"><code>set_rho_hist_colors.Rd</code></div>
     </div>
@@ -126,7 +126,7 @@
     <div class="ref-description">
     
     <p>Based on the inputs, create the set of colors to be used in
-  the changepoint histogram.</p>
+  the change point histogram.</p>
     
     </div>
 
@@ -137,24 +137,29 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>Matrix of changepoint locations (element <code>rhos</code>) from an 
-object of class <code>TS_fit</code>.</p></td>
+      <td><p>Matrix of change point locations (element <code>rhos</code>) from an 
+object of class <code>TS_fit</code>, fit by <code><a href='TS.html'>TS</a></code>.</p></td>
     </tr>
     <tr>
       <th>cols</th>
-      <td><p>Colors to be used to plot the histograms of changepoints.</p></td>
+      <td><p>Colors to be used to plot the histograms of change points.
+Any valid color values (<em>e.g.</em>, see <code><a href='https://www.rdocumentation.org/packages/grDevices/topics/colors'>colors</a></code>,
+<code><a href='https://www.rdocumentation.org/packages/grDevices/topics/rgb'>rgb</a></code>) can be input as with a standard plot. 
+The default (<code>rho_cols = NULL</code>) triggers use of 
+<code><a href='https://www.rdocumentation.org/packages/viridis/topics/reexports'>viridis</a></code> color options (see <code>rho_option</code>).</p></td>
     </tr>
     <tr>
       <th>option</th>
-      <td><p>A character string indicating the colormap option to use if 
-`cols == NULL`. Four options are available: "magma" (or "A"), "inferno" 
-(or "B"), "plasma" (or "C"), "viridis" (or "D", the default option) and 
-"cividis" (or "E").</p></td>
+      <td><p>A <code>character</code> string indicating the color option
+from <code><a href='https://www.rdocumentation.org/packages/viridis/topics/reexports'>viridis</a></code> to use if "cols == NULL". Four 
+options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
+(or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").</p></td>
     </tr>
     <tr>
       <th>alpha</th>
       <td><p>Numeric value [0,1] that indicates the transparency of the 
-colors used. Supported only on some devices, see <code>rgb</code>.</p></td>
+colors used. Supported only on some devices, see 
+<code><a href='https://www.rdocumentation.org/packages/grDevices/topics/rgb'>rgb</a></code>.</p></td>
     </tr>
     </table>
     

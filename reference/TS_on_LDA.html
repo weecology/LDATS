@@ -33,12 +33,15 @@
 <meta property="og:title" content="Conduct a set of Time Series analyses on a set of LDA models — TS_on_LDA" />
 
 <meta property="og:description" content="This is a wrapper function that expands the main Time Series
-  analyses function (TS) across the LDA models and the Time
-  Series models, with respect to both continuous time formulas and the 
+  analyses function (TS) across the LDA models (estimated
+  using LDA or LDA_set and the 
+  Time Series models, with respect to both continuous time formulas and the 
   number of discrete changepoints. This function allows direct passage of
   the control parameters for the parallel tempering MCMC through to the 
   main Time Series function, TS, via the 
-  ptMCMC_controls argument." />
+  ptMCMC_controls argument.
+check_TS_on_LDA_inputs checks that the inputs to 
+  TS_on_LDA are of proper classes for a full analysis." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -69,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.17</span>
       </span>
     </div>
 
@@ -131,58 +134,73 @@
     <div class="ref-description">
     
     <p>This is a wrapper function that expands the main Time Series
-  analyses function (<code><a href='TS.html'>TS</a></code>) across the LDA models and the Time
-  Series models, with respect to both continuous time formulas and the 
+  analyses function (<code><a href='TS.html'>TS</a></code>) across the LDA models (estimated
+  using <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code> or <code><a href='LDA_set.html'>LDA_set</a></code> and the 
+  Time Series models, with respect to both continuous time formulas and the 
   number of discrete changepoints. This function allows direct passage of
   the control parameters for the parallel tempering MCMC through to the 
   main Time Series function, <code><a href='TS.html'>TS</a></code>, via the 
   <code>ptMCMC_controls</code> argument.</p>
+<p><code>check_TS_on_LDA_inputs</code> checks that the inputs to 
+  <code>TS_on_LDA</code> are of proper classes for a full analysis.</p>
     
     </div>
 
     <pre class="usage"><span class='fu'>TS_on_LDA</span>(<span class='no'>LDA_models</span>, <span class='no'>document_covariate_table</span>, <span class='kw'>formulas</span> <span class='kw'>=</span> ~<span class='fl'>1</span>,
-  <span class='kw'>nchangepoints</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='TS_controls_list.html'>TS_controls_list</a></span>())</pre>
+  <span class='kw'>nchangepoints</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='TS_controls_list.html'>TS_controls_list</a></span>())
+
+<span class='fu'>check_TS_on_LDA_inputs</span>(<span class='no'>LDA_models</span>, <span class='no'>document_covariate_table</span>,
+  <span class='kw'>formulas</span> <span class='kw'>=</span> ~<span class='fl'>1</span>, <span class='kw'>nchangepoints</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='TS_controls_list.html'>TS_controls_list</a></span>())</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>LDA_models</th>
-      <td><p>List of LDA models (class <code>LDA_set</code>) or a singular
-LDA model (class <code>LDA</code>).</p></td>
+      <td><p>List of LDA models (class <code>LDA_set</code>, produced by
+<code><a href='LDA_set.html'>LDA_set</a></code>) or a singular LDA model (class <code>LDA</code>,
+produced by <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code>).</p></td>
     </tr>
     <tr>
       <th>document_covariate_table</th>
-      <td><p>Document covariate table (rows:
-documents (<code>M</code>), columns: time index and covariate options). 
-Every model needs a covariate to describe the time value for each
-document (in whatever relevant units), whose name in the table is input
-via <code>timename</code>, that dictates the application of the changepoints. 
-In addition, the table needs to include as columns all covariates named 
-within the specific models described via the argument <code>formula</code> 
-(if desired). Must be a conformable to a data table.</p></td>
+      <td><p>Document covariate table (rows: documents,
+columns: time index and covariate options). Every model needs a
+covariate to describe the time value for each document (in whatever 
+units and whose name in the table is input in <code>control$timename</code>)
+that dictates the application of the change points. 
+In addition, all covariates named within specific models in
+<code>formula</code> must be included. Must be a conformable to a data table,
+as verified by <code><a href='check_document_covariate_table.html'>check_document_covariate_table</a></code>.</p></td>
     </tr>
     <tr>
       <th>formulas</th>
-      <td><p>Vector of <code>formula</code>(s) for the continuous change. Any 
+      <td><p>Vector of <code><a href='https://www.rdocumentation.org/packages/stats/topics/formula'>formula</a></code>(s) for the 
+continuous (non-change point) component of the time series models. Any 
 predictor variable included in a formula must also be a column in the
 <code>document_covariate_table</code>. Each element (formula) in the vector
 is evaluated for each number of change points and each LDA model.</p></td>
     </tr>
     <tr>
       <th>nchangepoints</th>
-      <td><p>Vector of integers corresponding to the number of 
-change points to include in the model. 0 is a valid input (corresponding
-to no change points, so a singular time series model), and the current 
-implementation can reasonably include up to 6 change points. Each element 
-(number of change points) in the vector is used to dictate the
-segementation of the data  for each continuous model and each LDA model.</p></td>
+      <td><p>Vector of <code>integer</code>s corresponding to the number 
+of change points to include in the time series models. 0 is a valid input 
+corresponding to no change points (<em>i.e.</em>, a singular time series
+model), and the current implementation can reasonably include up to 6 
+change points. Each element in the vector is the number of change points 
+used to segement the data for each formula (entry in <code>formulas</code>) 
+component of the TS model, for each selected LDA model.</p></td>
     </tr>
     <tr>
       <th>weights</th>
       <td><p>Optional class <code>numeric</code> vector of weights for each 
-document. Corresponds to the vector <strong>\(v\)</strong> in the math 
-description.</p></td>
+document. Defaults to <code>NULL</code>, translating to an equal weight for
+each document. When using <code>multinom_TS</code> in a standard LDATS 
+analysis, it is advisable to weight the documents by their total size,
+as the result of <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code> is a matrix of 
+proportions, which does not account for size differences among documents.
+For most models, a scaling of the weights (so that the average is 1) is
+most appropriate, and this is accomplished using <code>document_weights</code>.</p></td>
     </tr>
     <tr>
       <th>control</th>
@@ -199,6 +217,18 @@ Monte Carlo (ptMCMC) controls, generated by
   applied for each model on each LDA model input.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>rodents</span>)
+  <span class='no'>document_term_table</span> <span class='kw'>&lt;-</span> <span class='no'>rodents</span>$<span class='no'>document_term_table</span>
+  <span class='no'>document_covariate_table</span> <span class='kw'>&lt;-</span> <span class='no'>rodents</span>$<span class='no'>document_covariate_table</span>
+  <span class='no'>LDAs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='LDA_set.html'>LDA_set</a></span>(<span class='no'>document_term_table</span>, <span class='kw'>topics</span> <span class='kw'>=</span> <span class='fl'>2</span>:<span class='fl'>3</span>, <span class='kw'>nseeds</span> <span class='kw'>=</span> <span class='fl'>2</span>)
+  <span class='no'>LDA_models</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='select_LDA.html'>select_LDA</a></span>(<span class='no'>LDAs</span>)
+  <span class='no'>weights</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='document_weights.html'>document_weights</a></span>(<span class='no'>document_term_table</span>)
+  <span class='no'>mods</span> <span class='kw'>&lt;-</span> <span class='fu'>TS_on_LDA</span>(<span class='no'>LDA_models</span>, <span class='no'>document_covariate_table</span>,
+                    <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(~ <span class='fl'>1</span>, ~ <span class='no'>newmoon</span>), <span class='kw'>nchangepoints</span> <span class='kw'>=</span> <span class='fl'>0</span>:<span class='fl'>1</span>, <span class='no'>weights</span>)
+<span class='co'># }</span><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -206,7 +236,9 @@ Monte Carlo (ptMCMC) controls, generated by
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>
