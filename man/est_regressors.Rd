@@ -3,28 +3,38 @@
 \name{est_regressors}
 \alias{est_regressors}
 \title{Estimate the distribution of regressors, unconditional on the
-  changepoint locations}
+  change point locations}
 \usage{
 est_regressors(rho_dist, data, formula, weights, control)
 }
 \arguments{
 \item{rho_dist}{List of saved data objects from the ptMCMC estimation of
-changepoint locations (unless \code{nchangepoints} is 0, then 
-\code{NULL}).}
+change point locations (unless \code{nchangepoints} is 0, then 
+\code{NULL}) returned from \code{\link{est_changepts}}.}
 
-\item{data}{Class \code{data.frame} object including [1] the time variable
-(indicated in \code{control}), [2] the predictor variables (required by
-\code{formula}) and [3], the multinomial response variable (indicated
-in \code{formula}).}
+\item{data}{\code{data.frame} including [1] the time variable (indicated 
+in \code{control$timename}), [2] the predictor variables (required by
+\code{formula}) and [3], the multinomial response variable (indicated in
+\code{formula}) as verified by \code{\link{check_timename}} and 
+\code{\link{check_formula}}. Note that the response variables should be
+formatted as a \code{data.frame} object named as indicated by the 
+\code{response} entry in the \code{control} list, such as \code{gamma} 
+for a standard TS analysis on LDA output. See \code{Examples}.}
 
-\item{formula}{\code{formula} describing the continuous change. Any 
-predictor variable included must also be a column in the
-\code{data}.  Any (multinomial) response variable must also be a set of
-columns in \code{data}.}
+\item{formula}{\code{\link[stats]{formula}} defining the regression between
+relationship the change points. Any 
+predictor variable included must also be a column in 
+\code{data} and any (multinomial) response variable must be a set of
+columns in \code{data}, as verified by \code{\link{check_formula}}.}
 
 \item{weights}{Optional class \code{numeric} vector of weights for each 
-document. Corresponds to the vector \strong{\eqn{v}} in the math 
-description.}
+document. Defaults to \code{NULL}, translating to an equal weight for
+each document. When using \code{multinom_TS} in a standard LDATS 
+analysis, it is advisable to weight the documents by their total size,
+as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
+proportions, which does not account for size differences among documents.
+For most models, a scaling of the weights (so that the average is 1) is
+most appropriate, and this is accomplished using \code{document_weights}.}
 
 \item{control}{Class \code{TS_controls} list, holding control parameters
 for the Time Series model including the parallel tempering Markov Chain 
@@ -36,7 +46,39 @@ Matrix of draws (rows) from the marginal posteriors of the
   coefficients across the segments (columns).
 }
 \description{
-This function uses the estimated changepoint locations to 
-  estimate the marginal distribution of the regression coefficients for
-  the chunk-level models, unconditional on the changepoint locations.
+This function uses the marginal posterior distributions of
+  the change point locations (estimated by \code{\link{est_changepts}}) in
+  combination with the conditional (on the change point locations) 
+  posterior distributions of the regressors (estimated by
+  \code{\link{multinom_TS}}) to estimate the marginal posterior 
+  distribution of the regressors, unconditional on the change point 
+  locations.
+}
+\details{
+The general approach follows that of Western and Kleykamp
+  (2004), although we note some important differences. Our regression
+  models are fit indpendently for each chunk (segment of time), and 
+  therefore the variance-covariance matrix for the full model 
+  has \code{0} entries for covariances between regressors in different
+  chunks of the time series. Further, because the regression model here
+  is a standard (non-hierarchical) softmax (Ripley 1996, Venables and 
+  Ripley 2002, Bishop 2006), there is no error term in the regression  
+  (as there is in the normal model used by Western and Kleykamp 2004), 
+  and so the posterior distribution used here is a multivariate normal,
+  as opposed to a multivariate t, as used by Western and Kleykamp (2004).
+}
+\references{
+Bishop, C. M. 2006. \emph{Pattern Recognition and Machine Learning}. 
+   Springer, New York, NY, USA.
+
+  Ripley, B. D. 1996. \emph{Pattern Recognition and Neural Networks}. 
+  Cambridge University Press, Cambridge, UK.
+
+  Venables, W. N. and B. D. Ripley. 2002. \emph{Modern and Applied
+  Statistics with S}. Fourth Edition. Springer, New York, NY, USA.
+
+  Western, B. and M. Kleykamp. 2004. A Bayesian change point model for 
+  historical time series analysis. \emph{Political Analysis}
+  \strong{12}:354-374.
+  \href{https://doi.org/10.1093/pan/mph023}{link}.
 }

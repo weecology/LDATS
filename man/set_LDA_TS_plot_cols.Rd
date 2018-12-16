@@ -9,7 +9,7 @@ set_LDA_TS_plot_cols(rho_cols = NULL, rho_option = "D",
   gamma_alpha = 0.8)
 }
 \arguments{
-\item{rho_cols}{Colors to be used to plot the histograms of changepoints.
+\item{rho_cols}{Colors to be used to plot the histograms of change points.
 Any valid color values (\emph{e.g.}, see \code{\link[grDevices]{colors}},
 \code{\link[grDevices]{rgb}}) can be input as with a standard plot. 
 The default (\code{rho_cols = NULL}) triggers use of 
@@ -57,7 +57,7 @@ the colors used. Supported only on some devices, see
 \description{
 A default list generator function that produces the options
   for the colors controlling the panels of the LDATS summary plots, needed
-  because the changepoint histogram panel should be in a different color 
+  because the change point histogram panel should be in a different color 
   scheme than the LDA and fitted time series model panels, which should be
   in a matching color scheme. See \code{\link{set_LDA_plot_colors}}, 
   \code{\link{set_TS_summary_plot_cols}}, \code{\link{set_gamma_colors}},  

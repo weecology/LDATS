@@ -22,7 +22,7 @@ formatted as a \code{data.frame} object named as indicated by the
 for a standard TS analysis on LDA output. See \code{Examples}.}
 
 \item{formula}{\code{\link[stats]{formula}} defining the regression between
-relationship the changepoints. Any 
+relationship the change points. Any 
 predictor variable included must also be a column in 
 \code{data} and any (multinomial) response variable must be a set of
 columns in \code{data}, as verified by \code{\link{check_formula}}.}

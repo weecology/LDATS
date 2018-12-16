@@ -15,7 +15,7 @@
 #'   for a standard TS analysis on LDA output. See \code{Examples}.
 #'
 #' @param formula \code{\link[stats]{formula}} defining the regression between
-#'   relationship the changepoints. Any 
+#'   relationship the change points. Any 
 #'   predictor variable included must also be a column in 
 #'   \code{data} and any (multinomial) response variable must be a set of
 #'   columns in \code{data}, as verified by \code{\link{check_formula}}.
@@ -190,9 +190,9 @@ package_chunk_fits <- function(chunks, fits){
 #'   Time Series model
 #'
 #' @description Creates the table containing the start and end times for each
-#'   chunk within a time series, based on the changepoints (used to break up
+#'   chunk within a time series, based on the change points (used to break up
 #'   the time series) and the range of the time series. If there are no 
-#'   changepoints (i.e. \code{changepoints} is \code{NULL}, there is still a
+#'   change points (i.e. \code{changepoints} is \code{NULL}, there is still a
 #'   single chunk defined by the start and end of the time series.
 #'
 #' @param data Class \code{data.frame} object including the predictor and 
@@ -221,7 +221,7 @@ prep_chunks <- function(data, changepoints = NULL,
 #' @title Verify the change points of a multinomial time series model
 #'
 #' @description Verify that a time series can be broken into a set 
-#'   of chunks based on input changepoints. 
+#'   of chunks based on input change points. 
 #'
 #' @param data Class \code{data.frame} object including the predictor and 
 #'   response variables.
@@ -231,7 +231,7 @@ prep_chunks <- function(data, changepoints = NULL,
 #'
 #' @param timename \code{character} name of the column in the 
 #'   \code{document_covariate_table} that contains the time index to use
-#'   for assignment of the changepoints. 
+#'   for assignment of the change points. 
 #'
 #' @return Logical indicator of the check passing \code{TRUE} or failing
 #'   \code{FALSE}.

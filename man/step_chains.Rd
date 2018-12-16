@@ -18,7 +18,7 @@ take_step(cpts, prop_step, accept_step)
 \arguments{
 \item{i}{\code{integer} iteration index.}
 
-\item{cpts}{Matrix of changepoint locations across chains.}
+\item{cpts}{Matrix of change point locations across chains.}
 
 \item{inputs}{Class \code{ptMCMC_inputs} list, containing the static inputs
 for use within the ptMCMC algorithm.}
@@ -31,13 +31,13 @@ proposed step.}
 \value{
 \code{step_chains}: the initialized progress bar object.
 
-\code{propose_step}: List of changepoints and log-likelihood values
-  for the proposal.
+\code{propose_step}: List of change points and log-likelihood 
+  values for the proposal.
 
 \code{propose_step}: \code{logical} vector indicating if each 
   chain's proposal was accepted.
 
-\code{take_step}: list of changepoints, log-likelihoods, and
+\code{take_step}: list of change points, log-likelihoods, and
   logical indicators of acceptance for each chain.
 }
 \description{
@@ -55,7 +55,7 @@ This set of functions steps the chains forward one iteration
 \details{
 For each iteration of the ptMCMC algorithm, all of the chains
   have the potential to take a step. The possible step is proposed under
-  a proposal distribution (here for changepoints we use a symmetric
+  a proposal distribution (here for change points we use a symmetric
   geometric distribution), the proposed step is then evaluated and either
   accepted or not (following the Metropolis-Hastings rule; Metropolis,
   \emph{et al.} 1953, Hasting 1960, Gupta \emph{et al.} 2018), and then

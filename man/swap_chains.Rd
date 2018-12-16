@@ -15,7 +15,7 @@ for use within the ptMCMC algorithm.}
 \item{ids}{The vector of integer chain ids.}
 }
 \value{
-List of updated changepoints, log-likelihoods, and chain ids, as 
+List of updated change points, log-likelihoods, and chain ids, as 
   well as a vector of acceptance indicators for each swap.
 }
 \description{

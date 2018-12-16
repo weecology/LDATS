@@ -2,7 +2,7 @@
 % Please edit documentation in R/TS.R
 \name{AIC.TS_fit}
 \alias{AIC.TS_fit}
-\title{Determine the AIC (deviance) value of a TS model}
+\title{Determine the AIC (deviance) value of a Time Series model}
 \usage{
 \method{AIC}{TS_fit}(object, ..., k = 2)
 }
@@ -15,5 +15,5 @@
 }
 \description{
 Convenience function to extract the AIC (deviance) element of 
-  \code{TS_fit}-class object.
+  \code{TS_fit}-class object fit by \code{\link{multinom_TS}}.
 }

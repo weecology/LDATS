@@ -42,7 +42,7 @@ to \code{NULL}, which results in usage of the \code{timename} element
 of the control list (held in\code{control$TS_control$timename}). To have
 no label printed, set \code{xlab = ""}.}
 
-\item{selection}{Indicator of the changepoints to use in the timeseries
+\item{selection}{Indicator of the change points to use in the timeseries
 summary plot. Currently only defined for \code{"median"} and 
 \code{"mode"}.}
 

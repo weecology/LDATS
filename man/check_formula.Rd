@@ -7,13 +7,19 @@
 check_formula(data, formula)
 }
 \arguments{
-\item{data}{Class \code{data.frame} object including [1] the time variable
-(indicated in \code{control}), [2] the predictor variables (required by
-\code{formula}) and [3], the multinomial response variable.}
+\item{data}{\code{data.frame} including [1] the time variable (indicated 
+in \code{control$timename}), [2] the predictor variables (required by
+\code{formula}) and [3], the multinomial response variable (indicated in
+\code{formula}) as verified by \code{\link{check_timename}} and 
+\code{\link{check_formula}}. Note that the response variables should be
+formatted as a \code{data.frame} object named as indicated by the 
+\code{response} entry in the \code{control} list, such as \code{gamma} 
+for a standard TS analysis on LDA output.}
 
-\item{formula}{Formula to evaluate.}
+\item{formula}{\code{formula} to evaluate.}
 }
 \description{
-Check that the formula is actually a formula and that the
-  response and predictor variabless are all included in the data.
+Check that \code{formula} is actually a 
+  \code{\link[stats]{formula}} and that the
+  response and predictor variabless are all included in \code{data}.
 }

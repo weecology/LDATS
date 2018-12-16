@@ -24,7 +24,7 @@
 #'   of the control list (held in\code{control$TS_control$timename}). To have
 #'   no label printed, set \code{xlab = ""}.
 #'
-#' @param selection Indicator of the changepoints to use in the timeseries
+#' @param selection Indicator of the change points to use in the timeseries
 #'   summary plot. Currently only defined for \code{"median"} and 
 #'   \code{"mode"}.
 #'
@@ -86,13 +86,13 @@ plot.LDA_TS <- function(x, ..., control = LDA_TS_controls_list(),
 #'
 #' @description A default list generator function that produces the options
 #'   for the colors controlling the panels of the LDATS summary plots, needed
-#'   because the changepoint histogram panel should be in a different color 
+#'   because the change point histogram panel should be in a different color 
 #'   scheme than the LDA and fitted time series model panels, which should be
 #'   in a matching color scheme. See \code{\link{set_LDA_plot_colors}}, 
 #'   \code{\link{set_TS_summary_plot_cols}}, \code{\link{set_gamma_colors}},  
 #'   and \code{\link{set_rho_hist_colors}} for specific details on usage.
 #'
-#' @param rho_cols Colors to be used to plot the histograms of changepoints.
+#' @param rho_cols Colors to be used to plot the histograms of change points.
 #'   Any valid color values (\emph{e.g.}, see \code{\link[grDevices]{colors}},
 #'   \code{\link[grDevices]{rgb}}) can be input as with a standard plot. 
 #'   The default (\code{rho_cols = NULL}) triggers use of 
