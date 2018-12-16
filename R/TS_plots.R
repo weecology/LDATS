@@ -32,14 +32,17 @@
 #'
 #' @param LDATS \code{logical} indicating if the plot is part of a larger 
 #'   LDATS plot output.
+#'
+#' @param interactive \code{logical} input, should be code{TRUE} unless
+#'   testing.
 #' 
 #' @export 
 #'
-plot.TS_fit <- function(x, ..., plot_type = "summary", 
+plot.TS_fit <- function(x, ..., plot_type = "summary", interactive = FALSE,
                         cols = set_TS_summary_plot_cols(), bin_width = 1, 
                         xlab = NULL, selection = "median", LDATS = FALSE){
   if (plot_type == "diagnostic"){
-    TS_diagnostics_plot(x)
+    TS_diagnostics_plot(x, interactive = interactive)
   } else if (plot_type == "summary"){
     TS_summary_plot(x, cols, bin_width, xlab, selection, LDATS)
   }

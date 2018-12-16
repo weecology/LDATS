@@ -44,6 +44,7 @@ test_that("check pred_gamma plot", {
     TS_gamma_plot <- recordPlot()
     vdiffr::expect_doppelganger("Base TS gamma plot", TS_gamma_plot)  
   }
+  expect_equal(set_gamma_colors(NULL), NULL)
 })
 
 test_that("check rho_lines", {
@@ -69,6 +70,7 @@ test_that("check rho_hist plot", {
     TS_rho_plot <- recordPlot()
     vdiffr::expect_doppelganger("Base TS rho plot", TS_rho_plot)  
   }
+  expect_equal(set_rho_hist_colors(NULL), NULL)
 })
 
 
@@ -130,6 +132,7 @@ test_that("check posterior_plot", {
 test_that("check plotting of TS_fit", {
   if (tenv == "cran"){
     expect_silent(plot(TSmod))
+    expect_silent(plot(TSmod, plot_type = "diagnostic", interactive = FALSE))
   } else{
     plot(TSmod)
     TS_plot <- recordPlot()
@@ -173,6 +176,7 @@ test_that("check rho_diagnostics_plots", {
 })
 
 test_that("check eta_diagnostics_plots", {
+  expect_equal(eta_diagnostics_plots(NULL), NULL)
   if (tenv == "cran"){
     expect_silent(eta_diagnostics_plots(TSmod, interactive = FALSE))
   } else{

@@ -30,6 +30,10 @@ test_that("check prep_TS_data", {
   expect_error(prep_TS_data(document_covariate_table, LDA_models, "ok", i))
   expect_error(prep_TS_data(document_covariate_table, "ok", mods, i))
   expect_error(prep_TS_data("ok", LDA_models, mods, i))
+
+  data_1 <- prep_TS_data(document_covariate_table, LDA_models[[1]], mods, 1)
+  data_i <- prep_TS_data(document_covariate_table, LDA_models, mods, 1)
+  expect_equal(data_1, data_i)
 })
 
 test_that("check select_TS", {
@@ -44,6 +48,9 @@ test_that("check select_TS", {
   expect_is(sel_mod, "TS_fit")
   expect_error(select_TS(mods, LDA_controls_list()))
   expect_error(select_TS("ok", TS_controls_list()))
+
+  xxfun <- function(x){x}
+  expect_warning(select_TS(mods, TS_controls_list(selector = xxfun)))
 })
 
 test_that("check package_TS_on_LDA", {
@@ -60,6 +67,7 @@ test_that("check package_TS_on_LDA", {
                       control = TS_controls_list(nit = 1e3))
   }
   expect_is(package_TS_on_LDA(TSmods, LDA_models, mods), "TS_on_LDA")
+  expect_is(package_TS_on_LDA(TSmods, LDA_models[[1]], mods), "TS_on_LDA")
   expect_error(package_TS_on_LDA(TSmods, LDA_models, "ok"))
   expect_error(package_TS_on_LDA("ok", LDA_models, mods))
   expect_error(package_TS_on_LDA(TSmods, "ok", mods))
@@ -114,6 +122,8 @@ test_that("check expand_TS", {
   expect_equal(dim(exp_TS), c(16, 3))
   expect_error(expand_TS("ok", formulas, nchangepoints))
   expect_error(expand_TS(LDA_models, "ok", nchangepoints))
+  expect_error(expand_TS(LDA_models, c("~1", "ok"), nchangepoints))
+  expect_error(expand_TS(LDA_models, list("~1", "ok"), nchangepoints))
   expect_error(expand_TS(LDA_models, formulas, 2.5))
 })
 
@@ -149,6 +159,8 @@ test_that("check check_document_covariate_table", {
   expect_silent(check_document_covariate_table(document_covariate_table, 
                                                LDA_models = LDA_models))
   expect_silent(check_document_covariate_table(document_covariate_table, 
+                                               LDA_models = LDAs))
+  expect_silent(check_document_covariate_table(document_covariate_table, 
                                   document_term_table = document_term_table))
   expect_error(check_document_covariate_table(document_covariate_table,
                                   LDA_models = 1))
@@ -158,6 +170,7 @@ test_that("check check_document_covariate_table", {
                                   LDA_models = LDA_models))
   expect_error(check_document_covariate_table(document_covariate_table = 1,
                                   document_term_table = document_term_table))
+  expect_error(check_document_covariate_table(lm(1~1), LDA_models))
 })
 
 test_that("check check_timename", {
@@ -167,12 +180,16 @@ test_that("check check_timename", {
   expect_error(check_timename(document_covariate_table, 1))
   expect_error(check_timename(document_covariate_table, 
                               rep(control$timename, 2)))
+  expect_error(check_timename(document_covariate_table, 1))
+  expect_error(check_timename(data.frame(letters), "letters"))
 })
 
 test_that("check check_formulas", {
   expect_silent(check_formulas(formulas, document_covariate_table, control))
   expect_error(check_formulas("ok", document_covariate_table, control))
   expect_error(check_formulas(~newmoon, "ok", control))
+  expect_error(check_formulas(~newmoon, c(~1, "ok"), control))
+  expect_error(check_formulas(~newmoon, list(~1, "ok"), control))
   expect_error(check_formulas(formulas, document_covariate_table, "ok"))
 })
 

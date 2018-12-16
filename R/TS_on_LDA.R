@@ -122,14 +122,11 @@ TS_on_LDA <- function(LDA_models, document_covariate_table, formulas = ~ 1,
 #' @export
 #'
 prep_TS_data <- function(document_covariate_table, LDA_models, mods, i){
-  check_document_covariate_table(document_covariate_table)
+  check_document_covariate_table(document_covariate_table, LDA_models)
   check_LDA_models(LDA_models)
   if(is(LDA_models, "LDA")){
     LDA_models <- c(LDA_models)
     class(LDA_models) <- c("LDA_set", "list")
-  }
-  if(nrow(document_covariate_table) != nrow(LDA_models[[mods$LDA[i]]]@gamma)){
-    stop("document covariate table and LDA model are not conformable")
   }
   data_i <- document_covariate_table
   data_i$gamma <- LDA_models[[mods$LDA[i]]]@gamma
@@ -171,7 +168,7 @@ select_TS <- function(TS_models, control = TS_controls_list()){
   TS_selected <- apply(TS_measured, 2, selector) 
   which_selected <- which(TS_measured %in% TS_selected)
   if (length(which_selected) > 1){
-    message("Selection results in multiple models, returning first")
+    warning("Selection results in multiple models, returning first")
     which_selected <- which_selected[1]
   }
   out <- TS_models[[which_selected]]
@@ -310,14 +307,14 @@ expand_TS <- function(LDA_models, formulas, nchangepoints){
     LDA_models <- c(LDA_models)
     class(LDA_models) <- c("LDA_set", "list")
   }
-  if(!is(formulas, "vector")){
+  if(!is(formulas, "list")){
     if(is(formulas, "formula")){
       formulas <- c(formulas)
     } else{
       stop("formulas does not contain formula(s)")
     }
-  } else if (!is(formulas[[1]], "formula")){
-      stop("formulas does not contain formula(s)")
+  } else if (!all(sapply(formulas, is, "formula"))){
+      stop("formulas does not contain all formula(s)")
   }
   out <- formulas
   for (i in 1:length(formulas)){
@@ -414,16 +411,22 @@ check_document_covariate_table <- function(document_covariate_table,
                                            document_term_table = NULL){
   dct_df <- tryCatch(data.frame(document_covariate_table),
                      warning = function(x){NA}, error = function(x){NA})
+  if(is(LDA_models, "LDA")){
+    LDA_models <- c(LDA_models)
+    class(LDA_models) <- c("LDA_set", "list")
+  }
   if (length(dct_df) == 1 && is.na(dct_df)){
     stop("document_covariate_table is not conformable to a data frame")
   }
   if (!is.null(LDA_models)){
-    if (nrow(document_covariate_table) != nrow(LDA_models[[1]]@gamma)){
+    if (nrow(data.frame(document_covariate_table)) != 
+        nrow(LDA_models[[1]]@gamma)){
       stop("number of documents in covariate table is not equal to number of 
         documents observed")
     }
   } else if (!is.null(document_term_table)){
-    if (nrow(document_covariate_table) != nrow(document_term_table)){
+    if (nrow(data.frame(document_covariate_table)) != 
+        nrow(data.frame(document_term_table))){
       stop("number of documents in covariate table is not equal to number of 
         documents observed")
     }
@@ -481,16 +484,14 @@ check_formulas <- function(formulas, document_covariate_table, control){
   check_control(control, "TS_controls")
   response <- control$response
   dct <- document_covariate_table
-  if(!is(formulas, "vector")){
+  if(!is(formulas, "list")){
     if(is(formulas, "formula")){
       formulas <- c(formulas)
     } else{
-      stop("formulas does not contain a formula")
+      stop("formulas does not contain formula(s)")
     }
-  } else{ 
-    if (!all(unlist(lapply(formulas, is, "formula")))){
-      stop("formulas is not a vector of formulas")
-    }
+  } else if (!all(sapply(formulas, is, "formula"))){
+      stop("formulas does not contain all formula(s)")
   }
   resp <- unlist(lapply(lapply(formulas, terms), attr, "response"))
   pred <- unlist(lapply(lapply(formulas, terms), attr, "term.labels"))

@@ -5,8 +5,8 @@
 \title{Plot a LDATS TS models}
 \usage{
 \method{plot}{TS_fit}(x, ..., plot_type = "summary",
-  cols = set_TS_summary_plot_cols(), bin_width = 1, xlab = NULL,
-  selection = "median", LDATS = FALSE)
+  interactive = FALSE, cols = set_TS_summary_plot_cols(),
+  bin_width = 1, xlab = NULL, selection = "median", LDATS = FALSE)
 }
 \arguments{
 \item{x}{A \code{TS_fit} object of a multinomial time series model fit by
@@ -16,6 +16,9 @@
 used, just retained for alignment with \code{\link[graphics]{plot}}.}
 
 \item{plot_type}{"diagnostic" or "summary".}
+
+\item{interactive}{\code{logical} input, should be code{TRUE} unless
+testing.}
 
 \item{cols}{\code{list} of elements used to define the colors for the two
 panels of the summary plot, as generated simply using 
