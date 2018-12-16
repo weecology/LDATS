@@ -52,15 +52,15 @@
 #'   which are hidden for \code{print}ing, but are accessible:
 #'   \describe{
 #'     \item{data}{\code{data} input to the function.}
-#'     \item{formula}{\code{\link[stats]{formula}}.}
+#'     \item{formula}{\code{\link[stats]{formula}} input to the function.}
 #'     \item{nchangepoints}{\code{nchangepoints} input to the function.}
 #'     \item{weights}{\code{weights} input to the function.}
 #'     \item{control}{\code{control} input to the function.}
 #'     \item{lls}{Iteration-by-iteration 
 #'                \link[=logLik.multinom_TS_fit]{logLik} values for the
-#'                 full time series fit by \code{\link{TS_multinom}}.}
+#'                 full time series fit by \code{\link{multinom_TS}}.}
 #'     \item{rhos}{Iteration-by-iteration change point estimates from
-#'                 \code{\link{est_changepoints}}.}
+#'                 \code{\link{est_changepts}}.}
 #'     \item{etas}{Iteration-by-iteration marginal regressor estimates from
 #'                 \code{\link{est_regressors}}, which have been 
 #'                 unconditioned with respect to the change point locations.}
@@ -78,8 +78,9 @@
 #'     \item{eta_vcov}{Variance-covariance matrix for the estimates of
 #'                      \code{etas} (the regressors), see 
 #'                      \code{\link{measure_eta_vcov}}.}
-#'     \item{logLik}{Across-iteration average of \code{lls}.}
-#'     \item{nparams}{Total number of parameters included for the full model,
+#'     \item{logLik}{Across-iteration average of log-likelihoods 
+#'                    (\code{lls}).}
+#'     \item{nparams}{Total number of parameters in the full model,
 #'                    including the change point locations and regressors.}
 #'     \item{deviance}{Penalized negative log-likelihood, based on 
 #'                     \code{logLik} and \code{nparams}.}
@@ -157,22 +158,33 @@ check_TS_inputs <- function(data, formula, nchangepoints, weights, control){
 
 #' @title Summarize the Time Series model 
 #'
-#' @description Calculate relevant summaries and package the output as a
+#' @description Calculate relevant summaries for the run of a Time Series
+#'   model within \code{\link{TS}} and package the output as a
 #'   \code{TS_fit}-class object.
 #'
-#' @param data Class \code{data.frame} object including [1] the time variable
-#'   (indicated in \code{control}), [2] the predictor variables (required by
-#'   \code{formula}) and [3], the multinomial response variable (indicated
-#'   in \code{formula}). 
+#' @param data \code{data.frame} including [1] the time variable (indicated 
+#'   in \code{control$timename}), [2] the predictor variables (required by
+#'   \code{formula}) and [3], the multinomial response variable (indicated in
+#'   \code{formula}) as verified by \code{\link{check_timename}} and 
+#'   \code{\link{check_formula}}. Note that the response variables should be
+#'   formatted as a \code{data.frame} object named as indicated by the 
+#'   \code{response} entry in the \code{control} list, such as \code{gamma} 
+#'   for a standard TS analysis on LDA output. See \code{Examples}.
 #'
-#' @param formula \code{formula} describing the continuous change. Any 
-#'   predictor variable included must also be a column in the
-#'   \code{data}.  Any (multinomial) response variable must also be a set of
-#'   columns in \code{data}. 
+#' @param formula \code{\link[stats]{formula}} defining the regression between
+#'   relationship the changepoints. Any 
+#'   predictor variable included must also be a column in 
+#'   \code{data} and any (multinomial) response variable must be a set of
+#'   columns in \code{data}, as verified by \code{\link{check_formula}}.
 #'
 #' @param weights Optional class \code{numeric} vector of weights for each 
-#'   document. Corresponds to the vector \strong{\eqn{v}} in the math 
-#'   description.
+#'   document. Defaults to \code{NULL}, translating to an equal weight for
+#'   each document. When using \code{multinom_TS} in a standard LDATS 
+#'   analysis, it is advisable to weight the documents by their total size,
+#'   as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
+#'   proportions, which does not account for size differences among documents.
+#'   For most models, a scaling of the weights (so that the average is 1) is
+#'   most appropriate, and this is accomplished using \code{document_weights}.
 #'
 #' @param control Class \code{TS_controls} list, holding control parameters
 #'   for the Time Series model including the parallel tempering Markov Chain 
@@ -180,13 +192,50 @@ check_TS_inputs <- function(data, formula, nchangepoints, weights, control){
 #'   \code{\link{TS_controls_list}}.
 #'
 #' @param rho_dist List of saved data objects from the ptMCMC estimation of
-#'   changepoint locations (unless \code{nchangepoints} is 0, then 
-#'   \code{NULL}).
+#'   changepoint locations returned by \code{\link{est_changepts}}
+#'   (unless \code{nchangepoints} is 0, then \code{NULL}).
 #'
 #' @param eta_dist Matrix of draws (rows) from the marginal posteriors of the 
-#'   coefficients across the segments (columns). 
+#'   coefficients across the segments (columns), as estimated by
+#'   \code{\link{est_regressors}}. 
 #'
-#' @return Set of results from TS.
+#' @return \code{TS_fit}-class list containing the following elements, many of
+#'   which are hidden for \code{print}ing, but are accessible:
+#'   \describe{
+#'     \item{data}{\code{data} input to the function.}
+#'     \item{formula}{\code{\link[stats]{formula}} input to the function.}
+#'     \item{nchangepoints}{\code{nchangepoints} input to the function.}
+#'     \item{weights}{\code{weights} input to the function.}
+#'     \item{control}{\code{control} input to the function.}
+#'     \item{lls}{Iteration-by-iteration 
+#'                \link[=logLik.multinom_TS_fit]{logLik} values for the
+#'                 full time series fit by \code{\link{multinom_TS}}.}
+#'     \item{rhos}{Iteration-by-iteration change point estimates from
+#'                 \code{\link{est_changepts}}.}
+#'     \item{etas}{Iteration-by-iteration marginal regressor estimates from
+#'                 \code{\link{est_regressors}}, which have been 
+#'                 unconditioned with respect to the change point locations.}
+#'     \item{ptMCMC_diagnostics}{ptMCMC diagnostics, 
+#'                                see \code{\link{diagnose_ptMCMC}}}
+#'     \item{rho_summary}{Summary table describing \code{rhos} (the change
+#'                        point locations), 
+#'                        see \code{\link{summarize_rhos}}.}
+#'     \item{rho_vcov}{Variance-covariance matrix for the estimates of
+#'                      \code{rhos} (the change point locations), see 
+#'                      \code{\link{measure_rho_vcov}}.}
+#'     \item{eta_summary}{Summary table describing \code{ets} (the 
+#'                        regressors), 
+#'                        see \code{\link{summarize_etas}}.}
+#'     \item{eta_vcov}{Variance-covariance matrix for the estimates of
+#'                      \code{etas} (the regressors), see 
+#'                      \code{\link{measure_eta_vcov}}.}
+#'     \item{logLik}{Across-iteration average of log-likelihoods 
+#'                    (\code{lls}).}
+#'     \item{nparams}{Total number of parameters in the full model,
+#'                    including the change point locations and regressors.}
+#'     \item{deviance}{Penalized negative log-likelihood, based on 
+#'                     \code{logLik} and \code{nparams}.}
+#'   }
 #'
 #' @export
 #'
@@ -239,13 +288,12 @@ summarize_TS <- function(data, formula, weights, control, rho_dist,
 #' @title Print a Time Series model fit
 #'
 #' @description Convenience function to print only the most important 
-#'   components of a \code{TS_fit}-class object.
+#'   components of a \code{TS_fit}-class object fit by 
+#'   \code{\link{TS}}.
 #'
 #' @param x Class \code{TS_fit} object to be printed.
 #'
 #' @param ... Not used, simply included to maintain method compatability.
-#'
-#' @return Nothing (model is printed, not returned).
 #'
 #' @export
 #'

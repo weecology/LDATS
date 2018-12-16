@@ -4,7 +4,7 @@
 #
 # working through documentation right now
 #  scripts to do
-#   TS
+#   TS [working here now: presently down to summarize_etas]
 #   TS_on_LDA
 #   TS_plots
 
