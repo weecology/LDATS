@@ -2,26 +2,29 @@
 % Please edit documentation in R/TS_on_LDA.R
 \name{prep_TS_data}
 \alias{prep_TS_data}
-\title{Prepare the model-specific data to be used in the TS analysis}
+\title{Prepare the model-specific data to be used in the TS analysis
+  of LDA output}
 \usage{
 prep_TS_data(document_covariate_table, LDA_models, mods, i)
 }
 \arguments{
-\item{document_covariate_table}{Document covariate table (rows:
-documents (\code{M}), columns: time index and covariate options). 
-Every model needs a covariate to describe the time value for each
-document (in whatever relevant units), whose name in the table is input
-via \code{timename}, that dictates the application of the changepoints. 
-In addition, the table needs to include as columns all covariates named 
-within the specific models described via the argument \code{formula} 
-(if desired). Must be a conformable to a data table.}
+\item{document_covariate_table}{Document covariate table (rows: documents,
+columns: time index and covariate options). Every model needs a
+covariate to describe the time value for each document (in whatever 
+units and whose name in the table is input in \code{control$timename})
+that dictates the application of the change points. 
+In addition, all covariates named within specific models in
+\code{formula} must be included. Must be a conformable to a data table,
+as verified by \code{\link{check_document_covariate_table}}.}
 
-\item{LDA_models}{List of LDA models (class \code{LDA_set}) or a singular
-LDA model (class \code{LDA}).}
+\item{LDA_models}{List of LDA models (class \code{LDA_set}, produced by
+\code{\link{LDA_set}}) or a singular LDA model (class \code{LDA},
+produced by \code{\link[topicmodels]{LDA}}).}
 
-\item{mods}{The \code{data.table} created by \code{expand_TS} the contains
-each of the models (defined by the LDA model to use and the formula and
-number of changepoints for the TS model). Indexded here by \code{i}.}
+\item{mods}{The \code{data.table} created by \code{\link{expand_TS}} that 
+contains each of the models (defined by the LDA model to use and the and
+formula number of changepoints for the TS model). Indexded here by 
+\code{i}.}
 
 \item{i}{\code{integer} index referencing the row in \code{mods} to use.}
 }
@@ -32,7 +35,7 @@ Class \code{data.frame} object including [1] the time variable
   in \code{formula}), ready for input into \code{TS}.
 }
 \description{
-Append the estimated topic proportions (\eqn{\gamma}) values 
-  from a fitted LDA model to the document covariate table to create the
-  data structure needed for \code{TS}.
+Append the estimated topic proportions from a fitted LDA model 
+  to the document covariate table to create the data structure needed for 
+  \code{\link{TS}}.
 }

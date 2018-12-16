@@ -10,6 +10,6 @@ check_weights(weights)
 \item{weights}{Vector of the document weights to evaluate.}
 }
 \description{
-Check that the vector of document weights is numeric
-  and inform the user if the average weight isn't 1.
+Check that the vector of document weights is numeric and 
+  positive and inform the user if the average weight isn't 1.
 }

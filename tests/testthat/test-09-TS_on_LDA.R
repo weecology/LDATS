@@ -132,7 +132,7 @@ test_that("check check_weights", {
   expect_silent(check_weights(1))
   expect_silent(check_weights(NULL))
   expect_error(check_weights("ok"))
-  expect_warning(check_weights(-1))
+  expect_error(check_weights(-1))
   expect_warning(check_weights(100))
 })
 

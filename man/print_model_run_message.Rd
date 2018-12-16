@@ -2,8 +2,8 @@
 % Please edit documentation in R/TS_on_LDA.R
 \name{print_model_run_message}
 \alias{print_model_run_message}
-\title{Print the message to the console about which combination of TS
-  and LDA is being run}
+\title{Print the message to the console about which combination of the 
+  Time Series and LDA models is being run}
 \usage{
 print_model_run_message(models, i, LDA_models, control)
 }
@@ -14,8 +14,9 @@ and formulas and nchangepoints used in the TS models.}
 
 \item{i}{\code{integer} index of the row to use from \code{models}.}
 
-\item{LDA_models}{List of LDA models (class \code{LDA_set}) or a singular
-LDA model (class \code{LDA}).}
+\item{LDA_models}{List of LDA models (class \code{LDA_set}, produced by
+\code{\link{LDA_set}}) or a singular LDA model (class \code{LDA},
+produced by \code{\link[topicmodels]{LDA}}).}
 
 \item{control}{Class \code{TS_controls} list, holding control parameters
 for the Time Series model including the parallel tempering Markov Chain 

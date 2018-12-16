@@ -10,8 +10,9 @@ package_TS_on_LDA(TSmods, LDA_models, models)
 \item{TSmods}{list of results from \code{\link{TS}} applied for each model 
 on each LDA model input.}
 
-\item{LDA_models}{List of LDA models (class \code{LDA_set}) or a singular
-LDA model (class \code{LDA}).}
+\item{LDA_models}{List of LDA models (class \code{LDA_set}, produced by
+\code{\link{LDA_set}}) or a singular LDA model (class \code{LDA},
+produced by \code{\link[topicmodels]{LDA}}).}
 
 \item{models}{\code{data.frame} object returned from 
 \code{\link{expand_TS}} that contains the combinations of LDA models, 

@@ -2,39 +2,52 @@
 % Please edit documentation in R/TS_on_LDA.R
 \name{TS_on_LDA}
 \alias{TS_on_LDA}
+\alias{check_TS_on_LDA_inputs}
 \title{Conduct a set of Time Series analyses on a set of LDA models}
 \usage{
 TS_on_LDA(LDA_models, document_covariate_table, formulas = ~1,
   nchangepoints = 0, weights = NULL, control = TS_controls_list())
+
+check_TS_on_LDA_inputs(LDA_models, document_covariate_table,
+  formulas = ~1, nchangepoints = 0, weights = NULL,
+  control = TS_controls_list())
 }
 \arguments{
-\item{LDA_models}{List of LDA models (class \code{LDA_set}) or a singular
-LDA model (class \code{LDA}).}
+\item{LDA_models}{List of LDA models (class \code{LDA_set}, produced by
+\code{\link{LDA_set}}) or a singular LDA model (class \code{LDA},
+produced by \code{\link[topicmodels]{LDA}}).}
 
-\item{document_covariate_table}{Document covariate table (rows:
-documents (\code{M}), columns: time index and covariate options). 
-Every model needs a covariate to describe the time value for each
-document (in whatever relevant units), whose name in the table is input
-via \code{timename}, that dictates the application of the changepoints. 
-In addition, the table needs to include as columns all covariates named 
-within the specific models described via the argument \code{formula} 
-(if desired). Must be a conformable to a data table.}
+\item{document_covariate_table}{Document covariate table (rows: documents,
+columns: time index and covariate options). Every model needs a
+covariate to describe the time value for each document (in whatever 
+units and whose name in the table is input in \code{control$timename})
+that dictates the application of the change points. 
+In addition, all covariates named within specific models in
+\code{formula} must be included. Must be a conformable to a data table,
+as verified by \code{\link{check_document_covariate_table}}.}
 
-\item{formulas}{Vector of \code{formula}(s) for the continuous change. Any 
+\item{formulas}{Vector of \code{\link[stats]{formula}}(s) for the 
+continuous (non-change point) component of the time series models. Any 
 predictor variable included in a formula must also be a column in the
 \code{document_covariate_table}. Each element (formula) in the vector
 is evaluated for each number of change points and each LDA model.}
 
-\item{nchangepoints}{Vector of integers corresponding to the number of 
-change points to include in the model. 0 is a valid input (corresponding
-to no change points, so a singular time series model), and the current 
-implementation can reasonably include up to 6 change points. Each element 
-(number of change points) in the vector is used to dictate the
-segementation of the data  for each continuous model and each LDA model.}
+\item{nchangepoints}{Vector of \code{integer}s corresponding to the number 
+of change points to include in the time series models. 0 is a valid input 
+corresponding to no change points (\emph{i.e.}, a singular time series
+model), and the current implementation can reasonably include up to 6 
+change points. Each element in the vector is the number of change points 
+used to segement the data for each formula (entry in \code{formulas}) 
+component of the TS model, for each selected LDA model.}
 
 \item{weights}{Optional class \code{numeric} vector of weights for each 
-document. Corresponds to the vector \strong{\eqn{v}} in the math 
-description.}
+document. Defaults to \code{NULL}, translating to an equal weight for
+each document. When using \code{multinom_TS} in a standard LDATS 
+analysis, it is advisable to weight the documents by their total size,
+as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
+proportions, which does not account for size differences among documents.
+For most models, a scaling of the weights (so that the average is 1) is
+most appropriate, and this is accomplished using \code{document_weights}.}
 
 \item{control}{Class \code{TS_controls} list, holding control parameters
 for the Time Series model including the parallel tempering Markov Chain 
@@ -47,10 +60,14 @@ Class \code{TS_on_LDA} list of results from \code{\link{TS}}
 }
 \description{
 This is a wrapper function that expands the main Time Series
-  analyses function (\code{\link{TS}}) across the LDA models and the Time
-  Series models, with respect to both continuous time formulas and the 
+  analyses function (\code{\link{TS}}) across the LDA models (estimated
+  using \code{\link[topicmodels]{LDA}} or \code{\link{LDA_set}} and the 
+  Time Series models, with respect to both continuous time formulas and the 
   number of discrete changepoints. This function allows direct passage of
   the control parameters for the parallel tempering MCMC through to the 
   main Time Series function, \code{\link{TS}}, via the 
   \code{ptMCMC_controls} argument.
+
+\code{check_TS_on_LDA_inputs} checks that the inputs to 
+  \code{TS_on_LDA} are of proper classes for a full analysis.
 }
