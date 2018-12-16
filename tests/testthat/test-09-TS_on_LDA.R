@@ -39,7 +39,7 @@ test_that("check select_TS", {
   sel_mod <- select_TS(mods, control)
 
   expect_equal(length(mods), 2)
-  expect_equal(length(sel_mod), 15)
+  expect_equal(length(sel_mod), 16)
   expect_is(mods, "TS_on_LDA")
   expect_is(sel_mod, "TS_fit")
   expect_error(select_TS(mods, LDA_controls_list()))

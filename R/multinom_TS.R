@@ -14,8 +14,8 @@
 #'   \code{response} entry in the \code{control} list, such as \code{gamma} 
 #'   for a standard TS analysis on LDA output. See \code{Examples}.
 #'
-#' @param formula \code{formula} defining the regression relationship between
-#'   the changepoints, see \code{\link[stats]{formula}}. Any 
+#' @param formula \code{\link[stats]{formula}} defining the regression between
+#'   relationship the changepoints. Any 
 #'   predictor variable included must also be a column in 
 #'   \code{data} and any (multinomial) response variable must be a set of
 #'   columns in \code{data}, as verified by \code{\link{check_formula}}.
@@ -124,8 +124,9 @@ check_changepoints <- function(changepoints = NULL){
 #' 
 #' @description Convenience function to simply extract the \code{logLik}
 #'   element (and \code{df} and \code{nobs}) from a \code{multinom_TS_fit}
-#'   object. Extends \code{\link[stats]{logLik}} from 
-#'   \code{\link[nnet]{multinom}} to \code{multinom_TS_fit} objects.
+#'   object fit by \code{\link{multinom_TS}}. Extends 
+#'   \code{\link[stats]{logLik}} from \code{\link[nnet]{multinom}} to 
+#'   \code{multinom_TS_fit} objects.
 #'
 #' @param object A \code{multinom_TS_fit}-class object.
 #'
@@ -262,8 +263,8 @@ verify_changepoint_locations <- function(data, changepoints = NULL,
 #' @param data Class \code{data.frame} object including the predictor and 
 #'   response variables.
 #'
-#' @param formula Formula as a class \code{formula} or class \code{character} 
-#'   object describing the chunk.
+#' @param formula Formula as a \code{\link[stats]{formula}} or 
+#'   \code{\link[base]{character}} object describing the chunk.
 #'
 #' @param chunk Length-2 vector of times: [1] \code{start}, the start time 
 #'   for the chunk and [2] \code{end}, the end time for the chunk.

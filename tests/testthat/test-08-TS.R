@@ -125,7 +125,7 @@ test_that("check est_regressors", {
 test_that("check summarize_TS", {
   summ <- summarize_TS(data, formula, weights, control, rho_dist, eta_dist)
   expect_is(summ, "TS_fit")
-  expect_equal(length(summ), 15)
+  expect_equal(length(summ), 16)
   expect_equal(names(summ)[3], "nchangepoints")
   expect_error(
     summarize_TS("ok", formula, weights, control, rho_dist, eta_dist))
@@ -138,7 +138,7 @@ test_that("check summarize_TS", {
 
 test_that("check TS", {
   expect_is(TSmod, "TS_fit")
-  expect_equal(length(TSmod), 15)
+  expect_equal(length(TSmod), 16)
   expect_equal(TSmod$nchangepoints, 1)
   expect_error(TS(data, formula, nchangepoints = 0, weights, "ok"))
   expect_error(TS(data, formula, nchangepoints = 0, "ok", control))
