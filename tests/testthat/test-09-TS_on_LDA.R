@@ -120,6 +120,9 @@ test_that("check expand_TS", {
   exp_TS <- expand_TS(LDA_models, c(~1, ~newmoon), 3:10)
   expect_is(exp_TS, "data.frame")
   expect_equal(dim(exp_TS), c(16, 3))
+  exp_TS <- expand_TS(LDA_models[[1]], c(~1, ~newmoon), 3:10)
+  expect_is(exp_TS, "data.frame")
+  expect_equal(dim(exp_TS), c(16, 3))
   expect_error(expand_TS("ok", formulas, nchangepoints))
   expect_error(expand_TS(LDA_models, "ok", nchangepoints))
   expect_error(expand_TS(LDA_models, c("~1", "ok"), nchangepoints))
@@ -188,8 +191,10 @@ test_that("check check_formulas", {
   expect_silent(check_formulas(formulas, document_covariate_table, control))
   expect_error(check_formulas("ok", document_covariate_table, control))
   expect_error(check_formulas(~newmoon, "ok", control))
-  expect_error(check_formulas(~newmoon, c(~1, "ok"), control))
-  expect_error(check_formulas(~newmoon, list(~1, "ok"), control))
+  expect_error(check_formulas(c(~1, "ok"), 
+               document_covariate_table, control))
+  expect_error(check_formulas(list(~1, "ok"), 
+               document_covariate_table, control))
   expect_error(check_formulas(formulas, document_covariate_table, "ok"))
 })
 
