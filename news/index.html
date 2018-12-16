@@ -131,12 +131,19 @@
 <li>Inclusion of control options lists for the LDA stage, TS stage, and overall to reduce the length of input lists.</li>
 </ul>
 </div>
+<div id="full-inclusion-of-functions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#full-inclusion-of-functions" class="anchor"></a>Full inclusion of functions</h2>
+<ul>
+<li>All functions used in the code base are now exported, documented, and tested.</li>
+</ul>
+</div>
 <div id="lda-model-aic-calculation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#lda-model-aic-calculation" class="anchor"></a>LDA Model AIC calculation</h2>
+<a href="#lda-model-aic-calculation" class="anchor"></a>LDA model AIC calculation</h2>
 <ul>
 <li>
-<code>AIC.LDA_VEM</code> now uses the number of parameters as reported from <code>logLik</code> to calculate AIC.</li>
+<code>AIC.LDA_VEM()</code> now uses the number of parameters as reported from <code>logLik</code> to calculate AIC.</li>
 <li>Previous by-hand calculations of AIC included variational parameters that are integrated out of the model in the total parameter count.</li>
 </ul>
 </div>
@@ -148,16 +155,50 @@
 <li>Regressor estimates come as marginal posterior distributions, and are calculated by unconditioning the estimates generated under known change points.</li>
 </ul>
 </div>
+<div id="document-weighting" class="section level2">
+<h2 class="hasAnchor">
+<a href="#document-weighting" class="anchor"></a>Document weighting</h2>
+<ul>
+<li>
+<code><a href="../reference/document_weights.html">document_weights()</a></code> function is provided to allow for appropriate weighting of documents by their sizes (number of words) so that an average-length document is 1.</li>
+<li>Document weighting is done automatically by default, which is easily undone by using <code>weights = NULL</code>.</li>
+</ul>
+</div>
+<div id="ptmcmc-functionality" class="section level2">
+<h2 class="hasAnchor">
+<a href="#ptmcmc-functionality" class="anchor"></a>ptMCMC functionality</h2>
+<ul>
+<li>The ptMCMC code has been refactored into functions, many of which are generalized to use in other contexts.</li>
+<li>The temperature schema is fully controllable via arguments to the TS controls list</li>
+<li>Burn-in removal and thinning of final chains is controllable via the TS controls list</li>
+</ul>
+</div>
+<div id="optional-memoisation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#optional-memoisation" class="anchor"></a>Optional memoisation</h2>
+<ul>
+<li>Memoisation of <code>mutlinom_TS()</code> and <code><a href="../reference/multinom_TS_chunk.html">multinom_TS_chunk()</a></code> now is optional via <code><a href="../reference/memoise_fun.html">memoise_fun()</a></code> and is controlled through the TS controls list.</li>
+</ul>
+</div>
 <div id="plotting-functions" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plotting-functions" class="anchor"></a>Plotting functions</h2>
 <ul>
 <li>
-<code>LDA_set</code>, <code>LDA_TS</code>, and <code>TS</code> now all have default plotting options on their outputs.</li>
+<code><a href="../reference/LDA_set.html">LDA_set()</a></code>, <code><a href="../reference/LDA_TS.html">LDA_TS()</a></code>, and <code><a href="../reference/TS.html">TS()</a></code> now all have default plotting options on their outputs.</li>
 <li>
-<code>TS</code> provides MCMC diagnostic plots and summary plots.</li>
+<code>plot.TS()</code> provides MCMC diagnostic plots and summary plots.</li>
 <li>
-<code>LDA_TS</code> plots produce the combination of plots.</li>
+<code><a href="../reference/plot.LDA_TS.html">plot.LDA_TS()</a></code> plots produce the combination of plots.</li>
+</ul>
+</div>
+<div id="rodents-data-set" class="section level2">
+<h2 class="hasAnchor">
+<a href="#rodents-data-set" class="anchor"></a>Rodents data set</h2>
+<ul>
+<li>Portal rodent data from <a href="https://doi.org/10.1002/ecy.2373">Christensen <em>et al.</em> (2018)</a> are now provided in a pre-formatted and ready-to-roll data object.</li>
+<li>See <code><a href="https://www.rdocumentation.org/packages/utils/topics/data">data(rodents)</a></code>
+</li>
 </ul>
 </div>
 </div>
