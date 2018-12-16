@@ -39,12 +39,17 @@ test_that("check pred_gamma plot", {
 
   if (tenv == "cran"){
     expect_silent(pred_gamma_TS_plot(TSmod, cols = gamma_cols))
+
+    expect_silent(pred_gamma_TS_plot(TSmod, selection = "mode", 
+                  cols = gamma_cols))
   } else{
     TS_gamma_plot <- pred_gamma_TS_plot(TSmod, cols = gamma_cols)
     TS_gamma_plot <- recordPlot()
     vdiffr::expect_doppelganger("Base TS gamma plot", TS_gamma_plot)  
   }
   expect_equal(set_gamma_colors(NULL), NULL)
+    expect_error(pred_gamma_TS_plot(TSmod, selection = "ok", 
+                  cols = gamma_cols))
 })
 
 test_that("check rho_lines", {
@@ -57,6 +62,7 @@ test_that("check rho_lines", {
     TS_rho_line_plot <- recordPlot()
     vdiffr::expect_doppelganger("rho line plot", TS_rho_line_plot)
   }
+  expect_equal(rho_lines(NULL), NULL)
 })
 
 
