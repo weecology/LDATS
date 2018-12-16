@@ -16,8 +16,8 @@ Nothin. Model-by-model plots are generated in the active graphics
   device.
 }
 \description{
-Generalization of the plot function to work on a list of LDA 
-  topic models (class \code{LDA_set}).
+Generalization of the \code{\link[graphics]{plot}} function to 
+  work on a list of LDA topic models (class \code{LDA_set}).
 }
 \examples{
 \dontrun{

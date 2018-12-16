@@ -1,4 +1,5 @@
 context("Check LDA_TS plot functions")
+tenv <- "cran"
 
 data(rodents)
 lda_data <- rodents$document_term_table
@@ -12,10 +13,14 @@ mod <- LDA_TS(document_term_table, document_covariate_table,
                         TS_control = TS_controls_list(nit = 100, seed = 1)))
 
 test_that("check plot for LDA_TS", {
-  plot(mod, interactive = FALSE)
-  LDA_TS_set_plot <- recordPlot()
-  vdiffr::expect_doppelganger("Base LDA_TS non-interactive plot", 
-                              LDA_TS_set_plot) 
+  if (tenv == "cran"){
+    expect_silent(plot(mod, interactive = FALSE))
+  } else{
+    plot(mod, interactive = FALSE)
+    LDA_TS_set_plot <- recordPlot()
+    vdiffr::expect_doppelganger("Base LDA_TS non-interactive plot", 
+                                LDA_TS_set_plot) 
+  }
 })
 
 test_that("check color list creation function", {

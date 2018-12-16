@@ -71,3 +71,16 @@ This is a wrapper function that expands the main Time Series
 \code{check_TS_on_LDA_inputs} checks that the inputs to 
   \code{TS_on_LDA} are of proper classes for a full analysis.
 }
+\examples{
+\dontrun{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDAs <- LDA_set(document_term_table, topics = 2:3, nseeds = 2)
+  LDA_models <- select_LDA(LDAs)
+  weights <- document_weights(document_term_table)
+  mods <- TS_on_LDA(LDA_models, document_covariate_table,
+                    c(~ 1, ~ newmoon), nchangepoints = 0:1, weights)
+}
+
+}

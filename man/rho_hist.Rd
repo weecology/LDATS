@@ -2,22 +2,23 @@
 % Please edit documentation in R/TS_plots.R
 \name{rho_hist}
 \alias{rho_hist}
-\title{Create the changepoint histograms plot}
+\title{Create the change point histograms plot}
 \usage{
 rho_hist(x, cols, bin_width = 1, xlab = NULL)
 }
 \arguments{
-\item{x}{Object of class \code{TS_fit}.}
+\item{x}{Object of class \code{TS_fit} produced by \code{\link{TS}}.}
 
-\item{cols}{Hex values of the colors to be used to plot the histograms of 
-changepoints.}
+\item{cols}{Colors to be used to plot the histograms of change points.
+Any valid color values (\emph{e.g.}, see \code{\link[grDevices]{colors}},
+\code{\link[grDevices]{rgb}}) can be input as with a standard plot.}
 
 \item{bin_width}{Width of the bins used in the histograms, in units of the
 x-axis (the time variable used to fit the model).}
 
-\item{xlab}{Label for the x-axis.}
+\item{xlab}{Label for the x-axis (time).}
 }
 \description{
-Produces a plot of the changepoint distributions as histograms
-  over time.
+Produces a plot of the change point distributions as 
+  histograms over time.
 }

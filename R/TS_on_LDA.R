@@ -53,6 +53,7 @@
 #' @return Class \code{TS_on_LDA} list of results from \code{\link{TS}} 
 #'   applied for each model on each LDA model input.
 #'
+#' @examples
 #' \dontrun{
 #'   data(rodents)
 #'   document_term_table <- rodents$document_term_table

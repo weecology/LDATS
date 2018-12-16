@@ -10,7 +10,7 @@
 }
 \arguments{
 \item{x}{A \code{LDA_TS} object of a full LDATS model fit by
-\code{LDA_TS}.}
+\code{\link{LDA_TS}}.}
 
 \item{...}{Additional arguments to be passed to subfunctions. Not currently
 used, just retained for alignment with \code{plot}.}
@@ -50,8 +50,9 @@ summary plot. Currently only defined for \code{"median"} and
 currently (except for testing).}
 }
 \description{
-Generalization of the \code{plot} function to work on fitted
-  LDA_TS model (class \code{LDA_TS}, result of \code{\link{LDA_TS}}).
+Generalization of the \code{\link[graphics]{plot}} function to
+  work on fitted LDA_TS model objects (class \code{LDA_TS}) returned by 
+  \code{\link{LDA_TS}}).
 }
 \examples{
 \dontrun{

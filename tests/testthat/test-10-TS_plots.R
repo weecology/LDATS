@@ -1,4 +1,5 @@
 context("Check TS plot functions")
+tenv <- "cran"
 
 data(rodents)
 lda_data <- rodents$document_term_table
@@ -35,25 +36,39 @@ test_that("check pred_gamma color generator", {
 test_that("check pred_gamma plot", {
   gc <- set_TS_summary_plot_cols()$gamma
   gamma_cols <- set_gamma_colors(TSmod, gc$cols, gc$option, gc$alpha)
-  TS_gamma_plot <- pred_gamma_TS_plot(TSmod, cols = gamma_cols)
-  TS_gamma_plot <- recordPlot()
-  vdiffr::expect_doppelganger("Base TS gamma plot", TS_gamma_plot)  
+
+  if (tenv == "cran"){
+    expect_silent(pred_gamma_TS_plot(TSmod, cols = gamma_cols))
+  } else{
+    TS_gamma_plot <- pred_gamma_TS_plot(TSmod, cols = gamma_cols)
+    TS_gamma_plot <- recordPlot()
+    vdiffr::expect_doppelganger("Base TS gamma plot", TS_gamma_plot)  
+  }
 })
 
 test_that("check rho_lines", {
-  plot(1, 1, xlim = c(-10, 10), ylim = c(0, 1))
-  rho_lines(1)
-  TS_rho_line_plot <- recordPlot()
-  vdiffr::expect_doppelganger("rho line plot", TS_rho_line_plot)
+  if (tenv == "cran"){
+    expect_silent(plot(1, 1, xlim = c(-10, 10), ylim = c(0, 1)))
+    expect_silent(rho_lines(1))
+  } else{
+    plot(1, 1, xlim = c(-10, 10), ylim = c(0, 1))
+    rho_lines(1)
+    TS_rho_line_plot <- recordPlot()
+    vdiffr::expect_doppelganger("rho line plot", TS_rho_line_plot)
+  }
 })
 
 
 test_that("check rho_hist plot", {
   rc <- set_TS_summary_plot_cols()$rho
   rho_cols <- set_rho_hist_colors(TSmod$rhos, rc$cols, rc$option, rc$alpha)
-  TS_rho_plot <- rho_hist(TSmod, rho_cols)
-  TS_rho_plot <- recordPlot()
-  vdiffr::expect_doppelganger("Base TS rho plot", TS_rho_plot)  
+  if (tenv == "cran"){
+    expect_silent(rho_hist(TSmod, rho_cols))
+  } else{
+    TS_rho_plot <- rho_hist(TSmod, rho_cols)
+    TS_rho_plot <- recordPlot()
+    vdiffr::expect_doppelganger("Base TS rho plot", TS_rho_plot)  
+  }
 })
 
 
@@ -72,60 +87,97 @@ test_that("check color list creation function", {
 
 
 test_that("check trace_plot", {
-  TS_trace_plot <- trace_plot(TSmod$rhos[ , 1])
-  TS_trace_plot <- recordPlot()
-  vdiffr::expect_doppelganger("Base TS trace plot", TS_trace_plot)  
+  if (tenv == "cran"){
+    expect_silent(trace_plot(TSmod$rhos[ , 1]))
+  } else{
+    TS_trace_plot <- trace_plot(TSmod$rhos[ , 1])
+    TS_trace_plot <- recordPlot()
+    vdiffr::expect_doppelganger("Base TS trace plot", TS_trace_plot)  
+  }
 })
 
 test_that("check ecdf_plot", {
-  TS_ecdf_plot <- ecdf_plot(TSmod$rhos[ , 1])
-  TS_ecdf_plot <- recordPlot()
-  vdiffr::expect_doppelganger("Base TS ecdf plot", TS_ecdf_plot)  
+  if (tenv == "cran"){
+    expect_silent(ecdf_plot(TSmod$rhos[ , 1]))
+  } else{
+    TS_ecdf_plot <- ecdf_plot(TSmod$rhos[ , 1])
+    TS_ecdf_plot <- recordPlot()
+    vdiffr::expect_doppelganger("Base TS ecdf plot", TS_ecdf_plot)  
+  }
 })
 
 test_that("check autocorr_plot", {
-  TS_autocorr_plot <- autocorr_plot(TSmod$rhos[ , 1])
-  TS_autocorr_plot <- recordPlot()
-  vdiffr::expect_doppelganger("Base TS autocorr plot", TS_autocorr_plot)  
+  if (tenv == "cran"){
+    expect_silent(autocorr_plot(TSmod$rhos[ , 1]))
+  } else{
+    TS_autocorr_plot <- autocorr_plot(TSmod$rhos[ , 1])
+    TS_autocorr_plot <- recordPlot()
+    vdiffr::expect_doppelganger("Base TS autocorr plot", TS_autocorr_plot)  
+  }
 })
 
 test_that("check posterior_plot", {
-  TS_posterior_plot <- posterior_plot(TSmod$rhos[ , 1])
-  TS_posterior_plot <- recordPlot()
-  vdiffr::expect_doppelganger("Base TS posterior plot", TS_posterior_plot)  
+  if (tenv == "cran"){
+    expect_silent(posterior_plot(TSmod$rhos[ , 1]))
+  } else{
+    TS_posterior_plot <- posterior_plot(TSmod$rhos[ , 1])
+    TS_posterior_plot <- recordPlot()
+    vdiffr::expect_doppelganger("Base TS posterior plot", TS_posterior_plot)  
+  }
 })
 
 
 test_that("check plotting of TS_fit", {
-  plot(TSmod)
-  TS_plot <- recordPlot()
-  vdiffr::expect_doppelganger("Base TS plot", TS_plot)  
+  if (tenv == "cran"){
+    expect_silent(plot(TSmod))
+  } else{
+    plot(TSmod)
+    TS_plot <- recordPlot()
+    vdiffr::expect_doppelganger("Base TS plot", TS_plot)  
+  }
 })
 
 test_that("check TS_diagnostics_plot", {
   TSmod0 <- TS(data, formula, nchangepoints = 0, weights, control)
-  TS_diagnostics_plot(TSmod0, interactive = FALSE)
-  TS_diag_plot <- recordPlot()
-  vdiffr::expect_doppelganger("Base TS diagnostic plot", TS_diag_plot)  
+  if (tenv == "cran"){
+    expect_silent(TS_diagnostics_plot(TSmod0, interactive = FALSE))
+  } else{
+    TS_diagnostics_plot(TSmod0, interactive = FALSE)
+    TS_diag_plot <- recordPlot()
+    vdiffr::expect_doppelganger("Base TS diagnostic plot", TS_diag_plot)  
+  }
 })
 
 
 test_that("check TS_summary_plot", {
-  TS_summary_plot(TSmod, cols = set_TS_summary_plot_cols(),
-                        bin_width = 1, xlab = NULL, selection = "median")
-  TS_summ_plot <- recordPlot()
-  vdiffr::expect_doppelganger("Base TS summary plot", TS_summ_plot)  
+  if (tenv == "cran"){
+    expect_silent(TS_summary_plot(TSmod, cols = set_TS_summary_plot_cols(),
+                        bin_width = 1, xlab = NULL, selection = "median"))
+  } else{
+    TS_summary_plot(TSmod, cols = set_TS_summary_plot_cols(),
+                          bin_width = 1, xlab = NULL, selection = "median")
+    TS_summ_plot <- recordPlot()
+    vdiffr::expect_doppelganger("Base TS summary plot", TS_summ_plot)  
+  }
 })
 
 
 test_that("check rho_diagnostics_plots", {
-  rho_diagnostics_plots(TSmod, interactive = FALSE)
-  TS_rdiag_plot <- recordPlot()
-  vdiffr::expect_doppelganger("Base TS rho diagnostic plot", TS_rdiag_plot)  
+  if (tenv == "cran"){
+    expect_silent(rho_diagnostics_plots(TSmod, interactive = FALSE))
+  } else{
+    rho_diagnostics_plots(TSmod, interactive = FALSE)
+    TS_rdiag_plot <- recordPlot()
+    vdiffr::expect_doppelganger("Base TS rho diagnostic plot", TS_rdiag_plot)  
+  }
 })
 
 test_that("check eta_diagnostics_plots", {
-  eta_diagnostics_plots(TSmod, interactive = FALSE)
-  TS_ediag_plot <- recordPlot()
-  vdiffr::expect_doppelganger("Base TS eta diagnostic plot", TS_ediag_plot)  
+  if (tenv == "cran"){
+    expect_silent(eta_diagnostics_plots(TSmod, interactive = FALSE))
+  } else{
+    eta_diagnostics_plots(TSmod, interactive = FALSE)
+    TS_ediag_plot <- recordPlot()
+    vdiffr::expect_doppelganger("Base TS eta diagnostic plot", TS_ediag_plot)  
+  }
 })

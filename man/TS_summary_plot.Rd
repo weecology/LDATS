@@ -8,27 +8,27 @@ TS_summary_plot(x, cols = set_TS_summary_plot_cols(), bin_width, xlab,
   selection = "median")
 }
 \arguments{
-\item{x}{Object of class \code{TS_fit}.}
+\item{x}{Object of class \code{TS_fit} produced by \code{\link{TS}}.}
 
 \item{cols}{\code{list} of elements used to define the colors for the two
-panels, as generated simply using \code{TS_summary_cols}. \code{cols}
-has two elements \code{rho} and \code{gamma}, each corresponding to the
+panels, as generated simply using \code{\link{set_TS_summary_plot_cols}}. 
+Has two elements \code{rho} and \code{gamma}, each corresponding to the
 related panel, and each containing default values for entries named
 \code{cols}, \code{option}, and \code{alpha}. See
-\code{set_gamma_colors} and \code{set_rho_hist_colors} for
+\code{\link{set_gamma_colors}} and \code{\link{set_rho_hist_colors}} for
 details on usage.}
 
 \item{bin_width}{Width of the bins used in the histograms, in units of the
 x-axis (the time variable used to fit the model).}
 
-\item{xlab}{Label for the x-axis.}
+\item{xlab}{Label for the x-axis (time).}
 
-\item{selection}{Indicator of the changepoints to use. Currently only
+\item{selection}{Indicator of the change points to use. Currently only
 defined for "median" and "mode".}
 }
 \description{
-Produces a two-panel figure of [1] the changepoint 
+Produces a two-panel figure of [1] the change point 
   distributions as histograms over time and [2] the time series of the 
-  fitted topic proportions (gamma values) over time, based on a selected 
-  set of changepoint locations.
+  fitted topic proportions over time, based on a selected set of 
+  change point locations.
 }

@@ -2,15 +2,15 @@
 % Please edit documentation in R/TS_plots.R
 \name{rho_lines}
 \alias{rho_lines}
-\title{Add changepoint location lines to the time series plot}
+\title{Add change point location lines to the time series plot}
 \usage{
 rho_lines(spec_rhos)
 }
 \arguments{
 \item{spec_rhos}{\code{numeric} vector indicating the locations along the
-x axis where the specific changepoints being used are located.}
+x axis where the specific change points being used are located.}
 }
 \description{
-Adds vertical lines to the fitted gamma time series plot 
-  associated with the changepoints of interest.
+Adds vertical lines to the plot of the time series of fitted
+  proportions associated with the change points of interest.
 }

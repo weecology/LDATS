@@ -15,6 +15,7 @@ indexed to the iteration by the order of the vector.}
 }
 \description{
 Produce a vanilla histogram plot using \code{hist} for the 
-  parameter of interest (rho or eta). Vertical line added to show the 
+  parameter of interest (rho or eta) as part of 
+  \code{\link{TS_diagnostics_plot}}. A vertical line is added to show the 
   median of the posterior.
 }

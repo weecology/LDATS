@@ -1,7 +1,7 @@
 #' @title Plot a set of LDATS LDA models
 #'
-#' @description Generalization of the plot function to work on a list of LDA 
-#'   topic models (class \code{LDA_set}). 
+#' @description Generalization of the \code{\link[graphics]{plot}} function to 
+#'   work on a list of LDA topic models (class \code{LDA_set}). 
 #' 
 #' @param x An \code{LDA_set} object of LDA topic models.
 #' 

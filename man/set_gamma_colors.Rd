@@ -7,18 +7,19 @@
 set_gamma_colors(x, cols = NULL, option = "D", alpha = 1)
 }
 \arguments{
-\item{x}{Object of class \code{TS_fit}.}
+\item{x}{Object of class \code{TS_fit}, fit by \code{\link{TS}}.}
 
 \item{cols}{Colors to be used to plot the time series of fitted topic 
-proportions (gammas).}
+proportions.}
 
-\item{option}{A character string indicating the colormap option to use if 
-`cols == NULL`. Four options are available: "magma" (or "A"), "inferno" 
-(or "B"), "plasma" (or "C"), "viridis" (or "D", the default option) and 
-"cividis" (or "E").}
+\item{option}{A \code{character} string indicating the color option
+from \code{\link[viridis]{viridis}} to use if "cols == NULL". Four 
+options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
+(or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").}
 
 \item{alpha}{Numeric value [0,1] that indicates the transparency of the 
-colors used. Supported only on some devices, see \code{rgb}.}
+colors used. Supported only on some devices, see 
+\code{\link[grDevices]{rgb}}.}
 }
 \value{
 Vector of \code{character} hex codes indicating colors to use.

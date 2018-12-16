@@ -12,6 +12,7 @@ autocorr_plot(x)
 indexed to the iteration by the order of the vector.}
 }
 \description{
-Produce a vanilla ACF plot using \code{acf} for the parameter
-  of interest (rho or eta).
+Produce a vanilla ACF plot using \code{\link[stats]{acf}} for
+  the parameter of interest (rho or eta) as part of 
+  \code{\link{TS_diagnostics_plot}}.
 }
