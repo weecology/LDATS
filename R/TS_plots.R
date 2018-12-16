@@ -29,16 +29,19 @@
 #'   and each containing default values for entries named \code{cols},
 #'   \code{option}, and \code{alpha}. See \code{\link{set_gamma_colors}} and 
 #'   \code{\link{set_rho_hist_colors}} for details on usage.
+#'
+#' @param LDATS \code{logical} indicating if the plot is part of a larger 
+#'   LDATS plot output.
 #' 
 #' @export 
 #'
 plot.TS_fit <- function(x, ..., plot_type = "summary", 
-                        cols = set_TS_summary_plot_cols(),
-                        bin_width = 1, xlab = NULL, selection = "median"){
+                        cols = set_TS_summary_plot_cols(), bin_width = 1, 
+                        xlab = NULL, selection = "median", LDATS = FALSE){
   if (plot_type == "diagnostic"){
     TS_diagnostics_plot(x)
   } else if (plot_type == "summary"){
-    TS_summary_plot(x, cols, bin_width, xlab, selection)
+    TS_summary_plot(x, cols, bin_width, xlab, selection, LDATS)
   }
 }
 
@@ -281,16 +284,26 @@ set_TS_summary_plot_cols <- function(rho_cols = NULL, rho_option = "D",
 #' @param selection Indicator of the change points to use. Currently only
 #'   defined for "median" and "mode".
 #'
+#' @param LDATS \code{logical} indicating if the plot is part of a larger 
+#'   LDATS plot output.
+#'
 #' @export
 #'
-TS_summary_plot <- function(x, cols = set_TS_summary_plot_cols(), 
-                            bin_width, xlab, selection = "median"){
+TS_summary_plot <- function(x, cols = set_TS_summary_plot_cols(), bin_width,
+                            xlab, selection = "median", LDATS = FALSE){
 
-  par(mfrow = c(2, 1))
+  if(LDATS){
+    par(fig = c(0, 1, 0.25, 0.5), new = TRUE)
+  } else{
+    par(mfrow = c(2, 1))
+  } 
   rc <- cols$rho
   rho_cols <- set_rho_hist_colors(x$rhos, rc$cols, rc$option, rc$alpha)
   rho_hist(x, rho_cols, bin_width, xlab = NULL)
 
+  if(LDATS){
+    par(fig = c(0, 1, 0, 0.25), new = TRUE)
+  }
   gc <- cols$gamma
   gamma_cols <- set_gamma_colors(x, gc$cols, gc$option, gc$alpha)
   pred_gamma_TS_plot(x, selection, gamma_cols, xlab)

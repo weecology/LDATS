@@ -7,11 +7,12 @@
 \title{Plot the results of an LDATS LDA model}
 \usage{
 \method{plot}{LDA_VEM}(x, ..., xtime = NULL, xname = NULL,
-  cols = NULL, option = "E", alpha = 0.8)
+  cols = NULL, option = "E", alpha = 0.8, LDATS = FALSE)
 
-LDA_plot_top_panel(x, cols, option, alpha)
+LDA_plot_top_panel(x, cols, option, alpha, LDATS = FALSE)
 
-LDA_plot_bottom_panel(x, xtime, xname, cols, option, alpha)
+LDA_plot_bottom_panel(x, xtime, xname, cols, option, alpha,
+  LDATS = FALSE)
 }
 \arguments{
 \item{x}{Object of class \code{LDA_VEM}.}
@@ -38,6 +39,9 @@ options are available: "magma" (or "A"), "inferno" (or "B"), "plasma"
 \item{alpha}{Numeric value [0,1] that indicates the transparency of the 
 colors used. Supported only on some devices, see 
 \code{\link[grDevices]{rgb}}.}
+
+\item{LDATS}{\code{logical} indicating if the plot is part of a larger 
+LDATS plot output.}
 }
 \description{
 Create an LDATS LDA summary plot, with a top panel showing

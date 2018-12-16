@@ -6,7 +6,7 @@
 \usage{
 \method{plot}{LDA_TS}(x, ..., control = LDA_TS_controls_list(),
   cols = set_LDA_TS_plot_cols(), bin_width = 1, xlab = NULL,
-  selection = "median", interactive = TRUE)
+  selection = "median")
 }
 \arguments{
 \item{x}{A \code{LDA_TS} object of a full LDATS model fit by
@@ -45,9 +45,6 @@ no label printed, set \code{xlab = ""}.}
 \item{selection}{Indicator of the change points to use in the timeseries
 summary plot. Currently only defined for \code{"median"} and 
 \code{"mode"}.}
-
-\item{interactive}{\code{logical} indicator, should be set to \code{TRUE}
-currently (except for testing).}
 }
 \description{
 Generalization of the \code{\link[graphics]{plot}} function to

@@ -6,7 +6,7 @@
 \usage{
 \method{plot}{TS_fit}(x, ..., plot_type = "summary",
   cols = set_TS_summary_plot_cols(), bin_width = 1, xlab = NULL,
-  selection = "median")
+  selection = "median", LDATS = FALSE)
 }
 \arguments{
 \item{x}{A \code{TS_fit} object of a multinomial time series model fit by
@@ -34,6 +34,9 @@ the model).}
 \item{selection}{Indicator of the change points to use in the timeseries
 summary plot. Currently only defined for \code{"median"} and 
 \code{"mode"}.}
+
+\item{LDATS}{\code{logical} indicating if the plot is part of a larger 
+LDATS plot output.}
 }
 \description{
 Generalization of the \code{\link[graphics]{plot}} function to 

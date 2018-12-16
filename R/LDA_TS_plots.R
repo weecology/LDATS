@@ -41,9 +41,6 @@
 #'   \code{\link{set_TS_summary_plot_cols}}, \code{\link{set_gamma_colors}},  
 #'   and \code{\link{set_rho_hist_colors}}).
 #' 
-#' @param interactive \code{logical} indicator, should be set to \code{TRUE}
-#'   currently (except for testing).
-#' 
 #' @examples
 #' \dontrun{
 #'   data(rodents)
@@ -61,24 +58,17 @@
 #'
 plot.LDA_TS <- function(x, ..., control = LDA_TS_controls_list(),
                         cols = set_LDA_TS_plot_cols(),
-                        bin_width = 1, xlab = NULL, selection = "median",
-                        interactive = TRUE){
+                        bin_width = 1, xlab = NULL, selection = "median"){
   tname <- control$TS_control$timename
   tvar <- x$"Selected TS model"$data[ , tname]
   if(!is.null(xlab)){
     tname <- xlab
   }
-  if (interactive){
-    devAskNewPage(TRUE)
-  }
   plot.LDA_set(x$"Selected LDA model", xtime = tvar, xname = tname, 
-               cols = cols$LDA$cols, option = cols$LDA$option)
-  if (interactive){
-    devAskNewPage(TRUE)
-  }
+               cols = cols$LDA$cols, option = cols$LDA$option, LDATS = TRUE)
   plot.TS_fit(x$"Selected TS model", plot_type = "summary", cols = cols$TS,
-              bin_width = bin_width, xlab = xlab, selection = selection)
-  devAskNewPage(FALSE)
+              bin_width = bin_width, xlab = xlab, selection = selection,
+              LDATS = TRUE)
 }
 
 
