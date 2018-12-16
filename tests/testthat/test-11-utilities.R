@@ -50,7 +50,7 @@ test_that("check mirror_vcov", {
   formula <- mods$formula[[1]]
   nchangepoints <- mods$nchangepoints[1]
   data <- prep_TS_data(document_covariate_table, LDA_models, mods, 1)
-  rho_dist <- est_changepts(data, formula, nchangepoints, weights, control)
+  rho_dist <- est_changepoints(data, formula, nchangepoints, weights, control)
   mod <- multinom_TS(data, formula, changepoints = NULL, weights, control)
   expect_equal(isSymmetric(vcov(mod[[1]][[1]])), FALSE)
   expect_equal(isSymmetric(mirror_vcov(mod[[1]][[1]])), TRUE)

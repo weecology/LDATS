@@ -10,7 +10,7 @@ est_regressors(rho_dist, data, formula, weights, control)
 \arguments{
 \item{rho_dist}{List of saved data objects from the ptMCMC estimation of
 change point locations (unless \code{nchangepoints} is 0, then 
-\code{NULL}) returned from \code{\link{est_changepts}}.}
+\code{NULL}) returned from \code{\link{est_changepoints}}.}
 
 \item{data}{\code{data.frame} including [1] the time variable (indicated 
 in \code{control$timename}), [2] the predictor variables (required by
@@ -47,8 +47,8 @@ Matrix of draws (rows) from the marginal posteriors of the
 }
 \description{
 This function uses the marginal posterior distributions of
-  the change point locations (estimated by \code{\link{est_changepts}}) in
-  combination with the conditional (on the change point locations) 
+  the change point locations (estimated by \code{\link{est_changepoints}})
+  in combination with the conditional (on the change point locations) 
   posterior distributions of the regressors (estimated by
   \code{\link{multinom_TS}}) to estimate the marginal posterior 
   distribution of the regressors, unconditional on the change point 

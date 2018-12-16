@@ -20,8 +20,9 @@ nchangepoints <- mods$nchangepoints[1]
 data <- prep_TS_data(document_covariate_table, LDA_models, mods, 1)
 
 set.seed(1)
-rho_dist0 <- est_changepts(data, formula, nchangepoints = 0, weights, control)
-rho_dist <- est_changepts(data, formula, nchangepoints, weights, control)
+rho_dist0 <- est_changepoints(data, formula, nchangepoints = 0, weights, 
+                              control)
+rho_dist <- est_changepoints(data, formula, nchangepoints, weights, control)
 eta_dist <- est_regressors(rho_dist, data, formula, weights, control)
 
 

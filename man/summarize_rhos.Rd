@@ -12,7 +12,7 @@ measure_rho_vcov(rhos)
 \arguments{
 \item{rhos}{Matrix of change point locations (columns) across iterations of 
 the ptMCMC (rows) or \code{NULL} if no change points are in the model,
-as returned from \code{\link{est_changepts}}.}
+as returned from \code{\link{est_changepoints}}.}
 
 \item{control}{Class \code{TS_controls} list, holding control parameters
 for the Time Series model including the parallel tempering Markov Chain 
