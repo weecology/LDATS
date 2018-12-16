@@ -38,8 +38,8 @@ Must be conformable to \code{integer} values.}
 each value of \code{topics} in the LDAs. Must be conformable to 
 \code{integer} value.}
 
-\item{formulas}{Vector of \code{formula}(s) for the continuous 
-(non-changepoint) component of the time series models. Any 
+\item{formulas}{Vector of \code{\link[stats]{formula}}(s) for the 
+continuous (non-change point) component of the time series models. Any 
 predictor variable included in a formula must also be a column in the
 \code{document_covariate_table}. Each element (formula) in the vector
 is evaluated for each number of change points and each LDA model.}

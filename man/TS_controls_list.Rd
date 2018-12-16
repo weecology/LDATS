@@ -22,7 +22,7 @@ used in the time series.}
 \item{timename}{\code{character} element indicating the time variable
 used in the time series.}
 
-\item{lambda}{\code{numeric} weight decay term used to set the prior
+\item{lambda}{\code{numeric} "weight" decay term used to set the prior
 on the regressors within each chunk-level model. Defaults to 0, 
 corresponding to a fully vague prior.}
 
@@ -30,8 +30,8 @@ corresponding to a fully vague prior.}
 models. \code{measurer} is used to create a value for each model
 and \code{selector} operates on the values to choose the model.}
 
-\item{ntemps}{\code{integer} number of temperatures to use in the 
-ptMCMC (referenced as \eqn{H} in the math description).}
+\item{ntemps}{\code{integer} number of temperatures (chains) to use in the 
+ptMCMC algorithm.}
 
 \item{penultimate_temp}{Penultimate temperature in the ptMCMC sequence.}
 
@@ -43,11 +43,10 @@ focal chain (reference with temperature = 1) to the penultimate chain. 0
 exponentiating.}
 
 \item{nit}{\code{integer} number of iterations (steps) used in the ptMCMC
-algorithm (referenced as \eqn{G} in the math description).}
+algorithm.}
 
 \item{magnitude}{Average magnitude (defining a geometric distribution)
-for the proposed step size in the ptMCMC algorithm (referenced as 
-\eqn{\kappa} in the math description).}
+for the proposed step size in the ptMCMC algorithm.}
 
 \item{quiet}{\code{logical} indicator of whether the model should run 
 quietly (if \code{FALSE}, a progress bar and notifications are printed).}
@@ -59,12 +58,14 @@ beginning of the ptMCMC algorithm.}
 and the default value of 1 represents no thinning.}
 
 \item{summary_prob}{Probability used for summarizing the posterior 
-distributions (via the highest posterior density interval).}
+distributions (via the highest posterior density interval, see
+\code{\link[coda]{HPDinterval}}).}
 
 \item{seed}{Input to \code{set.seed} for replication purposes.}
 }
 \value{
-List of class \code{TS_controls}.
+List of class \code{TS_controls}, with named elements corresponding
+  to the arguments.
 }
 \description{
 This function provides a simple creation and definition of a

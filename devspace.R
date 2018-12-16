@@ -1,12 +1,4 @@
-# to do:
-#   tidy up documentation
-#   full vignette
-#
-# working through documentation right now
-#  scripts to do
-#   TS
-#   TS_on_LDA
-#   TS_plots
+
 
 devtools::load_all()
 data(rodents)

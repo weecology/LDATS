@@ -1,4 +1,5 @@
 context("Check LDA plot functions")
+tenv <- "cran"
 
 data(rodents)
 lda_data <- rodents$document_term_table
@@ -21,29 +22,45 @@ test_that("check output from set_LDA_plot_colors", {
 })
 
 test_that("check plotting of plot.LDA", {
-  plot(x = lda)
-  LDA_plot <- recordPlot()
-  vdiffr::expect_doppelganger("Base LDA plot", LDA_plot)  
-  plot(x = lda, xtime = xtime, xname = "New Moon")
-  LDA_plot_xtime <- recordPlot()
-  vdiffr::expect_doppelganger("LDA plot with time x", LDA_plot_xtime)  
+  if (tenv == "cran"){
+    expect_silent(plot(x = lda))
+    expect_silent(plot(x = lda, xtime = xtime, xname = "New Moon"))
+  } else{
+    plot(x = lda)
+    LDA_plot <- recordPlot()
+    vdiffr::expect_doppelganger("Base LDA plot", LDA_plot)  
+    plot(x = lda, xtime = xtime, xname = "New Moon")
+    LDA_plot_xtime <- recordPlot()
+    vdiffr::expect_doppelganger("LDA plot with time x", LDA_plot_xtime)  
+  }
 })
 
 test_that("check plotting of plot.LDA_set", {
   sellda <- select_LDA(ldas)
-  plot(x = sellda)
-  LDA_set_plot <- recordPlot()
-  vdiffr::expect_doppelganger("Base LDA_set selected plot", LDA_set_plot)  
+  if (tenv == "cran"){
+    expect_silent(plot(x = sellda))
+  } else{
+    plot(x = sellda)
+    LDA_set_plot <- recordPlot()
+    vdiffr::expect_doppelganger("Base LDA_set selected plot", LDA_set_plot)  
+  }
 })
 
 test_that("check LDA plot panels", {
   cols <- set_LDA_plot_colors(x = lda, cols = NULL, option = "E")
-  LDA_plot_top_panel(x = lda, cols)
-  LDA_top_plot <- recordPlot()
-  vdiffr::expect_doppelganger("Base LDA plot top panel", LDA_top_plot)  
-  LDA_plot_bottom_panel(x = lda, xtime = NULL, xname = NULL, cols)
-  LDA_bottom_plot <- recordPlot()
-  vdiffr::expect_doppelganger("Base LDA plot bottom panel", LDA_bottom_plot)  
+
+  if (tenv == "cran"){
+    expect_silent(LDA_plot_top_panel(x = lda, cols))
+    expect_silent(LDA_plot_bottom_panel(x = lda, xtime = NULL, 
+                                        xname = NULL, cols))
+  } else{
+    LDA_plot_top_panel(x = lda, cols)
+    LDA_top_plot <- recordPlot()
+    vdiffr::expect_doppelganger("Base LDA plot top panel", LDA_top_plot)  
+    LDA_plot_bottom_panel(x = lda, xtime = NULL, xname = NULL, cols)
+    LDA_bottom_plot <- recordPlot()
+    vdiffr::expect_doppelganger("Base LDA plot bottom panel", LDA_bottom_plot)  
+  }
 })
 
 

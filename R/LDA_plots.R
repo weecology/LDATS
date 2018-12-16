@@ -1,7 +1,7 @@
 #' @title Plot a set of LDATS LDA models
 #'
-#' @description Generalization of the plot function to work on a list of LDA 
-#'   topic models (class \code{LDA_set}). 
+#' @description Generalization of the \code{\link[graphics]{plot}} function to 
+#'   work on a list of LDA topic models (class \code{LDA_set}). 
 #' 
 #' @param x An \code{LDA_set} object of LDA topic models.
 #' 
@@ -57,6 +57,9 @@ plot.LDA_set <- function(x, ...){
 #'   colors used. Supported only on some devices, see 
 #'   \code{\link[grDevices]{rgb}}.
 #'
+#' @param LDATS \code{logical} indicating if the plot is part of a larger 
+#'   LDATS plot output. 
+#'
 #' @param ... Not used, retained for alignment with base function.
 #' 
 #' @examples 
@@ -71,10 +74,10 @@ plot.LDA_set <- function(x, ...){
 #' @export 
 #'
 plot.LDA_VEM <- function(x, ..., xtime = NULL, xname = NULL, cols = NULL, 
-                     option = "E", alpha = 0.8){
+                     option = "E", alpha = 0.8, LDATS = FALSE){
 
-  LDA_plot_top_panel(x, cols, option, alpha)
-  LDA_plot_bottom_panel(x, xtime, xname, cols, option, alpha)
+  LDA_plot_top_panel(x, cols, option, alpha, LDATS)
+  LDA_plot_bottom_panel(x, xtime, xname, cols, option, alpha, LDATS)
 }
 
 #' @rdname plot.LDA_VEM 
@@ -84,7 +87,7 @@ plot.LDA_VEM <- function(x, ..., xtime = NULL, xname = NULL, cols = NULL,
 #' 
 #' @export 
 #'
-LDA_plot_top_panel <- function(x, cols, option, alpha){
+LDA_plot_top_panel <- function(x, cols, option, alpha, LDATS = FALSE){
 
   cols <- set_LDA_plot_colors(x, cols, option, alpha)
   gamma <- x@gamma
@@ -112,7 +115,12 @@ LDA_plot_top_panel <- function(x, cols, option, alpha){
     }
   }
 
-  par(fig = c(0, 0.9, 0.7, 1), mar = c(1, 3.5, 1, 0))
+  if (LDATS){
+    par(fig = c(0, 0.9, 0.85, 1))
+  } else{
+    par(fig = c(0, 0.9, 0.7, 1))
+  }
+  par(mar = c(1, 3.5, 1, 0))
   max_y <- max(rect_mat[,4]) * 1.05
   plot(1, 1, type = "n", bty = "L", xlab = "", ylab = "", las = 1,
        ylim = c(0, max_y), xlim = c(1, nwords), xaxt = "n", cex.axis = 0.75)  
@@ -125,7 +133,12 @@ LDA_plot_top_panel <- function(x, cols, option, alpha){
   mtext(side = 1, at = seq(1, nwords, 1), text = x@terms, tck = 0, 
        cex = 0.5, line = 0)
 
-  par(fig = c(0.9, 1, 0.7, 1), new = TRUE, mar = c(0, 0, 0, 0))
+  if (LDATS){
+    par(fig = c(0.9, 1, 0.85, 1)) 
+  } else{ 
+    par(fig = c(0.9, 1, 0.7, 1)) 
+  }
+  par(mar = c(0, 0, 0, 0), new = TRUE)
   plot(1, 1, type = "n", bty = "n", xlab = "", ylab = "", 
        xaxt = "n", yaxt = "n", ylim = c(0, 1), xlim = c(0,1))
 
@@ -144,7 +157,8 @@ LDA_plot_top_panel <- function(x, cols, option, alpha){
 #' 
 #' @export 
 #'
-LDA_plot_bottom_panel <- function(x, xtime, xname, cols, option, alpha){
+LDA_plot_bottom_panel <- function(x, xtime, xname, cols, option, alpha, 
+                                  LDATS = FALSE){
 
   cols <- set_LDA_plot_colors(x, cols, option, alpha)
   gamma <- x@gamma
@@ -157,7 +171,12 @@ LDA_plot_bottom_panel <- function(x, xtime, xname, cols, option, alpha){
     xname <- "Document"
   }
 
-  par(fig = c(0, 1, 0, 0.7), new = TRUE, mar = c(3.25, 4, 1, 1))
+  if (LDATS){
+    par(fig = c(0, 1, 0.5, 0.85))
+  } else{
+    par(fig = c(0, 1, 0, 0.7))
+  }
+  par(new = TRUE, mar = c(3.25, 4, 1, 1))
   plot(xtime, gamma[ , 1], type = "n", bty = "L", xlab = "", ylab = "", 
        las = 1, ylim = c(0, 1))
   mtext(side = 1, xname, line = 2.2, cex = 1.25)

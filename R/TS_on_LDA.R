@@ -1,40 +1,49 @@
 #' @title Conduct a set of Time Series analyses on a set of LDA models
 #'
 #' @description This is a wrapper function that expands the main Time Series
-#'   analyses function (\code{\link{TS}}) across the LDA models and the Time
-#'   Series models, with respect to both continuous time formulas and the 
+#'   analyses function (\code{\link{TS}}) across the LDA models (estimated
+#'   using \code{\link[topicmodels]{LDA}} or \code{\link{LDA_set}} and the 
+#'   Time Series models, with respect to both continuous time formulas and the 
 #'   number of discrete changepoints. This function allows direct passage of
 #'   the control parameters for the parallel tempering MCMC through to the 
 #'   main Time Series function, \code{\link{TS}}, via the 
 #'   \code{ptMCMC_controls} argument.
 #'
-#' @param LDA_models List of LDA models (class \code{LDA_set}) or a singular
-#'   LDA model (class \code{LDA}).
+#' @param LDA_models List of LDA models (class \code{LDA_set}, produced by
+#'   \code{\link{LDA_set}}) or a singular LDA model (class \code{LDA},
+#'   produced by \code{\link[topicmodels]{LDA}}).
 #'
-#' @param document_covariate_table Document covariate table (rows:
-#'   documents (\code{M}), columns: time index and covariate options). 
-#'   Every model needs a covariate to describe the time value for each
-#'   document (in whatever relevant units), whose name in the table is input
-#'   via \code{timename}, that dictates the application of the changepoints. 
-#'   In addition, the table needs to include as columns all covariates named 
-#'   within the specific models described via the argument \code{formula} 
-#'   (if desired). Must be a conformable to a data table. 
+#' @param document_covariate_table Document covariate table (rows: documents,
+#'   columns: time index and covariate options). Every model needs a
+#'   covariate to describe the time value for each document (in whatever 
+#'   units and whose name in the table is input in \code{control$timename})
+#'   that dictates the application of the change points. 
+#'   In addition, all covariates named within specific models in
+#'   \code{formula} must be included. Must be a conformable to a data table,
+#'   as verified by \code{\link{check_document_covariate_table}}. 
 #'
-#' @param formulas Vector of \code{formula}(s) for the continuous change. Any 
+#' @param formulas Vector of \code{\link[stats]{formula}}(s) for the 
+#'   continuous (non-change point) component of the time series models. Any 
 #'   predictor variable included in a formula must also be a column in the
 #'   \code{document_covariate_table}. Each element (formula) in the vector
 #'   is evaluated for each number of change points and each LDA model.
 #'
-#' @param nchangepoints Vector of integers corresponding to the number of 
-#'   change points to include in the model. 0 is a valid input (corresponding
-#'   to no change points, so a singular time series model), and the current 
-#'   implementation can reasonably include up to 6 change points. Each element 
-#'   (number of change points) in the vector is used to dictate the
-#'   segementation of the data  for each continuous model and each LDA model.
+#' @param nchangepoints Vector of \code{integer}s corresponding to the number 
+#'   of change points to include in the time series models. 0 is a valid input 
+#'   corresponding to no change points (\emph{i.e.}, a singular time series
+#'   model), and the current implementation can reasonably include up to 6 
+#'   change points. Each element in the vector is the number of change points 
+#'   used to segement the data for each formula (entry in \code{formulas}) 
+#'   component of the TS model, for each selected LDA model.
 #'
 #' @param weights Optional class \code{numeric} vector of weights for each 
-#'   document. Corresponds to the vector \strong{\eqn{v}} in the math 
-#'   description.
+#'   document. Defaults to \code{NULL}, translating to an equal weight for
+#'   each document. When using \code{multinom_TS} in a standard LDATS 
+#'   analysis, it is advisable to weight the documents by their total size,
+#'   as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
+#'   proportions, which does not account for size differences among documents.
+#'   For most models, a scaling of the weights (so that the average is 1) is
+#'   most appropriate, and this is accomplished using \code{document_weights}.
 #'
 #' @param control Class \code{TS_controls} list, holding control parameters
 #'   for the Time Series model including the parallel tempering Markov Chain 
@@ -43,6 +52,18 @@
 #'
 #' @return Class \code{TS_on_LDA} list of results from \code{\link{TS}} 
 #'   applied for each model on each LDA model input.
+#'
+#' @examples
+#' \dontrun{
+#'   data(rodents)
+#'   document_term_table <- rodents$document_term_table
+#'   document_covariate_table <- rodents$document_covariate_table
+#'   LDAs <- LDA_set(document_term_table, topics = 2:3, nseeds = 2)
+#'   LDA_models <- select_LDA(LDAs)
+#'   weights <- document_weights(document_term_table)
+#'   mods <- TS_on_LDA(LDA_models, document_covariate_table,
+#'                     c(~ 1, ~ newmoon), nchangepoints = 0:1, weights)
+#' }
 #'
 #' @export
 #'
@@ -67,26 +88,29 @@ TS_on_LDA <- function(LDA_models, document_covariate_table, formulas = ~ 1,
 }
 
 #' @title Prepare the model-specific data to be used in the TS analysis
+#'   of LDA output
 #' 
-#' @description Append the estimated topic proportions (\eqn{\gamma}) values 
-#'   from a fitted LDA model to the document covariate table to create the
-#'   data structure needed for \code{TS}.
+#' @description Append the estimated topic proportions from a fitted LDA model 
+#'   to the document covariate table to create the data structure needed for 
+#'   \code{\link{TS}}.
 #'
-#' @param document_covariate_table Document covariate table (rows:
-#'   documents (\code{M}), columns: time index and covariate options). 
-#'   Every model needs a covariate to describe the time value for each
-#'   document (in whatever relevant units), whose name in the table is input
-#'   via \code{timename}, that dictates the application of the changepoints. 
-#'   In addition, the table needs to include as columns all covariates named 
-#'   within the specific models described via the argument \code{formula} 
-#'   (if desired). Must be a conformable to a data table. 
+#' @param document_covariate_table Document covariate table (rows: documents,
+#'   columns: time index and covariate options). Every model needs a
+#'   covariate to describe the time value for each document (in whatever 
+#'   units and whose name in the table is input in \code{control$timename})
+#'   that dictates the application of the change points. 
+#'   In addition, all covariates named within specific models in
+#'   \code{formula} must be included. Must be a conformable to a data table,
+#'   as verified by \code{\link{check_document_covariate_table}}. 
 #'
-#' @param LDA_models List of LDA models (class \code{LDA_set}) or a singular
-#'   LDA model (class \code{LDA}).
+#' @param LDA_models List of LDA models (class \code{LDA_set}, produced by
+#'   \code{\link{LDA_set}}) or a singular LDA model (class \code{LDA},
+#'   produced by \code{\link[topicmodels]{LDA}}).
 #'
-#' @param mods The \code{data.table} created by \code{expand_TS} the contains
-#'   each of the models (defined by the LDA model to use and the formula and
-#'   number of changepoints for the TS model). Indexded here by \code{i}.
+#' @param mods The \code{data.table} created by \code{\link{expand_TS}} that 
+#'   contains each of the models (defined by the LDA model to use and the and
+#'   formula number of changepoints for the TS model). Indexded here by 
+#'   \code{i}.
 #'
 #' @param i \code{integer} index referencing the row in \code{mods} to use.
 #'
@@ -98,14 +122,11 @@ TS_on_LDA <- function(LDA_models, document_covariate_table, formulas = ~ 1,
 #' @export
 #'
 prep_TS_data <- function(document_covariate_table, LDA_models, mods, i){
-  check_document_covariate_table(document_covariate_table)
+  check_document_covariate_table(document_covariate_table, LDA_models)
   check_LDA_models(LDA_models)
   if(is(LDA_models, "LDA")){
     LDA_models <- c(LDA_models)
     class(LDA_models) <- c("LDA_set", "list")
-  }
-  if(nrow(document_covariate_table) != nrow(LDA_models[[mods$LDA[i]]]@gamma)){
-    stop("document covariate table and LDA model are not conformable")
   }
   data_i <- document_covariate_table
   data_i$gamma <- LDA_models[[mods$LDA[i]]]@gamma
@@ -115,17 +136,22 @@ prep_TS_data <- function(document_covariate_table, LDA_models, mods, i){
 #' @title Select the best Time Series model
 #'
 #' @description Select the best model of interest from an
-#'   \code{TS_on_LDA} object, based on a set of user-provided functions. The
-#'   functions default to choosing the model with the lowest AIC value.
+#'   \code{TS_on_LDA} object generated by \code{\link{TS_on_LDA}}, based on
+#'   a set of user-provided functions. The functions default to choosing the 
+#'   model with the lowest AIC value. \cr \cr
+#'   Presently, the set of functions should result in a singular selected
+#'   model. If multiple models are chosen via the selection, only the first
+#'   is returned.
 #'
 #' @param TS_models An object of class \code{TS_on_LDA} produced by
-#'   \code{TS_on_LDA}.
+#'   \code{\link{TS_on_LDA}}.
 #'
-#' @param control Class \code{LDA_controls} list including (named) elements
-#'   corresponding to the \code{measurer} and \code{evaluator} functions.
+#' @param control Class \code{TS_controls} list including (named) elements
+#'   corresponding to the \code{measurer} and \code{evaluator} functions, 
+#'   as generated by \code{\link{TS_controls_list}}.
 #'
 #' @return A reduced version of \code{TS_models} that only includes the 
-#'   selected TS model. The returned object is still an object of
+#'   selected TS model. The returned object is a single TS model object of
 #'   class \code{TS_fit}.
 #'
 #' @export
@@ -141,6 +167,10 @@ select_TS <- function(TS_models, control = TS_controls_list()){
                   matrix(ncol = 1)
   TS_selected <- apply(TS_measured, 2, selector) 
   which_selected <- which(TS_measured %in% TS_selected)
+  if (length(which_selected) > 1){
+    warning("Selection results in multiple models, returning first")
+    which_selected <- which_selected[1]
+  }
   out <- TS_models[[which_selected]]
   class(out)  <- c("TS_fit", "list") 
   out
@@ -155,8 +185,9 @@ select_TS <- function(TS_models, control = TS_controls_list()){
 #' @param TSmods list of results from \code{\link{TS}} applied for each model 
 #'   on each LDA model input.
 #'
-#' @param LDA_models List of LDA models (class \code{LDA_set}) or a singular
-#'   LDA model (class \code{LDA}).
+#' @param LDA_models List of LDA models (class \code{LDA_set}, produced by
+#'   \code{\link{LDA_set}}) or a singular LDA model (class \code{LDA},
+#'   produced by \code{\link[topicmodels]{LDA}}).
 #'
 #' @param models \code{data.frame} object returned from 
 #'   \code{\link{expand_TS}} that contains the combinations of LDA models, 
@@ -189,7 +220,7 @@ package_TS_on_LDA <- function(TSmods, LDA_models, models){
 #' @title Print a set of Time Series models fit to LDAs
 #'
 #' @description Convenience function to print only the names of a 
-#'   \code{TS_on_LDA}-class object.
+#'   \code{TS_on_LDA}-class object generated by \code{\link{TS_on_LDA}}.
 #'
 #' @param x Class \code{TS_on_LDA} object to be printed.
 #'
@@ -201,8 +232,8 @@ print.TS_on_LDA <- function(x, ...){
   print(names(x))
 }
 
-#' @title Print the message to the console about which combination of TS
-#'   and LDA is being run
+#' @title Print the message to the console about which combination of the 
+#'   Time Series and LDA models is being run
 #'
 #' @description If desired, print a message at the beginning of every model
 #'   combination stating the TS model and the LDA model being evaluated.
@@ -213,8 +244,9 @@ print.TS_on_LDA <- function(x, ...){
 #'
 #' @param i \code{integer} index of the row to use from \code{models}.
 #'
-#' @param LDA_models List of LDA models (class \code{LDA_set}) or a singular
-#'   LDA model (class \code{LDA}).
+#' @param LDA_models List of LDA models (class \code{LDA_set}, produced by
+#'   \code{\link{LDA_set}}) or a singular LDA model (class \code{LDA},
+#'   produced by \code{\link[topicmodels]{LDA}}).
 #'
 #' @param control Class \code{TS_controls} list, holding control parameters
 #'   for the Time Series model including the parallel tempering Markov Chain 
@@ -237,21 +269,34 @@ print_model_run_message <- function(models, i, LDA_models, control){
   cat(msg)
 }
 
-#' @title Expand the TS models needed across the factorial combination of
-#'   LDA models, continuous formulas, and number of change points
+#' @title Expand the TS models across the factorial combination of
+#'   LDA models, formulas, and number of change points
 #' 
 #' @description Expand the completely crossed combination of model inputs: 
-#'   LDA model results, continuous formulas
+#'   LDA model results, formulas, and number of change points. 
 #'   
-#' @param LDA_models \code{LDA_set}-class object of LDA models.
-#' 
-#' @param formulas Vector of the continuous formulas. 
+#' @param LDA_models List of LDA models (class \code{LDA_set}, produced by
+#'   \code{\link{LDA_set}}) or a singular LDA model (class \code{LDA},
+#'   produced by \code{\link[topicmodels]{LDA}}).
 #'
-#' @param nchangepoints Vector of the number of changepoints.
+#' @param formulas Vector of \code{\link[stats]{formula}}(s) for the 
+#'   continuous (non-change point) component of the time series models. Any 
+#'   predictor variable included in a formula must also be a column in the
+#'   \code{document_covariate_table}. Each element (formula) in the vector
+#'   is evaluated for each number of change points and each LDA model.
 #'
-#' @return Expanded table of the three values: [1] the LDA model (indicated
-#'   as a numeric element reference to the \code{LDA_set} object), [2] the 
-#'   continuous formula, and [3] the number of changepoints.
+#' @param nchangepoints Vector of \code{integer}s corresponding to the number 
+#'   of change points to include in the time series models. 0 is a valid input 
+#'   corresponding to no change points (\emph{i.e.}, a singular time series
+#'   model), and the current implementation can reasonably include up to 6 
+#'   change points. Each element in the vector is the number of change points 
+#'   used to segement the data for each formula (entry in \code{formulas}) 
+#'   component of the TS model, for each selected LDA model.
+#'
+#' @return Expanded \code{data.frame} table of the three values (columns) for
+#'   each unique model run (rows): [1] the LDA model (indicated
+#'   as a numeric element reference to the \code{LDA_models} object), [2] the 
+#'   regressor formula, and [3] the number of changepoints.
 #' 
 #' @export
 #'
@@ -262,14 +307,14 @@ expand_TS <- function(LDA_models, formulas, nchangepoints){
     LDA_models <- c(LDA_models)
     class(LDA_models) <- c("LDA_set", "list")
   }
-  if(!is(formulas, "vector")){
+  if(!is(formulas, "list")){
     if(is(formulas, "formula")){
       formulas <- c(formulas)
     } else{
       stop("formulas does not contain formula(s)")
     }
-  } else if (!is(formulas[[1]], "formula")){
-      stop("formulas does not contain formula(s)")
+  } else if (!all(sapply(formulas, is, "formula"))){
+      stop("formulas does not contain all formula(s)")
   }
   out <- formulas
   for (i in 1:length(formulas)){
@@ -304,8 +349,8 @@ check_nchangepoints <- function(nchangepoints){
 
 #' @title Check that weights vector is proper
 #' 
-#' @description Check that the vector of document weights is numeric
-#'   and inform the user if the average weight isn't 1. 
+#' @description Check that the vector of document weights is numeric and 
+#'   positive and inform the user if the average weight isn't 1. 
 #'   
 #' @param weights Vector of the document weights to evaluate.
 #' 
@@ -316,6 +361,9 @@ check_weights <- function(weights){
     if (!is.numeric(weights)){
       stop("weights vector must be numeric")
     }
+    if (any(weights <= 0)){
+      stop("weights must be positive")
+    }
     if (round(mean(weights)) != 1){
       warning("weights should have a mean of 1, fit may be unstable")
     }
@@ -324,8 +372,10 @@ check_weights <- function(weights){
 
 #' @title Check that LDA model input is proper
 #' 
-#' @description Check that the \code{LDA_models} input is, in fact, LDA 
-#'   models or a singular LDA model. 
+#' @description Check that the \code{LDA_models} input is either a set of 
+#'   LDA models (class \code{LDA_set}, produced by
+#'   \code{\link{LDA_set}}) or a singular LDA model (class \code{LDA},
+#'   produced by \code{\link[topicmodels]{LDA}}). 
 #'   
 #' @param LDA_models List of LDA models or singular LDA model to evaluate.
 #' 
@@ -361,16 +411,22 @@ check_document_covariate_table <- function(document_covariate_table,
                                            document_term_table = NULL){
   dct_df <- tryCatch(data.frame(document_covariate_table),
                      warning = function(x){NA}, error = function(x){NA})
+  if(is(LDA_models, "LDA")){
+    LDA_models <- c(LDA_models)
+    class(LDA_models) <- c("LDA_set", "list")
+  }
   if (length(dct_df) == 1 && is.na(dct_df)){
     stop("document_covariate_table is not conformable to a data frame")
   }
   if (!is.null(LDA_models)){
-    if (nrow(document_covariate_table) != nrow(LDA_models[[1]]@gamma)){
+    if (nrow(data.frame(document_covariate_table)) != 
+        nrow(LDA_models[[1]]@gamma)){
       stop("number of documents in covariate table is not equal to number of 
         documents observed")
     }
   } else if (!is.null(document_term_table)){
-    if (nrow(document_covariate_table) != nrow(document_term_table)){
+    if (nrow(data.frame(document_covariate_table)) != 
+        nrow(data.frame(document_term_table))){
       stop("number of documents in covariate table is not equal to number of 
         documents observed")
     }
@@ -410,8 +466,8 @@ check_timename <- function(document_covariate_table, timename){
 #'   variable
 #' 
 #' @description Check that the vector of formulas is actually formatted
-#'   as a vector formula objects and that the predictor variables are all 
-#'   included in the document covariate table. 
+#'   as a vector of \code{\link[stats]{formula}} objects and that the 
+#'   predictor variables are all included in the document covariate table. 
 #'   
 #' @param formulas Vector of the formulas to evaluate.
 #'
@@ -428,16 +484,14 @@ check_formulas <- function(formulas, document_covariate_table, control){
   check_control(control, "TS_controls")
   response <- control$response
   dct <- document_covariate_table
-  if(!is(formulas, "vector")){
+  if(!is(formulas, "list")){
     if(is(formulas, "formula")){
       formulas <- c(formulas)
     } else{
-      stop("formulas does not contain a formula")
+      stop("formulas does not contain formula(s)")
     }
-  } else{ 
-    if (!all(unlist(lapply(formulas, is, "formula")))){
-      stop("formulas is not a vector of formulas")
-    }
+  } else if (!all(sapply(formulas, is, "formula"))){
+      stop("formulas does not contain all formula(s)")
   }
   resp <- unlist(lapply(lapply(formulas, terms), attr, "response"))
   pred <- unlist(lapply(lapply(formulas, terms), attr, "term.labels"))
@@ -452,42 +506,10 @@ check_formulas <- function(formulas, document_covariate_table, control){
 
 }
 
-#' @title Check all of the inputs to TS_on_LDA
+#' @rdname TS_on_LDA
 #'
-#' @description Check the inputs to (\code{\link{TS_on_LDA}}).
-#'
-#' @param LDA_models List of LDA models (class \code{LDA_set}) or a singular
-#'   LDA model (class \code{LDA}).
-#'
-#' @param document_covariate_table Document covariate table (rows:
-#'   documents (\code{M}), columns: time index and covariate options). 
-#'   Every model needs a covariate to describe the time value for each
-#'   document (in whatever relevant units), whose name in the table is input
-#'   via \code{timename}, that dictates the application of the changepoints. 
-#'   In addition, the table needs to include as columns all covariates named 
-#'   within the specific models described via the argument \code{formula} 
-#'   (if desired). Must be a conformable to a data table. 
-#'
-#' @param formulas Vector of \code{formula}(s) for the continuous change. Any 
-#'   predictor variable included in a formula must also be a column in the
-#'   \code{document_covariate_table}. Each element (formula) in the vector
-#'   is evaluated for each number of change points and each LDA model.
-#'
-#' @param nchangepoints Vector of integers corresponding to the number of 
-#'   change points to include in the model. 0 is a valid input (corresponding
-#'   to no change points, so a singular time series model), and the current 
-#'   implementation can reasonably include up to 6 change points. Each element 
-#'   (number of change points) in the vector is used to dictate the
-#'   segementation of the data  for each continuous model and each LDA model.
-#'
-#' @param weights Optional class \code{numeric} vector of weights for each 
-#'   document. Corresponds to the vector \strong{\eqn{v}} in the math 
-#'   description.
-#'
-#' @param control Class \code{TS_controls} list, holding control parameters
-#'   for the Time Series model including the parallel tempering Markov Chain 
-#'   Monte Carlo (ptMCMC) controls, generated by 
-#'   \code{\link{TS_controls_list}}.
+#' @description \code{check_TS_on_LDA_inputs} checks that the inputs to 
+#'   \code{TS_on_LDA} are of proper classes for a full analysis.
 #'
 #' @export
 #'

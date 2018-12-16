@@ -110,8 +110,8 @@ test_that("check est_regressors", {
   expect_is(etas, "matrix")
   expect_equal(colnames(etas), c("1_2:(Intercept)", "2_2:(Intercept)"))
   expect_equal(dim(etas), c(1000, 2))
-  expect_equal(round(sum(etas[ , 1], 1)), 2133)
-  expect_equal(round(sum(etas2[ , 1], 1)), 288)
+  expect_equal(round(sum(etas[ , 1]), 1), 2132.2)
+  expect_equal(round(sum(etas2[1:10 , 1]), 1), 20.9)
   expect_error(est_regressors("ok", data, formula, weights, control))
   expect_error(est_regressors(rhos, data, formula, weights, "ok"))
   expect_error(est_regressors(rhos, data, formula, "ok", control))
@@ -125,7 +125,7 @@ test_that("check est_regressors", {
 test_that("check summarize_TS", {
   summ <- summarize_TS(data, formula, weights, control, rho_dist, eta_dist)
   expect_is(summ, "TS_fit")
-  expect_equal(length(summ), 15)
+  expect_equal(length(summ), 16)
   expect_equal(names(summ)[3], "nchangepoints")
   expect_error(
     summarize_TS("ok", formula, weights, control, rho_dist, eta_dist))
@@ -138,7 +138,7 @@ test_that("check summarize_TS", {
 
 test_that("check TS", {
   expect_is(TSmod, "TS_fit")
-  expect_equal(length(TSmod), 15)
+  expect_equal(length(TSmod), 16)
   expect_equal(TSmod$nchangepoints, 1)
   expect_error(TS(data, formula, nchangepoints = 0, weights, "ok"))
   expect_error(TS(data, formula, nchangepoints = 0, "ok", control))

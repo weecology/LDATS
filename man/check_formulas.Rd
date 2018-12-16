@@ -18,6 +18,6 @@ for the Time Series model.}
 }
 \description{
 Check that the vector of formulas is actually formatted
-  as a vector formula objects and that the predictor variables are all 
-  included in the document covariate table.
+  as a vector of \code{\link[stats]{formula}} objects and that the 
+  predictor variables are all included in the document covariate table.
 }

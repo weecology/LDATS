@@ -9,26 +9,37 @@ set_TS_summary_plot_cols(rho_cols = NULL, rho_option = "D",
   gamma_alpha = 0.8)
 }
 \arguments{
-\item{rho_cols}{Colors to be used to plot the histograms of changepoints.}
+\item{rho_cols}{Colors to be used to plot the histograms of change points.
+Any valid color values (\emph{e.g.}, see \code{\link[grDevices]{colors}},
+\code{\link[grDevices]{rgb}}) can be input as with a standard plot. 
+The default (\code{rho_cols = NULL}) triggers use of 
+\code{\link[viridis]{viridis}} color options (see \code{rho_option}).}
 
-\item{rho_option}{A character string indicating the colormap option to use
-if `rho_cols == NULL`. Four options are available: "magma" (or "A"), 
-"inferno" (or "B"), "plasma" (or "C"), "viridis" (or "D", the default
-option) and "cividis" (or "E").}
+\item{rho_option}{A \code{character} string indicating the color option
+from \code{\link[viridis]{viridis}} to use if `rho_cols == NULL`. Four 
+options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
+(or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").}
 
 \item{rho_alpha}{Numeric value [0,1] that indicates the transparency of the 
-colors used. Supported only on some devices, see \code{rgb}.}
+colors used. Supported only on some devices, see 
+\code{\link[grDevices]{rgb}}.}
 
-\item{gamma_cols}{Colors to be used to plot the time series of fitted topic 
-proportions (gammas).}
+\item{gamma_cols}{Colors to be used to plot the LDA topic proportions,
+time series of observed topic proportions, and time series of fitted 
+topic proportions. Any valid color values (\emph{e.g.}, see 
+\code{\link[grDevices]{colors}}, \code{\link[grDevices]{rgb}}) can be 
+input as with a standard plot. The default (\code{gamma_cols = NULL})
+triggers use of \code{\link[viridis]{viridis}} color options (see 
+\code{gamma_option}).}
 
-\item{gamma_option}{A character string indicating the colormap option to 
-use if `gamma_cols == NULL`. Four options are available: "magma" 
-(or "A"), "inferno" (or "B", the default option), "plasma" (or "C"), 
-"viridis" (or "D") and "cividis" (or "E")}
+\item{gamma_option}{A \code{character} string indicating the color option
+from \code{\link[viridis]{viridis}} to use if gamma_cols == NULL`. Four 
+options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
+(or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").}
 
 \item{gamma_alpha}{Numeric value [0,1] that indicates the transparency of 
-the colors used. Supported only on some devices, see \code{rgb}.}
+the colors used. Supported only on some devices, see 
+\code{\link[grDevices]{rgb}}.}
 }
 \value{
 \code{list} of elements used to define the colors for the two
@@ -40,6 +51,6 @@ the colors used. Supported only on some devices, see \code{rgb}.}
 A default list generator function that produces the options
   for the colors controlling the panels of the TS summary plots, so needed
   because the panels should be in different color schemes. See 
-  \code{set_gamma_colors} and \code{set_rho_hist_colors} for
+  \code{\link{set_gamma_colors}} and \code{\link{set_rho_hist_colors}} for
   specific details on usage.
 }

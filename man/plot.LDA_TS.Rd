@@ -6,11 +6,11 @@
 \usage{
 \method{plot}{LDA_TS}(x, ..., control = LDA_TS_controls_list(),
   cols = set_LDA_TS_plot_cols(), bin_width = 1, xlab = NULL,
-  selection = "median", interactive = TRUE)
+  selection = "median")
 }
 \arguments{
 \item{x}{A \code{LDA_TS} object of a full LDATS model fit by
-\code{LDA_TS}.}
+\code{\link{LDA_TS}}.}
 
 \item{...}{Additional arguments to be passed to subfunctions. Not currently
 used, just retained for alignment with \code{plot}.}
@@ -42,16 +42,14 @@ to \code{NULL}, which results in usage of the \code{timename} element
 of the control list (held in\code{control$TS_control$timename}). To have
 no label printed, set \code{xlab = ""}.}
 
-\item{selection}{Indicator of the changepoints to use in the timeseries
+\item{selection}{Indicator of the change points to use in the timeseries
 summary plot. Currently only defined for \code{"median"} and 
 \code{"mode"}.}
-
-\item{interactive}{\code{logical} indicator, should be set to \code{TRUE}
-currently (except for testing).}
 }
 \description{
-Generalization of the \code{plot} function to work on fitted
-  LDA_TS model (class \code{LDA_TS}, result of \code{\link{LDA_TS}}).
+Generalization of the \code{\link[graphics]{plot}} function to
+  work on fitted LDA_TS model objects (class \code{LDA_TS}) returned by 
+  \code{\link{LDA_TS}}).
 }
 \examples{
 \dontrun{

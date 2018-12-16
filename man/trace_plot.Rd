@@ -15,5 +15,6 @@ indexed to the iteration by the order of the vector.}
 }
 \description{
 Produce a trace plot for the parameter of interest (rho or 
-  eta). Horizontal line added to show the median of the posterior.
+  eta) as part of \code{\link{TS_diagnostics_plot}}. A horizontal line 
+  is added to show the median of the posterior.
 }

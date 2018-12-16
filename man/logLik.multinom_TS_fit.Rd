@@ -19,6 +19,7 @@ Log likelihood of the model, as class \code{logLik}, with
 \description{
 Convenience function to simply extract the \code{logLik}
   element (and \code{df} and \code{nobs}) from a \code{multinom_TS_fit}
-  object. Extends \code{\link[stats]{logLik}} from 
-  \code{\link[nnet]{multinom}} to \code{multinom_TS_fit} objects.
+  object fit by \code{\link{multinom_TS}}. Extends 
+  \code{\link[stats]{logLik}} from \code{\link[nnet]{multinom}} to 
+  \code{multinom_TS_fit} objects.
 }

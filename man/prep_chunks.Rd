@@ -26,8 +26,8 @@ Data frame of \code{start} and \code{end} times for each chunk
 }
 \description{
 Creates the table containing the start and end times for each
-  chunk within a time series, based on the changepoints (used to break up
+  chunk within a time series, based on the change points (used to break up
   the time series) and the range of the time series. If there are no 
-  changepoints (i.e. \code{changepoints} is \code{NULL}, there is still a
+  change points (i.e. \code{changepoints} is \code{NULL}, there is still a
   single chunk defined by the start and end of the time series.
 }

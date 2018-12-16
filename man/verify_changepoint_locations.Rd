@@ -16,7 +16,7 @@ points. Must be conformable to \code{integer} values.}
 
 \item{timename}{\code{character} name of the column in the 
 \code{document_covariate_table} that contains the time index to use
-for assignment of the changepoints.}
+for assignment of the change points.}
 }
 \value{
 Logical indicator of the check passing \code{TRUE} or failing
@@ -24,5 +24,5 @@ Logical indicator of the check passing \code{TRUE} or failing
 }
 \description{
 Verify that a time series can be broken into a set 
-  of chunks based on input changepoints.
+  of chunks based on input change points.
 }

@@ -1,10 +1,11 @@
 #' @title Plot the key results from a full LDATS analysis
 #'
-#' @description Generalization of the \code{plot} function to work on fitted
-#'   LDA_TS model (class \code{LDA_TS}, result of \code{\link{LDA_TS}}). 
+#' @description Generalization of the \code{\link[graphics]{plot}} function to
+#'   work on fitted LDA_TS model objects (class \code{LDA_TS}) returned by 
+#'   \code{\link{LDA_TS}}). 
 #' 
 #' @param x A \code{LDA_TS} object of a full LDATS model fit by
-#'   \code{LDA_TS}.
+#'   \code{\link{LDA_TS}}.
 #' 
 #' @param ... Additional arguments to be passed to subfunctions. Not currently
 #'   used, just retained for alignment with \code{plot}.
@@ -24,7 +25,7 @@
 #'   of the control list (held in\code{control$TS_control$timename}). To have
 #'   no label printed, set \code{xlab = ""}.
 #'
-#' @param selection Indicator of the changepoints to use in the timeseries
+#' @param selection Indicator of the change points to use in the timeseries
 #'   summary plot. Currently only defined for \code{"median"} and 
 #'   \code{"mode"}.
 #'
@@ -39,9 +40,6 @@
 #'   named \code{cols}, \code{option}, and \code{alpha} (see 
 #'   \code{\link{set_TS_summary_plot_cols}}, \code{\link{set_gamma_colors}},  
 #'   and \code{\link{set_rho_hist_colors}}).
-#' 
-#' @param interactive \code{logical} indicator, should be set to \code{TRUE}
-#'   currently (except for testing).
 #' 
 #' @examples
 #' \dontrun{
@@ -60,24 +58,17 @@
 #'
 plot.LDA_TS <- function(x, ..., control = LDA_TS_controls_list(),
                         cols = set_LDA_TS_plot_cols(),
-                        bin_width = 1, xlab = NULL, selection = "median",
-                        interactive = TRUE){
+                        bin_width = 1, xlab = NULL, selection = "median"){
   tname <- control$TS_control$timename
   tvar <- x$"Selected TS model"$data[ , tname]
   if(!is.null(xlab)){
     tname <- xlab
   }
-  if (interactive){
-    devAskNewPage(TRUE)
-  }
   plot.LDA_set(x$"Selected LDA model", xtime = tvar, xname = tname, 
-               cols = cols$LDA$cols, option = cols$LDA$option)
-  if (interactive){
-    devAskNewPage(TRUE)
-  }
+               cols = cols$LDA$cols, option = cols$LDA$option, LDATS = TRUE)
   plot.TS_fit(x$"Selected TS model", plot_type = "summary", cols = cols$TS,
-              bin_width = bin_width, xlab = xlab, selection = selection)
-  devAskNewPage(FALSE)
+              bin_width = bin_width, xlab = xlab, selection = selection,
+              LDATS = TRUE)
 }
 
 
@@ -86,13 +77,13 @@ plot.LDA_TS <- function(x, ..., control = LDA_TS_controls_list(),
 #'
 #' @description A default list generator function that produces the options
 #'   for the colors controlling the panels of the LDATS summary plots, needed
-#'   because the changepoint histogram panel should be in a different color 
+#'   because the change point histogram panel should be in a different color 
 #'   scheme than the LDA and fitted time series model panels, which should be
 #'   in a matching color scheme. See \code{\link{set_LDA_plot_colors}}, 
 #'   \code{\link{set_TS_summary_plot_cols}}, \code{\link{set_gamma_colors}},  
 #'   and \code{\link{set_rho_hist_colors}} for specific details on usage.
 #'
-#' @param rho_cols Colors to be used to plot the histograms of changepoints.
+#' @param rho_cols Colors to be used to plot the histograms of change points.
 #'   Any valid color values (\emph{e.g.}, see \code{\link[grDevices]{colors}},
 #'   \code{\link[grDevices]{rgb}}) can be input as with a standard plot. 
 #'   The default (\code{rho_cols = NULL}) triggers use of 

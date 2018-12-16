@@ -11,8 +11,8 @@ multinom_TS_chunk(data, formula, chunk, weights = NULL,
 \item{data}{Class \code{data.frame} object including the predictor and 
 response variables.}
 
-\item{formula}{Formula as a class \code{formula} or class \code{character} 
-object describing the chunk.}
+\item{formula}{Formula as a \code{\link[stats]{formula}} or 
+\code{\link[base]{character}} object describing the chunk.}
 
 \item{chunk}{Length-2 vector of times: [1] \code{start}, the start time 
 for the chunk and [2] \code{end}, the end time for the chunk.}

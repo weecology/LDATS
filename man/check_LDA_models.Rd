@@ -10,6 +10,8 @@ check_LDA_models(LDA_models)
 \item{LDA_models}{List of LDA models or singular LDA model to evaluate.}
 }
 \description{
-Check that the \code{LDA_models} input is, in fact, LDA 
-  models or a singular LDA model.
+Check that the \code{LDA_models} input is either a set of 
+  LDA models (class \code{LDA_set}, produced by
+  \code{\link{LDA_set}}) or a singular LDA model (class \code{LDA},
+  produced by \code{\link[topicmodels]{LDA}}).
 }

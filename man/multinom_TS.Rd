@@ -21,8 +21,8 @@ formatted as a \code{data.frame} object named as indicated by the
 \code{response} entry in the \code{control} list, such as \code{gamma} 
 for a standard TS analysis on LDA output. See \code{Examples}.}
 
-\item{formula}{\code{formula} defining the regression relationship between
-the changepoints, see \code{\link[stats]{formula}}. Any 
+\item{formula}{\code{\link[stats]{formula}} defining the regression between
+relationship the change points. Any 
 predictor variable included must also be a column in 
 \code{data} and any (multinomial) response variable must be a set of
 columns in \code{data}, as verified by \code{\link{check_formula}}.}
