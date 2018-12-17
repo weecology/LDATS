@@ -19,7 +19,7 @@ nchangepoints <- mods$nchangepoints[1]
 data <- prep_TS_data(document_covariate_table, LDA_models, mods, 1)
 TSmod <- TS(data, formula, nchangepoints, weights, control)
 
-rho_dist <- est_changepts(data, formula, nchangepoints, weights, control)
+rho_dist <- est_changepoints(data, formula, nchangepoints, weights, control)
 eta_dist <- est_regressors(rho_dist, data, formula, weights, control)
 set.seed(1)
 test_that("check measure_eta_vcov", {
@@ -79,9 +79,9 @@ test_that("check summarize_rhos", {
 
 
 
-test_that("check est_changepts", {
+test_that("check est_changepoints", {
   set.seed(1)
-  rhos <- est_changepts(data, formula, nchangepoints, weights, control)
+  rhos <- est_changepoints(data, formula, nchangepoints, weights, control)
   expect_is(rhos, "list")
   expect_equal(length(rhos), 5)
   expect_equal(names(rhos), 
@@ -89,20 +89,20 @@ test_that("check est_changepts", {
   expect_equal(dim(rhos[[1]]), c(1, 6, 1000))
   expect_equal(round(sum(rhos$lls), 1), -1253579.6)
 
-  expect_error(est_changepts(data, formula, nchangepoints, weights, "ok"))
-  expect_error(est_changepts(data, formula, nchangepoints, "ok", control))
-  expect_error(est_changepts(data, formula, "ok", weights, control))
-  expect_error(est_changepts(data, "ok", nchangepoints, weights, control))
-  expect_error(est_changepts("ok", formula, nchangepoints, weights, 
+  expect_error(est_changepoints(data, formula, nchangepoints, weights, "ok"))
+  expect_error(est_changepoints(data, formula, nchangepoints, "ok", control))
+  expect_error(est_changepoints(data, formula, "ok", weights, control))
+  expect_error(est_changepoints(data, "ok", nchangepoints, weights, control))
+  expect_error(est_changepoints("ok", formula, nchangepoints, weights, 
                                control))
 })
 
 test_that("check est_regressors", {
   set.seed(1)
-  rhos <- est_changepts(data, formula, nchangepoints, weights, control)
+  rhos <- est_changepoints(data, formula, nchangepoints, weights, control)
   etas <- est_regressors(rhos, data, formula, weights, control)
   set.seed(1)
-  rhos2 <- est_changepts(data, formula, nchangepoints = 2, weights, 
+  rhos2 <- est_changepoints(data, formula, nchangepoints = 2, weights, 
                          TS_controls_list(nit = 1e2, seed = 1))
   etas2 <- est_regressors(rhos2, data, formula, weights, 
                           TS_controls_list(nit = 1e2, seed = 1))

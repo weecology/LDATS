@@ -60,7 +60,7 @@
 #'                \link[=logLik.multinom_TS_fit]{logLik} values for the
 #'                 full time series fit by \code{\link{multinom_TS}}.}
 #'     \item{rhos}{Iteration-by-iteration change point estimates from
-#'                 \code{\link{est_changepts}}.}
+#'                 \code{\link{est_changepoints}}.}
 #'     \item{etas}{Iteration-by-iteration marginal regressor estimates from
 #'                 \code{\link{est_regressors}}, which have been 
 #'                 unconditioned with respect to the change point locations.}
@@ -137,7 +137,7 @@ TS <- function(data, formula, nchangepoints, weights,
                control = TS_controls_list()){
   check_TS_inputs(data, formula, nchangepoints, weights, control)
   set.seed(control$seed)
-  rho_dist <- est_changepts(data, formula, nchangepoints, weights, control)
+  rho_dist <- est_changepoints(data, formula, nchangepoints, weights, control)
   eta_dist <- est_regressors(rho_dist, data, formula, weights, control)
   summarize_TS(data, formula, weights, control, rho_dist, eta_dist)
 }
@@ -192,7 +192,7 @@ check_TS_inputs <- function(data, formula, nchangepoints, weights, control){
 #'   \code{\link{TS_controls_list}}.
 #'
 #' @param rho_dist List of saved data objects from the ptMCMC estimation of
-#'   change point locations returned by \code{\link{est_changepts}}
+#'   change point locations returned by \code{\link{est_changepoints}}
 #'   (unless \code{nchangepoints} is 0, then \code{NULL}).
 #'
 #' @param eta_dist Matrix of draws (rows) from the marginal posteriors of the 
@@ -211,7 +211,7 @@ check_TS_inputs <- function(data, formula, nchangepoints, weights, control){
 #'                \link[=logLik.multinom_TS_fit]{logLik} values for the
 #'                 full time series fit by \code{\link{multinom_TS}}.}
 #'     \item{rhos}{Iteration-by-iteration change point estimates from
-#'                 \code{\link{est_changepts}}.}
+#'                 \code{\link{est_changepoints}}.}
 #'     \item{etas}{Iteration-by-iteration marginal regressor estimates from
 #'                 \code{\link{est_regressors}}, which have been 
 #'                 unconditioned with respect to the change point locations.}
@@ -376,7 +376,7 @@ measure_eta_vcov <- function(etas){
 #'
 #' @param rhos Matrix of change point locations (columns) across iterations of 
 #'   the ptMCMC (rows) or \code{NULL} if no change points are in the model,
-#'   as returned from \code{\link{est_changepts}}.
+#'   as returned from \code{\link{est_changepoints}}.
 #'
 #' @param control Class \code{TS_controls} list, holding control parameters
 #'   for the Time Series model including the parallel tempering Markov Chain 
@@ -437,8 +437,8 @@ measure_rho_vcov <- function(rhos){
 #'   change point locations
 #'
 #' @description This function uses the marginal posterior distributions of
-#'   the change point locations (estimated by \code{\link{est_changepts}}) in
-#'   combination with the conditional (on the change point locations) 
+#'   the change point locations (estimated by \code{\link{est_changepoints}})
+#'   in combination with the conditional (on the change point locations) 
 #'   posterior distributions of the regressors (estimated by
 #'   \code{\link{multinom_TS}}) to estimate the marginal posterior 
 #'   distribution of the regressors, unconditional on the change point 
@@ -458,7 +458,7 @@ measure_rho_vcov <- function(rhos){
 #'
 #' @param rho_dist List of saved data objects from the ptMCMC estimation of
 #'   change point locations (unless \code{nchangepoints} is 0, then 
-#'   \code{NULL}) returned from \code{\link{est_changepts}}.
+#'   \code{NULL}) returned from \code{\link{est_changepoints}}.
 #'
 #' @param data \code{data.frame} including [1] the time variable (indicated 
 #'   in \code{control$timename}), [2] the predictor variables (required by
@@ -622,7 +622,7 @@ est_regressors <- function(rho_dist, data, formula, weights, control){
 #'
 #' @export
 #'
-est_changepts <- function(data, formula, nchangepoints, weights, control){
+est_changepoints <- function(data, formula, nchangepoints, weights, control){
   check_TS_inputs(data, formula, nchangepoints, weights, control)
   if (nchangepoints == 0){
     return(NULL)

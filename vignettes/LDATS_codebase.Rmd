@@ -23,7 +23,7 @@ today <- Sys.Date()
 
 ## Overview 
 
-This vignette details the code base for the **LDATS** package. It was
+This vignette outlines the code base for the **LDATS** package. It was
 constructed using **LDATS** version `r vers` on `r today`.
 
 ## Installation
@@ -42,29 +42,95 @@ The full LDATS analysis can be executed using the `LDA_TS` function,
 which is the top-level of the coding pipeline's hierarchy of
 functions:
 
-* `LDA_TS`
-  * `check_LDA_TS_inputs`
+* `LDA_TS()`
+  * `check_LDA_TS_inputs()`
     * `check_timename()`
-    * `check_formulas`
-    * `check_nchangepoints`
-    * `check_weights`
-    * `check_control`
-    * `check_document_term_table`
-    * `check_document_covariate_table`	
-    * `check_topics`
-    * `check_seeds`
-  * `LDA_set`
-    * `LDA`
-  * `select_LDA`
-  * `TS_on_LDA`
-    * `expand_TS`
-    * `TS`
-      * `est_changepoints`
-      * `est_regressors`
-      * `summarize_TS`
-  * `select_TS`
-  * `package_LDA_TS`
+    * `check_formulas()`
+    * `check_nchangepoints()`
+    * `check_weights()`
+    * `check_control()`
+    * `check_document_term_table()`
+    * `check_document_covariate_table()`	
+    * `check_topics()`
+    * `check_seeds()`
+  * `LDA_set()`
+    * `check_LDA_TS_inputs()`
+      * `check_control()`
+      * `check_document_term_table()`
+      * `check_topics()`
+      * `check_seeds()`
+    * loop over models
+      * `prep_LDA_control()`
+      * `LDA()`
+  * `select_LDA()`
+    * applies the `measurer` and `selector` functions supplied via `LDA_controls_list()`
+  * `TS_on_LDA()`
+    * `check_LDA_TS_inputs()`
+      * `check_LDA_models()`
+      * `check_formulas()`
+      * `check_nchangepoints()`
+      * `check_timename()`
+      * `check_control()`
+      * `check_weights()`
+      * `check_document_covariate_table()`	
+    * `expand_TS()`
+    * loop over models
+      * `prep_TS_data()`
+      * `TS()`
+        * `check_TS_inputs()`
+          * `check_formulas()`
+          * `check_nchangepoints()`
+          * `check_control()`
+          * `check_weights()`
+        * `est_changepoints()`
+          * `prep_saves()`
+          * `prep_ptMCMC_inputs()`
+          * `prep_cpts()`
+            * loop over chains
+              * `multinom_TS()`
+          * `prep_ids()`
+          * `prep_pbar()`
+          * loop over iterations
+            * `update_pbar()`
+            * `step_chains()`
+              * `propose_step()`
+                * `proposed_step_mods()`
+                  * loop over chains
+                    * `multinom_TS()`
+              * `eval_step()`
+              * `take_step()`
+            * `swap_chains()`
+                * loop over chain neighbors
+            * `update_saves()`
+            * `update_cpts()`
+            * `update_ids()`
+        * `est_regressors()`
+          * loop over unique realizations of change point locations
+            * `multinom_TS()`
+            * loop over chunks
+              * `mirror_vcov()`
+              * `rmvnorm()`
+        * `summarize_TS()`
+          * `diagnose_ptMCMC()`
+            * `count_trips()`
+          * `summarize_rhos()`
+          * `measure_rho_vcov()`
+          * `summarize_ets()`
+          * `measure_eta_vcov()`
+    * `select_TS()`
+      * applies the `measurer` and `selector` functions supplied via `TS_controls_list()`
+    * `package_LDA_TS()`
+
+Each component model's function (`LDA_set()` and `TS()`) can be run
+independently, as well. 
 
 ## Controls Lists
 
-`LDA_TS_controls_list`
+To minimize the length of argument lists and facilitate simple default usage
+throughout the pipeline, we implement an options/controls list approach, where
+each of the main functions (`LDA_TS`, `LDA_set`, and `TS`) has a controls 
+list (although `LDA_set` is referenced as `LDA` in the naming scheme)
+
+* `LDA_TS_controls_list()`
+* `LDA_controls_list()`
+* `TS_controls_list()`
