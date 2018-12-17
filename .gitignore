@@ -3,3 +3,5 @@
 .RData
 working/~$ats_ms.docx
 docs/*
+paper-comparison/.cache_chunk/*
+paper-comparison/.cache_ll/*
