@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.17</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.18</span>
       </span>
     </div>
 
@@ -97,7 +97,7 @@
 <div id="overview" class="section level2">
 <h2 class="hasAnchor">
 <a href="#overview" class="anchor"></a>Overview</h2>
-<p>This vignette details the code base for the <strong>LDATS</strong> package. It was constructed using <strong>LDATS</strong> version 0.0.17 on 2018-12-16.</p>
+<p>This vignette outlines the code base for the <strong>LDATS</strong> package. It was constructed using <strong>LDATS</strong> version 0.0.18 on 2018-12-17.</p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -112,55 +112,198 @@
 <p>The full LDATS analysis can be executed using the <code>LDA_TS</code> function, which is the top-level of the coding pipeline’s hierarchy of functions:</p>
 <ul>
 <li>
-<code>LDA_TS</code>
+<code><a href="../reference/LDA_TS.html">LDA_TS()</a></code>
 <ul>
 <li>
-<code>check_LDA_TS_inputs</code>
+<code><a href="../reference/LDA_TS.html">check_LDA_TS_inputs()</a></code>
 <ul>
 <li><code><a href="../reference/check_timename.html">check_timename()</a></code></li>
-<li><code>check_formulas</code></li>
-<li><code>check_nchangepoints</code></li>
-<li><code>check_weights</code></li>
-<li><code>check_control</code></li>
-<li><code>check_document_term_table</code></li>
+<li><code><a href="../reference/check_formulas.html">check_formulas()</a></code></li>
+<li><code><a href="../reference/check_nchangepoints.html">check_nchangepoints()</a></code></li>
+<li><code><a href="../reference/check_weights.html">check_weights()</a></code></li>
+<li><code><a href="../reference/check_control.html">check_control()</a></code></li>
+<li><code><a href="../reference/check_document_term_table.html">check_document_term_table()</a></code></li>
 <li>
-<code>check_document_covariate_table</code><br>
+<code><a href="../reference/check_document_covariate_table.html">check_document_covariate_table()</a></code><br>
 </li>
-<li><code>check_topics</code></li>
-<li><code>check_seeds</code></li>
+<li><code><a href="../reference/check_topics.html">check_topics()</a></code></li>
+<li><code><a href="../reference/check_seeds.html">check_seeds()</a></code></li>
 </ul>
 </li>
 <li>
-<code>LDA_set</code>
+<code><a href="../reference/LDA_set.html">LDA_set()</a></code>
 <ul>
-<li><code>LDA</code></li>
-</ul>
-</li>
-<li><code>select_LDA</code></li>
 <li>
-<code>TS_on_LDA</code>
+<code><a href="../reference/LDA_TS.html">check_LDA_TS_inputs()</a></code>
 <ul>
-<li><code>expand_TS</code></li>
+<li><code><a href="../reference/check_control.html">check_control()</a></code></li>
+<li><code><a href="../reference/check_document_term_table.html">check_document_term_table()</a></code></li>
+<li><code><a href="../reference/check_topics.html">check_topics()</a></code></li>
+<li><code><a href="../reference/check_seeds.html">check_seeds()</a></code></li>
+</ul>
+</li>
+<li>loop over models
+<ul>
+<li><code><a href="../reference/prep_LDA_control.html">prep_LDA_control()</a></code></li>
+<li><code>LDA()</code></li>
+</ul>
+</li>
+</ul>
+</li>
 <li>
-<code>TS</code>
+<code><a href="../reference/select_LDA.html">select_LDA()</a></code>
 <ul>
-<li><code>est_changepoints</code></li>
-<li><code>est_regressors</code></li>
-<li><code>summarize_TS</code></li>
+<li>applies the <code>measurer</code> and <code>selector</code> functions supplied via <code><a href="../reference/LDA_controls_list.html">LDA_controls_list()</a></code>
+</li>
+</ul>
+</li>
+<li>
+<code><a href="../reference/TS_on_LDA.html">TS_on_LDA()</a></code>
+<ul>
+<li>
+<code><a href="../reference/LDA_TS.html">check_LDA_TS_inputs()</a></code>
+<ul>
+<li><code><a href="../reference/check_LDA_models.html">check_LDA_models()</a></code></li>
+<li><code><a href="../reference/check_formulas.html">check_formulas()</a></code></li>
+<li><code><a href="../reference/check_nchangepoints.html">check_nchangepoints()</a></code></li>
+<li><code><a href="../reference/check_timename.html">check_timename()</a></code></li>
+<li><code><a href="../reference/check_control.html">check_control()</a></code></li>
+<li><code><a href="../reference/check_weights.html">check_weights()</a></code></li>
+<li>
+<code><a href="../reference/check_document_covariate_table.html">check_document_covariate_table()</a></code><br>
+</li>
+</ul>
+</li>
+<li><code><a href="../reference/expand_TS.html">expand_TS()</a></code></li>
+<li>loop over models
+<ul>
+<li><code><a href="../reference/prep_TS_data.html">prep_TS_data()</a></code></li>
+<li>
+<code><a href="../reference/TS.html">TS()</a></code>
+<ul>
+<li>
+<code><a href="../reference/TS.html">check_TS_inputs()</a></code>
+<ul>
+<li><code><a href="../reference/check_formulas.html">check_formulas()</a></code></li>
+<li><code><a href="../reference/check_nchangepoints.html">check_nchangepoints()</a></code></li>
+<li><code><a href="../reference/check_control.html">check_control()</a></code></li>
+<li><code><a href="../reference/check_weights.html">check_weights()</a></code></li>
+</ul>
+</li>
+<li>
+<code><a href="../reference/est_changepoints.html">est_changepoints()</a></code>
+<ul>
+<li><code><a href="../reference/prep_saves.html">prep_saves()</a></code></li>
+<li><code><a href="../reference/prep_ptMCMC_inputs.html">prep_ptMCMC_inputs()</a></code></li>
+<li>
+<code><a href="../reference/prep_cpts.html">prep_cpts()</a></code>
+<ul>
+<li>loop over chains
+<ul>
+<li><code><a href="../reference/multinom_TS.html">multinom_TS()</a></code></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><code>select_TS</code></li>
-<li><code>package_LDA_TS</code></li>
+<li><code><a href="../reference/prep_ids.html">prep_ids()</a></code></li>
+<li><code><a href="../reference/prep_pbar.html">prep_pbar()</a></code></li>
+<li>loop over iterations
+<ul>
+<li><code><a href="../reference/prep_pbar.html">update_pbar()</a></code></li>
+<li>
+<code><a href="../reference/step_chains.html">step_chains()</a></code>
+<ul>
+<li>
+<code><a href="../reference/step_chains.html">propose_step()</a></code>
+<ul>
+<li>
+<code><a href="../reference/proposed_step_mods.html">proposed_step_mods()</a></code>
+<ul>
+<li>loop over chains
+<ul>
+<li><code><a href="../reference/multinom_TS.html">multinom_TS()</a></code></li>
 </ul>
 </li>
 </ul>
+</li>
+</ul>
+</li>
+<li><code><a href="../reference/step_chains.html">eval_step()</a></code></li>
+<li><code><a href="../reference/step_chains.html">take_step()</a></code></li>
+</ul>
+</li>
+<li>
+<code><a href="../reference/swap_chains.html">swap_chains()</a></code>
+<ul>
+<li>loop over chain neighbors</li>
+</ul>
+</li>
+<li><code><a href="../reference/prep_saves.html">update_saves()</a></code></li>
+<li><code><a href="../reference/prep_cpts.html">update_cpts()</a></code></li>
+<li><code><a href="../reference/prep_ids.html">update_ids()</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<code><a href="../reference/est_regressors.html">est_regressors()</a></code>
+<ul>
+<li>loop over unique realizations of change point locations
+<ul>
+<li><code><a href="../reference/multinom_TS.html">multinom_TS()</a></code></li>
+<li>loop over chunks
+<ul>
+<li><code><a href="../reference/mirror_vcov.html">mirror_vcov()</a></code></li>
+<li><code>rmvnorm()</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<code><a href="../reference/summarize_TS.html">summarize_TS()</a></code>
+<ul>
+<li>
+<code><a href="../reference/diagnose_ptMCMC.html">diagnose_ptMCMC()</a></code>
+<ul>
+<li><code><a href="../reference/count_trips.html">count_trips()</a></code></li>
+</ul>
+</li>
+<li><code><a href="../reference/summarize_rhos.html">summarize_rhos()</a></code></li>
+<li><code><a href="../reference/summarize_rhos.html">measure_rho_vcov()</a></code></li>
+<li><code>summarize_ets()</code></li>
+<li><code><a href="../reference/summarize_etas.html">measure_eta_vcov()</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<code><a href="../reference/select_TS.html">select_TS()</a></code>
+<ul>
+<li>applies the <code>measurer</code> and <code>selector</code> functions supplied via <code><a href="../reference/TS_controls_list.html">TS_controls_list()</a></code>
+</li>
+</ul>
+</li>
+<li><code><a href="../reference/package_LDA_TS.html">package_LDA_TS()</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Each component model’s function (<code><a href="../reference/LDA_set.html">LDA_set()</a></code> and <code><a href="../reference/TS.html">TS()</a></code>) can be run independently, as well.</p>
 </div>
 <div id="controls-lists" class="section level2">
 <h2 class="hasAnchor">
 <a href="#controls-lists" class="anchor"></a>Controls Lists</h2>
-<p><code>LDA_TS_controls_list</code></p>
+<p>To minimize the length of argument lists and facilitate simple default usage throughout the pipeline, we implement an options/controls list approach, where each of the main functions (<code>LDA_TS</code>, <code>LDA_set</code>, and <code>TS</code>) has a controls list (although <code>LDA_set</code> is referenced as <code>LDA</code> in the naming scheme)</p>
+<ul>
+<li><code><a href="../reference/LDA_TS_controls_list.html">LDA_TS_controls_list()</a></code></li>
+<li><code><a href="../reference/LDA_controls_list.html">LDA_controls_list()</a></code></li>
+<li><code><a href="../reference/TS_controls_list.html">TS_controls_list()</a></code></li>
+</ul>
 </div>
   </div>
 

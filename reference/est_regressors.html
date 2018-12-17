@@ -35,8 +35,8 @@
   change point locations — est_regressors" />
 
 <meta property="og:description" content="This function uses the marginal posterior distributions of
-  the change point locations (estimated by est_changepts) in
-  combination with the conditional (on the change point locations) 
+  the change point locations (estimated by est_changepoints)
+  in combination with the conditional (on the change point locations) 
   posterior distributions of the regressors (estimated by
   multinom_TS) to estimate the marginal posterior 
   distribution of the regressors, unconditional on the change point 
@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.17</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.18</span>
       </span>
     </div>
 
@@ -134,8 +134,8 @@
     <div class="ref-description">
     
     <p>This function uses the marginal posterior distributions of
-  the change point locations (estimated by <code><a href='est_changepts.html'>est_changepts</a></code>) in
-  combination with the conditional (on the change point locations) 
+  the change point locations (estimated by <code><a href='est_changepoints.html'>est_changepoints</a></code>)
+  in combination with the conditional (on the change point locations) 
   posterior distributions of the regressors (estimated by
   <code><a href='multinom_TS.html'>multinom_TS</a></code>) to estimate the marginal posterior 
   distribution of the regressors, unconditional on the change point 
@@ -152,7 +152,7 @@
       <th>rho_dist</th>
       <td><p>List of saved data objects from the ptMCMC estimation of
 change point locations (unless <code>nchangepoints</code> is 0, then 
-<code>NULL</code>) returned from <code><a href='est_changepts.html'>est_changepts</a></code>.</p></td>
+<code>NULL</code>) returned from <code><a href='est_changepoints.html'>est_changepoints</a></code>.</p></td>
     </tr>
     <tr>
       <th>data</th>
