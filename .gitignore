@@ -3,5 +3,14 @@
 .RData
 working/~$ats_ms.docx
 docs/*
+.cache_chunk
+.cache_ll
 paper-comparison/.cache_chunk/*
 paper-comparison/.cache_ll/*
+paper-comparison/scraps*
+paper-comparison/.DS_Store
+paper-comparison/.Rapp.history
+paper-comparison/model-stash/*
+.DS_Store
+LDATS.Rproj
+.gitignore
