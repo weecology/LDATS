@@ -156,8 +156,8 @@ rm(ch_dat)
 
 ## ----reload LDAS, include = FALSE----------------------------------------
 
-load('model-stash/ldats_lda.Rds')
-load('model-stash/paper_lda.Rds')
+load('/Users/renatadiaz/Documents/model-stash/ldats_lda.Rds')
+load('/Users/renatadiaz/Documents/model-stash/paper_lda.Rds')
 
 
 ## ----plot LDAs-----------------------------------------------------------
@@ -205,21 +205,21 @@ x = data.frame(
 
 
 ## ---- eval = F-----------------------------------------------------------
-## # run models with 1, 2, 3, 4, 5 changepoints
-## cp_results_rodent = changepoint_model(ldats_lda_selected[[1]], x, 1, weights = rep(1,length(year_continuous)))
-## cp_results_rodent2 = changepoint_model(ldats_lda_selected[[1]], x, 2, weights = rep(1,length(year_continuous)))
-## cp_results_rodent3 = changepoint_model(ldats_lda_selected[[1]], x, 3, weights = rep(1,length(year_continuous)))
-## cp_results_rodent4 = changepoint_model(ldats_lda_selected[[1]], x, 4, weights = rep(1,length(year_continuous)))
-## cp_results_rodent5 = changepoint_model(ldats_lda_selected[[1]], x, 5, weights = rep(1,length(year_continuous)))
-## cp_results_rodent6 = changepoint_model(ldats_lda_selected[[1]], x, 6, weights = rep(1,length(year_continuous)))
-## 
-## paper_ldats <- list(cp_results_rodent, cp_results_rodent2,
-##                     cp_results_rodent3, cp_results_rodent4,
-##                     cp_results_rodent5, cp_results_rodent6)
-## 
-## rm(list = c('cp_results_rodent', 'cp_results_rodent2',
-##                     'cp_results_rodent3', 'cp_results_rodent4',
-##                     'cp_results_rodent5', 'cp_results_rodent6'))
-## 
-## save(paper_ldats, file = '/Users/renatadiaz/Documents/model-stash/paper_cpt_ldats_lda.Rds')
+# run models with 1, 2, 3, 4, 5 changepoints
+cp_results_rodent = changepoint_model(ldats_lda_selected[[1]], x, 1, weights = rep(1,length(year_continuous)))
+cp_results_rodent2 = changepoint_model(ldats_lda_selected[[1]], x, 2, weights = rep(1,length(year_continuous)))
+cp_results_rodent3 = changepoint_model(ldats_lda_selected[[1]], x, 3, weights = rep(1,length(year_continuous)))
+cp_results_rodent4 = changepoint_model(ldats_lda_selected[[1]], x, 4, weights = rep(1,length(year_continuous)))
+cp_results_rodent5 = changepoint_model(ldats_lda_selected[[1]], x, 5, weights = rep(1,length(year_continuous)))
+cp_results_rodent6 = changepoint_model(ldats_lda_selected[[1]], x, 6, weights = rep(1,length(year_continuous)))
+
+paper_ldats <- list(cp_results_rodent, cp_results_rodent2,
+                    cp_results_rodent3, cp_results_rodent4,
+                    cp_results_rodent5, cp_results_rodent6)
+
+rm(list = c('cp_results_rodent', 'cp_results_rodent2',
+                    'cp_results_rodent3', 'cp_results_rodent4',
+                    'cp_results_rodent5', 'cp_results_rodent6'))
+
+save(paper_ldats, file = '/Users/renatadiaz/Documents/model-stash/paper_cpt_ldats_lda.Rds')
 
