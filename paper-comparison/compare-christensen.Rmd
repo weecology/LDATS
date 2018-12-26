@@ -263,7 +263,7 @@ I am going to compare four combinations of LDA + changepoint models:
 
 There is the additional wrinkle of `document_term_weights`. The paper weighted all sample periods equally, wheras LDATS can weight sample periods according to how many individuals were captured. We now believe it is more appropriate to weight periods proportional to captures. However, for the purposes of comparison, I will continue to set all weights = 1 for both changepoint models. For an example of LDATS run with proportional weights, see the rodents vignette. [?]
 
-### run LDATS LDA with LDATS changepoint
+#### run LDATS LDA with LDATS changepoint
 ```{r, include = F}
 # remove paper LDA (for memory)
 rm(ldamodel)
@@ -293,39 +293,7 @@ rm(ldats_ldats)
 rm(ldats_ldats_selected)
 ```
 
-```{r paper cpt on LDATS LDA}
-source('christensen-ecology-files/changepointmodel.r')
-# set up parameters for model
-year_continuous = 1970 + as.integer(julian(ch_dates)) / 365.25
-x = data.frame(
-  year_continuous = year_continuous,
-  sin_year = sin(year_continuous * 2 * pi),
-  cos_year = cos(year_continuous * 2 * pi)
-)
-
-```
-
-```{r, eval = F}
-# run models with 1, 2, 3, 4, 5 changepoints
-cp_results_rodent = changepoint_model(ldats_lda_selected[[1]], x, 1, weights = rep(1,length(year_continuous)))
-cp_results_rodent2 = changepoint_model(ldats_lda_selected[[1]], x, 2, weights = rep(1,length(year_continuous)))
-cp_results_rodent3 = changepoint_model(ldats_lda_selected[[1]], x, 3, weights = rep(1,length(year_continuous)))
-cp_results_rodent4 = changepoint_model(ldats_lda_selected[[1]], x, 4, weights = rep(1,length(year_continuous)))
-cp_results_rodent5 = changepoint_model(ldats_lda_selected[[1]], x, 5, weights = rep(1,length(year_continuous)))
-cp_results_rodent6 = changepoint_model(ldats_lda_selected[[1]], x, 6, weights = rep(1,length(year_continuous)))
-
-paper_ldats <- list(cp_results_rodent, cp_results_rodent2,
-                    cp_results_rodent3, cp_results_rodent4,
-                    cp_results_rodent5, cp_results_rodent6)
-
-rm(list = c('cp_results_rodent', 'cp_results_rodent2',
-                    'cp_results_rodent3', 'cp_results_rodent4',
-                    'cp_results_rodent5', 'cp_results_rodent6'))
-
-save(paper_ldats, file = '/Users/renatadiaz/Documents/model-stash/paper_cpt_ldats_lda.Rds') 
-```
-
-### run LDATS LDA with paper changepoint
+#### run LDATS LDA with paper changepoint
 
 ```{r ldats paper, eval = F}
 source('christensen-ecology-files/changepointmodel.r')
@@ -370,7 +338,7 @@ rm(cp_results_rodent6)
 rm(ldats_lda_selected)
 ```
 
-### run paper LDA with paper changepoint
+#### run paper LDA with paper changepoint
 ```{r paper paper, eval = F}
 source('christensen-ecology-files/changepointmodel.r')
 # set up parameters for model
@@ -407,7 +375,7 @@ save(cp_results_rodent6, file = '/Users/renatadiaz/Documents/model-stash/paper_c
 rm(cp_results_rodent6)
 ```
 
-### run paper LDA with LDATS changepoint
+#### run paper LDA with LDATS changepoint
 ```{r paper ldats, eval = F}
 # Run changepoint
 
@@ -426,4 +394,5 @@ paper_ldats_selected <- LDATS::select_TS(TS_models = paper_ldats)
 save(paper_ldats_selected, file = '/Users/renatadiaz/Documents/model-stash/paper_ldats_selected.Rds')
 
 ```
+
 
