@@ -264,10 +264,6 @@ I am going to compare four combinations of LDA + changepoint models:
 There is the additional wrinkle of `document_term_weights`. The paper weighted all sample periods equally, wheras LDATS can weight sample periods according to how many individuals were captured. We now believe it is more appropriate to weight periods proportional to captures. However, for the purposes of comparison, I will continue to set all weights = 1 for both changepoint models. For an example of LDATS run with proportional weights, see the rodents vignette. [?]
 
 #### run LDATS LDA with LDATS changepoint
-```{r, include = F}
-# remove paper LDA (for memory)
-rm(ldamodel)
-```
 
 ```{r LDATS LDA + LDATS cpt, eval = F}
 # Run changepoint
@@ -375,6 +371,27 @@ save(cp_results_rodent6, file = '/Users/renatadiaz/Documents/model-stash/paper_c
 rm(cp_results_rodent6)
 ```
 
+```{r paper paper selection}
+ntopics = ldamodel@k
+# Load models and compare deviance to select the best one
+load('/Users/renatadiaz/Documents/model-stash/paper_cpt_paper_lda1.Rds')
+load('/Users/renatadiaz/Documents/model-stash/paper_cpt_paper_lda2.Rds')
+load('/Users/renatadiaz/Documents/model-stash/paper_cpt_paper_lda3.Rds')
+load('/Users/renatadiaz/Documents/model-stash/paper_cpt_paper_lda4.Rds')
+load('/Users/renatadiaz/Documents/model-stash/paper_cpt_paper_lda5.Rds')
+load('/Users/renatadiaz/Documents/model-stash/paper_cpt_paper_lda6.Rds')
+
+# change point model selection
+# mean deviance ( -2 * log likelihood) + 2*(#parameters)
+mean(cp_results_rodent$saved_lls * -2) + 2*(3*(ntopics-1)*(1+1)+(1))
+mean(cp_results_rodent2$saved_lls * -2)+ 2*(3*(ntopics-1)*(2+1)+(2))
+mean(cp_results_rodent3$saved_lls * -2)+ 2*(3*(ntopics-1)*(3+1)+(3))
+mean(cp_results_rodent4$saved_lls * -2)+ 2*(3*(ntopics-1)*(4+1)+(4))
+mean(cp_results_rodent5$saved_lls * -2)+ 2*(3*(ntopics-1)*(5+1)+(5))
+mean(cp_results_rodent6$saved_lls * -2)+ 2*(3*(ntopics-1)*(5+1)+(5))
+
+```
+
 #### run paper LDA with LDATS changepoint
 ```{r paper ldats, eval = F}
 # Run changepoint
@@ -394,5 +411,7 @@ paper_ldats_selected <- LDATS::select_TS(TS_models = paper_ldats)
 save(paper_ldats_selected, file = '/Users/renatadiaz/Documents/model-stash/paper_ldats_selected.Rds')
 
 ```
+
+### Compare model outcomes
 
 
