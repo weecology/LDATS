@@ -252,7 +252,7 @@ I am going to compare four combinations of LDA + changepoint models:
 
 There is the additional wrinkle of `document_term_weights`. The paper weighted all sample periods equally, wheras LDATS can weight sample periods according to how many individuals were captured. We now believe it is more appropriate to weight periods proportional to captures. However, for the purposes of comparison, I will continue to set all weights = 1 for both changepoint models. For an example of LDATS run with proportional weights, see the rodents vignette. \[?\]
 
-### run LDATS LDA with LDATS changepoint
+#### run LDATS LDA with LDATS changepoint
 
 ``` r
 # Run changepoint
@@ -277,44 +277,7 @@ rm(ldats_ldats)
 rm(ldats_ldats_selected)
 ```
 
-``` r
-source('christensen-ecology-files/changepointmodel.r')
-#> 
-#> Attaching package: 'lubridate'
-#> The following object is masked from 'package:base':
-#> 
-#>     date
-#> Loading required package: viridisLite
-# set up parameters for model
-year_continuous = 1970 + as.integer(julian(ch_dates)) / 365.25
-x = data.frame(
-  year_continuous = year_continuous,
-  sin_year = sin(year_continuous * 2 * pi),
-  cos_year = cos(year_continuous * 2 * pi)
-)
-```
-
-``` r
-# run models with 1, 2, 3, 4, 5 changepoints
-cp_results_rodent = changepoint_model(ldats_lda_selected[[1]], x, 1, weights = rep(1,length(year_continuous)))
-cp_results_rodent2 = changepoint_model(ldats_lda_selected[[1]], x, 2, weights = rep(1,length(year_continuous)))
-cp_results_rodent3 = changepoint_model(ldats_lda_selected[[1]], x, 3, weights = rep(1,length(year_continuous)))
-cp_results_rodent4 = changepoint_model(ldats_lda_selected[[1]], x, 4, weights = rep(1,length(year_continuous)))
-cp_results_rodent5 = changepoint_model(ldats_lda_selected[[1]], x, 5, weights = rep(1,length(year_continuous)))
-cp_results_rodent6 = changepoint_model(ldats_lda_selected[[1]], x, 6, weights = rep(1,length(year_continuous)))
-
-paper_ldats <- list(cp_results_rodent, cp_results_rodent2,
-                    cp_results_rodent3, cp_results_rodent4,
-                    cp_results_rodent5, cp_results_rodent6)
-
-rm(list = c('cp_results_rodent', 'cp_results_rodent2',
-                    'cp_results_rodent3', 'cp_results_rodent4',
-                    'cp_results_rodent5', 'cp_results_rodent6'))
-
-save(paper_ldats, file = '/Users/renatadiaz/Documents/model-stash/paper_cpt_ldats_lda.Rds') 
-```
-
-### run LDATS LDA with paper changepoint
+#### run LDATS LDA with paper changepoint
 
 ``` r
 source('christensen-ecology-files/changepointmodel.r')
@@ -359,7 +322,7 @@ rm(cp_results_rodent6)
 rm(ldats_lda_selected)
 ```
 
-### run paper LDA with paper changepoint
+#### run paper LDA with paper changepoint
 
 ``` r
 source('christensen-ecology-files/changepointmodel.r')
@@ -397,7 +360,33 @@ save(cp_results_rodent6, file = '/Users/renatadiaz/Documents/model-stash/paper_c
 rm(cp_results_rodent6)
 ```
 
-### run paper LDA with LDATS changepoint
+``` r
+ntopics = ldamodel@k
+# Load models and compare deviance to select the best one
+load('/Users/renatadiaz/Documents/model-stash/paper_cpt_paper_lda1.Rds')
+load('/Users/renatadiaz/Documents/model-stash/paper_cpt_paper_lda2.Rds')
+load('/Users/renatadiaz/Documents/model-stash/paper_cpt_paper_lda3.Rds')
+load('/Users/renatadiaz/Documents/model-stash/paper_cpt_paper_lda4.Rds')
+load('/Users/renatadiaz/Documents/model-stash/paper_cpt_paper_lda5.Rds')
+load('/Users/renatadiaz/Documents/model-stash/paper_cpt_paper_lda6.Rds')
+
+# change point model selection
+# mean deviance ( -2 * log likelihood) + 2*(#parameters)
+mean(cp_results_rodent$saved_lls * -2) + 2*(3*(ntopics-1)*(1+1)+(1))
+#> [1] 898.5209
+mean(cp_results_rodent2$saved_lls * -2)+ 2*(3*(ntopics-1)*(2+1)+(2))
+#> [1] 834.8776
+mean(cp_results_rodent3$saved_lls * -2)+ 2*(3*(ntopics-1)*(3+1)+(3))
+#> [1] 818.1249
+mean(cp_results_rodent4$saved_lls * -2)+ 2*(3*(ntopics-1)*(4+1)+(4))
+#> [1] 813.6164
+mean(cp_results_rodent5$saved_lls * -2)+ 2*(3*(ntopics-1)*(5+1)+(5))
+#> [1] 817.8308
+mean(cp_results_rodent6$saved_lls * -2)+ 2*(3*(ntopics-1)*(5+1)+(5))
+#> [1] 806.4913
+```
+
+#### run paper LDA with LDATS changepoint
 
 ``` r
 # Run changepoint
@@ -416,3 +405,5 @@ paper_ldats_selected <- LDATS::select_TS(TS_models = paper_ldats)
 
 save(paper_ldats_selected, file = '/Users/renatadiaz/Documents/model-stash/paper_ldats_selected.Rds')
 ```
+
+### Compare model outcomes
