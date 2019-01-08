@@ -289,3 +289,7 @@ estimates$paper_paper <- paper_paper$cpt_dates
 estimates
 
 ```
+
+All of the outcomes are reasonably close.
+
+The choice of changepoint model seems to matter less than the choice of LDA model. 
