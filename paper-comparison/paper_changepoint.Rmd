@@ -122,6 +122,16 @@ mean(df_4[df_4$variable=='V3','value']) %>% date_decimal() %>% format('%d-%m-%Y'
 mean(df_4[df_4$variable=='V4','value']) %>% date_decimal() %>% format('%d-%m-%Y')
 
 
+cpt_dates <- vector(length = 4)
+cpt_dates[1] <- mean(df_4[df_4$variable=='V1','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+cpt_dates[2] <-mean(df_4[df_4$variable=='V2','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+cpt_dates[3] <-mean(df_4[df_4$variable=='V3','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+cpt_dates[4] <-mean(df_4[df_4$variable=='V4','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+
+cpt_dates <- as.data.frame(cpt_dates)
+write.csv(cpt_dates, 'ldats_paper_dates.csv')
+
+
 # find 95% confidence intervals on each changepoint:
 quantile(df_4[df_4$variable=='V1','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
 quantile(df_4[df_4$variable=='V2','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
@@ -253,10 +263,22 @@ df_4 = as.data.frame(t(cp_results_rodent4$saved[,1,])) %>% melt()
 df_4$value = year_continuous[df_4$value]
 
 # find means on each changepoint:
+
+# find means on each changepoint:
 mean(df_4[df_4$variable=='V1','value']) %>% date_decimal() %>% format('%d-%m-%Y')
 mean(df_4[df_4$variable=='V2','value']) %>% date_decimal() %>% format('%d-%m-%Y')
 mean(df_4[df_4$variable=='V3','value']) %>% date_decimal() %>% format('%d-%m-%Y')
 mean(df_4[df_4$variable=='V4','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+
+
+cpt_dates <- vector(length = 4)
+cpt_dates[1] <- mean(df_4[df_4$variable=='V1','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+cpt_dates[2] <-mean(df_4[df_4$variable=='V2','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+cpt_dates[3] <-mean(df_4[df_4$variable=='V3','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+cpt_dates[4] <-mean(df_4[df_4$variable=='V4','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+
+cpt_dates <- as.data.frame(cpt_dates)
+write.csv(cpt_dates, 'paper_paper_dates.csv')
 
 # find 95% confidence intervals on each changepoint:
 quantile(df_4[df_4$variable=='V1','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')

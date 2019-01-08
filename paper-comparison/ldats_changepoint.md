@@ -122,7 +122,7 @@ ldats_ldats_cpt_selected$formula
 ```
 
     ## gamma ~ sin_year + cos_year
-    ## <environment: 0x7fe3b58dcd58>
+    ## <environment: 0x7fc317e62980>
 
 ``` r
 ldats_ldats_cpt_selected$nchangepoints
@@ -151,6 +151,10 @@ cpt_dates
     ## 2           172  1991-05-13   2
     ## 3           266  1998-12-18   3
     ## 4           401  2009-11-16   4
+
+``` r
+write.csv(cpt_dates, 'ldats_ldats_dates.csv')
+```
 
 Paper LDA
 ---------
@@ -186,7 +190,7 @@ paper_ldats_cpt_selected$formula
 ```
 
     ## gamma ~ sin_year + cos_year
-    ## <environment: 0x7fe3b03f82d8>
+    ## <environment: 0x7fc310be3660>
 
 ``` r
 paper_ldats_cpt_selected$nchangepoints
@@ -216,3 +220,7 @@ cpt_dates
     ## 2           190  1992-10-25   2
     ## 3           273  1999-07-12   3
     ## 4           403  2010-01-15   4
+
+``` r
+write.csv(cpt_dates, 'paper_ldats_dates.csv')
+```
