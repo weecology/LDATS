@@ -40,7 +40,7 @@ ch_dat <- dat
 ch_dates <- dates
 ch_newmoons <- period_dates$newmoonnumber
 
-rm(list = c('dat', 'dates', 'period_dates', 'moondat',
+rm(list = c('dat', 'dates',
             'create_rodent_table'))
 
 ldats_dat <- as.matrix(ch_dat)
@@ -97,7 +97,20 @@ ldats_ldats_cpt_selected <- select_TS(ldats_ldats_cpt)
 plot(ldats_ldats_cpt_selected)
 ldats_ldats_cpt_selected$formula
 ldats_ldats_cpt_selected$nchangepoints
-ldats_ldats_cpt_selected$rho_summary
+cpt_means <- ldats_ldats_cpt_selected$rho_summary$Mean
+
+cpt_means <- floor(cpt_means)
+cpt_means <- as.data.frame(cpt_means)
+colnames(cpt_means) <- 'newmoonnumber'
+cpt_means$cpt <- 1:ldats_ldats_cpt_selected$nchangepoints
+
+cpt_dates <- as.data.frame(moondat) %>%
+  dplyr::select(newmoonnumber, newmoondate) %>%
+  dplyr::left_join(cpt_means, by = 'newmoonnumber') %>%
+  dplyr::filter(!is.na(cpt))
+
+cpt_dates
+
 ```
 
 ```{r clean up ldats lda + ldats cpt, echo = F}
@@ -137,6 +150,19 @@ paper_ldats_cpt_selected <- select_TS(paper_ldats_cpt)
 plot(paper_ldats_cpt_selected)
 paper_ldats_cpt_selected$formula
 paper_ldats_cpt_selected$nchangepoints
-paper_ldats_cpt_selected$rho_summary
+cpt_means <- paper_ldats_cpt_selected$rho_summary$Mean
+
+
+cpt_means <- floor(cpt_means)
+cpt_means <- as.data.frame(cpt_means)
+colnames(cpt_means) <- 'newmoonnumber'
+cpt_means$cpt <- 1:paper_ldats_cpt_selected$nchangepoints
+
+cpt_dates <- as.data.frame(moondat) %>%
+  dplyr::select(newmoonnumber, newmoondate) %>%
+  dplyr::left_join(cpt_means, by = 'newmoonnumber') %>%
+  dplyr::filter(!is.na(cpt))
+
+cpt_dates
 ```
 
