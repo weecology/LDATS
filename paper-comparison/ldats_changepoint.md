@@ -63,7 +63,7 @@ ch_dat <- dat
 ch_dates <- dates
 ch_newmoons <- period_dates$newmoonnumber
 
-rm(list = c('dat', 'dates', 'period_dates', 'moondat',
+rm(list = c('dat', 'dates',
             'create_rodent_table'))
 
 ldats_dat <- as.matrix(ch_dat)
@@ -122,7 +122,7 @@ ldats_ldats_cpt_selected$formula
 ```
 
     ## gamma ~ sin_year + cos_year
-    ## <environment: 0x7f914a23b9c8>
+    ## <environment: 0x7fe3b58dcd58>
 
 ``` r
 ldats_ldats_cpt_selected$nchangepoints
@@ -131,19 +131,26 @@ ldats_ldats_cpt_selected$nchangepoints
     ## [1] 4
 
 ``` r
-ldats_ldats_cpt_selected$rho_summary
+cpt_means <- ldats_ldats_cpt_selected$rho_summary$Mean
+
+cpt_means <- floor(cpt_means)
+cpt_means <- as.data.frame(cpt_means)
+colnames(cpt_means) <- 'newmoonnumber'
+cpt_means$cpt <- 1:ldats_ldats_cpt_selected$nchangepoints
+
+cpt_dates <- as.data.frame(moondat) %>%
+  dplyr::select(newmoonnumber, newmoondate) %>%
+  dplyr::left_join(cpt_means, by = 'newmoonnumber') %>%
+  dplyr::filter(!is.na(cpt))
+
+cpt_dates
 ```
 
-    ##                 Mean Median Mode Lower_95% Upper_95%   SD MCMCerr   AC10
-    ## Changepoint_1  81.76     83   84        72        87 4.20  0.0420 0.4137
-    ## Changepoint_2 172.63    173  173       167       176 2.87  0.0287 0.3108
-    ## Changepoint_3 266.76    268  269       253       276 7.35  0.0735 0.2427
-    ## Changepoint_4 401.26    401  400       397       410 3.48  0.0348 0.3464
-    ##                    ESS
-    ## Changepoint_1 456.2876
-    ## Changepoint_2 543.7482
-    ## Changepoint_3 753.6761
-    ## Changepoint_4 632.2190
+    ##   newmoonnumber newmoondate cpt
+    ## 1            81  1984-01-02   1
+    ## 2           172  1991-05-13   2
+    ## 3           266  1998-12-18   3
+    ## 4           401  2009-11-16   4
 
 Paper LDA
 ---------
@@ -179,7 +186,7 @@ paper_ldats_cpt_selected$formula
 ```
 
     ## gamma ~ sin_year + cos_year
-    ## <environment: 0x7f914b358860>
+    ## <environment: 0x7fe3b03f82d8>
 
 ``` r
 paper_ldats_cpt_selected$nchangepoints
@@ -188,16 +195,24 @@ paper_ldats_cpt_selected$nchangepoints
     ## [1] 4
 
 ``` r
-paper_ldats_cpt_selected$rho_summary
+cpt_means <- paper_ldats_cpt_selected$rho_summary$Mean
+
+
+cpt_means <- floor(cpt_means)
+cpt_means <- as.data.frame(cpt_means)
+colnames(cpt_means) <- 'newmoonnumber'
+cpt_means$cpt <- 1:paper_ldats_cpt_selected$nchangepoints
+
+cpt_dates <- as.data.frame(moondat) %>%
+  dplyr::select(newmoonnumber, newmoondate) %>%
+  dplyr::left_join(cpt_means, by = 'newmoonnumber') %>%
+  dplyr::filter(!is.na(cpt))
+
+cpt_dates
 ```
 
-    ##                 Mean Median Mode Lower_95% Upper_95%    SD MCMCerr   AC10
-    ## Changepoint_1  85.01     85   84        79        88  4.96  0.0496 0.5634
-    ## Changepoint_2 190.18    205  218       136       230 32.38  0.3238 0.7241
-    ## Changepoint_3 273.95    272  272       264       277 16.11  0.1611 0.8629
-    ## Changepoint_4 403.83    403  402       395       413  6.18  0.0618 0.3620
-    ##                     ESS
-    ## Changepoint_1 222.53409
-    ## Changepoint_2 107.00853
-    ## Changepoint_3  54.35299
-    ## Changepoint_4 400.78833
+    ##   newmoonnumber newmoondate cpt
+    ## 1            85  1984-04-30   1
+    ## 2           190  1992-10-25   2
+    ## 3           273  1999-07-12   3
+    ## 4           403  2010-01-15   4
