@@ -282,3 +282,7 @@ estimates
 #> 3         3  1998-12-18  04-01-1999  1999-07-12  29-05-1999
 #> 4         4  2009-11-16  10-11-2009  2010-01-15  01-01-2010
 ```
+
+All of the outcomes are reasonably close.
+
+The choice of changepoint model seems to matter less than the choice of LDA model.
