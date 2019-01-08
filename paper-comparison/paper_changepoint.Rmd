@@ -115,6 +115,13 @@ annual_hist(cp_results_rodent4,year_continuous)
 df_4 = as.data.frame(t(cp_results_rodent4$saved[,1,])) %>% melt()
 df_4$value = year_continuous[df_4$value]
 
+# find means on each changepoint:
+mean(df_4[df_4$variable=='V1','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+mean(df_4[df_4$variable=='V2','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+mean(df_4[df_4$variable=='V3','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+mean(df_4[df_4$variable=='V4','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+
+
 # find 95% confidence intervals on each changepoint:
 quantile(df_4[df_4$variable=='V1','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
 quantile(df_4[df_4$variable=='V2','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
@@ -244,6 +251,12 @@ annual_hist(cp_results_rodent4,year_continuous)
 # turn changepoint results into data frame
 df_4 = as.data.frame(t(cp_results_rodent4$saved[,1,])) %>% melt()
 df_4$value = year_continuous[df_4$value]
+
+# find means on each changepoint:
+mean(df_4[df_4$variable=='V1','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+mean(df_4[df_4$variable=='V2','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+mean(df_4[df_4$variable=='V3','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+mean(df_4[df_4$variable=='V4','value']) %>% date_decimal() %>% format('%d-%m-%Y')
 
 # find 95% confidence intervals on each changepoint:
 quantile(df_4[df_4$variable=='V1','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
