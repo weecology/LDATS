@@ -196,6 +196,31 @@ df_4 = as.data.frame(t(cp_results_rodent4$saved[,1,])) %>% melt()
 ``` r
 df_4$value = year_continuous[df_4$value]
 
+# find means on each changepoint:
+mean(df_4[df_4$variable=='V1','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+```
+
+    ## [1] "12-01-1984"
+
+``` r
+mean(df_4[df_4$variable=='V2','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+```
+
+    ## [1] "02-06-1991"
+
+``` r
+mean(df_4[df_4$variable=='V3','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+```
+
+    ## [1] "04-01-1999"
+
+``` r
+mean(df_4[df_4$variable=='V4','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+```
+
+    ## [1] "10-11-2009"
+
+``` r
 # find 95% confidence intervals on each changepoint:
 quantile(df_4[df_4$variable=='V1','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
 ```
@@ -452,6 +477,31 @@ df_4 = as.data.frame(t(cp_results_rodent4$saved[,1,])) %>% melt()
 ``` r
 df_4$value = year_continuous[df_4$value]
 
+# find means on each changepoint:
+mean(df_4[df_4$variable=='V1','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+```
+
+    ## [1] "14-04-1984"
+
+``` r
+mean(df_4[df_4$variable=='V2','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+```
+
+    ## [1] "24-11-1992"
+
+``` r
+mean(df_4[df_4$variable=='V3','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+```
+
+    ## [1] "29-05-1999"
+
+``` r
+mean(df_4[df_4$variable=='V4','value']) %>% date_decimal() %>% format('%d-%m-%Y')
+```
+
+    ## [1] "01-01-2010"
+
+``` r
 # find 95% confidence intervals on each changepoint:
 quantile(df_4[df_4$variable=='V1','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
 ```
