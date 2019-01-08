@@ -111,6 +111,8 @@ cpt_dates <- as.data.frame(moondat) %>%
 
 cpt_dates
 
+write.csv(cpt_dates, 'ldats_ldats_dates.csv')
+
 ```
 
 ```{r clean up ldats lda + ldats cpt, echo = F}
@@ -164,5 +166,8 @@ cpt_dates <- as.data.frame(moondat) %>%
   dplyr::filter(!is.na(cpt))
 
 cpt_dates
+
+write.csv(cpt_dates, 'paper_ldats_dates.csv')
+
 ```
 
