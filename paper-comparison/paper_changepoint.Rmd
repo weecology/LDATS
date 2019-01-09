@@ -100,14 +100,15 @@ mean(cp_results_rodent2$saved_lls * -2)+ 2*(3*(ntopics-1)*(2+1)+(2))
 mean(cp_results_rodent3$saved_lls * -2)+ 2*(3*(ntopics-1)*(3+1)+(3))
 mean(cp_results_rodent4$saved_lls * -2)+ 2*(3*(ntopics-1)*(4+1)+(4))
 mean(cp_results_rodent5$saved_lls * -2)+ 2*(3*(ntopics-1)*(5+1)+(5))
-mean(cp_results_rodent6$saved_lls * -2)+ 2*(3*(ntopics-1)*(5+1)+(5))
+mean(cp_results_rodent6$saved_lls * -2)+ 2*(3*(ntopics-1)*(6+1)+(6))
 
-# lowest deviance is for 4 (or 6) changepoints
+# lowest deviance is for 4 changepoints
 
 rm(list = c('cp_results_rodent', 'cp_results_rodent2', 
-            'cp_results_rodent3', 'cp_results_rodent5'))
+            'cp_results_rodent3', 'cp_results_rodent5',
+            'cp_results_rodent6'))
 hist(year_continuous[cp_results_rodent4$saved[,1,]],breaks = seq(1977,2016,.25),xlab='',main='Changepoint Estimate')
-hist(year_continuous[cp_results_rodent6$saved[,1,]],breaks = seq(1977,2016,.25),xlab='',main='Changepoint Estimate')
+
 
 annual_hist(cp_results_rodent4,year_continuous)
 
@@ -138,19 +139,6 @@ quantile(df_4[df_4$variable=='V2','value'],probs=c(.025,.975)) %>% date_decimal(
 quantile(df_4[df_4$variable=='V3','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
 quantile(df_4[df_4$variable=='V4','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
 
-## 6 cpts 
-annual_hist(cp_results_rodent6,year_continuous)
-# turn changepoint results into data frame
-df_6 = as.data.frame(t(cp_results_rodent6$saved[,1,])) %>% melt()
-df_6$value = year_continuous[df_6$value]
-
-# find 95% confidence intervals on each changepoint:
-quantile(df_6[df_6$variable=='V1','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
-quantile(df_6[df_6$variable=='V2','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
-quantile(df_6[df_6$variable=='V3','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
-quantile(df_6[df_6$variable=='V4','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
-quantile(df_6[df_6$variable=='V5','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
-quantile(df_6[df_6$variable=='V6','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
 
 rm(list = ls())
 ```
@@ -247,14 +235,14 @@ mean(cp_results_rodent2$saved_lls * -2)+ 2*(3*(ntopics-1)*(2+1)+(2))
 mean(cp_results_rodent3$saved_lls * -2)+ 2*(3*(ntopics-1)*(3+1)+(3))
 mean(cp_results_rodent4$saved_lls * -2)+ 2*(3*(ntopics-1)*(4+1)+(4))
 mean(cp_results_rodent5$saved_lls * -2)+ 2*(3*(ntopics-1)*(5+1)+(5))
-mean(cp_results_rodent6$saved_lls * -2)+ 2*(3*(ntopics-1)*(5+1)+(5))
+mean(cp_results_rodent6$saved_lls * -2)+ 2*(3*(ntopics-1)*(6+1)+(6))
 
-# lowest deviance is again for 4 (or 6) changepoints
+# lowest deviance is again for 4 changepoints
 
 rm(list = c('cp_results_rodent', 'cp_results_rodent2', 
-            'cp_results_rodent3', 'cp_results_rodent5'))
+            'cp_results_rodent3', 'cp_results_rodent5',
+            'cp_results_rodent6'))
 hist(year_continuous[cp_results_rodent4$saved[,1,]],breaks = seq(1977,2016,.25),xlab='',main='Changepoint Estimate')
-hist(year_continuous[cp_results_rodent6$saved[,1,]],breaks = seq(1977,2016,.25),xlab='',main='Changepoint Estimate')
 
 annual_hist(cp_results_rodent4,year_continuous)
 
@@ -286,17 +274,4 @@ quantile(df_4[df_4$variable=='V2','value'],probs=c(.025,.975)) %>% date_decimal(
 quantile(df_4[df_4$variable=='V3','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
 quantile(df_4[df_4$variable=='V4','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
 
-## 6 cpts 
-annual_hist(cp_results_rodent6,year_continuous)
-# turn changepoint results into data frame
-df_6 = as.data.frame(t(cp_results_rodent6$saved[,1,])) %>% melt()
-df_6$value = year_continuous[df_6$value]
-
-# find 95% confidence intervals on each changepoint:
-quantile(df_6[df_6$variable=='V1','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
-quantile(df_6[df_6$variable=='V2','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
-quantile(df_6[df_6$variable=='V3','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
-quantile(df_6[df_6$variable=='V4','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
-quantile(df_6[df_6$variable=='V5','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
-quantile(df_6[df_6$variable=='V6','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
 ```

@@ -159,32 +159,27 @@ mean(cp_results_rodent5$saved_lls * -2)+ 2*(3*(ntopics-1)*(5+1)+(5))
     ## [1] 1287.404
 
 ``` r
-mean(cp_results_rodent6$saved_lls * -2)+ 2*(3*(ntopics-1)*(5+1)+(5))
+mean(cp_results_rodent6$saved_lls * -2)+ 2*(3*(ntopics-1)*(6+1)+(6))
 ```
 
-    ## [1] 1270.919
+    ## [1] 1302.919
 
 ``` r
-# lowest deviance is for 4 (or 6) changepoints
+# lowest deviance is for 4 changepoints
 
 rm(list = c('cp_results_rodent', 'cp_results_rodent2', 
-            'cp_results_rodent3', 'cp_results_rodent5'))
+            'cp_results_rodent3', 'cp_results_rodent5',
+            'cp_results_rodent6'))
 hist(year_continuous[cp_results_rodent4$saved[,1,]],breaks = seq(1977,2016,.25),xlab='',main='Changepoint Estimate')
 ```
 
 ![](paper_changepoint_files/figure-markdown_github/ldats%20lda-1.png)
 
 ``` r
-hist(year_continuous[cp_results_rodent6$saved[,1,]],breaks = seq(1977,2016,.25),xlab='',main='Changepoint Estimate')
-```
-
-![](paper_changepoint_files/figure-markdown_github/ldats%20lda-2.png)
-
-``` r
 annual_hist(cp_results_rodent4,year_continuous)
 ```
 
-![](paper_changepoint_files/figure-markdown_github/ldats%20lda-3.png)
+![](paper_changepoint_files/figure-markdown_github/ldats%20lda-2.png)
 
 ``` r
 # turn changepoint results into data frame
@@ -258,65 +253,6 @@ quantile(df_4[df_4$variable=='V4','value'],probs=c(.025,.975)) %>% date_decimal(
 
     ##         2.5%        97.5% 
     ## "23-05-2009" "14-05-2010"
-
-``` r
-## 6 cpts 
-annual_hist(cp_results_rodent6,year_continuous)
-```
-
-![](paper_changepoint_files/figure-markdown_github/ldats%20lda-4.png)
-
-``` r
-# turn changepoint results into data frame
-df_6 = as.data.frame(t(cp_results_rodent6$saved[,1,])) %>% melt()
-```
-
-    ## No id variables; using all as measure variables
-
-``` r
-df_6$value = year_continuous[df_6$value]
-
-# find 95% confidence intervals on each changepoint:
-quantile(df_6[df_6$variable=='V1','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
-```
-
-    ##         2.5%        97.5% 
-    ## "25-02-1983" "02-07-1984"
-
-``` r
-quantile(df_6[df_6$variable=='V2','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
-```
-
-    ##         2.5%        97.5% 
-    ## "30-01-1987" "06-08-1991"
-
-``` r
-quantile(df_6[df_6$variable=='V3','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
-```
-
-    ##         2.5%        97.5% 
-    ## "12-03-1991" "21-12-1998"
-
-``` r
-quantile(df_6[df_6$variable=='V4','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
-```
-
-    ##         2.5%        97.5% 
-    ## "14-07-1993" "05-03-2003"
-
-``` r
-quantile(df_6[df_6$variable=='V5','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
-```
-
-    ##         2.5%        97.5% 
-    ## "17-07-1998" "12-12-2009"
-
-``` r
-quantile(df_6[df_6$variable=='V6','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
-```
-
-    ##         2.5%        97.5% 
-    ## "20-06-2009" "25-04-2014"
 
 ``` r
 rm(list = ls())
@@ -450,32 +386,27 @@ mean(cp_results_rodent5$saved_lls * -2)+ 2*(3*(ntopics-1)*(5+1)+(5))
     ## [1] 817.8308
 
 ``` r
-mean(cp_results_rodent6$saved_lls * -2)+ 2*(3*(ntopics-1)*(5+1)+(5))
+mean(cp_results_rodent6$saved_lls * -2)+ 2*(3*(ntopics-1)*(6+1)+(6))
 ```
 
-    ## [1] 806.4913
+    ## [1] 826.4913
 
 ``` r
-# lowest deviance is again for 4 (or 6) changepoints
+# lowest deviance is again for 4 changepoints
 
 rm(list = c('cp_results_rodent', 'cp_results_rodent2', 
-            'cp_results_rodent3', 'cp_results_rodent5'))
+            'cp_results_rodent3', 'cp_results_rodent5',
+            'cp_results_rodent6'))
 hist(year_continuous[cp_results_rodent4$saved[,1,]],breaks = seq(1977,2016,.25),xlab='',main='Changepoint Estimate')
 ```
 
 ![](paper_changepoint_files/figure-markdown_github/paper%20lda-1.png)
 
 ``` r
-hist(year_continuous[cp_results_rodent6$saved[,1,]],breaks = seq(1977,2016,.25),xlab='',main='Changepoint Estimate')
-```
-
-![](paper_changepoint_files/figure-markdown_github/paper%20lda-2.png)
-
-``` r
 annual_hist(cp_results_rodent4,year_continuous)
 ```
 
-![](paper_changepoint_files/figure-markdown_github/paper%20lda-3.png)
+![](paper_changepoint_files/figure-markdown_github/paper%20lda-2.png)
 
 ``` r
 # turn changepoint results into data frame
@@ -550,62 +481,3 @@ quantile(df_4[df_4$variable=='V4','value'],probs=c(.025,.975)) %>% date_decimal(
 
     ##         2.5%        97.5% 
     ## "20-06-2009" "05-11-2010"
-
-``` r
-## 6 cpts 
-annual_hist(cp_results_rodent6,year_continuous)
-```
-
-![](paper_changepoint_files/figure-markdown_github/paper%20lda-4.png)
-
-``` r
-# turn changepoint results into data frame
-df_6 = as.data.frame(t(cp_results_rodent6$saved[,1,])) %>% melt()
-```
-
-    ## No id variables; using all as measure variables
-
-``` r
-df_6$value = year_continuous[df_6$value]
-
-# find 95% confidence intervals on each changepoint:
-quantile(df_6[df_6$variable=='V1','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
-```
-
-    ##         2.5%        97.5% 
-    ## "17-02-1978" "30-07-1984"
-
-``` r
-quantile(df_6[df_6$variable=='V2','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
-```
-
-    ##         2.5%        97.5% 
-    ## "03-02-1984" "03-03-1995"
-
-``` r
-quantile(df_6[df_6$variable=='V3','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
-```
-
-    ##         2.5%        97.5% 
-    ## "13-05-1988" "10-09-1999"
-
-``` r
-quantile(df_6[df_6$variable=='V4','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
-```
-
-    ##         2.5%        97.5% 
-    ## "16-08-1994" "20-01-2007"
-
-``` r
-quantile(df_6[df_6$variable=='V5','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
-```
-
-    ##         2.5%        97.5% 
-    ## "19-02-1999" "17-10-2009"
-
-``` r
-quantile(df_6[df_6$variable=='V6','value'],probs=c(.025,.975)) %>% date_decimal() %>% format('%d-%m-%Y')
-```
-
-    ##         2.5%        97.5% 
-    ## "22-08-2009" "25-05-2011"
