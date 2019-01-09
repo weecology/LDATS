@@ -14,7 +14,7 @@
 #'   to per-iteration rates using \code{\link{count_trips}}.
 #'   \cr \cr 
 #'   This function was first designed to work within \code{\link{TS}} and 
-#'   process the output of \code{\link{est_changepts}}, but has been 
+#'   process the output of \code{\link{est_changepoints}}, but has been 
 #'   generalized and would work with any output from a ptMCMC as long as 
 #'   \code{ptMCMCout} is formatted properly.
 #'
@@ -58,7 +58,7 @@ diagnose_ptMCMC <- function(ptMCMCout){
 #'   ptMCMC particles, as identified by their id on initialization.
 #'   \cr \cr
 #'   This function was designed to work within \code{\link{TS}} and process
-#'   the output of \code{\link{est_changepts}} as a component of 
+#'   the output of \code{\link{est_changepoints}} as a component of 
 #'   \code{\link{diagnose_ptMCMC}}, but has been generalized
 #'   and would work with any output from a ptMCMC as long as \code{ids}
 #'   is formatted properly.
@@ -114,7 +114,7 @@ count_trips <- function(ids){
 #'   temperatures and likelihood differentials.  
 #'   \cr \cr
 #'   This function was designed to work within \code{\link{TS}} and 
-#'   specifically \code{\link{est_changepts}}. It is still hardcoded to do
+#'   specifically \code{\link{est_changepoints}}. It is still hardcoded to do
 #'   so, but has the capacity to be generalized to work with any estimation
 #'   via ptMCMC with additional coding work.
 #'
@@ -198,7 +198,7 @@ swap_chains <- function(chainsin, inputs, ids){
 #'   update of the configuration (made by \code{take_step}). 
 #'   \cr \cr
 #'   This set of functions was designed to work within \code{\link{TS}} and 
-#'   specifically \code{\link{est_changepts}}. They are still hardcoded to do
+#'   specifically \code{\link{est_changepoints}}. They are still hardcoded to do
 #'   so, but have the capacity to be generalized to work with any estimation
 #'   via ptMCMC with additional coding work.
 #'
@@ -343,7 +343,7 @@ proposed_step_mods <- function(prop_changepts, inputs){
 #'   among chains.
 #'   \cr \cr
 #'   These functions were designed to work within \code{\link{TS}} and 
-#'   specifically \code{\link{est_changepts}}, but have been generalized
+#'   specifically \code{\link{est_changepoints}}, but have been generalized
 #'   and would work within any general ptMCMC as long as \code{control},
 #'   \code{ids}, and \code{swaps} are formatted properly.
 #'
@@ -382,7 +382,7 @@ update_ids <- function(ids, swaps){
 #'   by the ptMCMC algorithm in the context of estimating change points. 
 #'   \cr \cr
 #'   This function was designed to work within \code{\link{TS}} and 
-#'   specifically \code{\link{est_changepts}}. It is still hardcoded to do
+#'   specifically \code{\link{est_changepoints}}. It is still hardcoded to do
 #'   so, but has the capacity to be generalized to work with any estimation
 #'   via ptMCMC with additional coding work.
 #'
@@ -499,9 +499,9 @@ prep_proposal_dist <- function(nchangepoints, control = TS_controls_list()){
 #'   iterations are thinned) via \code{process_saves}.
 #'   \cr \cr
 #'   This set of functions was designed to work within \code{\link{TS}} and 
-#'   specifically \code{\link{est_changepts}}. They are still hardcoded to do
-#'   so, but have the capacity to be generalized to work with any estimation
-#'   via ptMCMC with additional coding work.
+#'   specifically \code{\link{est_changepoints}}. They are still hardcoded to
+#'   do so, but have the capacity to be generalized to work with any
+#'   estimation via ptMCMC with additional coding work.
 #'
 #' @param nchangepoints \code{integer} corresponding to the number of 
 #'   change points to include in the model. 0 is a valid input (corresponding
@@ -678,7 +678,7 @@ update_cpts <- function(cpts, swaps){
 #'   algorithm.
 #'   \cr \cr
 #'   This function was designed to work within \code{\link{TS}} and 
-#'   \code{\link{est_changepts}} specifically, but has been generalized
+#'   \code{\link{est_changepoints}} specifically, but has been generalized
 #'   and would work with any ptMCMC model as long as \code{control}
 #'   includes the relevant control parameters (and provided that the 
 #'   \code{\link{check_control}} function and its use here are generalized).

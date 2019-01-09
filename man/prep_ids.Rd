@@ -29,7 +29,7 @@ The vector of chain ids.
   among chains.
   \cr \cr
   These functions were designed to work within \code{\link{TS}} and 
-  specifically \code{\link{est_changepts}}, but have been generalized
+  specifically \code{\link{est_changepoints}}, but have been generalized
   and would work within any general ptMCMC as long as \code{control},
   \code{ids}, and \code{swaps} are formatted properly.
 }
