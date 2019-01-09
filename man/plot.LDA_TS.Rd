@@ -6,7 +6,7 @@
 \usage{
 \method{plot}{LDA_TS}(x, ..., control = LDA_TS_controls_list(),
   cols = set_LDA_TS_plot_cols(), bin_width = 1, xlab = NULL,
-  selection = "median")
+  border = NA, selection = "median")
 }
 \arguments{
 \item{x}{A \code{LDA_TS} object of a full LDATS model fit by
@@ -41,6 +41,8 @@ timeseries plot, in units of the time variable used to fit the model
 to \code{NULL}, which results in usage of the \code{timename} element 
 of the control list (held in\code{control$TS_control$timename}). To have
 no label printed, set \code{xlab = ""}.}
+
+\item{border}{Border for the histogram, default is \code{NA}.}
 
 \item{selection}{Indicator of the change points to use in the timeseries
 summary plot. Currently only defined for \code{"median"} and 
