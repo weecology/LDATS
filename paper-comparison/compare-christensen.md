@@ -254,7 +254,7 @@ There is the additional wrinkle of `document_term_weights`. The paper weighted a
 
 For narratives running all these models, see `ldats_changepoint.md` and `paper_changepoint.md`.
 
-All the models found 4 changepoints (although the paper model actually finds lower deviances for 6 changepoints, 6 was outside the range considered by the paper/anticipated by LDATS, so I'm sticking with 4 for now)
+All the models found 4 changepoints.
 
 ### Compare model outcomes
 
