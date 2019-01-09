@@ -6,7 +6,8 @@
 \usage{
 \method{plot}{TS_fit}(x, ..., plot_type = "summary",
   interactive = FALSE, cols = set_TS_summary_plot_cols(),
-  bin_width = 1, xlab = NULL, selection = "median", LDATS = FALSE)
+  bin_width = 1, xlab = NULL, border = NA, selection = "median",
+  LDATS = FALSE)
 }
 \arguments{
 \item{x}{A \code{TS_fit} object of a multinomial time series model fit by
@@ -33,6 +34,8 @@ timeseries plot, in units of the x-axis (the time variable used to fit
 the model).}
 
 \item{xlab}{Label for the x-axis in the summary time series plot.}
+
+\item{border}{Border for the histogram, default is \code{NA}.}
 
 \item{selection}{Indicator of the change points to use in the timeseries
 summary plot. Currently only defined for \code{"median"} and 

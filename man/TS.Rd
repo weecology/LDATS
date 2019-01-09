@@ -108,7 +108,7 @@ This is the main interface function for the LDATS application
   document_covariate_table <- rodents$document_covariate_table
   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
   data <- document_covariate_table
-  data$gamma <- LDA_model@gamma
+  data$gamma <- LDA_models@gamma
   weights <- document_weights(document_term_table)
   TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, weights)
 }

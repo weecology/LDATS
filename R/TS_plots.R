@@ -18,6 +18,8 @@
 #'
 #' @param xlab Label for the x-axis in the summary time series plot.
 #'
+#' @param border Border for the histogram, default is \code{NA}.
+#'
 #' @param selection Indicator of the change points to use in the timeseries
 #'   summary plot. Currently only defined for \code{"median"} and 
 #'   \code{"mode"}.
@@ -40,11 +42,12 @@
 #'
 plot.TS_fit <- function(x, ..., plot_type = "summary", interactive = FALSE,
                         cols = set_TS_summary_plot_cols(), bin_width = 1, 
-                        xlab = NULL, selection = "median", LDATS = FALSE){
+                        xlab = NULL, border = NA, selection = "median", 
+                        LDATS = FALSE){
   if (plot_type == "diagnostic"){
     TS_diagnostics_plot(x, interactive = interactive)
   } else if (plot_type == "summary"){
-    TS_summary_plot(x, cols, bin_width, xlab, selection, LDATS)
+    TS_summary_plot(x, cols, bin_width, xlab, border, selection, LDATS)
   }
 }
 
@@ -284,6 +287,8 @@ set_TS_summary_plot_cols <- function(rho_cols = NULL, rho_option = "D",
 #'
 #' @param xlab Label for the x-axis (time).
 #'
+#' @param border Border for the histogram, default is \code{NA}.
+#'
 #' @param selection Indicator of the change points to use. Currently only
 #'   defined for "median" and "mode".
 #'
@@ -293,7 +298,8 @@ set_TS_summary_plot_cols <- function(rho_cols = NULL, rho_option = "D",
 #' @export
 #'
 TS_summary_plot <- function(x, cols = set_TS_summary_plot_cols(), bin_width,
-                            xlab, selection = "median", LDATS = FALSE){
+                            xlab = NULL, border = NA, selection = "median", 
+                            LDATS = FALSE){
 
   if(LDATS){
     par(fig = c(0, 1, 0.25, 0.5), new = TRUE)
@@ -302,7 +308,7 @@ TS_summary_plot <- function(x, cols = set_TS_summary_plot_cols(), bin_width,
   } 
   rc <- cols$rho
   rho_cols <- set_rho_hist_colors(x$rhos, rc$cols, rc$option, rc$alpha)
-  rho_hist(x, rho_cols, bin_width, xlab = NULL)
+  rho_hist(x, rho_cols, bin_width, xlab = xlab, border = border)
 
   if(LDATS){
     par(fig = c(0, 1, 0, 0.25), new = TRUE)
@@ -358,12 +364,13 @@ pred_gamma_TS_plot <- function(x, selection = "median", cols, xlab = NULL){
   if (is.null(xlab)){
     xlab <- x$control$timename
   }
-  par(mar = c(4.5, 4, 1, 1))
+  par(mar = c(4.5, 5, 1, 1))
   plot(1, 1, type = "n", bty = "L", xlab = xlab, ylab = "", xaxt = "n", 
        yaxt = "n", ylim = c(0, 1), xlim = c(t1 - 1, t2 + 1))
   yax <- round(seq(0, 1, length.out = 5), 3)
   axis(2, at = yax, las = 1)
   axis(1)
+  mtext(side = 2, line = 3.5, cex = 1.25, "Proportion")
   ntopics <- ncol(as.matrix(x$data[[x$control$response]]))
   seg1 <- c(0, spec_rhos[-length(rhos)])
   seg2 <- c(spec_rhos, t2)
@@ -421,9 +428,11 @@ rho_lines <- function(spec_rhos){
 #'
 #' @param xlab Label for the x-axis (time).
 #'
+#' @param border Border for the histogram, default is \code{NA}.
+#'
 #' @export
 #'
-rho_hist <- function(x, cols, bin_width = 1, xlab = NULL){
+rho_hist <- function(x, cols, bin_width = 1, xlab = NULL, border = NA){
 
   rhos <- x$rhos
   nrhos <- ncol(rhos)
@@ -453,19 +462,20 @@ rho_hist <- function(x, cols, bin_width = 1, xlab = NULL){
       xlab <- x$control$timename
     }
   }
-  par(mar = c(1.5, 4, 1, 1))
+  par(mar = c(1.5, 5, 1, 1))
   plot(1, 1, type = "n", bty = "L", xlab = xlab, ylab = "", xaxt = "n", 
        yaxt = "n", ylim = c(0, maxht), xlim = c(bin1[1], bin2[nbins]))
   yax <- round(seq(0, maxht, length.out = 5), 3)
   axis(2, at = yax, las = 1)
   axis(1)
+  mtext(side = 2, line = 3.75, cex = 1.25, "Proportion")
   if (!is.null(nrhos)){
     for (i in 1:nbins){
       rho_ord <- order(hts[i,], decreasing = TRUE)
       for(j in 1:nrhos){
         ht_j <- hts[i, rho_ord[j]] / niter
         col_j <- cols[rho_ord[j]]
-        rect(bin1[i], 0, bin2[i], ht_j, col = col_j)      
+        rect(bin1[i], 0, bin2[i], ht_j, col = col_j, border = border)      
       }
     }
   }
