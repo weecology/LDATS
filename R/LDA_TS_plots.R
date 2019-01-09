@@ -25,6 +25,8 @@
 #'   of the control list (held in\code{control$TS_control$timename}). To have
 #'   no label printed, set \code{xlab = ""}.
 #'
+#' @param border Border for the histogram, default is \code{NA}.
+#'
 #' @param selection Indicator of the change points to use in the timeseries
 #'   summary plot. Currently only defined for \code{"median"} and 
 #'   \code{"mode"}.
@@ -58,7 +60,8 @@
 #'
 plot.LDA_TS <- function(x, ..., control = LDA_TS_controls_list(),
                         cols = set_LDA_TS_plot_cols(),
-                        bin_width = 1, xlab = NULL, selection = "median"){
+                        bin_width = 1, xlab = NULL, border = NA,
+                        selection = "median"){
   tname <- control$TS_control$timename
   tvar <- x$"Selected TS model"$data[ , tname]
   if(!is.null(xlab)){
@@ -67,8 +70,8 @@ plot.LDA_TS <- function(x, ..., control = LDA_TS_controls_list(),
   plot.LDA_set(x$"Selected LDA model", xtime = tvar, xname = tname, 
                cols = cols$LDA$cols, option = cols$LDA$option, LDATS = TRUE)
   plot.TS_fit(x$"Selected TS model", plot_type = "summary", cols = cols$TS,
-              bin_width = bin_width, xlab = xlab, selection = selection,
-              LDATS = TRUE)
+              bin_width = bin_width, xlab = xlab, border = border,
+              selection = selection, LDATS = TRUE)
 }
 
 

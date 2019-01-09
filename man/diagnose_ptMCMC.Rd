@@ -38,7 +38,7 @@ Within-chain step acceptance rates are averaged for each of the
   to per-iteration rates using \code{\link{count_trips}}.
   \cr \cr 
   This function was first designed to work within \code{\link{TS}} and 
-  process the output of \code{\link{est_changepts}}, but has been 
+  process the output of \code{\link{est_changepoints}}, but has been 
   generalized and would work with any output from a ptMCMC as long as 
   \code{ptMCMCout} is formatted properly.
 }

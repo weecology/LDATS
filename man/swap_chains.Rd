@@ -23,7 +23,7 @@ This function handles the among-chain swapping based on
   temperatures and likelihood differentials.  
   \cr \cr
   This function was designed to work within \code{\link{TS}} and 
-  specifically \code{\link{est_changepts}}. It is still hardcoded to do
+  specifically \code{\link{est_changepoints}}. It is still hardcoded to do
   so, but has the capacity to be generalized to work with any estimation
   via ptMCMC with additional coding work.
 }
