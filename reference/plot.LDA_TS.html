@@ -135,7 +135,7 @@
     <pre class="usage"><span class='co'># S3 method for LDA_TS</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='LDA_TS_controls_list.html'>LDA_TS_controls_list</a></span>(),
   <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fu'><a href='set_LDA_TS_plot_cols.html'>set_LDA_TS_plot_cols</a></span>(), <span class='kw'>bin_width</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>selection</span> <span class='kw'>=</span> <span class='st'>"median"</span>)</pre>
+  <span class='kw'>border</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>selection</span> <span class='kw'>=</span> <span class='st'>"median"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -184,6 +184,10 @@ timeseries plot, in units of the time variable used to fit the model
 to <code>NULL</code>, which results in usage of the <code>timename</code> element 
 of the control list (held in<code>control$TS_control$timename</code>). To have
 no label printed, set <code>xlab = ""</code>.</p></td>
+    </tr>
+    <tr>
+      <th>border</th>
+      <td><p>Border for the histogram, default is <code>NA</code>.</p></td>
     </tr>
     <tr>
       <th>selection</th>

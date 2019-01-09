@@ -135,7 +135,8 @@
     <pre class="usage"><span class='co'># S3 method for TS_fit</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>plot_type</span> <span class='kw'>=</span> <span class='st'>"summary"</span>,
   <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fu'><a href='set_TS_summary_plot_cols.html'>set_TS_summary_plot_cols</a></span>(),
-  <span class='kw'>bin_width</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>selection</span> <span class='kw'>=</span> <span class='st'>"median"</span>, <span class='kw'>LDATS</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='kw'>bin_width</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>border</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>selection</span> <span class='kw'>=</span> <span class='st'>"median"</span>,
+  <span class='kw'>LDATS</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -178,6 +179,10 @@ the model).</p></td>
     <tr>
       <th>xlab</th>
       <td><p>Label for the x-axis in the summary time series plot.</p></td>
+    </tr>
+    <tr>
+      <th>border</th>
+      <td><p>Border for the histogram, default is <code>NA</code>.</p></td>
     </tr>
     <tr>
       <th>selection</th>
