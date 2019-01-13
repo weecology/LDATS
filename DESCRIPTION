@@ -1,6 +1,6 @@
 Package: LDATS
 Title: Latent Dirichlet Allocation coupled with Time Series analyses
-Version: 0.0.18
+Version: 0.1.0
 Authors@R: c(
 	person(c("Juniper", "L."), "Simonis", 
       email = "juniper.simonis@weecology.org", role = c("aut", "cre"), 
