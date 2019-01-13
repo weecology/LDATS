@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -94,10 +94,10 @@
 <p>The <code>LDATS</code> package provides functionality for analyzing time series of high-dimensional data using a two-stage approach comprised of Latent Dirichlet Allocation (LDA) and Bayesian time series (TS) analyses.</p>
 <p>For a full description of the math underlying the <code>LDATS</code> package, see the <a href="https://github.com/weecology/LDATS/blob/master/manuscript/simonis_et_al.pdf"><em>draft</em> technical manuscript</a>.</p>
 </div>
-<div id="status-in-development" class="section level2">
+<div id="status-stable-version-available-in-development" class="section level2">
 <h2 class="hasAnchor">
-<a href="#status-in-development" class="anchor"></a>Status: In Development</h2>
-<p>The package is currently in active development by the <a href="https://www.weecology.org">Weecology Team</a>, in advance of submission to CRAN. The API is well defined at this point and should not change substantially, but we are presently engaged in testing and documentation, and further edits may occur before submission to CRAN. Therefore, any output should still be considered <strong><em>provisional</em></strong>.</p>
+<a href="#status-stable-version-available-in-development" class="anchor"></a>Status: Stable Version Available, In Development</h2>
+<p>The package is currently in active development by the <a href="https://www.weecology.org">Weecology Team</a>, although a stable version (0.1.0) has been submitted to CRAN. The API is well defined at this point and should not change substantially.</p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -109,12 +109,19 @@
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
 <p>Here is an example of a full LDA-TS analysis using the <a href="https://github.com/weecology/PortalData">Portal rodent data</a>:</p>
-<pre><code>data(rodents)
+<pre><code><a href="https://www.rdocumentation.org/packages/base/topics/library">library(LDATS)
+data(rodents)
 dtt &lt;- rodents$document_term_table
 dct &lt;- rodents$document_covariate_table
 
-r_LDATS &lt;- LDATS::LDA_TS(dtt, dct, topics = 2:5, nseeds = 2, 
-                         formulas = c(~1, ~newmoon) nchangepoints = 0:2)</code></pre>
+r_LDATS &lt;- LDA_TS(dtt, dct, topics = 2:5, nseeds = 2, 
+                  formulas = c(~1, ~newmoon), nchangepoints = 0:2)</a></code></pre>
+<p>Which conducts two replicates (<code>nseeds</code>) for each of two to five topics in an LDA model using the document term table, selects the best (AIC) of those, then conducts six time series models on it (each of an intercept only and newmoon-based regression under 0, 1, and 2 changepoints), then selects the best (AIC) of the time series, and packages all the models together.</p>
+<p>The resulting object is of class <code>LDA_TS</code>, which has a few basic routines available:</p>
+<pre><code><a href="https://www.rdocumentation.org/packages/base/topics/print">print(r_KDATS)</a></code></pre>
+<p>prints the selected LDA and TS models and</p>
+<pre><code><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot(r_KDATS)</a></code></pre>
+<p>produces a 4-panel figure of them a la Figure 1 from <a href="https://doi.org/10.1002/ecy.2373">Christensen et al. 2018</a>.</p>
 </div>
 <div id="more-information" class="section level2">
 <h2 class="hasAnchor">
