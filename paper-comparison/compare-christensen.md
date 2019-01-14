@@ -294,11 +294,34 @@ plot(ldamodel_nonadj)
 
 ldamodel_nonadj@k
 #> [1] 4
+```
 
-paper_gamma_comparison <- ldamodel_adj@gamma == ldamodel_nonadj@gamma
-unique(paper_gamma_comparison)
-#>       [,1]  [,2]  [,3]  [,4]
-#> [1,] FALSE FALSE FALSE FALSE
+``` r
+load('~/Dropbox/ldats-models/ldats_lda_adj_data.Rds')
+
+plot(ldats_adj_lda_selected[[1]])
+```
+
+![](compare-christensen_files/figure-markdown_github/ldats%20adj%20lda-1.png)
+
+``` r
+
+ldats_adj_lda_selected[[1]]@k
+#> [1] 6
+```
+
+``` r
+load('~/Dropbox/ldats-models/ldats_lda_nonadj_data.Rds')
+
+plot(ldats_nonadj_lda_selected[[1]])
+```
+
+![](compare-christensen_files/figure-markdown_github/ldats%20nonadj%20lda-1.png)
+
+``` r
+
+ldats_nonadj_lda_selected[[1]]@k
+#> [1] 6
 ```
 
 LDA
