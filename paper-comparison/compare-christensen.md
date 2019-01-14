@@ -175,7 +175,6 @@ In principle, whether we use the adjusted or the non-adjusted rodent table shoul
 Exploring/illustrating this:
 
 ``` r
-
 # paper LDA w adjusted data
 source('christensen-ecology-files/AIC_model_selection.R')
 source('christensen-ecology-files/LDA-distance.R')
@@ -202,7 +201,7 @@ seeds_4topics = best_ntopic %>%
 
 # choose seed with highest log likelihood for all following analyses
 #    (also produces plot of community composition for 'best' run compared to 'worst')
-best_seed = calculate_LDA_distance(rodents[[1]],seeds_4topics)
+best_seed = calculate_LDA_distance(rodents_adj[[1]],seeds_4topics)
 mean_dist = unlist(best_seed)[2]
 max_dist = unlist(best_seed)[3]
 
@@ -211,9 +210,9 @@ max_dist = unlist(best_seed)[3]
 # ==================================================================
 ntopics = 4
 SEED = unlist(best_seed)[1]  # For the paper, I use seed 206
-ldamodel_adj = LDA(rodents[[1]],ntopics, control = list(seed = SEED),method='VEM')
+ldamodel_adj = LDA(rodents_adj[[1]],ntopics, control = list(seed = SEED),method='VEM')
 
-plot(ldamodel_adj)
+save(ldamodel_adj, file = '~/Dropbox/ldats-models/paper_lda_adj_data.Rds')
 
 # paper LDA w nonadjusted data
 
@@ -250,21 +249,56 @@ ntopics = 4
 SEED = unlist(best_seed)[1]  # For the paper, I use seed 206
 ldamodel_nonadj = LDA(rodents[[1]],ntopics, control = list(seed = SEED),method='VEM')
 
-plot(ldamodel_nonadj)
+save(ldamodel_nonadj, file = '~/Dropbox/ldats-models/paper_lda_nonadj_data.Rds')
 
 # ldats LDA w adjusted data
 
 ldats_adj_ldas <- LDATS::LDA_set(document_term_table = rodents_adj$document_term_table, topics = c(2:6), nseeds = 100)
 ldats_adj_lda_selected <- LDATS::select_LDA(LDA_models = ldats_adj_ldas)
 
-plot(ldats_adj_lda_selected)
+save(ldats_adj_lda_selected, file = '~/Dropbox/ldats-models/ldats_lda_adj_data.Rds')
 
 # ldats LDA w nonadjusted data
 
 ldats_nonadj_ldas <- LDATS::LDA_set(document_term_table = rodents$document_term_table, topics = c(2:6), nseeds = 100)
-ldats_nonadj_lda_selected <- LDATS::select_LDA(LDA_models = ldats_ldas)
+ldats_nonadj_lda_selected <- LDATS::select_LDA(LDA_models = ldats_nonadj_ldas)
 
-plot(ldats_nonadj_lda_selected)
+save(ldats_nonadj_lda_selected, file = '~/Dropbox/ldats-models/ldats_lda_nonadj_data.Rds')
+```
+
+``` r
+
+load('~/Dropbox/ldats-models/paper_lda_adj_data.Rds')
+load('~/Dropbox/ldats-models/paper_lda_nonadj_data.Rds')
+
+# Adjusted data
+plot(ldamodel_adj)
+```
+
+![](compare-christensen_files/figure-markdown_github/paper%20adj%20lda-1.png)
+
+``` r
+
+ldamodel_adj@k
+#> [1] 4
+```
+
+``` r
+# Nonadjusted data
+plot(ldamodel_nonadj)
+```
+
+![](compare-christensen_files/figure-markdown_github/paper%20nonadj%20lda-1.png)
+
+``` r
+
+ldamodel_nonadj@k
+#> [1] 4
+
+paper_gamma_comparison <- ldamodel_adj@gamma == ldamodel_nonadj@gamma
+unique(paper_gamma_comparison)
+#>       [,1]  [,2]  [,3]  [,4]
+#> [1,] FALSE FALSE FALSE FALSE
 ```
 
 LDA
