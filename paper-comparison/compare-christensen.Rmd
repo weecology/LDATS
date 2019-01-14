@@ -289,8 +289,24 @@ plot(ldamodel_nonadj)
 
 ldamodel_nonadj@k
 
-paper_gamma_comparison <- ldamodel_adj@gamma == ldamodel_nonadj@gamma
-unique(paper_gamma_comparison)
+
+```
+
+```{r ldats adj lda}
+load('~/Dropbox/ldats-models/ldats_lda_adj_data.Rds')
+
+plot(ldats_adj_lda_selected[[1]])
+
+ldats_adj_lda_selected[[1]]@k
+
+```
+
+```{r ldats nonadj lda}
+load('~/Dropbox/ldats-models/ldats_lda_nonadj_data.Rds')
+
+plot(ldats_nonadj_lda_selected[[1]])
+
+ldats_nonadj_lda_selected[[1]]@k
 
 ```
 
