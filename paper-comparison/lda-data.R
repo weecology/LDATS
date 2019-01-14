@@ -59,7 +59,7 @@ seeds_4topics = best_ntopic %>%
 
 # choose seed with highest log likelihood for all following analyses
 #    (also produces plot of community composition for 'best' run compared to 'worst')
-best_seed = calculate_LDA_distance(rodents[[1]],seeds_4topics)
+best_seed = calculate_LDA_distance(rodents_adj[[1]],seeds_4topics)
 mean_dist = unlist(best_seed)[2]
 max_dist = unlist(best_seed)[3]
 
@@ -68,14 +68,9 @@ max_dist = unlist(best_seed)[3]
 # ==================================================================
 ntopics = 4
 SEED = unlist(best_seed)[1]  # For the paper, I use seed 206
-ldamodel_adj = LDA(rodents[[1]],ntopics, control = list(seed = SEED),method='VEM')
+ldamodel_adj = LDA(rodents_adj[[1]],ntopics, control = list(seed = SEED),method='VEM')
 
 save(ldamodel_adj, file = '~/Dropbox/ldats-models/paper_lda_adj_data.Rds')
-
-plot(ldamodel_adj)
-ldamodel_adj@k
-head(ldamodel_adj@gamma)
-
 
 # paper LDA w nonadjusted data
 
@@ -113,7 +108,6 @@ SEED = unlist(best_seed)[1]  # For the paper, I use seed 206
 ldamodel_nonadj = LDA(rodents[[1]],ntopics, control = list(seed = SEED),method='VEM')
 
 save(ldamodel_nonadj, file = '~/Dropbox/ldats-models/paper_lda_nonadj_data.Rds')
-
 plot(ldamodel_nonadj)
 ldamodel_nonadj@k
 head(ldamodel_nonadj@gamma)
