@@ -34,7 +34,7 @@ rm(ldats_dates)
 rm(ch_dat)
 
 #### Load LDA ####
-load('/Users/renatadiaz/Documents/model-stash/ldats_lda.Rds')
+load('/~/Dropbox/ldats-models/ldats_lda.Rds')
 
 #### Run changepoint ####
 source('paper-comparison/christensen-ecology-files/changepointmodel.r')
@@ -48,37 +48,37 @@ x = data.frame(
 
 # # run models with 1, 2, 3, 4, 5 changepoints
 # cp_results_rodent = changepoint_model(ldats_lda_selected[[1]], x, 1, weights = rep(1,length(year_continuous)))
-# save(cp_results_rodent, file = '/Users/renatadiaz/Documents/model-stash/paper_cpt_ldats_lda1.Rds')
+# save(cp_results_rodent, file = '/~/Dropbox/ldats-models/paper_cpt_ldats_lda1.Rds')
 # rm(cp_results_rodent)
 # 
 # cp_results_rodent2 = changepoint_model(ldats_lda_selected[[1]], x, 2, weights = rep(1,length(year_continuous)))
-# save(cp_results_rodent2, file = '/Users/renatadiaz/Documents/model-stash/paper_cpt_ldats_lda2.Rds')
+# save(cp_results_rodent2, file = '/~/Dropbox/ldats-models/paper_cpt_ldats_lda2.Rds')
 # rm(cp_results_rodent2)
 # 
 # cp_results_rodent3 = changepoint_model(ldats_lda_selected[[1]], x, 3, weights = rep(1,length(year_continuous)))
-# save(cp_results_rodent3, file = '/Users/renatadiaz/Documents/model-stash/paper_cpt_ldats_lda3.Rds')
+# save(cp_results_rodent3, file = '/~/Dropbox/ldats-models/paper_cpt_ldats_lda3.Rds')
 # rm(cp_results_rodent3)
 # 
 # cp_results_rodent4 = changepoint_model(ldats_lda_selected[[1]], x, 4, weights = rep(1,length(year_continuous)))
-# save(cp_results_rodent4, file = '/Users/renatadiaz/Documents/model-stash/paper_cpt_ldats_lda4.Rds')
+# save(cp_results_rodent4, file = '/~/Dropbox/ldats-models/paper_cpt_ldats_lda4.Rds')
 # rm(cp_results_rodent4)
 # 
 # cp_results_rodent5 = changepoint_model(ldats_lda_selected[[1]], x, 5, weights = rep(1,length(year_continuous)))
-# save(cp_results_rodent5, file = '/Users/renatadiaz/Documents/model-stash/paper_cpt_ldats_lda5.Rds')
+# save(cp_results_rodent5, file = '/~/Dropbox/ldats-models/paper_cpt_ldats_lda5.Rds')
 # rm(cp_results_rodent5)
 # 
 # cp_results_rodent6 = changepoint_model(ldats_lda_selected[[1]], x, 6, weights = rep(1,length(year_continuous)))
-# save(cp_results_rodent6, file = '/Users/renatadiaz/Documents/model-stash/paper_cpt_ldats_lda6.Rds')
+# save(cp_results_rodent6, file = '/~/Dropbox/ldats-models/paper_cpt_ldats_lda6.Rds')
 # rm(cp_results_rodent6)
 # 
 
 #### Changepoint model selection ####
-load('/Users/renatadiaz/Documents/model-stash/paper_cpt_ldats_lda1.Rds')
-load('/Users/renatadiaz/Documents/model-stash/paper_cpt_ldats_lda2.Rds')
-load('/Users/renatadiaz/Documents/model-stash/paper_cpt_ldats_lda3.Rds')
-load('/Users/renatadiaz/Documents/model-stash/paper_cpt_ldats_lda4.Rds')
-load('/Users/renatadiaz/Documents/model-stash/paper_cpt_ldats_lda5.Rds')
-load('/Users/renatadiaz/Documents/model-stash/paper_cpt_ldats_lda6.Rds')
+load('/~/Dropbox/ldats-models/paper_cpt_ldats_lda1.Rds')
+load('/~/Dropbox/ldats-models/paper_cpt_ldats_lda2.Rds')
+load('/~/Dropbox/ldats-models/paper_cpt_ldats_lda3.Rds')
+load('/~/Dropbox/ldats-models/paper_cpt_ldats_lda4.Rds')
+load('/~/Dropbox/ldats-models/paper_cpt_ldats_lda5.Rds')
+load('/~/Dropbox/ldats-models/paper_cpt_ldats_lda6.Rds')
 
 ntopics = ldats_lda_selected[[1]]@k
 
