@@ -35,7 +35,7 @@ rm(ldats_dates)
 rm(ch_dat)
 
 #### Load LDA ####
-load('/Users/renatadiaz/Documents/model-stash/ldats_lda.Rds')
+load('/~/Dropbox/ldats-models/ldats_lda.Rds')
 year_continuous = 1970 + as.integer(julian(ch_dates)) / 365.25
 x = data.frame(
   year_continuous = year_continuous,
@@ -55,15 +55,15 @@ ldats_ldats_cpt <- TS_on_LDA(LDA_models = ldats_lda_selected,
                              weights = NULL)
 
 
-save(ldats_ldats_cpt, file = '/Users/renatadiaz/Documents/model-stash/ldats_lda_ldats_cpt.Rds')
+save(ldats_ldats_cpt, file = '/~/Dropbox/ldats-models/ldats_lda_ldats_cpt.Rds')
 rm(ldats_ldats_cpt)
 rm(ldats_lda_selected)
 
 #### Load paper LDA ####
-load('/Users/renatadiaz/Documents/model-stash/paper_lda.Rds')
+load('/~/Dropbox/ldats-models/paper_lda.Rds')
 paper_ldats_cpt <- TS_on_LDA(LDA_models = ldamodel, 
                              document_covariate_table = x,
                              formulas = ~ sin_year + cos_year,
                              nchangepoints = 1:6,
                              weights = NULL)
-save(paper_ldats_cpt, file = '/Users/renatadiaz/Documents/model-stash/paper_lda_ldats_cpt.Rds')
+save(paper_ldats_cpt, file = '/~/Dropbox/ldats-models/paper_lda_ldats_cpt.Rds')
