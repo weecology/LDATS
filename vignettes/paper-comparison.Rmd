@@ -71,4 +71,109 @@ rm(files_to_download)
 rm(i)
 
 }
+
+rm(test_filepath)
+rm(paper_filepath)
+```
+
+
+
+## Data
+
+The Portal rodents control data is included in the LDATS package:
+
+```{r LDATS data}
+
+data(rodents)
+
+ldats_dat <- rodents[[1]]
+ldats_dates <- rodents[[2]]
+head(ldats_dat)
+
+```
+
+Load the data used in Christensen et al: 
+
+```{r Ch data}
+source(here::here('vignettes', 'paper-comparison-files', 'christensenetal-2018-files', 'rodent_data_for_LDA.r'))
+
+dat = create_rodent_table(period_first = 1,
+                          period_last = 436,
+                          selected_plots = c(2,4,8,11,12,14,17,22),
+                          selected_species = c('BA','DM','DO','DS','NA','OL','OT','PB','PE','PF','PH','PI','PL','PM','PP','RF','RM','RO','SF','SH','SO'))
+
+# dates to go with count data
+moondat = read.csv(text=getURL("https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/moon_dates.csv"),stringsAsFactors = F)
+moondat$date = as.Date(moondat$censusdate)
+
+period_dates = filter(moondat,period %in% rownames(dat)) %>% select(period,date)
+dates = period_dates$date
+
+ch_dat <- dat
+
+ch_dates <- dates
+
+rm(list = c('dat', 'dates', 'period_dates', 'moondat',
+            'create_rodent_table'))
+
+```
+
+
+Compare paper data to LDATS data:
+
+```{r rodent data comparison, eval = F} 
+
+compare <- ldats_dat == ch_dat
+
+length(which(rowSums(compare) < ncol(compare)))
+```
+
+
+There are 16 rows where the data included in LDATS differs from the paper data. This is because the LDATS data is not adjusted to account for trapping effort, but the paper data has divided all census counts by the actual number of plots trapped and multiplied by 8 to account for incompletely-trapped censuses. 
+
+To confirm this, refer to lines 36-46 in `rodent_data_for_LDA.r`:
+
+```
+# retrieve data on number of plots trapped per month
+  trap_table = read.csv('https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent_trapping.csv')
+  trap_table_controls = filter(trap_table, plot %in% selected_plots)
+  nplots_controls = aggregate(trap_table_controls$sampled,by=list(period = trap_table_controls$period),FUN=sum)
+  
+  # adjust species counts by number of plots trapped that month
+  r_table_adjusted = as.data.frame.matrix(r_table)
+  for (n in 1:436) {
+    #divide by number of control plots actually trapped (should be 8) and multiply by 8 to estimate captures as if all plots were trapped
+    r_table_adjusted[n,] = round(r_table_adjusted[n,]/nplots_controls$x[n]*8)
+  }
+  
+    return(r_table_adjusted)
+
+```  
+ 
+Running the same procedure on the LDATS data, we modify 16 rows, and finish with a data frame that matches the one from the paper.
+
+```{r adjust LDATS data after Christensen et al}
+
+trap_table = read.csv('https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent_trapping.csv')
+  trap_table_controls =dplyr::filter(trap_table, plot %in% c(2,4,8,11,12,14,17,22))
+  nplots_controls = aggregate(trap_table_controls$sampled,by=list(period = trap_table_controls$period),FUN=sum)
+  
+   # adjust species counts by number of plots trapped that month
+  ldats_rodents_adjusted = as.data.frame.matrix(rodents[[1]])
+  for (n in 1:436) {
+    #divide by number of control plots actually trapped (should be 8) and multiply by 8 to estimate captures as if all plots were trapped
+    ldats_rodents_adjusted[n,] = round(ldats_rodents_adjusted[n,]/nplots_controls$x[n]*8)
+  }
+
+  
+compare_raw <- rodents[[1]] == ldats_rodents_adjusted
+length(which(rowSums(compare_raw) < ncol(compare_raw)))
+
+compare_adjusted <- ldats_rodents_adjusted == ch_dat
+length(which(rowSums(compare_adjusted) < ncol(compare_adjusted)))
+
+```
+
+```{r data adjustment cleanup, eval = F, include = FALSE}
+rm(list = c('diagnose_dat', 'nplots', 'compare', 'compare_raw', 'adjusted_table', 'i', 'compare_rows', 'raw_table', 'create_rodent_table'))
 ```
