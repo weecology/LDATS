@@ -4,8 +4,8 @@
 \alias{TS_summary_plot}
 \title{Create the summary plot for a TS fit to an LDA model}
 \usage{
-TS_summary_plot(x, cols = set_TS_summary_plot_cols(), bin_width, xlab,
-  selection = "median", LDATS = FALSE)
+TS_summary_plot(x, cols = set_TS_summary_plot_cols(), bin_width,
+  xlab = NULL, border = NA, selection = "median", LDATS = FALSE)
 }
 \arguments{
 \item{x}{Object of class \code{TS_fit} produced by \code{\link{TS}}.}
@@ -22,6 +22,8 @@ details on usage.}
 x-axis (the time variable used to fit the model).}
 
 \item{xlab}{Label for the x-axis (time).}
+
+\item{border}{Border for the histogram, default is \code{NA}.}
 
 \item{selection}{Indicator of the change points to use. Currently only
 defined for "median" and "mode".}

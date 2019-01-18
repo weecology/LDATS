@@ -4,7 +4,7 @@
 \alias{rho_hist}
 \title{Create the change point histograms plot}
 \usage{
-rho_hist(x, cols, bin_width = 1, xlab = NULL)
+rho_hist(x, cols, bin_width = 1, xlab = NULL, border = NA)
 }
 \arguments{
 \item{x}{Object of class \code{TS_fit} produced by \code{\link{TS}}.}
@@ -17,6 +17,8 @@ Any valid color values (\emph{e.g.}, see \code{\link[grDevices]{colors}},
 x-axis (the time variable used to fit the model).}
 
 \item{xlab}{Label for the x-axis (time).}
+
+\item{border}{Border for the histogram, default is \code{NA}.}
 }
 \description{
 Produces a plot of the change point distributions as 

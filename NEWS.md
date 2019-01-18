@@ -18,6 +18,7 @@ all components of the LDATS analysis.
 * Previous by-hand calculations of AIC included variational parameters that are integrated out of the model in the total parameter count.
 
 ## Regressor estimates
+* Time series models allow for flexible covariate set for regression via formula inputs to the top-level functions.
 * The time series model code now also includes estimation of the parameters defining the between-change point regressions (*i.e.*, the regressors).
 * Regressor estimates come as marginal posterior distributions, and are calculated by unconditioning the estimates generated under known change points. 
 
@@ -31,7 +32,7 @@ all components of the LDATS analysis.
 * Burn-in removal and thinning of final chains is controllable via the TS controls list
 
 ## Optional memoisation
-* Memoisation of `mutlinom_TS()` and `multinom_TS_chunk()` now is optional via `memoise_fun()` and is controlled through the TS controls list.
+* Memoisation of `multinom_TS()` and `multinom_TS_chunk()` now is optional via `memoise_fun()` and is controlled through the TS controls list.
 
 ## Plotting functions
 * `LDA_set()`, `LDA_TS()`, and `TS()` now all have default plotting options on their outputs.

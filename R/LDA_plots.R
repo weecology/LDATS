@@ -145,8 +145,8 @@ LDA_plot_top_panel <- function(x, cols, option, alpha, LDATS = FALSE){
   ypos <- (0.9 / ntopics) * (ntopics:1)
   ttext <- paste("Topic ", 1:ntopics, sep = "")
   for (i in 1:ntopics){
-    text(ttext[i], x = 0.1, y = ypos[i], col = cols[i], adj = 0, cex = 0.75,
-         font = 2)
+    text(ttext[i], x = 0.25, y = ypos[i], adj = 0, cex = 0.75)
+    rect(0.0, ypos[i] - 0.05, 0.15, ypos[i] + 0.05, col = cols[i])
   }
 }
 
@@ -176,11 +176,11 @@ LDA_plot_bottom_panel <- function(x, xtime, xname, cols, option, alpha,
   } else{
     par(fig = c(0, 1, 0, 0.7))
   }
-  par(new = TRUE, mar = c(3.25, 4, 1, 1))
+  par(new = TRUE, mar = c(3.25, 5, 1, 1))
   plot(xtime, gamma[ , 1], type = "n", bty = "L", xlab = "", ylab = "", 
        las = 1, ylim = c(0, 1))
   mtext(side = 1, xname, line = 2.2, cex = 1.25)
-  mtext(side = 2, "Proportion", line = 2.8, cex = 1.25)
+  mtext(side = 2, "Proportion", line = 3.5, cex = 1.25)
   for (i in 1:ntopics){
     points(xtime, gamma[ , i], col = cols[i], type = "l", lwd = 2)
   }

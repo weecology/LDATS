@@ -22,7 +22,7 @@ Count the full trips (from one extreme temperature chain to
   ptMCMC particles, as identified by their id on initialization.
   \cr \cr
   This function was designed to work within \code{\link{TS}} and process
-  the output of \code{\link{est_changepts}} as a component of 
+  the output of \code{\link{est_changepoints}} as a component of 
   \code{\link{diagnose_ptMCMC}}, but has been generalized
   and would work with any output from a ptMCMC as long as \code{ids}
   is formatted properly.

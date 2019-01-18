@@ -14,14 +14,12 @@ Dirichlet Allocation (LDA) and Bayesian time series (TS) analyses.
 For a full description of the math underlying the `LDATS` package, see the
 [*draft* technical manuscript](https://github.com/weecology/LDATS/blob/master/manuscript/simonis_et_al.pdf).
 
-## Status: In Development
+## Status: Stable Version Available, In Development
 
 The package is currently in active development by the 
-[Weecology Team](https://www.weecology.org), in advance of submission to 
-CRAN. The API is well defined at this point and should not change 
-substantially, but we are presently engaged in testing and documentation,
-and further edits may occur before submission to CRAN. Therefore, any 
-output should still be considered ***provisional***. 
+[Weecology Team](https://www.weecology.org), although a stable version (0.1.0)
+has been submitted to CRAN. The API is well defined at this point and should 
+not change substantially.
 
 ## Installation
 
@@ -37,13 +35,32 @@ Here is an example of a full LDA-TS analysis using the
 [Portal rodent data](https://github.com/weecology/PortalData):
 
 ```
+library(LDATS)
 data(rodents)
 dtt <- rodents$document_term_table
 dct <- rodents$document_covariate_table
 
-r_LDATS <- LDATS::LDA_TS(dtt, dct, topics = 2:5, nseeds = 2, 
-                         formulas = c(~1, ~newmoon) nchangepoints = 0:2)
+r_LDATS <- LDA_TS(dtt, dct, topics = 2:5, nseeds = 2, 
+                  formulas = c(~1, ~newmoon), nchangepoints = 0:2)
 ```
+Which conducts two replicates (`nseeds`) for each of two to five topics in an
+LDA model using the document term table, selects the best (AIC) of those, 
+then conducts six time series models on it (each of an intercept only and
+newmoon-based regression under 0, 1, and 2 changepoints), then selects the 
+best (AIC) of the time series, and packages all the models together.
+
+The resulting object is of class `LDA_TS`, which has a few basic routines 
+available:
+
+```
+print(r_KDATS)
+```
+prints the selected LDA and TS models and 
+```
+plot(r_KDATS)
+```
+produces a 4-panel figure of them a la Figure 1 from
+[Christensen et al. 2018](https://doi.org/10.1002/ecy.2373).
 
 ## More Information 
 

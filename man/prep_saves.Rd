@@ -46,7 +46,7 @@ List of saved ptMCMC objects: change points (\code{$cpts}),
   iterations are thinned) via \code{process_saves}.
   \cr \cr
   This set of functions was designed to work within \code{\link{TS}} and 
-  specifically \code{\link{est_changepts}}. They are still hardcoded to do
-  so, but have the capacity to be generalized to work with any estimation
-  via ptMCMC with additional coding work.
+  specifically \code{\link{est_changepoints}}. They are still hardcoded to
+  do so, but have the capacity to be generalized to work with any
+  estimation via ptMCMC with additional coding work.
 }
