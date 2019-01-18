@@ -274,4 +274,270 @@ plot(ldamodel, cols = NULL, option = "D")
 plot(ldats_lda_selected[[1]], cols = NULL, option = "D")
 ```
 
+```{r remove LDAS after plotting, include = F}
+rm(ldamodel)
+rm(ldats_lda_selected)
+```
+
 The paper method finds 4 topics and LDATS finds 6. This is because of an update to the model selection procedure. The paper conservatively overestimates the number of parameters and therefore overpenalizes AIC for models with more topics. For this vignette, we will compare the results from using both LDA models. 
+
+
+## Changepoint models
+
+We will compare four combinations of LDA + changepoint models:
+
+* LDATS LDA + LDATS changepoint
+* LDATS LDA + paper changepoint
+* Paper LDA + LDATS changepoint
+* Paper LDA + paper changepoint
+
+The paper changepoint model weighted all sample periods equally, wheras LDATS can weight sample periods according to how many individuals were captured (controlled by the `document_term_weights`). We now believe it is more appropriate to weight periods proportional to captures, and this is what we recommend for LDATS users. For the purposes of comparison, we will continue set all weights = 1 for both changepoint models. For an example of LDATS run with proportional weights, see the rodents vignette. [?]
+
+### Running paper changepoint models
+
+#### LDATS LDA and paper changepoint
+
+```{r load LDATS LDA for paper cpt}
+
+#### Load LDA ####
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_lda_selected.Rds'))
+
+```
+
+```{r run LDATS LDA and paper cpt, eval = F}
+#### Run changepoint ####
+source(here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files', 'changepointmodel.r'))
+
+# set up parameters for model
+year_continuous = 1970 + as.integer(julian(paper_dates)) / 365.25
+x = data.frame(
+  year_continuous = year_continuous,
+  sin_year = sin(year_continuous * 2 * pi),
+  cos_year = cos(year_continuous * 2 * pi)
+)
+
+# run models with 1, 2, 3, 4, 5, 6 changepoints
+cp_results_rodent = changepoint_model(ldats_lda_selected[[1]], x, 1, weights = rep(1,length(year_continuous)))
+save(cp_results_rodent, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_1.Rds'))
+rm(cp_results_rodent)
+
+cp_results_rodent2 = changepoint_model(ldats_lda_selected[[1]], x, 2, weights = rep(1,length(year_continuous)))
+save(cp_results_rodent2, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_2.Rds'))
+rm(cp_results_rodent2)
+
+cp_results_rodent3 = changepoint_model(ldats_lda_selected[[1]], x, 3, weights = rep(1,length(year_continuous)))
+save(cp_results_rodent3, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_3.Rds'))
+rm(cp_results_rodent3)
+
+cp_results_rodent4 = changepoint_model(ldats_lda_selected[[1]], x, 4, weights = rep(1,length(year_continuous)))
+save(cp_results_rodent4, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_4.Rds'))
+rm(cp_results_rodent4)
+
+cp_results_rodent5 = changepoint_model(ldats_lda_selected[[1]], x, 5, weights = rep(1,length(year_continuous)))
+save(cp_results_rodent5, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_5.Rds'))
+rm(cp_results_rodent5)
+
+cp_results_rodent6 = changepoint_model(ldats_lda_selected[[1]], x, 6, weights = rep(1,length(year_continuous)))
+save(cp_results_rodent6, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_6.Rds'))
+rm(cp_results_rodent6)
+```
+
+```{r select LDATS LDA and paper cpt}
+#### Changepoint model selection ####
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_1.Rds'))
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_2.Rds'))
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_3.Rds'))
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_4.Rds'))
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_5.Rds'))
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_6.Rds'))
+
+ntopics = ldats_lda_selected[[1]]@k
+
+# change point model selection
+# mean deviance ( -2 * log likelihood) + 2*(#parameters)
+mean(cp_results_rodent$saved_lls * -2) + 2*(3*(ntopics-1)*(1+1)+(1))
+mean(cp_results_rodent2$saved_lls * -2)+ 2*(3*(ntopics-1)*(2+1)+(2))
+mean(cp_results_rodent3$saved_lls * -2)+ 2*(3*(ntopics-1)*(3+1)+(3))
+mean(cp_results_rodent4$saved_lls * -2)+ 2*(3*(ntopics-1)*(4+1)+(4))
+mean(cp_results_rodent5$saved_lls * -2)+ 2*(3*(ntopics-1)*(5+1)+(5))
+mean(cp_results_rodent6$saved_lls * -2)+ 2*(3*(ntopics-1)*(6+1)+(6))
+
+# The lowest deviance is for 4 changepoints. 
+
+```
+
+```{r clean up LDATS LDA and paper changepoint, include = F}
+rm(list = c('x', 'cp_results_rodent', 'cp_results_rodent2', 'cp_results_rodent3', 'cp_results_rodent4', 'cp_results_rodent5', 'cp_results_rodent6', 'ntopics', 'ldats_lda_selected'))
+```
+
+#### Paper LDA and paper changepoint
+
+```{r load paper LDA for paper cpt}
+
+#### Load LDA ####
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_ldamodel.Rds'))
+
+```
+
+```{r run paper LDA and paper cpt, eval = F}
+#### Run changepoint ####
+source(here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files', 'changepointmodel.r'))
+
+# set up parameters for model
+year_continuous = 1970 + as.integer(julian(paper_dates)) / 365.25
+x = data.frame(
+  year_continuous = year_continuous,
+  sin_year = sin(year_continuous * 2 * pi),
+  cos_year = cos(year_continuous * 2 * pi)
+)
+
+# run models with 1, 2, 3, 4, 5, 6 changepoints
+cp_results_rodent = changepoint_model(ldamodel, x, 1, weights = rep(1,length(year_continuous)))
+save(cp_results_rodent, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper1.Rds'))
+rm(cp_results_rodent)
+
+cp_results_rodent2 = changepoint_model(ldamodel, x, 2, weights = rep(1,length(year_continuous)))
+save(cp_results_rodent2, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper2.Rds'))
+rm(cp_results_rodent2)
+
+cp_results_rodent3 = changepoint_model(ldamodel, x, 3, weights = rep(1,length(year_continuous)))
+save(cp_results_rodent3, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper3.Rds'))
+rm(cp_results_rodent3)
+
+cp_results_rodent4 = changepoint_model(ldamodel, x, 4, weights = rep(1,length(year_continuous)))
+save(cp_results_rodent4, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper4.Rds'))
+rm(cp_results_rodent4)
+
+cp_results_rodent5 = changepoint_model(ldamodel, x, 5, weights = rep(1,length(year_continuous)))
+save(cp_results_rodent5, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper5.Rds'))
+rm(cp_results_rodent5)
+
+cp_results_rodent6 = changepoint_model(ldamodel, x, 6, weights = rep(1,length(year_continuous)))
+save(cp_results_rodent6, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper6.Rds'))
+rm(cp_results_rodent6)
+```
+
+```{r select paper LDA and paper cpt}
+#### Changepoint model selection ####
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper_1.Rds'))
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper_2.Rds'))
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper_3.Rds'))
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper_4.Rds'))
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper_5.Rds'))
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper_6.Rds'))
+
+ntopics = ldamodel@k
+
+# change point model selection
+# mean deviance ( -2 * log likelihood) + 2*(#parameters)
+mean(cp_results_rodent$saved_lls * -2) + 2*(3*(ntopics-1)*(1+1)+(1))
+mean(cp_results_rodent2$saved_lls * -2)+ 2*(3*(ntopics-1)*(2+1)+(2))
+mean(cp_results_rodent3$saved_lls * -2)+ 2*(3*(ntopics-1)*(3+1)+(3))
+mean(cp_results_rodent4$saved_lls * -2)+ 2*(3*(ntopics-1)*(4+1)+(4))
+mean(cp_results_rodent5$saved_lls * -2)+ 2*(3*(ntopics-1)*(5+1)+(5))
+mean(cp_results_rodent6$saved_lls * -2)+ 2*(3*(ntopics-1)*(6+1)+(6))
+
+# The lowest deviance is for 4 changepoints. 
+
+```
+
+```{r clean up paper LDA and paper changepoint, include = F}
+rm(list = c('x', 'cp_results_rodent', 'cp_results_rodent2', 'cp_results_rodent3', 'cp_results_rodent4', 'cp_results_rodent5', 'cp_results_rodent6', 'ntopics', 'ldamodel'))
+```
+
+### Running LDATS changepoint models
+
+#### LDATS LDA and LDATS changepoint
+
+```{r load LDATS LDA for LDATS cpt}
+
+#### Load LDA ####
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_lda_selected.Rds'))
+
+```
+#### Run the TS models
+
+```{r run LDATS LDA and LDATS changepoint, eval = F}
+#### Run LDATS changepoint ####
+
+ldats_ldats_cpt <- TS_on_LDA(LDA_models = ldats_lda_selected, 
+                             document_covariate_table = rodents$document_covariate_table,
+                             formulas = ~ sin_year + cos_year,
+                             nchangepoints = 1:6,
+                             weights = NULL)
+
+
+save(ldats_ldats_cpt, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_ldats.Rds'))
+rm(ldats_ldats_cpt)
+rm(ldats_lda_selected)
+```
+
+```{r load LDATS LDA and LDATS changepoint, include = F}
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_ldats.Rds'))
+```
+
+### Select model
+
+```{r select ldats lda + ldats cpt}
+
+ldats_ldats_cpt_selected <- select_TS(ldats_ldats_cpt)
+
+ldats_ldats_cpt_selected$nchangepoints
+
+```
+
+```{r cleanup LDATS LDA and LDATS changepoint, include = F}
+
+save(ldats_ldats_cpt_selected, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_ldats_selected.Rds'))
+
+rm(ldats_ldats_cpt_selected)
+rm(ldats_ldats_cpt)
+```
+
+### Paper LDA and LDATS changepoint
+
+
+```{r load paper LDA for LDATS cpt}
+
+#### Load LDA ####
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_ldamodel.Rds'))
+
+```
+#### Run the TS models
+
+```{r run paper LDA and LDATS changepoint, eval = F}
+#### Run LDATS changepoint ####
+
+paper_ldats_cpt <- TS_on_LDA(LDA_models = ldamodel, 
+                             document_covariate_table = rodents$document_covariate_table,
+                             formulas = ~ sin_year + cos_year,
+                             nchangepoints = 1:6,
+                             weights = NULL)
+
+
+save(paper_ldats_cpt, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_ldats.Rds'))
+rm(paper_ldats_cpt)
+rm(ldamodel)
+```
+
+```{r load paper LDA and LDATS changepoint, include = F}
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_ldats.Rds'))
+```
+
+### Select model
+
+```{r select paper lda + ldats cpt}
+
+paper_ldats_cpt_selected <- select_TS(paper_ldats_cpt)
+
+paper_ldats_cpt_selected$nchangepoints
+
+```
+
+```{r cleanup paper LDA and LDATS changepoint, include = F}
+
+save(paper_ldats_cpt_selected, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_ldats_selected.Rds'))
+
+rm(paper_ldats_cpt_selected)
+rm(paper_ldats_cpt)
+```
