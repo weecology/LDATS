@@ -1,8 +1,11 @@
 ---
 title: "Paper comparison (cleaned up)"
 author: "Renata Diaz"
-date: "1/18/2019"
-output: github_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
@@ -22,10 +25,12 @@ version from GitHub:
 ```{r, eval=FALSE}
 install.packages("devtools")
 devtools::install_github("weecology/LDATS")
+install.packages('here')
 ```
 
 ```{r, eval = T}
 library(LDATS)
+
 ```
 
 ## Christensen 2018 analysis files
@@ -55,8 +60,8 @@ Figure scripts:
 
 ```{r download Christensen}
 
-paper_filepath <- here::here('vignettes', 'paper-comparison-files', 'christensenetal-2018-files')
-test_filepath <- here::here('vignettes', 'paper-comparison-files', 'christensenetal-2018-files', 'rodent_LDA_analysis.r')
+paper_filepath <- here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files')
+test_filepath <- here::here('vignettes', 'christensenetal-ristensenetal-comparison-files', 'christensenetal-2018-files', 'rodent_LDA_analysis.r')
 
 if(!file.exists(test_filepath)) {
 
@@ -93,7 +98,7 @@ head(rodents[[1]])
 Load the data used in Christensen et al: 
 
 ```{r Paper data}
-source(here::here('vignettes', 'paper-comparison-files', 'christensenetal-2018-files', 'rodent_data_for_LDA.r'))
+source(here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files', 'rodent_data_for_LDA.r'))
 
 dat = create_rodent_table(period_first = 1,
                           period_last = 436,
@@ -192,8 +197,8 @@ While LDATS can run start-to-finish with `LDATS::LDA_TS`, here we will work thro
 ldats_ldas <- LDATS::LDA_set(document_term_table = rodents$document_term_table, topics = c(2:6), nseeds = 100)
 ldats_lda_selected <- LDATS::select_LDA(LDA_models = ldats_ldas)
 
-save(ldats_ldas, file = here::here('vignettes', 'paper-comparison-files', 'model-cache', 'ldats_ldas.Rds'))
-save(ldats_lda_selected, file = here::here('vignettes', 'paper-comparison-files', 'model-cache', 'ldats_lda_selected.Rds'))
+save(ldats_ldas, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_ldas.Rds'))
+save(ldats_lda_selected, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_lda_selected.Rds'))
 
 ```
 
@@ -208,8 +213,8 @@ dat = paper_dat
 ```
 
 ```{r paper LDAs, eval = F}
-source(here::here('vignettes', 'paper-comparison-files', 'christensenetal-2018-files', 'AIC_model_selection.R'))
-source(here::here('vignettes', 'paper-comparison-files', 'christensenetal-2018-files', 'LDA-distance.R'))
+source(here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files', 'AIC_model_selection.R'))
+source(here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files', 'LDA-distance.R'))
 
 # Fit a bunch of LDA models with different seeds
 # Only use even numbers for seeds because consecutive seeds give identical results
@@ -244,7 +249,7 @@ ntopics = 4
 SEED = unlist(best_seed)[1]  # For the paper, use seed 206
 ldamodel = LDA(paper_dat,ntopics, control = list(seed = SEED),method='VEM')
 
-save(ldamodel,file = here::here('vignettes', 'paper-comparison-files', 'model-cache', 'paper_ldamodel.Rds'))
+save(ldamodel,file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_ldamodel.Rds'))
 ```
 
 ```{r cleanup paper LDAS, include = F, eval = F}
@@ -254,8 +259,8 @@ rm(list = c('dat', 'ldamodel', 'max_dist', 'mean_dist',
 
 ```{r reload LDAS, include = FALSE}
 
-load(here::here('vignettes', 'paper-comparison-files', 'model-cache', 'ldats_lda_selected.Rds'))
-load(here::here('vignettes', 'paper-comparison-files', 'model-cache', 'paper_ldamodel.Rds'))
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_lda_selected.Rds'))
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_ldamodel.Rds'))
 
 ```
 
