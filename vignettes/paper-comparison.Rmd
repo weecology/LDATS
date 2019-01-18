@@ -86,15 +86,13 @@ The Portal rodents control data is included in the LDATS package:
 
 data(rodents)
 
-ldats_dat <- rodents[[1]]
-ldats_dates <- rodents[[2]]
-head(ldats_dat)
+head(rodents[[1]])
 
 ```
 
 Load the data used in Christensen et al: 
 
-```{r Ch data}
+```{r Paper data}
 source(here::here('vignettes', 'paper-comparison-files', 'christensenetal-2018-files', 'rodent_data_for_LDA.r'))
 
 dat = create_rodent_table(period_first = 1,
@@ -109,9 +107,9 @@ moondat$date = as.Date(moondat$censusdate)
 period_dates = filter(moondat,period %in% rownames(dat)) %>% select(period,date)
 dates = period_dates$date
 
-ch_dat <- dat
+paper_dat <- dat
 
-ch_dates <- dates
+paper_dates <- dates
 
 rm(list = c('dat', 'dates', 'period_dates', 'moondat',
             'create_rodent_table'))
@@ -121,9 +119,9 @@ rm(list = c('dat', 'dates', 'period_dates', 'moondat',
 
 Compare paper data to LDATS data:
 
-```{r rodent data comparison, eval = F} 
+```{r rodent data comparison} 
 
-compare <- ldats_dat == ch_dat
+compare <- rodents[[1]] == paper_dat
 
 length(which(rowSums(compare) < ncol(compare)))
 ```
@@ -169,11 +167,106 @@ trap_table = read.csv('https://raw.githubusercontent.com/weecology/PortalData/ma
 compare_raw <- rodents[[1]] == ldats_rodents_adjusted
 length(which(rowSums(compare_raw) < ncol(compare_raw)))
 
-compare_adjusted <- ldats_rodents_adjusted == ch_dat
+compare_adjusted <- ldats_rodents_adjusted == paper_dat
 length(which(rowSums(compare_adjusted) < ncol(compare_adjusted)))
 
 ```
 
-```{r data adjustment cleanup, eval = F, include = FALSE}
-rm(list = c('diagnose_dat', 'nplots', 'compare', 'compare_raw', 'adjusted_table', 'i', 'compare_rows', 'raw_table', 'create_rodent_table'))
+```{r data adjustment cleanup, include = FALSE}
+rm(list = c('compare', 'compare_adjusted', 'compare_raw', 'n', 'ldats_rodents_adjusted', 'nplots_controls', 'trap_table', 'trap_table_controls'))
 ```
+
+
+Because the LDA procedure weights the information from documents (census periods) according to the number of words (rodents captured), we now believe it is most appropriate to run the LDA on _unadjusted_ trapping data, and we recommend that users of LDATS do so. However, to maintain consistency with Christensen et al 2018, we will proceed using the _adjusted_ rodent table in this vignette. 
+
+```{r switch to adjusted rodents}
+rodents[[1]] <- paper_dat
+```
+
+## Stage 1: LDA
+
+While LDATS can run start-to-finish with `LDATS::LDA_TS`, here we will work through the process function-by-function to isolate differences with the paper. For an illustration of `LDA_TS`, see the `codebase` vignette.
+
+```{r LDATS LDAs, eval = F}
+
+ldats_ldas <- LDATS::LDA_set(document_term_table = rodents$document_term_table, topics = c(2:6), nseeds = 100)
+ldats_lda_selected <- LDATS::select_LDA(LDA_models = ldats_ldas)
+
+save(ldats_ldas, file = here::here('vignettes', 'paper-comparison-files', 'model-cache', 'ldats_ldas.Rds'))
+save(ldats_lda_selected, file = here::here('vignettes', 'paper-comparison-files', 'model-cache', 'ldats_lda_selected.Rds'))
+
+```
+
+```{r rm LDATS LDAS, include = F, eval = F}
+rm(list = c('ldats_ldas', 'ldats_lda_selected'))
+```
+
+Paper LDAS:
+
+```{r create dat for paper lda, include = F}
+dat = paper_dat
+```
+
+```{r paper LDAs, eval = F}
+source(here::here('vignettes', 'paper-comparison-files', 'christensenetal-2018-files', 'AIC_model_selection.R'))
+source(here::here('vignettes', 'paper-comparison-files', 'christensenetal-2018-files', 'LDA-distance.R'))
+
+# Fit a bunch of LDA models with different seeds
+# Only use even numbers for seeds because consecutive seeds give identical results
+seeds = 2*seq(200)
+
+# repeat LDA model fit and AIC calculation with a bunch of different seeds to test robustness of the analysis
+best_ntopic = repeat_VEM(paper_dat,
+                         seeds,
+                         topic_min=2,
+                         topic_max=6)
+hist(best_ntopic$k,breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='best # of topics', main='')
+
+# 2b. how different is species composition of 4 community-types when LDA is run with different seeds?
+# ==================================================================
+# get the best 100 seeds where 4 topics was the best LDA model
+seeds_4topics = best_ntopic %>% 
+  filter(k == 4) %>% 
+  arrange(aic) %>% 
+  head(100) %>% 
+  pull(SEED)
+
+# choose seed with highest log likelihood for all following analyses
+#    (also produces plot of community composition for 'best' run compared to 'worst')
+best_seed = calculate_LDA_distance(paper_dat,seeds_4topics)
+mean_dist = unlist(best_seed)[2]
+max_dist = unlist(best_seed)[3]
+
+# ==================================================================
+# 3. run LDA model
+# ==================================================================
+ntopics = 4
+SEED = unlist(best_seed)[1]  # For the paper, use seed 206
+ldamodel = LDA(paper_dat,ntopics, control = list(seed = SEED),method='VEM')
+
+save(ldamodel,file = here::here('vignettes', 'paper-comparison-files', 'model-cache', 'paper_ldamodel.Rds'))
+```
+
+```{r cleanup paper LDAS, include = F, eval = F}
+rm(list = c('dat', 'ldamodel', 'max_dist', 'mean_dist',
+            'ntopics', 'SEED', 'seeds', 'seeds_4topics', 'aic_model', 'aic_model_gibbs', 'calculate_LDA_distance', 'Hellinger', 'min_H', 'repeat_VEM', 'best_ntopic', 'best_seed'))
+```
+
+```{r reload LDAS, include = FALSE}
+
+load(here::here('vignettes', 'paper-comparison-files', 'model-cache', 'ldats_lda_selected.Rds'))
+load(here::here('vignettes', 'paper-comparison-files', 'model-cache', 'paper_ldamodel.Rds'))
+
+```
+
+### Plot LDAS
+
+```{r plot LDAs}
+# Paper
+plot(ldamodel, cols = NULL, option = "D")
+
+# LDATS
+plot(ldats_lda_selected[[1]], cols = NULL, option = "D")
+```
+
+The paper method finds 4 topics and LDATS finds 6. This is because of an update to the model selection procedure. The paper conservatively overestimates the number of parameters and therefore overpenalizes AIC for models with more topics. For this vignette, we will compare the results from using both LDA models. 
