@@ -32,7 +32,7 @@ all components of the LDATS analysis.
 * Burn-in removal and thinning of final chains is controllable via the TS controls list
 
 ## Optional memoisation
-* Memoisation of `mutlinom_TS()` and `multinom_TS_chunk()` now is optional via `memoise_fun()` and is controlled through the TS controls list.
+* Memoisation of `multinom_TS()` and `multinom_TS_chunk()` now is optional via `memoise_fun()` and is controlled through the TS controls list.
 
 ## Plotting functions
 * `LDA_set()`, `LDA_TS()`, and `TS()` now all have default plotting options on their outputs.
