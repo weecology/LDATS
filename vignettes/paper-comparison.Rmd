@@ -116,7 +116,7 @@ paper_dat <- dat
 
 paper_dates <- dates
 
-rm(list = c('dat', 'dates', 'period_dates', 'moondat',
+rm(list = c('dat', 'dates', 'period_dates',
             'create_rodent_table'))
 
 ```
@@ -186,6 +186,27 @@ Because the LDA procedure weights the information from documents (census periods
 
 ```{r switch to adjusted rodents}
 rodents[[1]] <- paper_dat
+```
+
+
+The LDATS rodent data comes with a `document_covariate_table`, which we will use later as the predictor variables for the changepoint models. In this table, time is expressed as new moon numbers. Later we will want to be able to interpret the results in terms of census dates. We will add a column to the `document_covariate_table` to convert new moon numbers to census dates. We will not reference this column in any of the formulas we pass to the changepoint models, so it will be ignored until we need it.
+
+```{r add dates to covariate table}
+
+head(rodents$document_covariate_table)
+
+moondat <- dplyr::select(moondat, newmoonnumber, censusdate)
+colnames(moondat) <- c('newmoon', 'censusdate')
+
+new_cov_table <- dplyr::left_join(rodents$document_covariate_table, moondat, by = 'newmoon')
+
+rodents$document_covariate_table <- new_cov_table
+
+```
+
+```{r cleanup dates, include = F}
+rm(moondat)
+rm(new_cov_table)
 ```
 
 ## Stage 1: LDA
@@ -364,10 +385,24 @@ mean(cp_results_rodent6$saved_lls * -2)+ 2*(3*(ntopics-1)*(6+1)+(6))
 
 # The lowest deviance is for 4 changepoints. 
 
+
+df_4 = as.data.frame(t(cp_results_rodent4$saved[,1,])) %>% reshape::melt()
+year_continuous = 1970 + as.integer(julian(paper_dates)) / 365.25
+df_4$value = year_continuous[df_4$value]
+
+
+ldats_paper_cpt_dates <- vector(length = 4)
+ldats_paper_cpt_dates[1] <- mean(df_4[df_4$variable=='V1','value']) %>% lubridate::date_decimal() %>% format('%d-%m-%Y')
+ldats_paper_cpt_dates[2] <-mean(df_4[df_4$variable=='V2','value']) %>% lubridate::date_decimal() %>% format('%d-%m-%Y')
+ldats_paper_cpt_dates[3] <-mean(df_4[df_4$variable=='V3','value']) %>% lubridate::date_decimal() %>% format('%d-%m-%Y')
+ldats_paper_cpt_dates[4] <-mean(df_4[df_4$variable=='V4','value']) %>% lubridate::date_decimal() %>% format('%d-%m-%Y')
+
+ldats_paper_cpt_dates
+
 ```
 
 ```{r clean up LDATS LDA and paper changepoint, include = F}
-rm(list = c('x', 'cp_results_rodent', 'cp_results_rodent2', 'cp_results_rodent3', 'cp_results_rodent4', 'cp_results_rodent5', 'cp_results_rodent6', 'ntopics', 'ldats_lda_selected'))
+rm(list = c('x', 'cp_results_rodent', 'cp_results_rodent2', 'cp_results_rodent3', 'cp_results_rodent4', 'cp_results_rodent5', 'cp_results_rodent6', 'ntopics', 'ldats_lda_selected', 'df_4'))
 ```
 
 #### Paper LDA and paper changepoint
@@ -439,10 +474,22 @@ mean(cp_results_rodent6$saved_lls * -2)+ 2*(3*(ntopics-1)*(6+1)+(6))
 
 # The lowest deviance is for 4 changepoints. 
 
+df_4 = as.data.frame(t(cp_results_rodent4$saved[,1,])) %>%  reshape::melt()
+df_4$value = year_continuous[df_4$value]
+
+
+paper_paper_cpt_dates <- vector(length = 4)
+paper_paper_cpt_dates[1] <- mean(df_4[df_4$variable=='V1','value']) %>% lubridate::date_decimal() %>% format('%d-%m-%Y')
+paper_paper_cpt_dates[2] <-mean(df_4[df_4$variable=='V2','value']) %>% lubridate::date_decimal() %>% format('%d-%m-%Y')
+paper_paper_cpt_dates[3] <-mean(df_4[df_4$variable=='V3','value']) %>% lubridate::date_decimal() %>% format('%d-%m-%Y')
+paper_paper_cpt_dates[4] <-mean(df_4[df_4$variable=='V4','value']) %>% lubridate::date_decimal() %>% format('%d-%m-%Y')
+
+paper_paper_cpt_dates
+
 ```
 
 ```{r clean up paper LDA and paper changepoint, include = F}
-rm(list = c('x', 'cp_results_rodent', 'cp_results_rodent2', 'cp_results_rodent3', 'cp_results_rodent4', 'cp_results_rodent5', 'cp_results_rodent6', 'ntopics', 'ldamodel'))
+rm(list = c('x', 'cp_results_rodent', 'cp_results_rodent2', 'cp_results_rodent3', 'cp_results_rodent4', 'cp_results_rodent5', 'cp_results_rodent6', 'ntopics', 'ldamodel', 'df_4'))
 ```
 
 ### Running LDATS changepoint models
@@ -483,6 +530,19 @@ load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 
 ldats_ldats_cpt_selected <- select_TS(ldats_ldats_cpt)
 
 ldats_ldats_cpt_selected$nchangepoints
+
+```
+
+### Get dates associated with changepoints
+
+```{r get ldats lda + ldats cpt dates}
+ldats_ldats_cpt_dates <- ldats_ldats_cpt_selected$rho_summary$Mean
+ldats_ldats_cpt_dates <- round(ldats_ldats_cpt_dates)
+
+ldats_ldats_cpt_dates <- as.data.frame(ldats_ldats_cpt_dates)
+colnames(ldats_ldats_cpt_dates) <- 'newmoon'
+ldats_ldats_cpt_dates <- dplyr::left_join(ldats_ldats_cpt_dates, rodents$document_covariate_table, by = 'newmoon')
+ldats_ldats_cpt_dates <- ldats_ldats_cpt_dates$censusdate
 
 ```
 
@@ -534,6 +594,20 @@ paper_ldats_cpt_selected$nchangepoints
 
 ```
 
+#### Get dates
+
+```{r get paper lda + ldats cpt dates}
+paper_ldats_cpt_dates <- paper_ldats_cpt_selected$rho_summary$Mean
+paper_ldats_cpt_dates <- round(paper_ldats_cpt_dates)
+
+paper_ldats_cpt_dates <- as.data.frame(paper_ldats_cpt_dates)
+colnames(paper_ldats_cpt_dates) <- 'newmoon'
+paper_ldats_cpt_dates <- dplyr::left_join(paper_ldats_cpt_dates, rodents$document_covariate_table, by = 'newmoon')
+paper_ldats_cpt_dates <- paper_ldats_cpt_dates$censusdate
+
+```
+
+
 ```{r cleanup paper LDA and LDATS changepoint, include = F}
 
 save(paper_ldats_cpt_selected, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_ldats_selected.Rds'))
@@ -541,3 +615,22 @@ save(paper_ldats_cpt_selected, file = here::here('vignettes', 'christensenetal-c
 rm(paper_ldats_cpt_selected)
 rm(paper_ldats_cpt)
 ```
+
+All of the models find four changepoints.
+
+```{r report cpt dates, include = F}
+
+cpt_dates <- as.data.frame(paper_paper_cpt_dates)
+cpt_dates <- cbind(cpt_dates, ldats_paper_cpt_dates)
+cpt_dates <- cbind(cpt_dates, ldats_ldats_cpt_dates)
+cpt_dates <- cbind(cpt_dates, paper_ldats_cpt_dates)
+
+colnames(cpt_dates) <- c('paperLDA_papercpt', 'ldatsLDA_ldatscpt', 'ldatsLDA_ldatscpt', 'paperLDA_ldatscpt')
+
+```
+
+```{r print cpt dates}
+cpt_dates
+```
+
+
