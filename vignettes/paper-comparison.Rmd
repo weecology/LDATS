@@ -325,7 +325,7 @@ load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 
 
 ```
 
-```{r run LDATS LDA and paper cpt, eval = F}
+```{r run LDATS LDA and paper cpt}
 #### Run changepoint ####
 source(here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files', 'changepointmodel.r'))
 
@@ -392,10 +392,10 @@ df_4$value = year_continuous[df_4$value]
 
 
 ldats_paper_cpt_dates <- vector(length = 4)
-ldats_paper_cpt_dates[1] <- mean(df_4[df_4$variable=='V1','value']) %>% lubridate::date_decimal() %>% format('%d-%m-%Y')
-ldats_paper_cpt_dates[2] <-mean(df_4[df_4$variable=='V2','value']) %>% lubridate::date_decimal() %>% format('%d-%m-%Y')
-ldats_paper_cpt_dates[3] <-mean(df_4[df_4$variable=='V3','value']) %>% lubridate::date_decimal() %>% format('%d-%m-%Y')
-ldats_paper_cpt_dates[4] <-mean(df_4[df_4$variable=='V4','value']) %>% lubridate::date_decimal() %>% format('%d-%m-%Y')
+ldats_paper_cpt_dates[1] <- mean(df_4[df_4$variable=='V1','value']) %>% lubridate::date_decimal() %>% format('%Y-%m-%d')
+ldats_paper_cpt_dates[2] <-mean(df_4[df_4$variable=='V2','value']) %>% lubridate::date_decimal() %>% format('%Y-%m-%d')
+ldats_paper_cpt_dates[3] <-mean(df_4[df_4$variable=='V3','value']) %>% lubridate::date_decimal() %>% format('%Y-%m-%d')
+ldats_paper_cpt_dates[4] <-mean(df_4[df_4$variable=='V4','value']) %>% lubridate::date_decimal() %>% format('%Y-%m-%d')
 
 ldats_paper_cpt_dates
 
@@ -414,7 +414,7 @@ load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 
 
 ```
 
-```{r run paper LDA and paper cpt, eval = F}
+```{r run paper LDA and paper cpt}
 #### Run changepoint ####
 source(here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files', 'changepointmodel.r'))
 
@@ -479,10 +479,10 @@ df_4$value = year_continuous[df_4$value]
 
 
 paper_paper_cpt_dates <- vector(length = 4)
-paper_paper_cpt_dates[1] <- mean(df_4[df_4$variable=='V1','value']) %>% lubridate::date_decimal() %>% format('%d-%m-%Y')
-paper_paper_cpt_dates[2] <-mean(df_4[df_4$variable=='V2','value']) %>% lubridate::date_decimal() %>% format('%d-%m-%Y')
-paper_paper_cpt_dates[3] <-mean(df_4[df_4$variable=='V3','value']) %>% lubridate::date_decimal() %>% format('%d-%m-%Y')
-paper_paper_cpt_dates[4] <-mean(df_4[df_4$variable=='V4','value']) %>% lubridate::date_decimal() %>% format('%d-%m-%Y')
+paper_paper_cpt_dates[1] <- mean(df_4[df_4$variable=='V1','value']) %>% lubridate::date_decimal() %>% format('%Y-%m-%d')
+paper_paper_cpt_dates[2] <-mean(df_4[df_4$variable=='V2','value']) %>% lubridate::date_decimal() %>% format('%Y-%m-%d')
+paper_paper_cpt_dates[3] <-mean(df_4[df_4$variable=='V3','value']) %>% lubridate::date_decimal() %>% format('%Y-%m-%d')
+paper_paper_cpt_dates[4] <-mean(df_4[df_4$variable=='V4','value']) %>% lubridate::date_decimal() %>% format('%Y-%m-%d')
 
 paper_paper_cpt_dates
 
@@ -504,7 +504,7 @@ load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 
 ```
 #### Run the TS models
 
-```{r run LDATS LDA and LDATS changepoint, eval = F}
+```{r run LDATS LDA and LDATS changepoint}
 #### Run LDATS changepoint ####
 
 ldats_ldats_cpt <- TS_on_LDA(LDA_models = ldats_lda_selected, 
@@ -565,7 +565,7 @@ load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 
 ```
 #### Run the TS models
 
-```{r run paper LDA and LDATS changepoint, eval = F}
+```{r run paper LDA and LDATS changepoint}
 #### Run LDATS changepoint ####
 
 paper_ldats_cpt <- TS_on_LDA(LDA_models = ldamodel, 
@@ -596,6 +596,8 @@ paper_ldats_cpt_selected$nchangepoints
 
 #### Get dates
 
+Unlike the paper changepoint model, LDATS can recognize that sampling periods may not be equidistant, and can place changepoint estimates at new moons if they fall between nonconsecutive sampling periods. We can estimate the dates corresponding to those new moons. 
+
 ```{r get paper lda + ldats cpt dates}
 paper_ldats_cpt_dates <- paper_ldats_cpt_selected$rho_summary$Mean
 paper_ldats_cpt_dates <- round(paper_ldats_cpt_dates)
@@ -603,8 +605,22 @@ paper_ldats_cpt_dates <- round(paper_ldats_cpt_dates)
 paper_ldats_cpt_dates <- as.data.frame(paper_ldats_cpt_dates)
 colnames(paper_ldats_cpt_dates) <- 'newmoon'
 paper_ldats_cpt_dates <- dplyr::left_join(paper_ldats_cpt_dates, rodents$document_covariate_table, by = 'newmoon')
-paper_ldats_cpt_dates <- paper_ldats_cpt_dates$censusdate
 
+halfinterval = as.integer((as.Date(rodents$document_covariate_table$censusdate[ which(rodents$document_covariate_table$newmoon == paper_ldats_cpt_dates$newmoon[1] + 1)]) - as.Date(rodents$document_covariate_table$censusdate[ which(rodents$document_covariate_table$newmoon == paper_ldats_cpt_dates$newmoon[1] - 1)]))/2)
+
+newdate <- lubridate::ymd(rodents$document_covariate_table$censusdate[ which(rodents$document_covariate_table$newmoon == paper_ldats_cpt_dates$newmoon[1] -1 )]) + lubridate::days(halfinterval)
+
+paper_ldats_cpt_dates$censusdate[1] <- as.character(newdate)
+
+
+
+halfinterval = 2 * as.integer((as.Date(rodents$document_covariate_table$censusdate[ which(rodents$document_covariate_table$newmoon == paper_ldats_cpt_dates$newmoon[3] + 1)]) - as.Date(rodents$document_covariate_table$censusdate[ which(rodents$document_covariate_table$newmoon == paper_ldats_cpt_dates$newmoon[3] - 2)]))/3)
+
+newdate <- lubridate::ymd(rodents$document_covariate_table$censusdate[ which(rodents$document_covariate_table$newmoon == paper_ldats_cpt_dates$newmoon[3] -2 )]) + lubridate::days(halfinterval)
+
+paper_ldats_cpt_dates$censusdate[3] <- as.character(newdate)
+
+paper_ldats_cpt_dates <- paper_ldats_cpt_dates$censusdate
 ```
 
 
@@ -614,6 +630,7 @@ save(paper_ldats_cpt_selected, file = here::here('vignettes', 'christensenetal-c
 
 rm(paper_ldats_cpt_selected)
 rm(paper_ldats_cpt)
+rm(list = c('newdate', 'halfinterval'))
 ```
 
 All of the models find four changepoints.
