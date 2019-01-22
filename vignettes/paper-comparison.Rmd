@@ -325,7 +325,7 @@ load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 
 
 ```
 
-```{r run LDATS LDA and paper cpt}
+```{r run LDATS LDA and paper cpt, eval = F}
 #### Run changepoint ####
 source(here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files', 'changepointmodel.r'))
 
@@ -402,7 +402,7 @@ ldats_paper_cpt_dates
 ```
 
 ```{r clean up LDATS LDA and paper changepoint, include = F}
-rm(list = c('x', 'cp_results_rodent', 'cp_results_rodent2', 'cp_results_rodent3', 'cp_results_rodent4', 'cp_results_rodent5', 'cp_results_rodent6', 'ntopics', 'ldats_lda_selected', 'df_4'))
+rm(list = c('cp_results_rodent', 'cp_results_rodent2', 'cp_results_rodent3', 'cp_results_rodent4', 'cp_results_rodent5', 'cp_results_rodent6', 'ntopics', 'ldats_lda_selected', 'df_4'))
 ```
 
 #### Paper LDA and paper changepoint
@@ -414,7 +414,7 @@ load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 
 
 ```
 
-```{r run paper LDA and paper cpt}
+```{r run paper LDA and paper cpt, eval = F}
 #### Run changepoint ####
 source(here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files', 'changepointmodel.r'))
 
@@ -489,7 +489,7 @@ paper_paper_cpt_dates
 ```
 
 ```{r clean up paper LDA and paper changepoint, include = F}
-rm(list = c('x', 'cp_results_rodent', 'cp_results_rodent2', 'cp_results_rodent3', 'cp_results_rodent4', 'cp_results_rodent5', 'cp_results_rodent6', 'ntopics', 'ldamodel', 'df_4'))
+rm(list = c('cp_results_rodent', 'cp_results_rodent2', 'cp_results_rodent3', 'cp_results_rodent4', 'cp_results_rodent5', 'cp_results_rodent6', 'ntopics', 'ldamodel', 'df_4'))
 ```
 
 ### Running LDATS changepoint models
@@ -504,7 +504,7 @@ load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 
 ```
 #### Run the TS models
 
-```{r run LDATS LDA and LDATS changepoint}
+```{r run LDATS LDA and LDATS changepoint, eval = F}
 #### Run LDATS changepoint ####
 
 ldats_ldats_cpt <- TS_on_LDA(LDA_models = ldats_lda_selected, 
@@ -565,7 +565,7 @@ load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 
 ```
 #### Run the TS models
 
-```{r run paper LDA and LDATS changepoint}
+```{r run paper LDA and LDATS changepoint, eval = F}
 #### Run LDATS changepoint ####
 
 paper_ldats_cpt <- TS_on_LDA(LDA_models = ldamodel, 
@@ -614,7 +614,7 @@ paper_ldats_cpt_dates$censusdate[1] <- as.character(newdate)
 
 
 
-halfinterval = 2 * as.integer((as.Date(rodents$document_covariate_table$censusdate[ which(rodents$document_covariate_table$newmoon == paper_ldats_cpt_dates$newmoon[3] + 1)]) - as.Date(rodents$document_covariate_table$censusdate[ which(rodents$document_covariate_table$newmoon == paper_ldats_cpt_dates$newmoon[3] - 2)]))/3)
+halfinterval =as.integer((as.Date(rodents$document_covariate_table$censusdate[ which(rodents$document_covariate_table$newmoon == paper_ldats_cpt_dates$newmoon[3] + 2)]) - as.Date(rodents$document_covariate_table$censusdate[ which(rodents$document_covariate_table$newmoon == paper_ldats_cpt_dates$newmoon[3] - 1)]))/3)
 
 newdate <- lubridate::ymd(rodents$document_covariate_table$censusdate[ which(rodents$document_covariate_table$newmoon == paper_ldats_cpt_dates$newmoon[3] -2 )]) + lubridate::days(halfinterval)
 
@@ -642,7 +642,7 @@ cpt_dates <- cbind(cpt_dates, ldats_paper_cpt_dates)
 cpt_dates <- cbind(cpt_dates, ldats_ldats_cpt_dates)
 cpt_dates <- cbind(cpt_dates, paper_ldats_cpt_dates)
 
-colnames(cpt_dates) <- c('paperLDA_papercpt', 'ldatsLDA_ldatscpt', 'ldatsLDA_ldatscpt', 'paperLDA_ldatscpt')
+colnames(cpt_dates) <- c('paperLDA_papercpt', 'ldatsLDA_papercpt', 'ldatsLDA_ldatscpt', 'paperLDA_ldatscpt')
 
 ```
 
@@ -650,4 +650,49 @@ colnames(cpt_dates) <- c('paperLDA_papercpt', 'ldatsLDA_ldatscpt', 'ldatsLDA_lda
 cpt_dates
 ```
 
+The choice of LDA has more influence on the changepoint locations than the choice of changepoint model - probably because the LDATS LDA has 6 topics, and the paper LDA has 4.
 
+```{r cleanup cpt_dates, include = F}
+rm(list= 'ldats_ldats_cpt_dates', 'ldats_paper_cpt_dates',  'paper_ldats_cpt_dates', 'paper_paper_cpt_dates', 'cpt_dates')
+```
+
+### Plot changepoint models
+
+```{r load cpts to plot, include = F}
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_ldats_selected.Rds'))
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_ldats_selected.Rds'))
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper_4.Rds'))
+paper_paper_cpt_selected <- cp_results_rodent4
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_4.Rds'))
+ldats_paper_cpt_selected <- cp_results_rodent4
+
+year_continuous = 1970 + as.integer(julian(paper_dates)) / 365.25
+x = data.frame(
+  year_continuous = year_continuous,
+  sin_year = sin(year_continuous * 2 * pi),
+  cos_year = cos(year_continuous * 2 * pi)
+)
+ntopics = 4
+
+```
+
+```{r plot cpts}
+
+plot(paper_ldats_cpt_selected)
+
+plot(ldats_ldats_cpt_selected)
+
+
+source(here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files', 'LDA_figure_scripts.R'))
+source(here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files', 'changepointmodel.r'))
+paper_cpts = find_changepoint_location(paper_paper_cpt_selected)
+paper_cpt_plot = get_ll_non_memoized_plot(ldamodel,x,paper_cpts,make_plot=T,weights=rep(1,length(year_continuous)))
+annual_hist(paper_paper_cpt_selected, year_continuous)
+paper_cpt_plot
+
+ntopics = 6
+ldats_cpts = find_changepoint_location(ldats_paper_cpt_selected)
+ldats_cpt_plot = get_ll_non_memoized_plot(ldats_lda_selected[[1]],x,ldats_cpts,make_plot=T,weights=rep(1,length(year_continuous)))
+annual_hist(ldats_paper_cpt_selected, year_continuous)
+ldats_cpt_plot
+```
