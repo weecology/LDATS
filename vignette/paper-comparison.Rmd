@@ -3,7 +3,7 @@ title: "Paper comparison (cleaned up)"
 author: "Renata Diaz"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{paper-comparison}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
