@@ -287,10 +287,15 @@ load(here::here('vignette', 'christensenetal-comparison-files', 'model-cache', '
 
 ### Plot LDAS
 
-```{r plot LDAs}
+#### Paper LDA
+```{r plot paper LDA, fig.width=6, fig.height=6}
 # Paper
 plot(ldamodel, cols = NULL, option = "D")
 
+```
+
+#### LDATS LDA
+```{r plot LDATS LDA, fig.width=6, fig.height=6}
 # LDATS
 plot(ldats_lda_selected[[1]], cols = NULL, option = "D")
 ```
@@ -596,7 +601,7 @@ paper_ldats_cpt_selected$nchangepoints
 
 #### Get dates
 
-Unlike the paper changepoint model, LDATS can recognize that sampling periods may not be equidistant, and can place changepoint estimates at new moons if they fall between nonconsecutive sampling periods. We can estimate the dates corresponding to those new moons. 
+Unlike the paper changepoint model, LDATS can recognize that sampling periods may not be equidistant, and can place changepoint estimates at new moons if they fall between nonconsecutive sampling periods. We can estimate the dates corresponding to those new moons, extrapolating from the census dates for adjacent census periods. 
 
 ```{r get paper lda + ldats cpt dates}
 paper_ldats_cpt_dates <- paper_ldats_cpt_selected$rho_summary$Mean
@@ -635,26 +640,6 @@ rm(list = c('newdate', 'halfinterval'))
 
 All of the models find four changepoints.
 
-```{r report cpt dates, include = F}
-
-cpt_dates <- as.data.frame(paper_paper_cpt_dates)
-cpt_dates <- cbind(cpt_dates, ldats_paper_cpt_dates)
-cpt_dates <- cbind(cpt_dates, ldats_ldats_cpt_dates)
-cpt_dates <- cbind(cpt_dates, paper_ldats_cpt_dates)
-
-colnames(cpt_dates) <- c('paperLDA_papercpt', 'ldatsLDA_papercpt', 'ldatsLDA_ldatscpt', 'paperLDA_ldatscpt')
-
-```
-
-```{r print cpt dates}
-cpt_dates
-```
-
-The choice of LDA has more influence on the changepoint locations than the choice of changepoint model - probably because the LDATS LDA has 6 topics, and the paper LDA has 4.
-
-```{r cleanup cpt_dates, include = F}
-rm(list= 'ldats_ldats_cpt_dates', 'ldats_paper_cpt_dates',  'paper_ldats_cpt_dates', 'paper_paper_cpt_dates', 'cpt_dates')
-```
 
 ### Plot changepoint models
 
@@ -676,12 +661,21 @@ ntopics = 4
 
 ```
 
-```{r plot cpts}
+#### Paper LDA and LDATS changepoint
+
+```{r plot paper LDA and LDATS cpts, fig.width=6, fig.height=6}
 
 plot(paper_ldats_cpt_selected)
 
-plot(ldats_ldats_cpt_selected)
+```
 
+#### LDATS LDA and LDATS changepoint
+```{r plot ldats LDA and LDATS cpt, fig.width=6, fig.height=6}
+plot(ldats_ldats_cpt_selected)
+```
+
+#### Paper LDA and paper changepoint
+```{r plot paper LDA and paper cpt, fig.width=6, fig.height=6}
 
 source(here::here('vignette', 'christensenetal-comparison-files', 'christensenetal-2018-files', 'LDA_figure_scripts.R'))
 source(here::here('vignette', 'christensenetal-comparison-files', 'christensenetal-2018-files', 'changepointmodel.r'))
@@ -690,9 +684,39 @@ paper_cpt_plot = get_ll_non_memoized_plot(ldamodel,x,paper_cpts,make_plot=T,weig
 annual_hist(paper_paper_cpt_selected, year_continuous)
 paper_cpt_plot
 
+```
+
+
+#### LDATS LDA and paper changepoint
+```{r plot LDATS lda and paper cpt, fig.width=6, fig.height=6}
 ntopics = 6
 ldats_cpts = find_changepoint_location(ldats_paper_cpt_selected)
 ldats_cpt_plot = get_ll_non_memoized_plot(ldats_lda_selected[[1]],x,ldats_cpts,make_plot=T,weights=rep(1,length(year_continuous)))
 annual_hist(ldats_paper_cpt_selected, year_continuous)
 ldats_cpt_plot
+```
+
+
+The results of the changepoint model appear extremely robust to both choice of LDA model and choice of changepoint model. 
+
+### Report changepoint dates
+```{r report cpt dates, include = F}
+
+cpt_dates <- as.data.frame(paper_paper_cpt_dates)
+cpt_dates <- cbind(cpt_dates, ldats_paper_cpt_dates)
+cpt_dates <- cbind(cpt_dates, ldats_ldats_cpt_dates)
+cpt_dates <- cbind(cpt_dates, paper_ldats_cpt_dates)
+
+colnames(cpt_dates) <- c('paperLDA_papercpt', 'ldatsLDA_papercpt', 'ldatsLDA_ldatscpt', 'paperLDA_ldatscpt')
+
+```
+
+```{r print cpt dates}
+cpt_dates
+```
+
+The choice of LDA has more influence on the changepoint locations than the choice of changepoint model - probably because the LDATS LDA has 6 topics, and the paper LDA has 4. However, all of the models agree to within 6 months in most cases, and a year for the broader early 1990s changepoint. 
+
+```{r cleanup cpt_dates, include = F}
+rm(list= 'ldats_ldats_cpt_dates', 'ldats_paper_cpt_dates',  'paper_ldats_cpt_dates', 'paper_paper_cpt_dates', 'cpt_dates')
 ```
