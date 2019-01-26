@@ -3,7 +3,7 @@ title: "LDATS Rodents Example"
 author: "Juniper L. Simonis"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{rodentsexample}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

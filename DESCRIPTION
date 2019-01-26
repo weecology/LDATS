@@ -40,7 +40,9 @@ Imports:
     progress,
     stats,
     topicmodels,
-    viridis
+    viridis,
+    dplyr,
+    here
 Suggests:
     knitr,
     pkgdown,
