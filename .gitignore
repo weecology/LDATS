@@ -5,3 +5,4 @@ doc
 .RData
 working/~$ats_ms.docx
 docs/*
+*.Rproj
