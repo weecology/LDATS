@@ -39,7 +39,13 @@ devtools::install_github("weecology/LDATS")
 
 For this vignette, we will be using rodent data from the control plots of the
 [Portal Project](https://github.com/weecology/portaldata), which come with
-the **LDATS** package
+the **LDATS** package.
+
+`rodents` contains two data tables, a `document_term_table` and a `document_covariate_table`. 
+
+The `document_term_table` is a matrix of species (term) counts by sampling period. Importantly, the `document_term_table` contains raw counts of individual rodent captures, not catch per unit effort. The LDA models operate on proportions and weight the information from each sampling period according to total catch (document size). Similarly, the TS models use the LDA compositional breakdown and weight the information from each period according to the total catch. We therefore give both models un-adjusted data. The values in the `document_term_table` must be integers.
+
+The `document_covariate_table` contains the covariates we would like to use for the time series models. In this case, we have a column for `newmoon`, which is the time step for each of our sampling periods. This column can include nonconsecutive time steps (i.e., `2, 4, 5`) if sampling periods are skipped or at unequal intervals. If there is no time column, `LDATS` will assume all time steps are equidistant. We also include columns `sin_year` and `cos_year` so we can account for seasonal dynamics.
 
 ```{r}
 data(rodents)
@@ -48,3 +54,30 @@ head(rodents$document_covariate_table, 10)
 ```
 
 
+## Stage 1: LDA models
+
+We use `LDA_set` and `select_LDA` to run LDA models with many seeds and select the best model. 
+
+LDA_set
+
+
+select_LDA
+
+
+Illustrate LDA_controls_list
+
+Illustrate plot.LDA
+
+Illustrate result pulling
+
+## Stage 2: TS changepoint models
+
+TS_on_LDA
+
+select_TS
+
+Illustrate TS_controls_list
+
+Illustrate plotting
+
+Illustrate result pulling
