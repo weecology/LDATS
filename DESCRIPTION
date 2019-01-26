@@ -42,7 +42,8 @@ Imports:
     topicmodels,
     viridis,
     here,
-		dplyr
+		dplyr,
+		reshape
 Suggests:
     knitr,
     pkgdown,
