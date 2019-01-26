@@ -43,13 +43,11 @@ Imports:
     rlang (>= 0.3.1),
     stats,
     topicmodels,
-<<<<<<< HEAD
     viridis
 =======
-    viridis,
-    here,
-		dplyr
->>>>>>> Add dplyr to DESCRIPTION
+		dplyr,
+		reshape
+>>>>>>> Add reshape to DESCRIPTION
 Suggests:
     knitr,
     pkgdown,
