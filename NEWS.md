@@ -41,7 +41,16 @@ all components of the LDATS analysis.
 
 ## Rodents data set
 * Portal rodent data from [Christensen *et al.* (2018)](https://doi.org/10.1002/ecy.2373) are now provided in a pre-formatted and ready-to-roll data object.
+* The data in Christensen *et al.* 2018 are scaled according to trapping effort. The data included in LDATS are not, to allow for appropriate weighting.
 * See `data(rodents)`
+
+## Comparison with [Christensen *et al.* (2018)](https://doi.org/10.1002/ecy.2373)
+* The paper-comparison vignette provides a step-by-step comparison of the LDATS pipeline to the analysis in Christensen *et al.* 2018. The differences are as follows:
+
+      * The `document_term_table` in Christensen *et al.* 2018 was adjusted to account for variable trapping effort. The data included in LDATS are not adjusted, so that sampling periods can be weighted appropriately.
+      * The LDA model selection criterion has changed (see LDA model AIC calculation, above), so that LDATS now identifies 6 topics compared to the 4 topics found in the paper.
+      * LDATS will by default weight sampling periods according to the number of terms (see Document weighting, above). 
+      * Despite these changes, the updated LDATS pipeline gives qualitatively similar results to the analysis in Christensen *et al.* 2018. 
 
 # [LDATS 0.0.1](https://github.com/weecology/LDATS/commit/326506b9d7fb3e0223948d0245381963f83a2b37) 2017-11-16
 
