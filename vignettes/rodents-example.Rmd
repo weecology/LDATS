@@ -56,19 +56,59 @@ head(rodents$document_covariate_table, 10)
 
 ## Stage 1: LDA models
 
-We use `LDA_set` and `select_LDA` to run LDA models with many seeds and select the best model. 
+We use `LDA_set` and `select_LDA` to run LDA models with varying numbers of topics (`2:6`) and many seeds and select the best model.
 
-LDA_set
+We use `LDA_controls_list())` to pass controls to the LDA function. In this case, we can set `quiet = TRUE` to make the model run quietly. 
+
+```{r lda_set, eval =F}
+lda_model_set <- LDA_set(document_term_table = rodents$document_term_table,
+                         topics = c(2:6),
+                         nseeds = 100,
+                        control = LDA_controls_list(quiet = TRUE))
+
+```
 
 
-select_LDA
+If we do not pass any controls, by default, `quiet = FALSE` (here run with only `2:3` topics and  `10` seeds, to keep output short): 
+
+```{r lda set not quiet}
+lda_model_set2 <- LDA_set(document_term_table = rodents$document_term_table,
+                         topics = c(2:3),
+                         nseeds = 10)
+```
+
+`LDA_set()` returns a list of LDA models. We use `select_LDA()` to identify the best number of topics and choice of seed from our set of models. By default, we will choose models based on minimum AIC. To use different selection criteria, define the appropriate functions and specify them using `LDA_controls_list(measurer = [measurer function], selector = [max, min, etc])`. 
+
+```{r load lda model set, include = F}
+load(here::here('vignettes', 'rodents-example-files', 'lda_model_set.Rds'))
+rm(lda_model_set2)
+```
+
+```{r select LDA}
+selected_lda_model <- select_LDA(lda_model_set)
+```
 
 
-Illustrate LDA_controls_list
+We can access the results of the model:
 
-Illustrate plot.LDA
+```{r LDA results}
+# Number of topics:
 
-Illustrate result pulling
+selected_lda_model[[1]]@k
+
+# Topic composition of communities at each time step
+# Columns are topics; rows are time steps
+head(selected_lda_model[[1]]@gamma)
+
+```
+
+`LDATS` includes flexible plot functionality for LDAs and time series. The top panel illustrates topic composition by species, and the bottom panel shows the proportion of the community made up of each topic over time. For all the available plot options see `?plot.LDA_VEM`. 
+
+```{r plot lda, fig.width=6, fig.height=6}
+plot(selected_lda_model[[1]])
+
+```
+
 
 ## Stage 2: TS changepoint models
 
