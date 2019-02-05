@@ -40,7 +40,7 @@ Imports:
     mvtnorm,
     nnet,
     progress,
-    reshape
+    reshape,
     stats,
     topicmodels,
     viridis,
