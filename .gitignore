@@ -5,8 +5,4 @@ doc
 .RData
 working/~$ats_ms.docx
 docs/*
-.cache_chunk
-.cache_ll
-.DS_Store
-LDATS.Rproj
-.gitignore
+*.Rproj
