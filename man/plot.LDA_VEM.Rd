@@ -7,7 +7,7 @@
 \title{Plot the results of an LDATS LDA model}
 \usage{
 \method{plot}{LDA_VEM}(x, ..., xtime = NULL, xname = NULL,
-  cols = NULL, option = "E", alpha = 0.8, LDATS = FALSE)
+  cols = NULL, option = "C", alpha = 0.8, LDATS = FALSE)
 
 LDA_plot_top_panel(x, cols, option, alpha, LDATS = FALSE)
 
@@ -34,7 +34,7 @@ The default (\code{cols = NULL}) triggers use of
 \item{option}{A \code{character} string indicating the color option
 from \code{\link[viridis]{viridis}} to use if `cols == NULL`. Four 
 options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
-(or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").}
+(or "C", the default option), "viridis" (or "D") and "cividis" (or "E").}
 
 \item{alpha}{Numeric value [0,1] that indicates the transparency of the 
 colors used. Supported only on some devices, see 

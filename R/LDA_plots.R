@@ -51,7 +51,7 @@ plot.LDA_set <- function(x, ...){
 #' @param option A \code{character} string indicating the color option
 #'   from \code{\link[viridis]{viridis}} to use if `cols == NULL`. Four 
 #'   options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
-#'   (or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").
+#'   (or "C", the default option), "viridis" (or "D") and "cividis" (or "E").
 #'
 #' @param alpha Numeric value [0,1] that indicates the transparency of the 
 #'   colors used. Supported only on some devices, see 
@@ -74,7 +74,7 @@ plot.LDA_set <- function(x, ...){
 #' @export 
 #'
 plot.LDA_VEM <- function(x, ..., xtime = NULL, xname = NULL, cols = NULL, 
-                     option = "E", alpha = 0.8, LDATS = FALSE){
+                     option = "C", alpha = 0.8, LDATS = FALSE){
 
   LDA_plot_top_panel(x, cols, option, alpha, LDATS)
   LDA_plot_bottom_panel(x, xtime, xname, cols, option, alpha, LDATS)
@@ -203,7 +203,7 @@ LDA_plot_bottom_panel <- function(x, xtime, xname, cols, option, alpha,
 #' @param option A \code{character} string indicating the color option
 #'   from \code{\link[viridis]{viridis}} to use if `cols == NULL`. Four 
 #'   options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
-#'   (or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").
+#'   (or "C", the default option), "viridis" (or "D") and "cividis" (or "E").
 #'
 #' @param alpha Numeric value [0,1] that indicates the transparency of the 
 #'   colors used. Supported only on some devices, see 
@@ -213,7 +213,7 @@ LDA_plot_bottom_panel <- function(x, xtime, xname, cols, option, alpha,
 #'
 #' @export 
 #'
-set_LDA_plot_colors <- function(x, cols = NULL, option = "D", alpha = 0.8){
+set_LDA_plot_colors <- function(x, cols = NULL, option = "C", alpha = 0.8){
 
   gamma <- x@gamma
   ntopics <- ncol(gamma)

@@ -9,7 +9,7 @@ xtime <- rodents$newmoon
 
 test_that("check output from set_LDA_plot_colors", {
   col_default <- set_LDA_plot_colors(x = lda)
-  expect_equal(col_default, c("#440154CC", "#BBDF27CC"))
+  expect_equal(col_default, c("#0D0887CC", "#FCCE25CC"))
   col_A <- set_LDA_plot_colors(x = lda, option = "A")
   expect_equal(col_A, c("#000004CC", "#FECE91CC"))
   col_grey <- set_LDA_plot_colors(x = lda, cols = "grey")

@@ -35,7 +35,7 @@ triggers use of \code{\link[viridis]{viridis}} color options (see
 \item{gamma_option}{A \code{character} string indicating the color option
 from \code{\link[viridis]{viridis}} to use if gamma_cols == NULL`. Four 
 options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
-(or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").}
+(or "C", the default option), "viridis" (or "D") and "cividis" (or "E").}
 
 \item{gamma_alpha}{Numeric value [0,1] that indicates the transparency of 
 the colors used. Supported only on some devices, see 
