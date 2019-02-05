@@ -4,7 +4,7 @@
 \alias{set_LDA_plot_colors}
 \title{Prepare the colors to be used in the LDA plots}
 \usage{
-set_LDA_plot_colors(x, cols = NULL, option = "D", alpha = 0.8)
+set_LDA_plot_colors(x, cols = NULL, option = "C", alpha = 0.8)
 }
 \arguments{
 \item{x}{Object of class \code{LDA}.}
@@ -18,7 +18,7 @@ The default (\code{cols = NULL}) triggers use of
 \item{option}{A \code{character} string indicating the color option
 from \code{\link[viridis]{viridis}} to use if `cols == NULL`. Four 
 options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
-(or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").}
+(or "C", the default option), "viridis" (or "D") and "cividis" (or "E").}
 
 \item{alpha}{Numeric value [0,1] that indicates the transparency of the 
 colors used. Supported only on some devices, see 
