@@ -84,7 +84,7 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>LDATS Rodents Example</h1>
-                        <h4 class="author">Juniper L. Simonis</h4>
+                        <h4 class="author">Renata Diaz and Juniper L. Simonis</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/weecology/LDATS/blob/master/vignettes/rodents-example.Rmd"><code>vignettes/rodents-example.Rmd</code></a></small>
@@ -94,7 +94,7 @@
 
     
     
-<p>This vignette walks through an example of <strong>LDATS</strong> at the command line and was constructed using <strong>LDATS</strong> version 0.1.0 on 2019-01-25.</p>
+<p>This vignette walks through an example of <strong>LDATS</strong> at the command line and was constructed using <strong>LDATS</strong> version 0.1.0 on 2019-02-05.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
@@ -105,7 +105,10 @@
 <div id="data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#data" class="anchor"></a>Data</h2>
-<p>For this vignette, we will be using rodent data from the control plots of the <a href="https://github.com/weecology/portaldata">Portal Project</a>, which come with the <strong>LDATS</strong> package</p>
+<p>For this vignette, we will be using rodent data from the control plots of the <a href="https://github.com/weecology/portaldata">Portal Project</a>, which come with the <strong>LDATS</strong> package (<code><a href="https://www.rdocumentation.org/packages/utils/topics/data">data(rodents)</a></code>).</p>
+<p><code>rodents</code> contains two data tables, a <code>document_term_table</code> and a <code>document_covariate_table</code>.</p>
+<p>The <code>document_term_table</code> is a matrix of species (term) counts by sampling period (document). Importantly, the <code>document_term_table</code> contains raw counts of individual rodent captures, not catch per unit effort. The LDA models operate on proportions and weight the information from each sampling period according to total catch (document size). Similarly, the TS models use the LDA compositional breakdown and weight the information from each period according to the total catch. We therefore give both models un-adjusted data. The values in the <code>document_term_table</code> must be integers.</p>
+<p>The <code>document_covariate_table</code> contains the covariates we would like to use for the time series models. In this case, we have a column for <code>newmoon</code>, which is the time step for each of our sampling periods. This column can include nonconsecutive time steps (i.e., <code>2, 4, 5</code>) if sampling periods are skipped or at unequal intervals. If there is no time column, <code>LDATS</code> will assume all time steps are equidistant. We also include columns <code>sin_year</code> and <code>cos_year</code> so we can account for seasonal dynamics.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(rodents)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(rodents<span class="op">$</span>document_term_table, <span class="dv">10</span>)</a>
 <a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">#&gt;    BA DM DO DS NA. OL OT PB PE PF PH PI PL PM PP RF RM RO SF SH SO</span></a>
@@ -132,6 +135,153 @@
 <a class="sourceLine" id="cb2-24" data-line-number="24"><span class="co">#&gt; 9        9   0.9141   0.4054</span></a>
 <a class="sourceLine" id="cb2-25" data-line-number="25"><span class="co">#&gt; 10      10   0.9951  -0.0988</span></a></code></pre></div>
 </div>
+<div id="stage-1-lda-models" class="section level2">
+<h2 class="hasAnchor">
+<a href="#stage-1-lda-models" class="anchor"></a>Stage 1: LDA models</h2>
+<p>We use <code><a href="../reference/LDA_set.html">LDA_set()</a></code> to run replicate LDA models (each with its own seed) with varying numbers of topics (<code>2:6</code>) and <code><a href="../reference/select_LDA.html">select_LDA()</a></code> to select the best model.</p>
+<p>We use <code>LDA_controls_list())</code> to pass controls to the LDA function. In this case, we can set <code>quiet = TRUE</code> to make the model run quietly.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">lda_model_set &lt;-<span class="st"> </span><span class="kw"><a href="../reference/LDA_set.html">LDA_set</a></span>(<span class="dt">document_term_table =</span> rodents<span class="op">$</span>document_term_table,</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">                         <span class="dt">topics =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">2</span><span class="op">:</span><span class="dv">6</span>),</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">                         <span class="dt">nseeds =</span> <span class="dv">100</span>,</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">                        <span class="dt">control =</span> <span class="kw"><a href="../reference/LDA_controls_list.html">LDA_controls_list</a></span>(<span class="dt">quiet =</span> <span class="ot">TRUE</span>))</a></code></pre></div>
+<p>If we do not pass any controls, by default, <code>quiet = FALSE</code> (here run with only <code>2:3</code> topics and <code>10</code> seeds, to keep output short):</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">lda_model_set2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/LDA_set.html">LDA_set</a></span>(<span class="dt">document_term_table =</span> rodents<span class="op">$</span>document_term_table,</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">                         <span class="dt">topics =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">2</span><span class="op">:</span><span class="dv">3</span>),</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">                         <span class="dt">nseeds =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt; Running LDA with 2 topics (seed 2)</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">#&gt; Running LDA with 2 topics (seed 4)</span></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt; Running LDA with 2 topics (seed 6)</span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt; Running LDA with 2 topics (seed 8)</span></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="co">#&gt; Running LDA with 2 topics (seed 10)</span></a>
+<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="co">#&gt; Running LDA with 2 topics (seed 12)</span></a>
+<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="co">#&gt; Running LDA with 2 topics (seed 14)</span></a>
+<a class="sourceLine" id="cb4-11" data-line-number="11"><span class="co">#&gt; Running LDA with 2 topics (seed 16)</span></a>
+<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">#&gt; Running LDA with 2 topics (seed 18)</span></a>
+<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="co">#&gt; Running LDA with 2 topics (seed 20)</span></a>
+<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co">#&gt; Running LDA with 3 topics (seed 2)</span></a>
+<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="co">#&gt; Running LDA with 3 topics (seed 4)</span></a>
+<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="co">#&gt; Running LDA with 3 topics (seed 6)</span></a>
+<a class="sourceLine" id="cb4-17" data-line-number="17"><span class="co">#&gt; Running LDA with 3 topics (seed 8)</span></a>
+<a class="sourceLine" id="cb4-18" data-line-number="18"><span class="co">#&gt; Running LDA with 3 topics (seed 10)</span></a>
+<a class="sourceLine" id="cb4-19" data-line-number="19"><span class="co">#&gt; Running LDA with 3 topics (seed 12)</span></a>
+<a class="sourceLine" id="cb4-20" data-line-number="20"><span class="co">#&gt; Running LDA with 3 topics (seed 14)</span></a>
+<a class="sourceLine" id="cb4-21" data-line-number="21"><span class="co">#&gt; Running LDA with 3 topics (seed 16)</span></a>
+<a class="sourceLine" id="cb4-22" data-line-number="22"><span class="co">#&gt; Running LDA with 3 topics (seed 18)</span></a>
+<a class="sourceLine" id="cb4-23" data-line-number="23"><span class="co">#&gt; Running LDA with 3 topics (seed 20)</span></a></code></pre></div>
+<p><code><a href="../reference/LDA_set.html">LDA_set()</a></code> returns a list of LDA models. We use <code><a href="../reference/select_LDA.html">select_LDA()</a></code> to identify the best number of topics and choice of seed from our set of models. By default, we will choose models based on minimum AIC. To use different selection criteria, define the appropriate functions and specify them using <code>LDA_controls_list(measurer = [measurer function], selector = [max, min, etc])</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">selected_lda_model &lt;-<span class="st"> </span><span class="kw"><a href="../reference/select_LDA.html">select_LDA</a></span>(lda_model_set)</a></code></pre></div>
+<p>We can access the results of the model:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co"># Number of topics:</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">selected_lda_model[[<span class="dv">1</span>]]<span class="op">@</span>k</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co">#&gt; [1] 6</span></a>
+<a class="sourceLine" id="cb6-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="co"># Topic composition of communities at each time step</span></a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="co"># Columns are topics; rows are time steps</span></a>
+<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(selected_lda_model[[<span class="dv">1</span>]]<span class="op">@</span>gamma)</a>
+<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="co">#&gt;             [,1]        [,2]        [,3]        [,4]      [,5]        [,6]</span></a>
+<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="co">#&gt; [1,] 0.185827715 0.006120344 0.006143583 0.006099663 0.3363500 0.459458732</span></a>
+<a class="sourceLine" id="cb6-11" data-line-number="11"><span class="co">#&gt; [2,] 0.079838735 0.004252738 0.004243540 0.004241287 0.2227395 0.684684219</span></a>
+<a class="sourceLine" id="cb6-12" data-line-number="12"><span class="co">#&gt; [3,] 0.036658810 0.003691496 0.003691928 0.003679927 0.5859909 0.366286961</span></a>
+<a class="sourceLine" id="cb6-13" data-line-number="13"><span class="co">#&gt; [4,] 0.002911201 0.310434747 0.002916843 0.002913084 0.6779035 0.002920604</span></a>
+<a class="sourceLine" id="cb6-14" data-line-number="14"><span class="co">#&gt; [5,] 0.003680717 0.003691625 0.046051772 0.003680944 0.7597112 0.183183719</span></a>
+<a class="sourceLine" id="cb6-15" data-line-number="15"><span class="co">#&gt; [6,] 0.003037767 0.003046109 0.003040025 0.003040343 0.7343683 0.253467486</span></a></code></pre></div>
+<p><code>LDATS</code> includes flexible plot functionality for LDAs and time series. The top panel illustrates topic composition by species, and the bottom panel shows the proportion of the community made up of each topic over time. For all the available plot options see <code><a href="../reference/plot.LDA_VEM.html">?plot.LDA_VEM</a></code>.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(selected_lda_model[[<span class="dv">1</span>]])</a></code></pre></div>
+<p><img src="rodents-example_files/figure-html/plot%20lda-1.png" width="672"></p>
+</div>
+<div id="stage-2-ts-changepoint-models" class="section level2">
+<h2 class="hasAnchor">
+<a href="#stage-2-ts-changepoint-models" class="anchor"></a>Stage 2: TS changepoint models</h2>
+<p>We use <code><a href="../reference/TS_on_LDA.html">TS_on_LDA()</a></code> to run LDATS changepoint models with <code>0:6</code> changepoints, and then use <code><a href="../reference/select_TS.html">select_TS()</a></code> to find the best-fit model of these.</p>
+<p>Here, <code><a href="../reference/TS_on_LDA.html">TS_on_LDA()</a></code> predicts the <code>gamma</code> (the proportion of the community made of up each topic) from our LDA model(s) as a function of <code>sin_year</code> and <code>cos_year</code> in the <code>document_covariate_table</code>. We use <code><a href="../reference/document_weights.html">document_weights()</a></code> to weight the information from each time step according to the total number of rodents captured at that time step.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">changepoint_models &lt;-<span class="st"> </span><span class="kw"><a href="../reference/TS_on_LDA.html">TS_on_LDA</a></span>(<span class="dt">LDA_models =</span> selected_lda_model, </a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">                                <span class="dt">document_covariate_table =</span> rodents<span class="op">$</span>document_covariate_table,</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">                                <span class="dt">formulas =</span> <span class="op">~</span><span class="st"> </span>sin_year <span class="op">+</span><span class="st"> </span>cos_year,</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4">                                <span class="dt">nchangepoints =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span><span class="op">:</span><span class="dv">6</span>), </a>
+<a class="sourceLine" id="cb8-5" data-line-number="5">                                <span class="dt">weights =</span> <span class="kw"><a href="../reference/document_weights.html">document_weights</a></span>(rodents<span class="op">$</span>document_term_table),</a>
+<a class="sourceLine" id="cb8-6" data-line-number="6">                                                           <span class="dt">control =</span> <span class="kw"><a href="../reference/TS_controls_list.html">TS_controls_list</a></span>(<span class="dt">nit =</span> <span class="dv">1000</span>))</a>
+<a class="sourceLine" id="cb8-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/save">save</a></span>(changepoint_models, <span class="dt">file =</span> here<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/here/topics/here">here</a></span>(<span class="st">'vignettes'</span>, <span class="st">'rodents-example-files'</span>, <span class="st">'changepoint_models.Rds'</span>))</a></code></pre></div>
+<p>We can adjust options for both TS functions using <code><a href="../reference/TS_controls_list.html">TS_controls_list()</a></code>. For a full list see <code><a href="../reference/TS_controls_list.html">?TS_controls_list</a></code>. Here we illustrate adjusting the number of ptMCMC iterations - the default is 10000, but it is convenient to use fewer iterations for code development.</p>
+<p>Also, it is important to note that by default the TS functions take the name of the time-step column from the <code>document_covariate_table</code> to be <code>"newmoon"</code>. To pass a different column name, use the <code>timename</code> argument in <code><a href="../reference/TS_controls_list.html">TS_controls_list()</a></code>.</p>
+<p><code><a href="../reference/select_TS.html">select_TS()</a></code> will identify the best-fit changepoint model of the models from <code><a href="../reference/TS_on_LDA.html">TS_on_LDA()</a></code>. As with <code><a href="../reference/select_LDA.html">select_LDA()</a></code>, we can adjust the <code>measurer</code> and <code>selector</code> using <code><a href="../reference/TS_controls_list.html">TS_controls_list()</a></code>.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">selected_changepoint_model &lt;-<span class="st"> </span><span class="kw"><a href="../reference/select_TS.html">select_TS</a></span>(changepoint_models)</a></code></pre></div>
+<p>We can access the results of the selected changepoint model:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co"># Number of changepoints</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">selected_changepoint_model<span class="op">$</span>nchangepoints</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="co">#&gt; [1] 4</span></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="co"># Summary of timesteps (newmoon values) for each changepoint</span></a>
+<a class="sourceLine" id="cb10-6" data-line-number="6">selected_changepoint_model<span class="op">$</span>rho_summary</a>
+<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="co">#&gt;                 Mean Median Mode Lower_95% Upper_95%    SD MCMCerr   AC10</span></a>
+<a class="sourceLine" id="cb10-8" data-line-number="8"><span class="co">#&gt; Changepoint_1  81.77     82   85        71        87  4.10  0.1297 0.4142</span></a>
+<a class="sourceLine" id="cb10-9" data-line-number="9"><span class="co">#&gt; Changepoint_2 175.18    173  172       167       190  6.29  0.1989 0.3620</span></a>
+<a class="sourceLine" id="cb10-10" data-line-number="10"><span class="co">#&gt; Changepoint_3 270.10    272  273       252       278  6.54  0.2068 0.6841</span></a>
+<a class="sourceLine" id="cb10-11" data-line-number="11"><span class="co">#&gt; Changepoint_4 395.99    403  410       311       420 28.21  0.8921 0.8764</span></a>
+<a class="sourceLine" id="cb10-12" data-line-number="12"><span class="co">#&gt;                    ESS</span></a>
+<a class="sourceLine" id="cb10-13" data-line-number="13"><span class="co">#&gt; Changepoint_1 39.31477</span></a>
+<a class="sourceLine" id="cb10-14" data-line-number="14"><span class="co">#&gt; Changepoint_2 47.17576</span></a>
+<a class="sourceLine" id="cb10-15" data-line-number="15"><span class="co">#&gt; Changepoint_3 19.58309</span></a>
+<a class="sourceLine" id="cb10-16" data-line-number="16"><span class="co">#&gt; Changepoint_4  6.59248</span></a>
+<a class="sourceLine" id="cb10-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb10-18" data-line-number="18"><span class="co"># Raw estimates for timesteps for each changepoint</span></a>
+<a class="sourceLine" id="cb10-19" data-line-number="19"><span class="co"># Changepoints are columns</span></a>
+<a class="sourceLine" id="cb10-20" data-line-number="20"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(selected_changepoint_model<span class="op">$</span>rhos)</a>
+<a class="sourceLine" id="cb10-21" data-line-number="21"><span class="co">#&gt;      [,1] [,2] [,3] [,4]</span></a>
+<a class="sourceLine" id="cb10-22" data-line-number="22"><span class="co">#&gt; [1,]   79  183  237  310</span></a>
+<a class="sourceLine" id="cb10-23" data-line-number="23"><span class="co">#&gt; [2,]   79  183  237  306</span></a>
+<a class="sourceLine" id="cb10-24" data-line-number="24"><span class="co">#&gt; [3,]   79  183  248  306</span></a>
+<a class="sourceLine" id="cb10-25" data-line-number="25"><span class="co">#&gt; [4,]   79  183  248  306</span></a>
+<a class="sourceLine" id="cb10-26" data-line-number="26"><span class="co">#&gt; [5,]   79  183  248  306</span></a>
+<a class="sourceLine" id="cb10-27" data-line-number="27"><span class="co">#&gt; [6,]   79  183  248  306</span></a></code></pre></div>
+<p>LDATS will plot the results of a changepoint model:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(selected_changepoint_model)</a></code></pre></div>
+<p><img src="rodents-example_files/figure-html/plot%20cpt-1.png" width="672"></p>
+</div>
+<div id="full-analysis-with-lda_ts" class="section level2">
+<h2 class="hasAnchor">
+<a href="#full-analysis-with-lda_ts" class="anchor"></a>Full analysis with <code>LDA_TS</code>
+</h2>
+<p>Finally, we can perform an entire LDATS analysis, including all of the above steps, using the <code><a href="../reference/LDA_TS.html">LDA_TS()</a></code> function and passing options to the LDA and TS functions using <code><a href="../reference/LDA_TS_controls_list.html">LDA_TS_controls_list()</a></code>.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">lda_ts_results &lt;-<span class="st"> </span><span class="kw"><a href="../reference/LDA_TS.html">LDA_TS</a></span>(<span class="dt">document_term_table =</span> rodents<span class="op">$</span>document_term_table,</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">                         <span class="dt">document_covariate_table =</span> rodents<span class="op">$</span>document_covariate_table,</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3">                         <span class="dt">nseeds =</span> <span class="dv">100</span>, </a>
+<a class="sourceLine" id="cb12-4" data-line-number="4">                         <span class="dt">topics =</span> <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>,</a>
+<a class="sourceLine" id="cb12-5" data-line-number="5">                         <span class="dt">formulas =</span> <span class="op">~</span><span class="st"> </span>sin_year <span class="op">+</span><span class="st"> </span>cos_year,</a>
+<a class="sourceLine" id="cb12-6" data-line-number="6">                         <span class="dt">nchangepoints=</span> <span class="dv">0</span><span class="op">:</span><span class="dv">6</span>,</a>
+<a class="sourceLine" id="cb12-7" data-line-number="7">                         <span class="dt">weights =</span> <span class="kw"><a href="../reference/document_weights.html">document_weights</a></span>(rodents<span class="op">$</span>document_term_table),</a>
+<a class="sourceLine" id="cb12-8" data-line-number="8">                         <span class="dt">control =</span> <span class="kw"><a href="../reference/LDA_TS_controls_list.html">LDA_TS_controls_list</a></span>(</a>
+<a class="sourceLine" id="cb12-9" data-line-number="9">                           <span class="dt">TS_control =</span> <span class="kw"><a href="../reference/TS_controls_list.html">TS_controls_list</a></span>(<span class="dt">nit =</span> <span class="dv">1000</span>)))</a></code></pre></div>
+<p><code><a href="../reference/LDA_TS.html">LDA_TS()</a></code> returns a list of all the model objects, and we can access their contents as above:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(lda_ts_results)</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="co">#&gt; [1] "LDA models"         "Selected LDA model" "TS models"         </span></a>
+<a class="sourceLine" id="cb13-3" data-line-number="3"><span class="co">#&gt; [4] "Selected TS model"</span></a>
+<a class="sourceLine" id="cb13-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb13-5" data-line-number="5"><span class="co"># Number of topics</span></a>
+<a class="sourceLine" id="cb13-6" data-line-number="6">lda_ts_results<span class="op">$</span><span class="st">`</span><span class="dt">Selected LDA model</span><span class="st">`</span><span class="op">$</span>k<span class="op">@</span>k</a>
+<a class="sourceLine" id="cb13-7" data-line-number="7"><span class="co">#&gt; [1] 6</span></a>
+<a class="sourceLine" id="cb13-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb13-9" data-line-number="9"><span class="co"># Number of changepoints</span></a>
+<a class="sourceLine" id="cb13-10" data-line-number="10">lda_ts_results<span class="op">$</span><span class="st">`</span><span class="dt">Selected TS model</span><span class="st">`</span><span class="op">$</span>nchangepoints</a>
+<a class="sourceLine" id="cb13-11" data-line-number="11"><span class="co">#&gt; [1] 4</span></a>
+<a class="sourceLine" id="cb13-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb13-13" data-line-number="13"><span class="co"># Summary of changepoint locations</span></a>
+<a class="sourceLine" id="cb13-14" data-line-number="14">lda_ts_results<span class="op">$</span><span class="st">`</span><span class="dt">Selected TS model</span><span class="st">`</span><span class="op">$</span>rho_summary</a>
+<a class="sourceLine" id="cb13-15" data-line-number="15"><span class="co">#&gt;                 Mean Median Mode Lower_95% Upper_95%    SD MCMCerr   AC10</span></a>
+<a class="sourceLine" id="cb13-16" data-line-number="16"><span class="co">#&gt; Changepoint_1  81.87     82   84        73        88  4.16  0.1316 0.5790</span></a>
+<a class="sourceLine" id="cb13-17" data-line-number="17"><span class="co">#&gt; Changepoint_2 174.00    172  172       165       193  6.68  0.2112 0.3207</span></a>
+<a class="sourceLine" id="cb13-18" data-line-number="18"><span class="co">#&gt; Changepoint_3 269.05    271  274       260       281 12.15  0.3842 0.4868</span></a>
+<a class="sourceLine" id="cb13-19" data-line-number="19"><span class="co">#&gt; Changepoint_4 400.72    404  404       393       422 24.48  0.7741 0.6635</span></a>
+<a class="sourceLine" id="cb13-20" data-line-number="20"><span class="co">#&gt;                     ESS</span></a>
+<a class="sourceLine" id="cb13-21" data-line-number="21"><span class="co">#&gt; Changepoint_1  9.429158</span></a>
+<a class="sourceLine" id="cb13-22" data-line-number="22"><span class="co">#&gt; Changepoint_2 54.056184</span></a>
+<a class="sourceLine" id="cb13-23" data-line-number="23"><span class="co">#&gt; Changepoint_3 32.909198</span></a>
+<a class="sourceLine" id="cb13-24" data-line-number="24"><span class="co">#&gt; Changepoint_4 18.632295</span></a></code></pre></div>
+<p>Finally, we can plot the <code>LDA_TS</code> results.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(lda_ts_results)</a></code></pre></div>
+<p><img src="rodents-example_files/figure-html/plot%20LDA_TS%20results-1.png" width="672"></p>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -141,6 +291,9 @@
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#installation">Installation</a></li>
       <li><a href="#data">Data</a></li>
+      <li><a href="#stage-1-lda-models">Stage 1: LDA models</a></li>
+      <li><a href="#stage-2-ts-changepoint-models">Stage 2: TS changepoint models</a></li>
+      <li><a href="#full-analysis-with-lda_ts">Full analysis with <code>LDA_TS</code></a></li>
       </ul>
 </div>
       </div>
