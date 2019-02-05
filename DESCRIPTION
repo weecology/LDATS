@@ -13,7 +13,7 @@ Authors@R: c(
       comment = c(ORCID = "0000-0003-0803-4734")),
     person("Hao", "Ye", role = c("aut"),
       comment = c(ORCID = "0000-0002-8630-1458")),
-	person(c("Ethan", "P."), "Ethan", role = c("aut"),
+	person(c("Ethan", "P."), "White", role = c("aut"),
       comment = c(ORCID = "0000-0001-6728-7745")),
     person(c("S.K.", "Morgan"), "Ernest", role = c("aut"),
       comment = c(ORCID = "0000-0002-6026-8530")))
@@ -40,14 +40,14 @@ Imports:
     mvtnorm,
     nnet,
     progress,
-    rlang (>= 0.3.1),
+		dplyr,
+		reshape
+=======
+    reshape
     stats,
     topicmodels,
     viridis
-=======
-		dplyr,
-		reshape
->>>>>>> Add reshape to DESCRIPTION
+>>>>>>> Update DESCRIPTION
 Suggests:
     knitr,
     pkgdown,
