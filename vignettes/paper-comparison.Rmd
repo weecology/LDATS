@@ -211,7 +211,7 @@ rm(new_cov_table)
 
 ## Stage 1: LDA
 
-While LDATS can run start-to-finish with `LDATS::LDA_TS`, here we will work through the process function-by-function to isolate differences with the paper. For an illustration of `LDA_TS`, see the `codebase` vignette.
+While LDATS can run start-to-finish with `LDATS::LDA_TS`, here we will work through the process function-by-function to isolate differences with the paper. For a breakdown of the `LDA_TS` pipeline, see the [`codebase` vignette](https://weecology.github.io/LDATS/articles/LDATS_codebase.html).
 
 ```{r LDATS LDAs, eval = F}
 
@@ -300,7 +300,7 @@ rm(ldamodel)
 rm(ldats_lda_selected)
 ```
 
-The paper method finds 4 topics and LDATS finds 6. This is because of an update to the model selection procedure. The paper conservatively overestimates the number of parameters and therefore overpenalizes AIC for models with more topics. For this vignette, we will compare the results from using both LDA models. 
+The paper method finds 4 topics and LDATS finds 6. This is because of an update to the model selection procedure. The paper conservatively overestimates the number of parameters (by counting all of the variational parameteres) and therefore overpenalizes the AIC for models with more topics. Comparatively, the LDATS method now uses the number of parameters remaining after the variational approximation, as returned by the LDA object. For this vignette, we will compare the results from using both LDA models. 
 
 
 ## Changepoint models
@@ -312,7 +312,7 @@ We will compare four combinations of LDA + changepoint models:
 * Paper LDA + LDATS changepoint
 * Paper LDA + paper changepoint
 
-The paper changepoint model weighted all sample periods equally, wheras LDATS can weight sample periods according to how many individuals were captured (controlled by the `document_term_weights`). We now believe it is more appropriate to weight periods proportional to captures, and this is what we recommend for LDATS users. For the purposes of comparison, we will continue set all weights = 1 for both changepoint models. For an example of LDATS run with proportional weights, see the rodents vignette. [?]
+Having divided the data to generate catch-per-effort, the paper changepoint model weighted all sample periods equally. In comparison, LDATS does not force an equal weighting, but assumes that as default, and can weight sample periods according to how many individuals were captured (controlled by the `weights` argument to `LDA_TS`, and easily calculated for a document-term matrix using `document_term_weights`. We now believe it is more appropriate to weight periods proportional to captures in the time series (despite the LDA function returning only proportions of each topic), and this is what we recommend for LDATS users. For the purposes of comparison, however, we will continue set all weights = 1 for both changepoint models. For an example of LDATS run with proportional weights, see the [rodents vignette](https://weecology.github.io/LDATS/articles/rodents-example.html).
 
 ### Running paper changepoint models
 
