@@ -5,7 +5,7 @@
 \title{Create the controls list for the Time Series model}
 \usage{
 TS_controls_list(memoise = TRUE, response = "gamma",
-  timename = "newmoon", lambda = 0, measurer = AIC, selector = min,
+  timename = "time", lambda = 0, measurer = AIC, selector = min,
   ntemps = 6, penultimate_temp = 2^6, ultimate_temp = 1e+10, q = 0,
   nit = 10000, magnitude = 12, quiet = FALSE, burnin = 0,
   thin_frac = 1, summary_prob = 0.95, seed = NULL)
@@ -20,7 +20,7 @@ Memoisation happens to both \code{\link{multinom_TS}} and
 used in the time series.}
 
 \item{timename}{\code{character} element indicating the time variable
-used in the time series.}
+used in the time series. Defaults to \code{"time"}.}
 
 \item{lambda}{\code{numeric} "weight" decay term used to set the prior
 on the regressors within each chunk-level model. Defaults to 0, 

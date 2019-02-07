@@ -9,7 +9,8 @@ nseeds <- 1
 formulas <- ~ 1
 nchangepoints <- 0
 weights <- document_weights(document_term_table)
-control <- LDA_TS_controls_list()
+TS_controls <- TS_controls_list(timename = "newmoon")
+control <- LDA_TS_controls_list(TS_control = TS_controls)
 LDAs <- LDA_set(document_term_table, topics, nseeds, control$LDA_control)
 LDA_models <- select_LDA(LDAs, control$LDA_control)
 control <- control$TS_control
@@ -39,7 +40,7 @@ test_that("check prep_TS_data", {
 test_that("check select_TS", {
   mods <- TS_on_LDA(LDA_models, document_covariate_table, formulas, 
                   nchangepoints = 0:1, weights, 
-                  control = TS_controls_list(nit = 1e3))
+                  control = TS_controls_list(nit = 1e3, timename = "newmoon"))
   sel_mod <- select_TS(mods, control)
 
   expect_equal(length(mods), 2)
@@ -64,7 +65,8 @@ test_that("check package_TS_on_LDA", {
     nchangepoints_i <- mods$nchangepoints[i]
     data_i <- prep_TS_data(document_covariate_table, LDA_models, mods, i)
     TSmods[[i]] <- TS(data_i, formula_i, nchangepoints_i, weights, 
-                      control = TS_controls_list(nit = 1e3))
+                      control = TS_controls_list(nit = 1e3, 
+                                                 timename = "newmoon"))
   }
   expect_is(package_TS_on_LDA(TSmods, LDA_models, mods), "TS_on_LDA")
   expect_is(package_TS_on_LDA(TSmods, LDA_models[[1]], mods), "TS_on_LDA")
@@ -77,7 +79,8 @@ test_that("check package_TS_on_LDA", {
 test_that("check TS_on_LDA", {
   mods <- TS_on_LDA(LDA_models, document_covariate_table, formulas, 
                   nchangepoints = 0:1, weights, 
-                  control = TS_controls_list(nit = 1e3))
+                  control = TS_controls_list(nit = 1e3, 
+                                                 timename = "newmoon"))
   expect_is(mods, "TS_on_LDA")
   expect_equal(length(mods), 2)
   expect_is(mods[[1]], "TS_fit")
@@ -102,7 +105,7 @@ test_that("check TS_on_LDA", {
 test_that("check printing for TS_on_LDA", {
   m1 <- TS_on_LDA(LDA_models, document_covariate_table, formulas, 
                   nchangepoints, weights, 
-                  control = TS_controls_list(nit = 1e4))
+                  control = TS_controls_list(nit = 1e4, timename = "newmoon"))
   expect_output(print(m1))
 })
 

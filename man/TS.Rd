@@ -110,7 +110,8 @@ This is the main interface function for the LDATS application
   data <- document_covariate_table
   data$gamma <- LDA_models@gamma
   weights <- document_weights(document_term_table)
-  TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, weights)
+  controls <- TS_controls_list(timename = "newmoon")
+  TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, weights, controls)
 }
 
 }

@@ -128,7 +128,8 @@
 #'   data <- document_covariate_table
 #'   data$gamma <- LDA_models@gamma
 #'   weights <- document_weights(document_term_table)
-#'   TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, weights)
+#'   controls <- TS_controls_list(timename = "newmoon")
+#'   TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, weights, controls)
 #' }
 #'
 #' @export
@@ -770,7 +771,7 @@ check_formula <- function(data, formula){
 #'   used in the time series. 
 #'
 #' @param timename \code{character} element indicating the time variable
-#'   used in the time series. 
+#'   used in the time series. Defaults to \code{"time"}.
 #'
 #' @param lambda \code{numeric} "weight" decay term used to set the prior
 #'   on the regressors within each chunk-level model. Defaults to 0, 
@@ -819,7 +820,7 @@ check_formula <- function(data, formula){
 #' @export
 #'
 TS_controls_list <- function(memoise = TRUE, response = "gamma", 
-                             timename = "newmoon", lambda = 0, 
+                             timename = "time", lambda = 0, 
                              measurer = AIC, selector = min, ntemps = 6, 
                              penultimate_temp = 2^6, ultimate_temp = 1e10,
                              q = 0, nit = 1e4, magnitude = 12, 

@@ -62,7 +62,7 @@ plot.LDA_TS <- function(x, ..., control = LDA_TS_controls_list(),
                         cols = set_LDA_TS_plot_cols(),
                         bin_width = 1, xlab = NULL, border = NA,
                         selection = "median"){
-  tname <- control$TS_control$timename
+  tname <- x[["Selected TS model"]]$control$timename
   tvar <- x$"Selected TS model"$data[ , tname]
   if(!is.null(xlab)){
     tname <- xlab

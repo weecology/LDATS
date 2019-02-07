@@ -12,7 +12,7 @@ weights <- document_weights(document_term_table)
 control <- LDA_TS_controls_list()
 LDAs <- LDA_set(document_term_table, topics, nseeds, control$LDA_control)
 LDA_models <- select_LDA(LDAs, control$LDA_control)
-control <- TS_controls_list(nit = 1e3, seed = 1)
+control <- TS_controls_list(nit = 1e3, seed = 1, timename = "newmoon")
 mods <- expand_TS(LDA_models, formulas, nchangepoints)
 formula <- mods$formula[[1]]
 nchangepoints <- mods$nchangepoints[1]
@@ -103,9 +103,9 @@ test_that("check est_regressors", {
   etas <- est_regressors(rhos, data, formula, weights, control)
   set.seed(1)
   rhos2 <- est_changepoints(data, formula, nchangepoints = 2, weights, 
-                         TS_controls_list(nit = 1e2, seed = 1))
+                TS_controls_list(nit = 1e2, seed = 1, timename = "newmoon"))
   etas2 <- est_regressors(rhos2, data, formula, weights, 
-                          TS_controls_list(nit = 1e2, seed = 1))
+                 TS_controls_list(nit = 1e2, seed = 1, timename = "newmoon"))
 
   expect_is(etas, "matrix")
   expect_equal(colnames(etas), c("1_2:(Intercept)", "2_2:(Intercept)"))
