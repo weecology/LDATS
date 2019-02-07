@@ -44,7 +44,6 @@ Imports:
     stats,
     topicmodels,
     viridis
->>>>>>> Update DESCRIPTION
 Suggests:
     knitr,
     pkgdown,
