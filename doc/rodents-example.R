@@ -57,9 +57,7 @@ plot(selected_lda_model[[1]])
 #                                  formulas = ~ sin_year + cos_year,
 #                                  nchangepoints = c(0:6),
 #                                  weights = document_weights(rodents$document_term_table),
-#                                                             control = TS_controls_list(nit = 1000))
-#  
-#  save(changepoint_models, file = here::here('vignettes', 'rodents-example-files', 'changepoint_models.Rds'))
+#                                  control = TS_controls_list(nit = 1000, timename = "newmoon"))
 #  
 
 ## ----reload ts, include = F----------------------------------------------
@@ -92,7 +90,7 @@ plot(selected_changepoint_model)
 #                           nchangepoints= 0:6,
 #                           weights = document_weights(rodents$document_term_table),
 #                           control = LDA_TS_controls_list(
-#                             TS_control = TS_controls_list(nit = 1000)))
+#                             TS_control = TS_controls_list(nit = 1000, timename = "newmoon")))
 
 ## ----load ldats results, include = F-------------------------------------
 load(here::here('vignettes', 'rodents-example-files', 'lda_ts_results.Rds'))
@@ -109,6 +107,7 @@ lda_ts_results$`Selected TS model`$nchangepoints
 # Summary of changepoint locations
 lda_ts_results$`Selected TS model`$rho_summary
 
-## ----plot LDA_TS results, fig.height = 16, fig.width = 7-----------------
-plot(lda_ts_results)
+## ----plot LDA_TS results, fig.height = 16, fig.width = 7, echo = F-------
+plot(lda_ts_results, control = LDA_TS_controls_list(
+                           TS_control = TS_controls_list(timename = "newmoon")))
 

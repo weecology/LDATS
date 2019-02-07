@@ -75,7 +75,7 @@ length(which(rowSums(compare) < ncol(compare)))
 trap_table = read.csv('https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent_trapping.csv')
   trap_table_controls =dplyr::filter(trap_table, plot %in% c(2,4,8,11,12,14,17,22))
   nplots_controls = aggregate(trap_table_controls$sampled,by=list(period = trap_table_controls$period),FUN=sum)
-  
+
    # adjust species counts by number of plots trapped that month
   ldats_rodents_adjusted = as.data.frame.matrix(rodents[[1]])
   for (n in 1:436) {
@@ -83,7 +83,7 @@ trap_table = read.csv('https://raw.githubusercontent.com/weecology/PortalData/ma
     ldats_rodents_adjusted[n,] = round(ldats_rodents_adjusted[n,]/nplots_controls$x[n]*8)
   }
 
-  
+
 compare_raw <- rodents[[1]] == ldats_rodents_adjusted
 length(which(rowSums(compare_raw) < ncol(compare_raw)))
 
@@ -253,7 +253,7 @@ mean(cp_results_rodent4$saved_lls * -2)+ 2*(3*(ntopics-1)*(4+1)+(4))
 mean(cp_results_rodent5$saved_lls * -2)+ 2*(3*(ntopics-1)*(5+1)+(5))
 mean(cp_results_rodent6$saved_lls * -2)+ 2*(3*(ntopics-1)*(6+1)+(6))
 
-# The lowest deviance is for 4 changepoints. 
+# The lowest deviance is for 4 changepoints.
 
 
 df_4 = as.data.frame(t(cp_results_rodent4$saved[,1,])) %>% reshape::melt()
@@ -336,7 +336,7 @@ mean(cp_results_rodent4$saved_lls * -2)+ 2*(3*(ntopics-1)*(4+1)+(4))
 mean(cp_results_rodent5$saved_lls * -2)+ 2*(3*(ntopics-1)*(5+1)+(5))
 mean(cp_results_rodent6$saved_lls * -2)+ 2*(3*(ntopics-1)*(6+1)+(6))
 
-# The lowest deviance is for 4 changepoints. 
+# The lowest deviance is for 4 changepoints.
 
 df_4 = as.data.frame(t(cp_results_rodent4$saved[,1,])) %>%  reshape::melt()
 df_4$value = year_continuous[df_4$value]

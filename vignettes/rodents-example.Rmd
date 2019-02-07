@@ -123,16 +123,14 @@ changepoint_models <- TS_on_LDA(LDA_models = selected_lda_model,
                                 formulas = ~ sin_year + cos_year,
                                 nchangepoints = c(0:6), 
                                 weights = document_weights(rodents$document_term_table),
-                                                           control = TS_controls_list(nit = 1000))
-
-save(changepoint_models, file = here::here('vignettes', 'rodents-example-files', 'changepoint_models.Rds'))
+                                control = TS_controls_list(nit = 1000, timename = "newmoon"))
 
 ```
 
 
 We can adjust options for both TS functions using `TS_controls_list()`. For a full list see `?TS_controls_list`. Here we illustrate adjusting the number of ptMCMC iterations - the default is 10000, but it is convenient to use fewer iterations for code development.
 
-Also, it is important to note that by default the TS functions take the name of the time-step column from the `document_covariate_table` to be `"newmoon"`. To pass a different column name, use the `timename` argument in `TS_controls_list()`. 
+Also, it is important to note that by default the TS functions take the name of the time-step column from the `document_covariate_table` to be `"time"`. To pass a different column name, use the `timename` argument in `TS_controls_list()`. 
 
 `select_TS()` will identify the best-fit changepoint model of the models from `TS_on_LDA()`. As with `select_LDA()`, we can adjust the `measurer` and `selector` using `TS_controls_list()`. 
 
@@ -178,7 +176,7 @@ lda_ts_results <- LDA_TS(document_term_table = rodents$document_term_table,
                          nchangepoints= 0:6,
                          weights = document_weights(rodents$document_term_table),
                          control = LDA_TS_controls_list(
-                           TS_control = TS_controls_list(nit = 1000)))
+                           TS_control = TS_controls_list(nit = 1000, timename = "newmoon")))
 ```
 
 ```{r load ldats results, include = F}
@@ -202,7 +200,8 @@ lda_ts_results$`Selected TS model`$rho_summary
 
 Finally, we can plot the `LDA_TS` results.
 
-```{r plot LDA_TS results, fig.height = 16, fig.width = 7}
-plot(lda_ts_results, control = LDA_TS_controls_list(TS_control = TS_controls_list(timename = 'newmoon')))
+```{r plot LDA_TS results, fig.height = 16, fig.width = 7, echo = F}
+plot(lda_ts_results, control = LDA_TS_controls_list(
+                           TS_control = TS_controls_list(timename = "newmoon")))
 ```
 

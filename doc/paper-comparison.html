@@ -198,14 +198,14 @@ compare &lt;-<span class="st"> </span>rodents[[<span class="dv">1</span>]] <span
   trap_table = read.csv('https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent_trapping.csv')
   trap_table_controls = filter(trap_table, plot %in% selected_plots)
   nplots_controls = aggregate(trap_table_controls$sampled,by=list(period = trap_table_controls$period),FUN=sum)
-  
+
   # adjust species counts by number of plots trapped that month
   r_table_adjusted = as.data.frame.matrix(r_table)
   for (n in 1:436) {
     #divide by number of control plots actually trapped (should be 8) and multiply by 8 to estimate captures as if all plots were trapped
     r_table_adjusted[n,] = round(r_table_adjusted[n,]/nplots_controls$x[n]*8)
   }
-  
+
     return(r_table_adjusted)
 </code></pre>
 <p>Running the same procedure on the LDATS data, we modify 16 rows, and finish with a data frame that matches the one from the paper.</p>
@@ -213,7 +213,7 @@ compare &lt;-<span class="st"> </span>rodents[[<span class="dv">1</span>]] <span
 trap_table =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">'https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent_trapping.csv'</span>)
   trap_table_controls =dplyr<span class="op">::</span><span class="kw">filter</span>(trap_table, plot <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">8</span>,<span class="dv">11</span>,<span class="dv">12</span>,<span class="dv">14</span>,<span class="dv">17</span>,<span class="dv">22</span>))
   nplots_controls =<span class="st"> </span><span class="kw">aggregate</span>(trap_table_controls<span class="op">$</span>sampled,<span class="dt">by=</span><span class="kw">list</span>(<span class="dt">period =</span> trap_table_controls<span class="op">$</span>period),<span class="dt">FUN=</span>sum)
-  
+
    <span class="co"># adjust species counts by number of plots trapped that month</span>
   ldats_rodents_adjusted =<span class="st"> </span><span class="kw">as.data.frame.matrix</span>(rodents[[<span class="dv">1</span>]])
   <span class="cf">for</span> (n <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">436</span>) {
@@ -221,7 +221,7 @@ trap_table =<span class="st"> </span><span class="kw">read.csv</span>(<span clas
     ldats_rodents_adjusted[n,] =<span class="st"> </span><span class="kw">round</span>(ldats_rodents_adjusted[n,]<span class="op">/</span>nplots_controls<span class="op">$</span>x[n]<span class="op">*</span><span class="dv">8</span>)
   }
 
-  
+
 compare_raw &lt;-<span class="st"> </span>rodents[[<span class="dv">1</span>]] <span class="op">==</span><span class="st"> </span>ldats_rodents_adjusted
 <span class="kw">length</span>(<span class="kw">which</span>(<span class="kw">rowSums</span>(compare_raw) <span class="op">&lt;</span><span class="st"> </span><span class="kw">ncol</span>(compare_raw)))
 <span class="co">#&gt; [1] 16</span>
@@ -276,10 +276,10 @@ best_ntopic =<span class="st"> </span><span class="kw">repeat_VEM</span>(paper_d
 <span class="co"># 2b. how different is species composition of 4 community-types when LDA is run with different seeds?</span>
 <span class="co"># ==================================================================</span>
 <span class="co"># get the best 100 seeds where 4 topics was the best LDA model</span>
-seeds_4topics =<span class="st"> </span>best_ntopic <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(k <span class="op">==</span><span class="st"> </span><span class="dv">4</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">arrange</span>(aic) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">head</span>(<span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+seeds_4topics =<span class="st"> </span>best_ntopic <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(k <span class="op">==</span><span class="st"> </span><span class="dv">4</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">arrange</span>(aic) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">head</span>(<span class="dv">100</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">pull</span>(SEED)
 
 <span class="co"># choose seed with highest log likelihood for all following analyses</span>
@@ -390,7 +390,7 @@ ntopics =<span class="st"> </span>ldats_lda_selected[[<span class="dv">1</span>]
 <span class="kw">mean</span>(cp_results_rodent6<span class="op">$</span>saved_lls <span class="op">*</span><span class="st"> </span><span class="op">-</span><span class="dv">2</span>)<span class="op">+</span><span class="st"> </span><span class="dv">2</span><span class="op">*</span>(<span class="dv">3</span><span class="op">*</span>(ntopics<span class="op">-</span><span class="dv">1</span>)<span class="op">*</span>(<span class="dv">6</span><span class="op">+</span><span class="dv">1</span>)<span class="op">+</span>(<span class="dv">6</span>))
 <span class="co">#&gt; [1] 1302.126</span>
 
-<span class="co"># The lowest deviance is for 4 changepoints. </span>
+<span class="co"># The lowest deviance is for 4 changepoints.</span>
 
 
 df_<span class="dv">4</span> =<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">t</span>(cp_results_rodent4<span class="op">$</span>saved[,<span class="dv">1</span>,])) <span class="op">%&gt;%</span><span class="st"> </span>reshape<span class="op">::</span><span class="kw">melt</span>()
@@ -473,7 +473,7 @@ ntopics =<span class="st"> </span>ldamodel<span class="op">@</span>k
 <span class="kw">mean</span>(cp_results_rodent6<span class="op">$</span>saved_lls <span class="op">*</span><span class="st"> </span><span class="op">-</span><span class="dv">2</span>)<span class="op">+</span><span class="st"> </span><span class="dv">2</span><span class="op">*</span>(<span class="dv">3</span><span class="op">*</span>(ntopics<span class="op">-</span><span class="dv">1</span>)<span class="op">*</span>(<span class="dv">6</span><span class="op">+</span><span class="dv">1</span>)<span class="op">+</span>(<span class="dv">6</span>))
 <span class="co">#&gt; [1] 826.4913</span>
 
-<span class="co"># The lowest deviance is for 4 changepoints. </span>
+<span class="co"># The lowest deviance is for 4 changepoints.</span>
 
 df_<span class="dv">4</span> =<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">t</span>(cp_results_rodent4<span class="op">$</span>saved[,<span class="dv">1</span>,])) <span class="op">%&gt;%</span><span class="st">  </span>reshape<span class="op">::</span><span class="kw">melt</span>()
 <span class="co">#&gt; Using  as id variables</span>
@@ -502,7 +502,7 @@ paper_paper_cpt_dates
 <h4>Run the TS models</h4>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">#### Run LDATS changepoint ####
 
-ldats_ldats_cpt &lt;-<span class="st"> </span><span class="kw">TS_on_LDA</span>(<span class="dt">LDA_models =</span> ldats_lda_selected, 
+ldats_ldats_cpt &lt;-<span class="st"> </span><span class="kw">TS_on_LDA</span>(<span class="dt">LDA_models =</span> ldats_lda_selected,
                              <span class="dt">document_covariate_table =</span> rodents<span class="op">$</span>document_covariate_table,
                              <span class="dt">formulas =</span> <span class="op">~</span><span class="st"> </span>sin_year <span class="op">+</span><span class="st"> </span>cos_year,
                              <span class="dt">nchangepoints =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>,
@@ -541,7 +541,7 @@ ldats_ldats_cpt_dates &lt;-<span class="st"> </span>ldats_ldats_cpt_dates<span c
 <h4>Run the TS models</h4>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">#### Run LDATS changepoint ####
 
-paper_ldats_cpt &lt;-<span class="st"> </span><span class="kw">TS_on_LDA</span>(<span class="dt">LDA_models =</span> ldamodel, 
+paper_ldats_cpt &lt;-<span class="st"> </span><span class="kw">TS_on_LDA</span>(<span class="dt">LDA_models =</span> ldamodel,
                              <span class="dt">document_covariate_table =</span> rodents<span class="op">$</span>document_covariate_table,
                              <span class="dt">formulas =</span> <span class="op">~</span><span class="st"> </span>sin_year <span class="op">+</span><span class="st"> </span>cos_year,
                              <span class="dt">nchangepoints =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>,
