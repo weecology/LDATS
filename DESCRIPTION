@@ -2,18 +2,18 @@ Package: LDATS
 Title: Latent Dirichlet Allocation coupled with Time Series analyses
 Version: 0.1.0
 Authors@R: c(
-	person(c("Juniper", "L."), "Simonis",
+    person(c("Juniper", "L."), "Simonis",
       email = "juniper.simonis@weecology.org", role = c("aut", "cre"),
       comment = c(ORCID = "0000-0001-9798-0460")),
     person(c("Erica", "M."), "Christensen",
       role = c("aut"), comment = c(ORCID = "0000-0002-5635-2502")),
     person(c("David", "J."), "Harris", role = c("aut"),
       comment = c(ORCID = "0000-0003-3332-9307")),
-	person(c("Renata", "M."), "Diaz", role = c("aut"),
+	  person(c("Renata", "M."), "Diaz", role = c("aut"),
       comment = c(ORCID = "0000-0003-0803-4734")),
     person("Hao", "Ye", role = c("aut"),
       comment = c(ORCID = "0000-0002-8630-1458")),
-	person(c("Ethan", "P."), "White", role = c("aut"),
+	  person(c("Ethan", "P."), "White", role = c("aut"),
       comment = c(ORCID = "0000-0001-6728-7745")),
     person(c("S.K.", "Morgan"), "Ernest", role = c("aut"),
       comment = c(ORCID = "0000-0002-6026-8530")))
@@ -40,8 +40,6 @@ Imports:
     mvtnorm,
     nnet,
     progress,
-    reshape
-=======
     reshape,
     stats,
     topicmodels,
