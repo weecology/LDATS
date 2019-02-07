@@ -138,6 +138,7 @@ TS <- function(data, formula, nchangepoints, weights,
                control = TS_controls_list()){
   check_TS_inputs(data, formula, nchangepoints, weights, control)
   set.seed(control$seed)
+  data <- data[order(data[,control$timename]), ]
   rho_dist <- est_changepoints(data, formula, nchangepoints, weights, control)
   eta_dist <- est_regressors(rho_dist, data, formula, weights, control)
   summarize_TS(data, formula, weights, control, rho_dist, eta_dist)

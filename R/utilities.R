@@ -221,3 +221,8 @@ check_seeds <- function(nseeds){
   }
 }
 
+# provides a functionality that can be used in testing for non-symmetric
+# vcov matrix
+vcov.dummy <- function(object, ...){
+  matrix(c(1, 2, 2.1, 3), 2, 2)
+}

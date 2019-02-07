@@ -25,13 +25,11 @@ test_that("check qprint", {
   expect_silent(qprint("ok", "", quiet = TRUE))
 })
 
-vcov.dummy <- function(object, ...){
-  matrix(c(1, 2, 2.1, 3), 2, 2)
-}
-dummy <- "x"
-class(dummy) <- "dummy"
-
 test_that("check mirror_vcov", {
+
+  dummy <- "x"
+  class(dummy) <- "dummy"
+
   y <- 1:10
   x <- 101:110
   mod <- lm(y ~ x)
