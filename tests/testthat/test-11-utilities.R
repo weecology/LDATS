@@ -25,6 +25,12 @@ test_that("check qprint", {
   expect_silent(qprint("ok", "", quiet = TRUE))
 })
 
+vcov.dummy <- function(object, ...){
+  matrix(c(1, 2, 2.1, 3), 2, 2)
+}
+dummy <- "x"
+class(dummy) <- "dummy"
+
 test_that("check mirror_vcov", {
   y <- 1:10
   x <- 101:110
@@ -32,6 +38,7 @@ test_that("check mirror_vcov", {
   vcv <- mirror_vcov(mod)  
   expect_equal(isSymmetric(vcv), TRUE)
   expect_error(mirror_vcov("ok"))
+  expect_warning(mirror_vcov(dummy))
   data(rodents)
   lda_data <- rodents$document_term_table
   document_term_table <- rodents$document_term_table
