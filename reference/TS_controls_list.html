@@ -133,7 +133,7 @@
     </div>
 
     <pre class="usage"><span class='fu'>TS_controls_list</span>(<span class='kw'>memoise</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>response</span> <span class='kw'>=</span> <span class='st'>"gamma"</span>,
-  <span class='kw'>timename</span> <span class='kw'>=</span> <span class='st'>"newmoon"</span>, <span class='kw'>lambda</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>measurer</span> <span class='kw'>=</span> <span class='no'>AIC</span>, <span class='kw'>selector</span> <span class='kw'>=</span> <span class='no'>min</span>,
+  <span class='kw'>timename</span> <span class='kw'>=</span> <span class='st'>"time"</span>, <span class='kw'>lambda</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>measurer</span> <span class='kw'>=</span> <span class='no'>AIC</span>, <span class='kw'>selector</span> <span class='kw'>=</span> <span class='no'>min</span>,
   <span class='kw'>ntemps</span> <span class='kw'>=</span> <span class='fl'>6</span>, <span class='kw'>penultimate_temp</span> <span class='kw'>=</span> <span class='fl'>2</span>^<span class='fl'>6</span>, <span class='kw'>ultimate_temp</span> <span class='kw'>=</span> <span class='fl'>1e+10</span>, <span class='kw'>q</span> <span class='kw'>=</span> <span class='fl'>0</span>,
   <span class='kw'>nit</span> <span class='kw'>=</span> <span class='fl'>10000</span>, <span class='kw'>magnitude</span> <span class='kw'>=</span> <span class='fl'>12</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>burnin</span> <span class='kw'>=</span> <span class='fl'>0</span>,
   <span class='kw'>thin_frac</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>summary_prob</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
@@ -156,7 +156,7 @@ used in the time series.</p></td>
     <tr>
       <th>timename</th>
       <td><p><code>character</code> element indicating the time variable
-used in the time series.</p></td>
+used in the time series. Defaults to <code>"time"</code>.</p></td>
     </tr>
     <tr>
       <th>lambda</th>

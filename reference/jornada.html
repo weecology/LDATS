@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a properly symmetric variance covariance matrix — mirror_vcov • LDATS</title>
+<title>Jornada rodent data — jornada • LDATS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,15 +30,11 @@
 
 
 
-<meta property="og:title" content="Create a properly symmetric variance covariance matrix — mirror_vcov" />
+<meta property="og:title" content="Jornada rodent data — jornada" />
 
-<meta property="og:description" content="A wrapper on vcov to produce a symmetric
-  matrix. If the defauly matrix returned by vcov is
-  symmetric it is returned simply. If it is not, in fact, symmetric
-  (as occurs occasionally with multinom applied to 
-  proportions), the matrix is made symmetric by averaging the lower and
-  upper triangles. If the relative difference between the upper and lower 
-  triangles for any entry is more than 0.1" />
+<meta property="og:description" content="Counts of 17 rodent species across 24 sampling events, 
+  with the count being the total number observed across three trapping webs
+  (146 traps in total) (Lightfoot et al. 2012)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -123,47 +119,53 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a properly symmetric variance covariance matrix</h1>
-    <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/utilities.R'><code>R/utilities.R</code></a></small>
-    <div class="hidden name"><code>mirror_vcov.Rd</code></div>
+    <h1>Jornada rodent data</h1>
+    <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/data.R'><code>R/data.R</code></a></small>
+    <div class="hidden name"><code>jornada.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>A wrapper on <code><a href='https://www.rdocumentation.org/packages/stats/topics/vcov'>vcov</a></code> to produce a symmetric
-  matrix. If the defauly matrix returned by <code><a href='https://www.rdocumentation.org/packages/stats/topics/vcov'>vcov</a></code> is
-  symmetric it is returned simply. If it is not, in fact, symmetric
-  (as occurs occasionally with <code><a href='https://www.rdocumentation.org/packages/nnet/topics/multinom'>multinom</a></code> applied to 
-  proportions), the matrix is made symmetric by averaging the lower and
-  upper triangles. If the relative difference between the upper and lower 
-  triangles for any entry is more than 0.1<!-- % a warning is thrown. --></p>
+    <p>Counts of 17 rodent species across 24 sampling events, 
+  with the count being the total number observed across three trapping webs
+  (146 traps in total) (Lightfoot <em>et al.</em> 2012).</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>mirror_vcov</span>(<span class='no'>x</span>)</pre>
-    
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>x</th>
-      <td><p>Model object that has a defined method for 
-<code><a href='https://www.rdocumentation.org/packages/stats/topics/vcov'>vcov</a></code>.</p></td>
-    </tr>
-    </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <pre class="usage"><span class='no'>jornada</span></pre>
+        
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>Properly symmetric variance covariance matrix.</p>
+    <p>A <code>list</code> of two <code>data.frame</code>-class objects with rows 
+  corresponding to documents (sampling events). One element is the
+  document term table (called <code>document_term_table</code>), which contains
+  counts of the species (terms) in each sample (document), and the other is
+  the document covariate table (called <code>document_covariate_table</code>) 
+  with columns of covariates (time step, year, season).</p>
+    
+    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
+
+    <p><a href='https://jornada.nmsu.edu/lter/dataset/49798/view'>https://jornada.nmsu.edu/lter/dataset/49798/view</a></p>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Lightfoot, D. C., A. D. Davidson, D. G. Parker, L. Hernandez, and J. W. 
+  Laundre. 2012. Bottom-up regulation of desert grassland and shrubland 
+  rodent communities: implications of species-specific reproductive
+  potentials. <em>Journal of Mammalogy</em> <strong>93</strong>:1017-1028.
+  <a href='https://doi.org/10.1644/11-MAMM-A-391.1'>link</a>.</p>
     
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#value">Value</a></li>
+      <li><a href="#format">Format</a></li>
+
+      <li><a href="#source">Source</a></li>
+
+      <li><a href="#references">References</a></li>
           </ul>
 
   </div>
