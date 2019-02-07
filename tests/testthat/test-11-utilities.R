@@ -32,7 +32,6 @@ test_that("check mirror_vcov", {
   vcv <- mirror_vcov(mod)  
   expect_equal(isSymmetric(vcv), TRUE)
   expect_error(mirror_vcov("ok"))
-
   data(rodents)
   lda_data <- rodents$document_term_table
   document_term_table <- rodents$document_term_table
@@ -84,13 +83,17 @@ test_that("check check_control", {
 })
 
 
-test_that("check error catching of check_document_term_table", {
+test_that("check check_document_term_table", {
   dtt <- "a"
   expect_error(check_document_term_table(dtt))
   dtt <- matrix(1:100, 10, 10)
-  expect_error(check_document_term_table(dtt, NA))
+  expect_silent(check_document_term_table(dtt))
+  dtt[1,1] <- 1.1
+  expect_error(check_document_term_table(dtt))
   dtt <- data.frame("dummy" = 1:100)
-  expect_error(check_document_term_table(dtt, NA))
+  expect_silent(check_document_term_table(dtt))
+  dtt[1,1] <- 1.1
+  expect_error(check_document_term_table(dtt))
 })
 
 test_that("check error catching of check_topics", {
