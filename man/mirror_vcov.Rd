@@ -18,6 +18,7 @@ A wrapper on \code{\link[stats]{vcov}} to produce a symmetric
   matrix. If the defauly matrix returned by \code{\link[stats]{vcov}} is
   symmetric it is returned simply. If it is not, in fact, symmetric
   (as occurs occasionally with \code{\link[nnet]{multinom}} applied to 
-  proportions), the matrix is made symmetric by mirroring the lower
-  triangle.
+  proportions), the matrix is made symmetric by averaging the lower and
+  upper triangles. If the relative difference between the upper and lower 
+  triangles for any entry is more than 0.1% a warning is thrown.
 }
