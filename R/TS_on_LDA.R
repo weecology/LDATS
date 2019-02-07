@@ -61,8 +61,10 @@
 #'   LDAs <- LDA_set(document_term_table, topics = 2:3, nseeds = 2)
 #'   LDA_models <- select_LDA(LDAs)
 #'   weights <- document_weights(document_term_table)
-#'   mods <- TS_on_LDA(LDA_models, document_covariate_table,
-#'                     c(~ 1, ~ newmoon), nchangepoints = 0:1, weights)
+#'   formulas <- c(~ 1, ~ newmoon)
+#'   controls <- TS_controls_list(timename = "newmoon")
+#'   mods <- TS_on_LDA(LDA_models, document_covariate_table, formulas,
+#'                     nchangepoints = 0:1, weights, controls)
 #' }
 #'
 #' @export

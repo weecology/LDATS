@@ -29,8 +29,10 @@ LazyData: true
 Imports: 
     coda,
     digest,
+    dplyr,
     graphics,
     grDevices,
+    here,
     lubridate,
     magrittr,
     memoise,
@@ -38,11 +40,10 @@ Imports:
     mvtnorm,
     nnet,
     progress,
+    rlang (>= 0.3.1),
     stats,
     topicmodels,
-    viridis,
-    dplyr,
-    here
+    viridis
 Suggests:
     knitr,
     pkgdown,

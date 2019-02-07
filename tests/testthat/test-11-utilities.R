@@ -26,13 +26,17 @@ test_that("check qprint", {
 })
 
 test_that("check mirror_vcov", {
+
+  dummy <- "x"
+  class(dummy) <- "dummy"
+
   y <- 1:10
   x <- 101:110
   mod <- lm(y ~ x)
   vcv <- mirror_vcov(mod)  
   expect_equal(isSymmetric(vcv), TRUE)
   expect_error(mirror_vcov("ok"))
-
+  expect_warning(mirror_vcov(dummy))
   data(rodents)
   lda_data <- rodents$document_term_table
   document_term_table <- rodents$document_term_table
@@ -45,7 +49,7 @@ test_that("check mirror_vcov", {
   control <- LDA_TS_controls_list()
   LDAs <- LDA_set(document_term_table, topics, nseeds, control$LDA_control)
   LDA_models <- select_LDA(LDAs, control$LDA_control)
-  control <- TS_controls_list(nit = 1e2, seed = 1)
+  control <- TS_controls_list(nit = 1e2, seed = 1, timename = "newmoon")
   mods <- expand_TS(LDA_models, formulas, nchangepoints)
   formula <- mods$formula[[1]]
   nchangepoints <- mods$nchangepoints[1]
@@ -84,13 +88,17 @@ test_that("check check_control", {
 })
 
 
-test_that("check error catching of check_document_term_table", {
+test_that("check check_document_term_table", {
   dtt <- "a"
   expect_error(check_document_term_table(dtt))
   dtt <- matrix(1:100, 10, 10)
-  expect_error(check_document_term_table(dtt, NA))
+  expect_silent(check_document_term_table(dtt))
+  dtt[1,1] <- 1.1
+  expect_error(check_document_term_table(dtt))
   dtt <- data.frame("dummy" = 1:100)
-  expect_error(check_document_term_table(dtt, NA))
+  expect_silent(check_document_term_table(dtt))
+  dtt[1,1] <- 1.1
+  expect_error(check_document_term_table(dtt))
 })
 
 test_that("check error catching of check_topics", {

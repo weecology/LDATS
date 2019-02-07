@@ -66,8 +66,9 @@ qprint <- function(msg, wrapper, quiet){
 #'   matrix. If the defauly matrix returned by \code{\link[stats]{vcov}} is
 #'   symmetric it is returned simply. If it is not, in fact, symmetric
 #'   (as occurs occasionally with \code{\link[nnet]{multinom}} applied to 
-#'   proportions), the matrix is made symmetric by mirroring the lower
-#'   triangle.
+#'   proportions), the matrix is made symmetric by averaging the lower and
+#'   upper triangles. If the relative difference between the upper and lower 
+#'   triangles for any entry is more than 0.1% a warning is thrown. 
 #'
 #' @param x Model object that has a defined method for 
 #'   \code{\link[stats]{vcov}}.
@@ -85,13 +86,17 @@ mirror_vcov <- function(x){
   if (isSymmetric(vcv)){
     return(vcv)
   }
+  tvcv <- t(vcv)
   lt <- vcv[lower.tri(vcv)]
-  ut <- t(vcv)[lower.tri(t(vcv))]
+  ut <- tvcv[lower.tri(tvcv)]
   if (any((abs(lt - ut) > (0.001 * abs(lt))))){
-    stop("Relative discrepancies in model vcov matrix are too large.")  
+    warning("Relative discrepancies in model vcov matrix are large.")  
   }
-  vcv2 <- t(vcv)
-  vcv2[lower.tri(vcv2)] <- vcv[lower.tri(vcv)]
+  bound <- cbind(as.numeric(vcv), as.numeric(tvcv))
+  avg <- apply(bound, 1, mean)
+  vcv2 <- matrix(avg, nrow(vcv), ncol(vcv))
+  rownames(vcv2) <- rownames(vcv)
+  colnames(vcv2) <- colnames(vcv)
   vcv2
 }
 
@@ -216,3 +221,8 @@ check_seeds <- function(nseeds){
   }
 }
 
+# provides a functionality that can be used in testing for non-symmetric
+# vcov matrix
+vcov.dummy <- function(object, ...){
+  matrix(c(1, 2, 2.1, 3), 2, 2)
+}
