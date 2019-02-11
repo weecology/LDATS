@@ -18,6 +18,15 @@ knitr::opts_chunk$set(
 
 Side-by-side comparison of LDATS results with analysis from Christensen et al 2018.
 
+## Summary
+
+| Step | Changes from Christensen et al 2018 to `LDATS` | Effect on comparison | Recommendations for future users |
+|:---------------|:------------------------|:-----------------------|:----------------------------|
+|Data|Paper adjusts abundances according to unit effort, while `LDATS` uses raw capture numbers.|None: run comparison using adjusted data|Use raw, unweighted abundances.|
+|LDA model selection|Paper conservatively overestimated the number of parameters for calculating AIC for model selection. `LDATS` calculates AIC appropriately.|Paper LDA selects 4 topics, while `LDATS` finds 6. Compare all combinations of paper and `LDATS` LDA models and changepoint models| Use `LDATS` AIC calculation.|
+|Changepoint model document weights|Paper weighted all sampling periods equally regardless of abundance. `LDATS` by default weights the information from each sampling period according to the number of individuals captured (i.e. the amount of information gleaned about the underlying community composition).|None; use `weights = NULL` to set all weights equal to 1 for LDATS| Weight sampling periods according to abundance|
+|Overall LDA + changepoint results| All combinations of LDA + changepoint model find 4 changepoints at approximately the same time steps|Choice of LDA model has more of an effect than choice of changepoint model|`LDATS` reflects best practices, but the paper methods produced qualitatively similar results.|
+
 ## LDATS Installation
 
 To obtain the most recent version of **LDATS**, install the most recent
@@ -159,7 +168,7 @@ Running the same procedure on the LDATS data, we modify 16 rows, and finish with
 ```{r adjust LDATS data after Christensen et al, eval = F}
 
 trap_table = read.csv('https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent_trapping.csv')
- 
+
 ```
 
 
