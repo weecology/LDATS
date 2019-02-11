@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ```
 
-Side-by-side comparison of LDATS results with analysis from Christensen et al 2018.
+This document prodives a side-by-side comparison of LDATS (v0.1.0) results with analysis from [Christensen et al. 2018](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2373).
 
 ## Summary
 
