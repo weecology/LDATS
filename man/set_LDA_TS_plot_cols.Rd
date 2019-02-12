@@ -11,55 +11,55 @@ set_LDA_TS_plot_cols(rho_cols = NULL, rho_option = "D",
 \arguments{
 \item{rho_cols}{Colors to be used to plot the histograms of change points.
 Any valid color values (\emph{e.g.}, see \code{\link[grDevices]{colors}},
-\code{\link[grDevices]{rgb}}) can be input as with a standard plot. 
-The default (\code{rho_cols = NULL}) triggers use of 
+\code{\link[grDevices]{rgb}}) can be input as with a standard plot.
+The default (\code{rho_cols = NULL}) triggers use of
 \code{\link[viridis]{viridis}} color options (see \code{rho_option}).}
 
 \item{rho_option}{A \code{character} string indicating the color option
-from \code{\link[viridis]{viridis}} to use if `rho_cols == NULL`. Four 
-options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
+from \code{\link[viridis]{viridis}} to use if `rho_cols == NULL`. Four
+options are available: "magma" (or "A"), "inferno" (or "B"), "plasma"
 (or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").}
 
-\item{rho_alpha}{Numeric value [0,1] that indicates the transparency of the 
-colors used. Supported only on some devices, see 
+\item{rho_alpha}{Numeric value [0,1] that indicates the transparency of the
+colors used. Supported only on some devices, see
 \code{\link[grDevices]{rgb}}.}
 
 \item{gamma_cols}{Colors to be used to plot the LDA topic proportions,
-time series of observed topic proportions, and time series of fitted 
-topic proportions. Any valid color values (\emph{e.g.}, see 
-\code{\link[grDevices]{colors}}, \code{\link[grDevices]{rgb}}) can be 
+time series of observed topic proportions, and time series of fitted
+topic proportions. Any valid color values (\emph{e.g.}, see
+\code{\link[grDevices]{colors}}, \code{\link[grDevices]{rgb}}) can be
 input as with a standard plot. The default (\code{gamma_cols = NULL})
-triggers use of \code{\link[viridis]{viridis}} color options (see 
+triggers use of \code{\link[viridis]{viridis}} color options (see
 \code{gamma_option}).}
 
 \item{gamma_option}{A \code{character} string indicating the color option
-from \code{\link[viridis]{viridis}} to use if gamma_cols == NULL`. Four 
-options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
+from \code{\link[viridis]{viridis}} to use if gamma_cols == NULL`. Four
+options are available: "magma" (or "A"), "inferno" (or "B"), "plasma"
 (or "C", the default option), "viridis" (or "D") and "cividis" (or "E").}
 
-\item{gamma_alpha}{Numeric value [0,1] that indicates the transparency of 
-the colors used. Supported only on some devices, see 
+\item{gamma_alpha}{Numeric value [0,1] that indicates the transparency of
+the colors used. Supported only on some devices, see
 \code{\link[grDevices]{rgb}}.}
 }
 \value{
 \code{list} of elements used to define the colors for the two
-  panels of the summary plot, as generated simply using 
-  \code{\link{set_LDA_TS_plot_cols}}. \code{cols} has two elements: 
+  panels of the summary plot, as generated simply using
+  \code{\link{set_LDA_TS_plot_cols}}. \code{cols} has two elements:
   \code{LDA} and \code{TS}, each corresponding the set of plots for
   its stage in the full model. \code{LDA} contains entries \code{cols}
-  and \code{options} (see \code{\link{set_LDA_plot_colors}}). \code{TS} 
+  and \code{options} (see \code{\link{set_LDA_plot_colors}}). \code{TS}
   contains two entries, \code{rho} and \code{gamma}, each corresponding
   to the related panel, and each containing default values for entries
-  named \code{cols}, \code{option}, and \code{alpha} (see 
-  \code{\link{set_TS_summary_plot_cols}}, \code{\link{set_gamma_colors}},  
+  named \code{cols}, \code{option}, and \code{alpha} (see
+  \code{\link{set_TS_summary_plot_cols}}, \code{\link{set_gamma_colors}},
   and \code{\link{set_rho_hist_colors}}).
 }
 \description{
 A default list generator function that produces the options
   for the colors controlling the panels of the LDATS summary plots, needed
-  because the change point histogram panel should be in a different color 
+  because the change point histogram panel should be in a different color
   scheme than the LDA and fitted time series model panels, which should be
-  in a matching color scheme. See \code{\link{set_LDA_plot_colors}}, 
-  \code{\link{set_TS_summary_plot_cols}}, \code{\link{set_gamma_colors}},  
+  in a matching color scheme. See \code{\link{set_LDA_plot_colors}},
+  \code{\link{set_TS_summary_plot_cols}}, \code{\link{set_gamma_colors}},
   and \code{\link{set_rho_hist_colors}} for specific details on usage.
 }
