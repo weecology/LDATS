@@ -53,11 +53,11 @@ The resulting object is of class `LDA_TS`, which has a few basic routines
 available:
 
 ```
-print(r_KDATS)
+print(r_LDATS)
 ```
 prints the selected LDA and TS models and 
 ```
-plot(r_KDATS)
+plot(r_LDATS)
 ```
 produces a 4-panel figure of them a la Figure 1 from
 [Christensen et al. 2018](https://doi.org/10.1002/ecy.2373).
