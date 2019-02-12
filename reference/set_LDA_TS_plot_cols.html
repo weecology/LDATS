@@ -34,10 +34,10 @@
 
 <meta property="og:description" content="A default list generator function that produces the options
   for the colors controlling the panels of the LDATS summary plots, needed
-  because the change point histogram panel should be in a different color 
+  because the change point histogram panel should be in a different color
   scheme than the LDA and fitted time series model panels, which should be
-  in a matching color scheme. See set_LDA_plot_colors, 
-  set_TS_summary_plot_cols, set_gamma_colors,  
+  in a matching color scheme. See set_LDA_plot_colors,
+  set_TS_summary_plot_cols, set_gamma_colors,
   and set_rho_hist_colors for specific details on usage." />
 <meta name="twitter:card" content="summary" />
 
@@ -92,7 +92,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/LDATS_codebase.html">Latent Dirichlet Allocation Time Series (LDATS)</a>
+      <a href="../articles/paper-comparison.html">Comparison to Christensen et al. 2018</a>
     </li>
     <li>
       <a href="../articles/rodents-example.html">LDATS Rodents Example</a>
@@ -132,10 +132,10 @@
     
     <p>A default list generator function that produces the options
   for the colors controlling the panels of the LDATS summary plots, needed
-  because the change point histogram panel should be in a different color 
+  because the change point histogram panel should be in a different color
   scheme than the LDA and fitted time series model panels, which should be
-  in a matching color scheme. See <code><a href='set_LDA_plot_colors.html'>set_LDA_plot_colors</a></code>, 
-  <code><a href='set_TS_summary_plot_cols.html'>set_TS_summary_plot_cols</a></code>, <code><a href='set_gamma_colors.html'>set_gamma_colors</a></code>,  
+  in a matching color scheme. See <code><a href='set_LDA_plot_colors.html'>set_LDA_plot_colors</a></code>,
+  <code><a href='set_TS_summary_plot_cols.html'>set_TS_summary_plot_cols</a></code>, <code><a href='set_gamma_colors.html'>set_gamma_colors</a></code>,
   and <code><a href='set_rho_hist_colors.html'>set_rho_hist_colors</a></code> for specific details on usage.</p>
     
     </div>
@@ -151,44 +151,44 @@
       <th>rho_cols</th>
       <td><p>Colors to be used to plot the histograms of change points.
 Any valid color values (<em>e.g.</em>, see <code><a href='https://www.rdocumentation.org/packages/grDevices/topics/colors'>colors</a></code>,
-<code><a href='https://www.rdocumentation.org/packages/grDevices/topics/rgb'>rgb</a></code>) can be input as with a standard plot. 
-The default (<code>rho_cols = NULL</code>) triggers use of 
+<code><a href='https://www.rdocumentation.org/packages/grDevices/topics/rgb'>rgb</a></code>) can be input as with a standard plot.
+The default (<code>rho_cols = NULL</code>) triggers use of
 <code><a href='https://www.rdocumentation.org/packages/viridis/topics/reexports'>viridis</a></code> color options (see <code>rho_option</code>).</p></td>
     </tr>
     <tr>
       <th>rho_option</th>
       <td><p>A <code>character</code> string indicating the color option
-from <code><a href='https://www.rdocumentation.org/packages/viridis/topics/reexports'>viridis</a></code> to use if `rho_cols == NULL`. Four 
-options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
+from <code><a href='https://www.rdocumentation.org/packages/viridis/topics/reexports'>viridis</a></code> to use if `rho_cols == NULL`. Four
+options are available: "magma" (or "A"), "inferno" (or "B"), "plasma"
 (or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").</p></td>
     </tr>
     <tr>
       <th>rho_alpha</th>
-      <td><p>Numeric value [0,1] that indicates the transparency of the 
-colors used. Supported only on some devices, see 
+      <td><p>Numeric value [0,1] that indicates the transparency of the
+colors used. Supported only on some devices, see
 <code><a href='https://www.rdocumentation.org/packages/grDevices/topics/rgb'>rgb</a></code>.</p></td>
     </tr>
     <tr>
       <th>gamma_cols</th>
       <td><p>Colors to be used to plot the LDA topic proportions,
-time series of observed topic proportions, and time series of fitted 
-topic proportions. Any valid color values (<em>e.g.</em>, see 
-<code><a href='https://www.rdocumentation.org/packages/grDevices/topics/colors'>colors</a></code>, <code><a href='https://www.rdocumentation.org/packages/grDevices/topics/rgb'>rgb</a></code>) can be 
+time series of observed topic proportions, and time series of fitted
+topic proportions. Any valid color values (<em>e.g.</em>, see
+<code><a href='https://www.rdocumentation.org/packages/grDevices/topics/colors'>colors</a></code>, <code><a href='https://www.rdocumentation.org/packages/grDevices/topics/rgb'>rgb</a></code>) can be
 input as with a standard plot. The default (<code>gamma_cols = NULL</code>)
-triggers use of <code><a href='https://www.rdocumentation.org/packages/viridis/topics/reexports'>viridis</a></code> color options (see 
+triggers use of <code><a href='https://www.rdocumentation.org/packages/viridis/topics/reexports'>viridis</a></code> color options (see
 <code>gamma_option</code>).</p></td>
     </tr>
     <tr>
       <th>gamma_option</th>
       <td><p>A <code>character</code> string indicating the color option
-from <code><a href='https://www.rdocumentation.org/packages/viridis/topics/reexports'>viridis</a></code> to use if gamma_cols == NULL`. Four 
-options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
+from <code><a href='https://www.rdocumentation.org/packages/viridis/topics/reexports'>viridis</a></code> to use if gamma_cols == NULL`. Four
+options are available: "magma" (or "A"), "inferno" (or "B"), "plasma"
 (or "C", the default option), "viridis" (or "D") and "cividis" (or "E").</p></td>
     </tr>
     <tr>
       <th>gamma_alpha</th>
-      <td><p>Numeric value [0,1] that indicates the transparency of 
-the colors used. Supported only on some devices, see 
+      <td><p>Numeric value [0,1] that indicates the transparency of
+the colors used. Supported only on some devices, see
 <code><a href='https://www.rdocumentation.org/packages/grDevices/topics/rgb'>rgb</a></code>.</p></td>
     </tr>
     </table>
@@ -196,15 +196,15 @@ the colors used. Supported only on some devices, see
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p><code>list</code> of elements used to define the colors for the two
-  panels of the summary plot, as generated simply using 
-  <code>set_LDA_TS_plot_cols</code>. <code>cols</code> has two elements: 
+  panels of the summary plot, as generated simply using
+  <code>set_LDA_TS_plot_cols</code>. <code>cols</code> has two elements:
   <code>LDA</code> and <code>TS</code>, each corresponding the set of plots for
   its stage in the full model. <code>LDA</code> contains entries <code>cols</code>
-  and <code>options</code> (see <code><a href='set_LDA_plot_colors.html'>set_LDA_plot_colors</a></code>). <code>TS</code> 
+  and <code>options</code> (see <code><a href='set_LDA_plot_colors.html'>set_LDA_plot_colors</a></code>). <code>TS</code>
   contains two entries, <code>rho</code> and <code>gamma</code>, each corresponding
   to the related panel, and each containing default values for entries
-  named <code>cols</code>, <code>option</code>, and <code>alpha</code> (see 
-  <code><a href='set_TS_summary_plot_cols.html'>set_TS_summary_plot_cols</a></code>, <code><a href='set_gamma_colors.html'>set_gamma_colors</a></code>,  
+  named <code>cols</code>, <code>option</code>, and <code>alpha</code> (see
+  <code><a href='set_TS_summary_plot_cols.html'>set_TS_summary_plot_cols</a></code>, <code><a href='set_gamma_colors.html'>set_gamma_colors</a></code>,
   and <code><a href='set_rho_hist_colors.html'>set_rho_hist_colors</a></code>).</p>
     
 

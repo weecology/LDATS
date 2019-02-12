@@ -83,7 +83,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/LDATS_codebase.html">Latent Dirichlet Allocation Time Series (LDATS)</a>
+      <a href="../articles/paper-comparison.html">Comparison to Christensen et al. 2018</a>
     </li>
     <li>
       <a href="../articles/rodents-example.html">LDATS Rodents Example</a>
@@ -120,7 +120,9 @@
 
     <div id="ldats-0-1-0" class="section level1">
 <h1 class="page-header">
-<a href="#ldats-0-1-0" class="anchor"></a>LDATS 0.1.0</h1>
+<a href="#ldats-0-1-0" class="anchor"></a><a href="https://github.com/weecology/LDATS/pull/105">LDATS 0.1.0</a>
+</h1>
+<p><em>2019-02-11</em></p>
 <div id="code-structure" class="section level2">
 <h2 class="hasAnchor">
 <a href="#code-structure" class="anchor"></a>Code structure</h2>
@@ -198,16 +200,33 @@
 <a href="#rodents-data-set" class="anchor"></a>Rodents data set</h2>
 <ul>
 <li>Portal rodent data from <a href="https://doi.org/10.1002/ecy.2373">Christensen <em>et al.</em> (2018)</a> are now provided in a pre-formatted and ready-to-roll data object.</li>
-<li>See <code><a href="https://www.rdocumentation.org/packages/utils/topics/data">data(rodents)</a></code>
+<li>Access the data using <code><a href="https://www.rdocumentation.org/packages/utils/topics/data">data(rodents)</a></code>.</li>
+<li>Note, however, that the data in Christensen <em>et al.</em> 2018 are scaled according to trapping effort. The data included in LDATS are not, to allow for appropriate weighting. See <a href="https://weecology.github.io/LDATS/articles/paper-comparison.html">comparison vignette</a> for further details.</li>
+</ul>
+</div>
+<div id="comparison-with-christensen-et-al--2018" class="section level2">
+<h2 class="hasAnchor">
+<a href="#comparison-with-christensen-et-al--2018" class="anchor"></a>Comparison with <a href="https://doi.org/10.1002/ecy.2373">Christensen <em>et al.</em> (2018)</a>
+</h2>
+<ul>
+<li>The [comparison vignette](<a href="https://weecology.github.io/LDATS/articles/paper-comparison.html" class="uri">https://weecology.github.io/LDATS/articles/paper-comparison.html</a> provides a step-by-step comparison of the LDATS pipeline to the analysis in Christensen <em>et al.</em> 2018.</li>
+<li>
+<p>The key differences are as follows:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="op">*</span><span class="st"> </span>The <span class="st">`</span><span class="dt">document_term_table</span><span class="st">`</span> <span class="cf">in</span> Christensen <span class="op">*</span>et al.<span class="op">*</span><span class="st"> </span><span class="dv">2018</span> was adjusted to account <span class="cf">for</span> variable trapping effort. The data included <span class="cf">in</span> LDATS are not adjusted, so that sampling periods can be weighted appropriately.</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="op">*</span><span class="st"> </span>The LDA model selection criterion has <span class="kw">changed</span> (see LDA model AIC calculation, above), so that LDATS now identifies <span class="dv">6</span> topics compared to the <span class="dv">4</span> topics found <span class="cf">in</span> the paper.</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="op">*</span><span class="st"> </span>LDATS will by default weight sampling periods according to the number of <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/terms">terms</a></span> (see Document weighting, above). </a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="op">*</span><span class="st"> </span>Despite these changes, the updated LDATS pipeline gives qualitatively similar results to the analysis <span class="cf">in</span> Christensen <span class="op">*</span>et al.<span class="op">*</span><span class="st"> </span><span class="fl">2018.</span> </a></code></pre></div>
 </li>
 </ul>
 </div>
 </div>
-    <div id="ldats-0-0-1-2017-11-16" class="section level1">
+    <div id="ldats-0-0-1" class="section level1">
 <h1 class="page-header">
-<a href="#ldats-0-0-1-2017-11-16" class="anchor"></a><a href="https://github.com/weecology/LDATS/commit/326506b9d7fb3e0223948d0245381963f83a2b37">LDATS 0.0.1</a> 2017-11-16</h1>
+<a href="#ldats-0-0-1" class="anchor"></a><a href="https://github.com/weecology/LDATS/commit/326506b9d7fb3e0223948d0245381963f83a2b37">LDATS 0.0.1</a>
+</h1>
+<p><em>2017-11-16</em></p>
 <ul>
-<li>Beginning initial development of package from <a href="(https://github.com/emchristensen/Extreme-events-LDA)">original code</a> used in <a href="https://doi.org/10.1002/ecy.2373">Christensen <em>et al.</em> (2018)</a>.</li>
+<li>Beginning initial development of package from <a href="(https://github.com/emchristensen/Extreme-events-LDA)">originalcode</a> used in <a href="https://doi.org/10.1002/ecy.2373">Christensen <em>et al.</em> (2018)</a>.</li>
 </ul>
 </div>
   </div>
@@ -217,7 +236,7 @@
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
         <li><a href="#ldats-0-1-0">0.1.0</a></li>
-        <li><a href="#ldats-0-0-1-2017-11-16">0.0.1</a></li>
+        <li><a href="#ldats-0-0-1">0.0.1</a></li>
       </ul>
     </div>
   </div>
