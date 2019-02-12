@@ -39,15 +39,21 @@ library(LDATS)
 data(rodents)
 dtt <- rodents$document_term_table
 dct <- rodents$document_covariate_table
-
+weights <- document_weights(document_term_table)
+TS_controls <- TS_controls_list(timename = "newmoon")
+controls <- LDA_TS_controls_list(TS_control = TS_controls)
 r_LDATS <- LDA_TS(dtt, dct, topics = 2:5, nseeds = 2, 
-                  formulas = c(~1, ~newmoon), nchangepoints = 0:2)
+                  formulas = c(~1, ~newmoon), nchangepoints = 0:2,
+                  weights = weights, control = controls)
 ```
 Which conducts two replicates (`nseeds`) for each of two to five topics in an
 LDA model using the document term table, selects the best (AIC) of those, 
 then conducts six time series models on it (each of an intercept only and
 newmoon-based regression under 0, 1, and 2 changepoints), then selects the 
-best (AIC) of the time series, and packages all the models together.
+best (AIC) of the time series, and packages all the models together. This uses
+the document term table to weight the samples by their sizes (number of words)
+and instructs the function to use the column named `"newmoon"` in the
+document covariates table as the time variable.
 
 The resulting object is of class `LDA_TS`, which has a few basic routines 
 available:
