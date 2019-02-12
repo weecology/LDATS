@@ -102,8 +102,8 @@ LDATS model, specifically suggesting the LDA and change point approaches,
 coding the first version of the change point model, and writing and editing 
 the first description of the model 
 ([Christensen *et al.* 2018](https://doi.org/10.1002/ecy.2373)). **R. Diaz**
-contributed code to the LDATS package, provided insight into model 
-development, and conducted end-user code application testing. **H. Ye**
+contributed code to the LDATS package, wrote vignettes, provided insight into
+model development, and conducted end-user code application testing. **H. Ye**
 contributed code to the LDATS package and insight into data structures and
 LDA algorithms. **E. P. White** helped design, troubleshoot, and supervise 
 initial methods development and provided big-picture feedback on 
