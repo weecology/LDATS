@@ -39,25 +39,31 @@ library(LDATS)
 data(rodents)
 dtt <- rodents$document_term_table
 dct <- rodents$document_covariate_table
-
+weights <- document_weights(document_term_table)
+TS_controls <- TS_controls_list(timename = "newmoon")
+controls <- LDA_TS_controls_list(TS_control = TS_controls)
 r_LDATS <- LDA_TS(dtt, dct, topics = 2:5, nseeds = 2, 
-                  formulas = c(~1, ~newmoon), nchangepoints = 0:2)
+                  formulas = c(~1, ~newmoon), nchangepoints = 0:2,
+                  weights = weights, control = controls)
 ```
 Which conducts two replicates (`nseeds`) for each of two to five topics in an
 LDA model using the document term table, selects the best (AIC) of those, 
 then conducts six time series models on it (each of an intercept only and
 newmoon-based regression under 0, 1, and 2 changepoints), then selects the 
-best (AIC) of the time series, and packages all the models together.
+best (AIC) of the time series, and packages all the models together. This uses
+the document term table to weight the samples by their sizes (number of words)
+and instructs the function to use the column named `"newmoon"` in the
+document covariates table as the time variable.
 
 The resulting object is of class `LDA_TS`, which has a few basic routines 
 available:
 
 ```
-print(r_KDATS)
+print(r_LDATS)
 ```
 prints the selected LDA and TS models and 
 ```
-plot(r_KDATS)
+plot(r_LDATS)
 ```
 produces a 4-panel figure of them a la Figure 1 from
 [Christensen et al. 2018](https://doi.org/10.1002/ecy.2373).
@@ -102,8 +108,8 @@ LDATS model, specifically suggesting the LDA and change point approaches,
 coding the first version of the change point model, and writing and editing 
 the first description of the model 
 ([Christensen *et al.* 2018](https://doi.org/10.1002/ecy.2373)). **R. Diaz**
-contributed code to the LDATS package, provided insight into model 
-development, and conducted end-user code application testing. **H. Ye**
+contributed code to the LDATS package, wrote vignettes, provided insight into
+model development, and conducted end-user code application testing. **H. Ye**
 contributed code to the LDATS package and insight into data structures and
 LDA algorithms. **E. P. White** helped design, troubleshoot, and supervise 
 initial methods development and provided big-picture feedback on 

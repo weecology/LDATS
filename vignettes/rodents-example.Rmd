@@ -200,7 +200,8 @@ lda_ts_results$`Selected TS model`$rho_summary
 
 Finally, we can plot the `LDA_TS` results.
 
-```{r plot LDA_TS results, fig.height = 16, fig.width = 7}
-plot(lda_ts_results)
+```{r plot LDA_TS results, fig.height = 16, fig.width = 7, echo = F}
+plot(lda_ts_results, control = LDA_TS_controls_list(
+                           TS_control = TS_controls_list(timename = "newmoon")))
 ```
 

@@ -1,11 +1,10 @@
 # LDATS (development version)
 
-# LDATS 0.1.0
+# [LDATS 0.1.0](https://github.com/weecology/LDATS/pull/105)
+*2019-02-11*
 
 ## Code structure
-* Creation of a [standard API and code 
-pipeline](https://weecology.github.io/LDATS/articles/LDATS_codebase.html) for 
-all components of the LDATS analysis.
+* Creation of a [standard API and code pipeline](https://weecology.github.io/LDATS/articles/LDATS_codebase.html) for all components of the LDATS analysis.
 * Substantial refactor of the underlying code from hardcoded to generalized functions.
 * Development of checking functions used to run the basic structural checks on the function inputs.
 * Inclusion of control options lists for the LDA stage, TS stage, and overall to reduce the length of input lists.
@@ -41,10 +40,20 @@ all components of the LDATS analysis.
 
 ## Rodents data set
 * Portal rodent data from [Christensen *et al.* (2018)](https://doi.org/10.1002/ecy.2373) are now provided in a pre-formatted and ready-to-roll data object.
-* See `data(rodents)`
+* Access the data using `data(rodents)`.
+* Note, however, that the data in Christensen *et al.* 2018 are scaled according to trapping effort. The data included in LDATS are not, to allow for appropriate weighting. See [comparison vignette](https://weecology.github.io/LDATS/articles/paper-comparison.html) for further details.
 
-# [LDATS 0.0.1](https://github.com/weecology/LDATS/commit/326506b9d7fb3e0223948d0245381963f83a2b37) 2017-11-16
 
-* Beginning initial development of package from [original
-code]((https://github.com/emchristensen/Extreme-events-LDA)) used in 
-[Christensen *et al.* (2018)](https://doi.org/10.1002/ecy.2373).
+## Comparison with [Christensen *et al.* (2018)](https://doi.org/10.1002/ecy.2373)
+* The [comparison vignette](https://weecology.github.io/LDATS/articles/paper-comparison.html provides a step-by-step comparison of the LDATS pipeline to the analysis in Christensen *et al.* 2018. 
+* The key differences are as follows:
+
+      * The `document_term_table` in Christensen *et al.* 2018 was adjusted to account for variable trapping effort. The data included in LDATS are not adjusted, so that sampling periods can be weighted appropriately.
+      * The LDA model selection criterion has changed (see LDA model AIC calculation, above), so that LDATS now identifies 6 topics compared to the 4 topics found in the paper.
+      * LDATS will by default weight sampling periods according to the number of terms (see Document weighting, above). 
+      * Despite these changes, the updated LDATS pipeline gives qualitatively similar results to the analysis in Christensen *et al.* 2018. 
+
+# [LDATS 0.0.1](https://github.com/weecology/LDATS/commit/326506b9d7fb3e0223948d0245381963f83a2b37) 
+*2017-11-16*
+
+* Beginning initial development of package from [originalcode]((https://github.com/emchristensen/Extreme-events-LDA)) used in [Christensen *et al.* (2018)](https://doi.org/10.1002/ecy.2373).
