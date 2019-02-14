@@ -45,7 +45,7 @@
 
 
 ## Comparison with [Christensen *et al.* (2018)](https://doi.org/10.1002/ecy.2373)
-* The [comparison vignette](https://weecology.github.io/LDATS/articles/paper-comparison.html provides a step-by-step comparison of the LDATS pipeline to the analysis in Christensen *et al.* 2018. 
+* The [comparison vignette](https://weecology.github.io/LDATS/articles/paper-comparison.html) provides a step-by-step comparison of the LDATS pipeline to the analysis in Christensen *et al.* 2018. 
 * The key differences are as follows:
 
       * The `document_term_table` in Christensen *et al.* 2018 was adjusted to account for variable trapping effort. The data included in LDATS are not adjusted, so that sampling periods can be weighted appropriately.
