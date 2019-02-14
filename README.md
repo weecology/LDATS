@@ -25,7 +25,7 @@ not change substantially.
 
 Install the `devtools` package and then run:
 
-```
+```r
 devtools::install_github("weecology/LDATS")
 ```
 
@@ -34,7 +34,7 @@ devtools::install_github("weecology/LDATS")
 Here is an example of a full LDA-TS analysis using the 
 [Portal rodent data](https://github.com/weecology/PortalData):
 
-```
+```r
 library(LDATS)
 data(rodents)
 dtt <- rodents$document_term_table
@@ -58,11 +58,11 @@ document covariates table as the time variable.
 The resulting object is of class `LDA_TS`, which has a few basic routines 
 available:
 
-```
+```r
 print(r_LDATS)
 ```
 prints the selected LDA and TS models and 
-```
+```r
 plot(r_LDATS)
 ```
 produces a 4-panel figure of them a la Figure 1 from
