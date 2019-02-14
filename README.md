@@ -39,7 +39,7 @@ library(LDATS)
 data(rodents)
 dtt <- rodents$document_term_table
 dct <- rodents$document_covariate_table
-weights <- document_weights(document_term_table)
+weights <- document_weights(dtt)
 TS_controls <- TS_controls_list(timename = "newmoon")
 controls <- LDA_TS_controls_list(TS_control = TS_controls)
 r_LDATS <- LDA_TS(dtt, dct, topics = 2:5, nseeds = 2, 
