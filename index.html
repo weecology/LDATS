@@ -113,7 +113,7 @@
 data(rodents)
 dtt &lt;- rodents$document_term_table
 dct &lt;- rodents$document_covariate_table
-weights &lt;- document_weights(document_term_table)
+weights &lt;- document_weights(dtt)
 TS_controls &lt;- TS_controls_list(timename = "newmoon")
 controls &lt;- LDA_TS_controls_list(TS_control = TS_controls)
 r_LDATS &lt;- LDA_TS(dtt, dct, topics = 2:5, nseeds = 2, 
