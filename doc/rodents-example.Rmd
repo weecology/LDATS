@@ -27,12 +27,13 @@ was constructed using **LDATS** version `r vers` on `r today`.
 
 ## Installation
 
-To obtain the most recent version of **LDATS**, install the most recent 
+To obtain the most recent version of **LDATS**, install and load the most recent 
 version from GitHub:
 
 ```{r, eval=FALSE}
 install.packages("devtools")
 devtools::install_github("weecology/LDATS")
+library(LDATS)
 ```
 
 ## Data
