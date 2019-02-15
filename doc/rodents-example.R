@@ -12,6 +12,7 @@ today <- Sys.Date()
 ## ---- eval=FALSE---------------------------------------------------------
 #  install.packages("devtools")
 #  devtools::install_github("weecology/LDATS")
+#  library(LDATS)
 
 ## ------------------------------------------------------------------------
 data(rodents)
