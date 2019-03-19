@@ -305,7 +305,7 @@ print_model_run_message <- function(models, i, LDA_models, control){
 expand_TS <- function(LDA_models, formulas, nchangepoints){
   check_LDA_models(LDA_models)
   check_nchangepoints(nchangepoints)
-  if(is(LDA_models, "LDA")){
+  if (is(LDA_models, "LDA")) {
     LDA_models <- c(LDA_models)
     class(LDA_models) <- c("LDA_set", "list")
   }
@@ -318,8 +318,10 @@ expand_TS <- function(LDA_models, formulas, nchangepoints){
   } else if (!all(vapply(formulas, is, TRUE, "formula"))) {
       stop("formulas does not contain all formula(s)")
   }
+  formulas
+  
   out <- formulas
-  for (i in 1:length(formulas)) {
+  for (i in seq_along(formulas)) {
     tformula <- paste(as.character(formulas[[i]]), collapse = "")
     out[[i]] <- as.formula(paste("gamma", tformula))
   }
