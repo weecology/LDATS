@@ -165,7 +165,7 @@ select_TS <- function(TS_models, control = TS_controls_list()){
   check_control(control, "TS_controls")
   measurer <- control$measurer
   selector <- control$selector
-  TS_measured <- sapply(TS_models, measurer) %>%
+  TS_measured <- vapply(TS_models, measurer, 0) %>%
                   matrix(ncol = 1)
   TS_selected <- apply(TS_measured, 2, selector) 
   which_selected <- which(TS_measured %in% TS_selected)
@@ -309,17 +309,17 @@ expand_TS <- function(LDA_models, formulas, nchangepoints){
     LDA_models <- c(LDA_models)
     class(LDA_models) <- c("LDA_set", "list")
   }
-  if(!is(formulas, "list")){
-    if(is(formulas, "formula")){
+  if (!is(formulas, "list")) {
+    if (is(formulas, "formula")) {
       formulas <- c(formulas)
     } else{
       stop("formulas does not contain formula(s)")
     }
-  } else if (!all(sapply(formulas, is, "formula"))){
+  } else if (!all(vapply(formulas, is, TRUE, "formula"))) {
       stop("formulas does not contain all formula(s)")
   }
   out <- formulas
-  for (i in 1:length(formulas)){
+  for (i in 1:length(formulas)) {
     tformula <- paste(as.character(formulas[[i]]), collapse = "")
     out[[i]] <- as.formula(paste("gamma", tformula))
   }
@@ -484,23 +484,23 @@ check_timename <- function(document_covariate_table, timename){
 check_formulas <- function(formulas, document_covariate_table, control){
   check_document_covariate_table(document_covariate_table)
   check_control(control, "TS_controls")
-  response <- control$response
+  # response <- control$response
   dct <- document_covariate_table
-  if(!is(formulas, "list")){
-    if(is(formulas, "formula")){
+  if (!is(formulas, "list")) {
+    if (is(formulas, "formula")) {
       formulas <- c(formulas)
     } else{
       stop("formulas does not contain formula(s)")
     }
-  } else if (!all(sapply(formulas, is, "formula"))){
+  } else if (!all(vapply(formulas, is, TRUE, "formula"))) {
       stop("formulas does not contain all formula(s)")
   }
   resp <- unlist(lapply(lapply(formulas, terms), attr, "response"))
   pred <- unlist(lapply(lapply(formulas, terms), attr, "term.labels"))
-  if (any(resp != 0)){
+  if (any(resp != 0)) {
     stop("formula inputs should not include response variable")
   }
-  if (!all(pred %in% colnames(dct))){
+  if (!all(pred %in% colnames(dct))) {
     misses <- pred[which(pred %in% colnames(dct) == FALSE)]
     mis <- paste(misses, collapse = ", ")
     stop(paste0("formulas include predictors not present in data: ", mis))
