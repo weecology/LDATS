@@ -10,10 +10,9 @@ vignette: >
   
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-collapse = TRUE,
-comment = "#>"
+  collapse = TRUE,
+  comment = "#>"
 )
-
 ```
 
 This document prodives a side-by-side comparison of LDATS (v0.1.0) results with analysis from [Christensen et al. 2018](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2373).
@@ -123,7 +122,7 @@ species_list <- c('BA', 'DM', 'DO', 'DS', 'NA', 'OL', 'OT', 'PB', 'PE', 'PF',
 
 Load the data used in Christensen et al:
 
-```{r Paper data, eval = F}
+```{r Paper data, eval = TRUE}
 source(here::here('vignettes', 'christensenetal-comparison-files', 
                   'christensenetal-2018-files', 'rodent_data_for_LDA.r'))
 
@@ -146,10 +145,11 @@ paper_dates <- moondat %>%
 paper_covariates <- data.frame(
   index = seq_along(paper_dates), 
   date = paper_dates, 
-  year_continuous = lubridate::decimal_date(paper_dates), 
-  sin_year = sin(year_continuous * 2 * pi), 
-  cos_year = cos(year_continuous * 2 * pi)
-)
+  year_continuous = lubridate::decimal_date(paper_dates)) %>%
+  dplyr::mutate( 
+    sin_year = sin(year_continuous * 2 * pi), 
+    cos_year = cos(year_continuous * 2 * pi)
+  )
 
 rm(list = c("create_rodent_table", "paper_dates"))
 
@@ -339,7 +339,7 @@ Having divided the data to generate catch-per-effort, the paper changepoint mode
 #### LDATS LDA and paper changepoint
 
 
-```{r run LDATS LDA and paper cpt, eval = F}
+```{r run LDATS LDA and paper cpt, eval = TRUE}
 #### Run changepoint ####
 source(here::here('vignettes', 'christensenetal-comparison-files', 
                   'christensenetal-2018-files', 'changepointmodel.r'))
@@ -358,7 +358,7 @@ find_changepoints <- function(lda_model, paper_covariates, n_changepoints = 1:6)
                                   function(n_changepoints)
                                   {
                                     changepoint_model(lda_model, x, n_changepoints, maxit = 1000, 
-                                                      weights = rep(1, length(year_continuous)))
+                                                      weights = rep(1, NROW(x)))
                                   })
   return(cpt_results)
 }
