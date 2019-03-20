@@ -7,11 +7,11 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
+  
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+collapse = TRUE,
+comment = "#>"
 )
 
 ```
@@ -52,23 +52,30 @@ Download Christensen 2018 analysis scripts & data files from [Extreme-events-LDA
 
 Main Analysis Scripts:
 
-  * rodent_LDA_analysis.R main script for analyzing rodent community change using LDA
+* `rodent_LDA_analysis.R`
+- main script for analyzing rodent community change using LDA
 
-  * rodent_data_for_LDA.R contains a function that creates the rodent data table used in analyses
+* `rodent_data_for_LDA.R`
+- contains a function that creates the rodent data table used in analyses
 
-  * AIC_model_selection.R contains functions for calculating AIC for different candidate LDA models
+* `AIC_model_selection.R`
+- contains functions for calculating AIC for different candidate LDA models
 
-  * changepointmodel.r contains change-point model code
+* `changepointmodel.r`
+- contains change-point model code
 
-  * LDA-distance.R function for computing Hellinger distance analyses
+* `LDA-distance.R`
+- function for computing Hellinger distance analyses
 
 Data:
 
-  * Rodent_table_dat.csv table of rodent data, created by rodent_data_for_LDA.R
+* `Rodent_table_dat.csv`
+- table of rodent data, created by rodent_data_for_LDA.R
 
 Figure scripts:
 
-  * LDA_figure_scripts.R contains functions for making main plots in manuscript (Fig 1). Called from rodent_LDA_analysis.R
+* `LDA_figure_scripts.R`
+- contains functions for making main plots in manuscript (Fig 1). Called from rodent_LDA_analysis.R
 
 
 ```{r download Christensen, eval = F}
@@ -76,18 +83,21 @@ Figure scripts:
 paper_filepath <- here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files')
 test_filepath <- here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files', 'rodent_LDA_analysis.r')
 
-if(!file.exists(test_filepath)) {
-
-files_to_download <- c('rodent_LDA_analysis.r', 'rodent_data_for_LDA.r', 'AIC_model_selection.R', 'changepointmodel.r', 'LDA-distance.R', 'Rodent_table_dat.csv', 'LDA_figure_scripts.R')
-
-for(i in 1:length(files_to_download)) {
-  download.file(url = paste0("https://raw.githubusercontent.com/emchristensen/Extreme-events-LDA/master/", files_to_download[i]),
-                destfile = paste0(paper_filepath, '/', files_to_download[i]))
-}
-
-rm(files_to_download)
-rm(i)
-
+if (!file.exists(test_filepath)) {
+  
+  files_to_download <- c('rodent_LDA_analysis.r', 'rodent_data_for_LDA.r', 
+                         'AIC_model_selection.R', 'changepointmodel.r', 
+                         'LDA-distance.R', 'Rodent_table_dat.csv', 'LDA_figure_scripts.R')
+  
+  for(i in 1:length(files_to_download)) {
+    download.file(url = paste0("https://raw.githubusercontent.com/emchristensen/Extreme-events-LDA/master/", 
+                               files_to_download[i]),
+                  destfile = paste0(paper_filepath, '/', files_to_download[i]))
+  }
+  
+  rm(files_to_download)
+  rm(i)
+  
 }
 
 rm(test_filepath)
@@ -109,26 +119,29 @@ head(rodents[[1]])
 Load the data used in Christensen et al:
 
 ```{r Paper data, eval = F}
-source(here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files', 'rodent_data_for_LDA.r'))
+source(here::here('vignettes', 'christensenetal-comparison-files', 
+                  'christensenetal-2018-files', 'rodent_data_for_LDA.r'))
 
-dat = create_rodent_table(period_first = 1,
-                          period_last = 436,
-                          selected_plots = c(2,4,8,11,12,14,17,22),
-                          selected_species = c('BA','DM','DO','DS','NA','OL','OT','PB','PE','PF','PH','PI','PL','PM','PP','RF','RM','RO','SF','SH','SO'))
+# assemble `paper_dat`, the data from Christensen et al. 2018
+periods <- 1:436
+control_plots <- c(2, 4, 8, 11, 12, 14, 17, 22)
+species_list <- c('BA', 'DM', 'DO', 'DS', 'NA', 'OL', 'OT', 'PB', 'PE', 'PF', 
+                  'PH', 'PI', 'PL', 'PM', 'PP', 'RF', 'RM', 'RO', 'SF', 'SH', 'SO')
 
-# dates to go with count data
-moondat = read.csv(text=getURL("https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/moon_dates.csv"),stringsAsFactors = F)
-moondat$date = as.Date(moondat$censusdate)
+paper_dat <- create_rodent_table(period_first = min(periods),
+                           period_last = max(periods),
+                           selected_plots = control_plots,
+                           selected_species = species_list)
 
-period_dates = filter(moondat,period %in% rownames(dat)) %>% select(period,date)
-dates = period_dates$date
+# assemble `paper_dates`, the associated dates for `paper_dat`
+moondat <- read.csv("https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/moon_dates.csv", 
+                    stringsAsFactors = F)
+paper_dates <- moondat %>%
+  dplyr::filter(period %>% dplyr::between(min(periods), max(periods))) %>% 
+  dplyr::pull(censusdate) %>%
+  as.Date()
 
-paper_dat <- dat
-
-paper_dates <- dates
-
-rm(list = c('dat', 'dates', 'period_dates',
-            'create_rodent_table'))
+rm(list = c('create_rodent_table'))
 
 ```
 
@@ -146,20 +159,20 @@ There are 16 rows where the data included in LDATS differs from the paper data. 
 
 To confirm this, refer to lines 36-46 in `rodent_data_for_LDA.r`:
 
-```
+```{r, eval = FALSE}
 # retrieve data on number of plots trapped per month
-  trap_table = read.csv('https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent_trapping.csv')
-  trap_table_controls = filter(trap_table, plot %in% selected_plots)
-  nplots_controls = aggregate(trap_table_controls$sampled,by=list(period = trap_table_controls$period),FUN=sum)
+trap_table = read.csv('https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent_trapping.csv')
+trap_table_controls = filter(trap_table, plot %in% selected_plots)
+nplots_controls = aggregate(trap_table_controls$sampled,by=list(period = trap_table_controls$period),FUN=sum)
 
-  # adjust species counts by number of plots trapped that month
-  r_table_adjusted = as.data.frame.matrix(r_table)
-  for (n in 1:436) {
-    #divide by number of control plots actually trapped (should be 8) and multiply by 8 to estimate captures as if all plots were trapped
-    r_table_adjusted[n,] = round(r_table_adjusted[n,]/nplots_controls$x[n]*8)
-  }
+# adjust species counts by number of plots trapped that month
+r_table_adjusted = as.data.frame.matrix(r_table)
+for (n in 1:436) {
+#divide by number of control plots actually trapped (should be 8) and multiply by 8 to estimate captures as if all plots were trapped
+r_table_adjusted[n,] = round(r_table_adjusted[n,]/nplots_controls$x[n]*8)
+}
 
-    return(r_table_adjusted)
+return(r_table_adjusted)
 
 ```  
 
@@ -171,24 +184,22 @@ trap_table = read.csv('https://raw.githubusercontent.com/weecology/PortalData/ma
 
 ```
 
-
 ```{r continue adjust LDATS after paper}
- trap_table_controls =dplyr::filter(trap_table, plot %in% c(2,4,8,11,12,14,17,22))
-  nplots_controls = aggregate(trap_table_controls$sampled,by=list(period = trap_table_controls$period),FUN=sum)
-   # adjust species counts by number of plots trapped that month
-  ldats_rodents_adjusted = as.data.frame.matrix(rodents[[1]])
-  for (n in 1:436) {
-    #divide by number of control plots actually trapped (should be 8) and multiply by 8 to estimate captures as if all plots were trapped
-    ldats_rodents_adjusted[n,] = round(ldats_rodents_adjusted[n,]/nplots_controls$x[n]*8)
-  }
-
+trap_table_controls <- dplyr::filter(trap_table, plot %in% control_plots)
+nplots_controls <- aggregate(trap_table_controls$sampled, 
+                            by = list(period = trap_table_controls$period), 
+                            FUN = sum)
+# adjust species counts by number of plots trapped that month
+#   divide by number of control plots actually trapped (should be 8) and 
+#   multiply by 8 to estimate captures as if all plots were trapped
+ldats_rodents_adjusted <- as.data.frame.matrix(rodents[[1]])
+ldats_rodents_adjusted[periods, ] <- round(ldats_rodents_adjusted[periods, ] / nplots_controls$x[periods] * 8)
 
 compare_raw <- rodents[[1]] == ldats_rodents_adjusted
 length(which(rowSums(compare_raw) < ncol(compare_raw)))
 
 compare_adjusted <- ldats_rodents_adjusted == paper_dat
 length(which(rowSums(compare_adjusted) < ncol(compare_adjusted)))
-
 ```
 
 ```{r data adjustment cleanup, include = FALSE}
@@ -206,16 +217,13 @@ rodents[[1]] <- paper_dat
 The LDATS rodent data comes with a `document_covariate_table`, which we will use later as the predictor variables for the changepoint models. In this table, time is expressed as new moon numbers. Later we will want to be able to interpret the results in terms of census dates. We will add a column to the `document_covariate_table` to convert new moon numbers to census dates. We will not reference this column in any of the formulas we pass to the changepoint models, so it will be ignored until we need it.
 
 ```{r add dates to covariate table}
-
 head(rodents$document_covariate_table)
 
-moondat <- dplyr::select(moondat, newmoonnumber, censusdate)
-colnames(moondat) <- c('newmoon', 'censusdate')
-
-new_cov_table <- dplyr::left_join(rodents$document_covariate_table, moondat, by = 'newmoon')
+new_cov_table <- dplyr::left_join(rodents$document_covariate_table, 
+                                  dplyr::select(moondat, newmoonnumber, censusdate), 
+                                  by = c("newmoon" = "newmoonnumber"))
 
 rodents$document_covariate_table <- new_cov_table
-
 ```
 
 ```{r cleanup dates, include = F}
@@ -256,7 +264,7 @@ best_ntopic = repeat_VEM(paper_dat,
                          seeds,
                          topic_min=2,
                          topic_max=6)
-hist(best_ntopic$k,breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5),xlab='best # of topics', main='')
+hist(best_ntopic$k, breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5), xlab='best # of topics', main='')
 
 # 2b. how different is species composition of 4 community-types when LDA is run with different seeds?
 # ==================================================================
@@ -280,7 +288,7 @@ ntopics = 4
 SEED = unlist(best_seed)[1]  # For the paper, use seed 206
 ldamodel = LDA(paper_dat,ntopics, control = list(seed = SEED),method='VEM')
 
-save(ldamodel,file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_ldamodel.Rds'))
+save(ldamodel, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_ldamodel.Rds'))
 ```
 
 ### Plot LDAS
@@ -321,80 +329,78 @@ Having divided the data to generate catch-per-effort, the paper changepoint mode
 #### Run changepoint ####
 source(here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files', 'changepointmodel.r'))
 
-# set up parameters for model
-year_continuous = 1970 + as.integer(julian(paper_dates)) / 365.25
-x = data.frame(
-  year_continuous = year_continuous,
-  sin_year = sin(year_continuous * 2 * pi),
+paper_covariates <- data.frame(
+  index = seq_along(paper_dates), 
+  date = paper_dates, 
+  year_continuous = lubridate::decimal_date(paper_dates), 
+  sin_year = sin(year_continuous * 2 * pi), 
   cos_year = cos(year_continuous * 2 * pi)
 )
 
-# run models with 1, 2, 3, 4, 5, 6 changepoints
-ldats_paper_cp_results_rodent = changepoint_model(ldats_lda_selected[[1]], x, 1, weights = rep(1,length(year_continuous)))
-save(ldats_paper_cp_results_rodent, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_1.Rds'))
-rm(ldats_paper_cp_results_rodent)
+find_changepoints <- function(lda_model, paper_covariates, n_changepoints = 1:6)
+{
+  # set up parameters for model
+  x <- dplyr::select(paper_covariates, 
+                     year_continuous, 
+                     sin_year, 
+                     cos_year)
 
-ldats_paper_cp_results_rodent2 = changepoint_model(ldats_lda_selected[[1]], x, 2, weights = rep(1,length(year_continuous)))
-save(ldats_paper_cp_results_rodent2, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_2.Rds'))
-rm(ldats_paper_cp_results_rodent2)
+  # run models with 1, 2, 3, 4, 5, 6 changepoints
+  cpt_results <- data.frame(n_changepoints = n_changepoints)
+  cpt_results$cpt_model <- lapply(cpt_results$n_changepoints,
+                                  function(n_changepoints)
+                                  {
+                                    changepoint_model(lda_model, x, n_changepoints, maxit = 1000, 
+                                                      weights = rep(1, length(year_continuous)))
+                                  })
+  return(cpt_results)
+}
 
-ldats_paper_cp_results_rodent3 = changepoint_model(ldats_lda_selected[[1]], x, 3, weights = rep(1,length(year_continuous)))
-save(ldats_paper_cp_results_rodent3, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_3.Rds'))
-rm(ldats_paper_cp_results_rodent3)
-
-ldats_paper_cp_results_rodent4 = changepoint_model(ldats_lda_selected[[1]], x, 4, weights = rep(1,length(year_continuous)))
-save(ldats_paper_cp_results_rodent4, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_4.Rds'))
-rm(ldats_paper_cp_results_rodent4)
-
-ldats_paper_cp_results_rodent5 = changepoint_model(ldats_lda_selected[[1]], x, 5, weights = rep(1,length(year_continuous)))
-save(ldats_paper_cp_results_rodent5, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_5.Rds'))
-rm(ldats_paper_cp_results_rodent5)
-
-ldats_paper_cp_results_rodent6 = changepoint_model(ldats_lda_selected[[1]], x, 6, weights = rep(1,length(year_continuous)))
-save(ldats_paper_cp_results_rodent6, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_6.Rds'))
-rm(ldats_paper_cp_results_rodent6)
+ldats_paper_results <- find_changepoints(ldats_lda_selected[[1]], paper_covariates)
+save(ldats_paper_results, file = here::here('vignettes', 'christensenetal-comparison-files', 
+                                            'model-cache', 'ldats_paper.Rds'))
+rm(ldats_paper_results)
 ```
 
 ```{r select LDATS LDA and paper cpt, eval = F}
 #### Changepoint model selection ####
-load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_1.Rds'))
-load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_2.Rds'))
-load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_3.Rds'))
-load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_4.Rds'))
-load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_5.Rds'))
-load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_paper_6.Rds'))
-
+load(here::here('vignettes', 'christensenetal-comparison-files', 
+                'model-cache', 'ldats_paper.Rds'))
 ```
 
 ```{r select LDATS-paper, eval = T}
-ntopics = ldats_lda_selected[[1]]@k
+# Among a selection of models with different # of changepoints, 
+#   - compute AIC
+#   - select the model with the best AIC
+#   - get the posterior distributions for the changepoints
+compute_cpt <- function(cpt_results, ntopics)
+{
+  # compute log likelihood as the mean deviance
+  cpt_results$mean_deviances <- vapply(cpt_results$cpt_model, 
+                                       function(cpt_model) {mean(cpt_model$saved_lls)}, 
+                                       0)
+  
+  # compute AIC = ( -2 * log likelihood) + 2 * (#parameters)
+  cpt_results$AIC <- cpt_results$mean_deviances * -2 + 
+    2 * (3 * (ntopics - 1) * (cpt_results$n_changepoints + 1) +
+           (cpt_results$n_changepoints))
+  
+  # select the best model
+  best_cpt_model <- cpt_results$cpt_model[[which.min(cpt_results$AIC)]]
+  
+  # transform the time index into actual dates
+  return(as.data.frame(t(ldats_paper_cpt_selected$saved[,1,])))
+}
 
-# change point model selection
-# mean deviance ( -2 * log likelihood) + 2*(#parameters)
-mean(ldats_paper_cp_results_rodent$saved_lls * -2) + 2*(3*(ntopics-1)*(1+1)+(1))
-mean(ldats_paper_cp_results_rodent2$saved_lls * -2)+ 2*(3*(ntopics-1)*(2+1)+(2))
-mean(ldats_paper_cp_results_rodent3$saved_lls * -2)+ 2*(3*(ntopics-1)*(3+1)+(3))
-mean(ldats_paper_cp_results_rodent4$saved_lls * -2)+ 2*(3*(ntopics-1)*(4+1)+(4))
-mean(ldats_paper_cp_results_rodent5$saved_lls * -2)+ 2*(3*(ntopics-1)*(5+1)+(5))
-mean(ldats_paper_cp_results_rodent6$saved_lls * -2)+ 2*(3*(ntopics-1)*(6+1)+(6))
+ldats_paper_changepoints <- compute_cpt(ldats_paper_results, 
+                                        ntopics = ldats_lda_selected[[1]]@k)
 
-# The lowest deviance is for 4 changepoints.
+ldats_paper_cpt_dates <- ldats_paper_changepoints %>% 
+  reshape::melt() %>%
+  dplyr::left_join(paper_covariates, by = c("value" = "index"))
 
-ldats_paper_cpt_selected = ldats_paper_cp_results_rodent4
-
-df_4 = as.data.frame(t(ldats_paper_cpt_selected$saved[,1,])) %>% reshape::melt()
-year_continuous = 1970 + as.integer(julian(paper_dates)) / 365.25
-df_4$value = year_continuous[df_4$value]
-
-
-ldats_paper_cpt_dates <- vector(length = 4)
-ldats_paper_cpt_dates[1] <- mean(df_4[df_4$variable=='V1','value']) %>% lubridate::date_decimal() %>% format('%Y-%m-%d')
-ldats_paper_cpt_dates[2] <-mean(df_4[df_4$variable=='V2','value']) %>% lubridate::date_decimal() %>% format('%Y-%m-%d')
-ldats_paper_cpt_dates[3] <-mean(df_4[df_4$variable=='V3','value']) %>% lubridate::date_decimal() %>% format('%Y-%m-%d')
-ldats_paper_cpt_dates[4] <-mean(df_4[df_4$variable=='V4','value']) %>% lubridate::date_decimal() %>% format('%Y-%m-%d')
-
-ldats_paper_cpt_dates
-
+save(ldats_paper_cpt_dates, here::here('vignettes', 'christensenetal-comparison-files', 
+                                       'model-cache', 'paper_ldamodel.Rds'))
 ```
 
 
@@ -403,87 +409,32 @@ ldats_paper_cpt_dates
 ```{r load paper LDA for paper cpt, eval = F}
 
 #### Load LDA ####
-load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_ldamodel.Rds'))
+load(here::here('vignettes', 'christensenetal-comparison-files', 
+                'model-cache', 'paper_ldamodel.Rds'))
 
 ```
 
 ```{r run paper LDA and paper cpt, eval = F}
 #### Run changepoint ####
-source(here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files', 'changepointmodel.r'))
+source(here::here('vignettes', 'christensenetal-comparison-files', 
+                  'christensenetal-2018-files', 'changepointmodel.r'))
 
-# set up parameters for model
-year_continuous = 1970 + as.integer(julian(paper_dates)) / 365.25
-x = data.frame(
-  year_continuous = year_continuous,
-  sin_year = sin(year_continuous * 2 * pi),
-  cos_year = cos(year_continuous * 2 * pi)
-)
-
-# run models with 1, 2, 3, 4, 5, 6 changepoints
-paper_paper_cp_results_rodent = changepoint_model(ldamodel, x, 1, weights = rep(1,length(year_continuous)))
-save(paper_paper_cp_results_rodent, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper_1.Rds'))
-rm(paper_paper_cp_results_rodent)
-
-paper_paper_cp_results_rodent2 = changepoint_model(ldamodel, x, 2, weights = rep(1,length(year_continuous)))
-save(paper_paper_cp_results_rodent2, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper_2.Rds'))
-rm(paper_paper_cp_results_rodent2)
-
-paper_paper_cp_results_rodent3 = changepoint_model(ldamodel, x, 3, weights = rep(1,length(year_continuous)))
-save(paper_paper_cp_results_rodent3, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper_3.Rds'))
-rm(paper_paper_cp_results_rodent3)
-
-paper_paper_cp_results_rodent4 = changepoint_model(ldamodel, x, 4, weights = rep(1,length(year_continuous)))
-save(paper_paper_cp_results_rodent4, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper_4.Rds'))
-rm(paper_paper_cp_results_rodent4)
-
-paper_paper_cp_results_rodent5 = changepoint_model(ldamodel, x, 5, weights = rep(1,length(year_continuous)))
-save(paper_paper_cp_results_rodent5, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper_5.Rds'))
-rm(paper_paper_cp_results_rodent5)
-
-paper_paper_cp_results_rodent6 = changepoint_model(ldamodel, x, 6, weights = rep(1,length(year_continuous)))
-save(paper_paper_cp_results_rodent6, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper_6.Rds'))
-rm(paper_paper_cp_results_rodent6)
+paper_paper_results <- find_changepoints(ldamodel, paper_covariates)
+save(paper_paper_results, file = here::here('vignettes', 'christensenetal-comparison-files', 
+                                            'model-cache', 'paper_paper.Rds'))
 ```
 
 ```{r select paper LDA and paper cpt, eval = F}
 #### Changepoint model selection ####
-load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper_1.Rds'))
-load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper_2.Rds'))
-load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper_3.Rds'))
-load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper_4.Rds'))
-load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper_5.Rds'))
-load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper_6.Rds'))
+load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper.Rds'))
 ```
 
 ```{r select paper-paper, eval = T}
-ntopics = ldamodel@k
-
-# change point model selection
-# mean deviance ( -2 * log likelihood) + 2*(#parameters)
-mean(paper_paper_cp_results_rodent$saved_lls * -2) + 2*(3*(ntopics-1)*(1+1)+(1))
-mean(paper_paper_cp_results_rodent2$saved_lls * -2)+ 2*(3*(ntopics-1)*(2+1)+(2))
-mean(paper_paper_cp_results_rodent3$saved_lls * -2)+ 2*(3*(ntopics-1)*(3+1)+(3))
-mean(paper_paper_cp_results_rodent4$saved_lls * -2)+ 2*(3*(ntopics-1)*(4+1)+(4))
-mean(paper_paper_cp_results_rodent5$saved_lls * -2)+ 2*(3*(ntopics-1)*(5+1)+(5))
-mean(paper_paper_cp_results_rodent6$saved_lls * -2)+ 2*(3*(ntopics-1)*(6+1)+(6))
-
-# The lowest deviance is for 4 changepoints.
-
-paper_paper_cpt_selected = paper_paper_cp_results_rodent4
-
-df_4 = as.data.frame(t(paper_paper_cpt_selected$saved[,1,])) %>%  reshape::melt()
-df_4$value = year_continuous[df_4$value]
-
-
-paper_paper_cpt_dates <- vector(length = 4)
-paper_paper_cpt_dates[1] <- mean(df_4[df_4$variable=='V1','value']) %>% lubridate::date_decimal() %>% format('%Y-%m-%d')
-paper_paper_cpt_dates[2] <-mean(df_4[df_4$variable=='V2','value']) %>% lubridate::date_decimal() %>% format('%Y-%m-%d')
-paper_paper_cpt_dates[3] <-mean(df_4[df_4$variable=='V3','value']) %>% lubridate::date_decimal() %>% format('%Y-%m-%d')
-paper_paper_cpt_dates[4] <-mean(df_4[df_4$variable=='V4','value']) %>% lubridate::date_decimal() %>% format('%Y-%m-%d')
-
-paper_paper_cpt_dates
-
-
+paper_paper_changepoints <- compute_cpt(ldats_paper_results, 
+                                        ntopics = ldamodel@k)
+paper_paper_cpt_dates <- paper_paper_changepoints %>%
+  reshape::melt() %>%
+  dplyr::left_join(paper_covariates, by = c("value" = "index"))
 ```
 
 ### Running LDATS changepoint models
@@ -500,10 +451,11 @@ ldats_ldats_cpt <- TS_on_LDA(LDA_models = ldats_lda_selected,
                              formulas = ~ sin_year + cos_year,
                              nchangepoints = 1:6,
                              weights = NULL,
-                             control = TS_controls_list(timename = 'newmoon'))
+                             control = TS_controls_list(timename = 'newmoon', 
+                                                        nit = 1000))
 
-
-save(ldats_ldats_cpt, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_ldats.Rds'))
+save(ldats_ldats_cpt, file = here::here('vignettes', 'christensenetal-comparison-files', 
+                                        'model-cache', 'ldats_ldats.Rds'))
 rm(ldats_ldats_cpt)
 rm(ldats_lda_selected)
 ```
@@ -522,14 +474,15 @@ ldats_ldats_cpt_selected$nchangepoints
 ### Get dates associated with changepoints
 
 ```{r get ldats lda + ldats cpt dates}
-ldats_ldats_cpt_dates <- ldats_ldats_cpt_selected$rho_summary$Mean
-ldats_ldats_cpt_dates <- round(ldats_ldats_cpt_dates)
+ldats_dates <- dplyr::select(moondat, 
+                             index = newmoonnumber, 
+                             date = newmoondate) %>%
+  dplyr::mutate(date = as.Date(date))
 
-ldats_ldats_cpt_dates <- as.data.frame(ldats_ldats_cpt_dates)
-colnames(ldats_ldats_cpt_dates) <- 'newmoon'
-ldats_ldats_cpt_dates <- dplyr::left_join(ldats_ldats_cpt_dates, rodents$document_covariate_table, by = 'newmoon')
-ldats_ldats_cpt_dates <- ldats_ldats_cpt_dates$censusdate
-
+ldats_ldats_cpt_dates <- ldats_ldats_cpt_selected$rhos %>%
+  as.data.frame() %>%
+  reshape::melt() %>%
+  dplyr::left_join(ldats_dates, by = c("value" = "index"))
 ```
 
 ### Paper LDA and LDATS changepoint
@@ -538,7 +491,8 @@ ldats_ldats_cpt_dates <- ldats_ldats_cpt_dates$censusdate
 ```{r load paper LDA for LDATS cpt, eval = F}
 
 #### Load LDA ####
-load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_ldamodel.Rds'))
+load(here::here('vignettes', 'christensenetal-comparison-files', 
+                'model-cache', 'paper_ldamodel.Rds'))
 
 ```
 #### Run the TS models
@@ -551,10 +505,11 @@ paper_ldats_cpt <- TS_on_LDA(LDA_models = ldamodel,
                              formulas = ~ sin_year + cos_year,
                              nchangepoints = 1:6,
                              weights = NULL,
-                              control = TS_controls_list(timename = 'newmoon'))
+                             control = TS_controls_list(timename = 'newmoon'))
 
 
-save(paper_ldats_cpt, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_ldats.Rds'))
+save(paper_ldats_cpt, file = here::here('vignettes', 'christensenetal-comparison-files', 
+                                        'model-cache', 'paper_ldats.Rds'))
 rm(paper_ldats_cpt)
 rm(ldamodel)
 ```
@@ -575,6 +530,10 @@ paper_ldats_cpt_selected$nchangepoints
 Unlike the paper changepoint model, LDATS can recognize that sampling periods may not be equidistant, and can place changepoint estimates at new moons if they fall between nonconsecutive sampling periods. We can estimate the dates corresponding to those new moons, extrapolating from the census dates for adjacent census periods.
 
 ```{r get paper lda + ldats cpt dates}
+
+
+
+
 paper_ldats_cpt_dates <- paper_ldats_cpt_selected$rho_summary$Mean
 paper_ldats_cpt_dates <- round(paper_ldats_cpt_dates)
 
@@ -659,17 +618,19 @@ The results of the changepoint model appear extremely robust to both choice of L
 ### Report changepoint dates
 ```{r report cpt dates, include = F}
 
-cpt_dates <- as.data.frame(paper_paper_cpt_dates)
-cpt_dates <- cbind(cpt_dates, ldats_paper_cpt_dates)
-cpt_dates <- cbind(cpt_dates, ldats_ldats_cpt_dates)
-cpt_dates <- cbind(cpt_dates, paper_ldats_cpt_dates)
-
-colnames(cpt_dates) <- c('paperLDA_papercpt', 'ldatsLDA_papercpt', 'ldatsLDA_ldatscpt', 'paperLDA_ldatscpt')
+cpt_dates <- dplyr::bind_rows("paperLDA_papercpt" = paper_paper_cpt_dates, 
+                              "ldatsLDA_ldatscpt" = ldats_ldats_cpt_dates, 
+                              .id = "analysis") %>%
+  dplyr::group_by(analysis, variable) %>%
+  dplyr::summarize(date = mean(date)) %>%
+  dplyr::ungroup() %>%
+  dplyr::rename(changepoint = variable) %>%
+  tidyr::spread(analysis, date)
 
 ```
 
 ```{r print cpt dates}
-cpt_dates
+knitr::kable(cpt_dates)
 ```
 
 The choice of LDA has more influence on the changepoint locations than the choice of changepoint model - probably because the LDATS LDA has 6 topics, and the paper LDA has 4. However, all of the models agree to within 6 months in most cases, and a year for the broader early 1990s changepoint.
