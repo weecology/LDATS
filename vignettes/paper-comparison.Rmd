@@ -339,7 +339,7 @@ Having divided the data to generate catch-per-effort, the paper changepoint mode
 #### LDATS LDA and paper changepoint
 
 
-```{r run LDATS LDA and paper cpt, eval = TRUE}
+```{r run LDATS LDA and paper cpt, eval = FALSE}
 #### Run changepoint ####
 source(here::here('vignettes', 'christensenetal-comparison-files', 
                   'christensenetal-2018-files', 'changepointmodel.r'))
@@ -369,7 +369,7 @@ save(ldats_paper_results, file = here::here('vignettes', 'christensenetal-compar
 rm(ldats_paper_results)
 ```
 
-```{r select LDATS LDA and paper cpt, eval = F}
+```{r select LDATS LDA and paper cpt, eval = TRUE}
 #### Changepoint model selection ####
 load(here::here('vignettes', 'christensenetal-comparison-files', 
                 'model-cache', 'ldats_paper.Rds'))
@@ -406,7 +406,7 @@ ldats_paper_cpt_dates <- ldats_paper_changepoints %>%
   reshape::melt() %>%
   dplyr::left_join(paper_covariates, by = c("value" = "index"))
 
-save(ldats_paper_cpt_dates, here::here('vignettes', 'christensenetal-comparison-files', 
+saveRDS(ldats_paper_cpt_dates, here::here('vignettes', 'christensenetal-comparison-files', 
                                        'model-cache', 'paper_ldamodel.Rds'))
 ```
 
@@ -558,13 +558,13 @@ All of the models find four changepoints.
 
 ```{r load cpts to plot, include = F}
 
-year_continuous = 1970 + as.integer(julian(paper_dates)) / 365.25
-x = data.frame(
-  year_continuous = year_continuous,
-  sin_year = sin(year_continuous * 2 * pi),
-  cos_year = cos(year_continuous * 2 * pi)
-)
-ntopics = 4
+# year_continuous = 1970 + as.integer(julian(paper_dates)) / 365.25
+# x = data.frame(
+#   year_continuous = year_continuous,
+#   sin_year = sin(year_continuous * 2 * pi),
+#   cos_year = cos(year_continuous * 2 * pi)
+# )
+# ntopics = 4
 
 ```
 
@@ -584,11 +584,17 @@ plot(ldats_ldats_cpt_selected)
 #### Paper LDA and paper changepoint
 ```{r plot paper LDA and paper cpt, fig.width=7, fig.height=6}
 
-source(here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files', 'LDA_figure_scripts.R'))
-source(here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files', 'changepointmodel.r'))
-paper_cpts = find_changepoint_location(paper_paper_cpt_selected)
-paper_cpt_plot = get_ll_non_memoized_plot(ldamodel,x,paper_cpts,make_plot=T,weights=rep(1,length(year_continuous)))
-annual_hist(paper_paper_cpt_selected, year_continuous)
+source(here::here('vignettes', 'christensenetal-comparison-files', 
+                  'christensenetal-2018-files', 'LDA_figure_scripts.R'))
+source(here::here('vignettes', 'christensenetal-comparison-files', 
+                  'christensenetal-2018-files', 'changepointmodel.r'))
+
+
+paper_cpts <- find_changepoint_location(paper_paper_cpt_selected)
+ntopics <- ldamodel@k
+paper_cpt_plot <- get_ll_non_memoized_plot(ldamodel, x, paper_cpts, make_plot = T,
+                                           weights = rep(1, NROW(x)))
+annual_hist(paper_paper_cpt_selected, paper_covariates$year_continuous)
 paper_cpt_plot
 
 ```
@@ -596,10 +602,11 @@ paper_cpt_plot
 
 #### LDATS LDA and paper changepoint
 ```{r plot LDATS lda and paper cpt, fig.width=7, fig.height=6}
-ntopics = 6
-ldats_cpts = find_changepoint_location(ldats_paper_cpt_selected)
-ldats_cpt_plot = get_ll_non_memoized_plot(ldats_lda_selected[[1]],x,ldats_cpts,make_plot=T,weights=rep(1,length(year_continuous)))
-annual_hist(ldats_paper_cpt_selected, year_continuous)
+ldats_cpts <- find_changepoint_location(ldats_paper_cpt_selected)
+ntopics <- ldats_lda_selected[[1]]@k
+ldats_cpt_plot <- get_ll_non_memoized_plot(ldats_lda_selected[[1]], x, ldats_cpts,
+                                           make_plot = T, weights = rep(1, NROW(x)))
+annual_hist(ldats_paper_cpt_selected, paper_covariates$year_continuous)
 ldats_cpt_plot
 ```
 
