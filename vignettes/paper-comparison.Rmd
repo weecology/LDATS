@@ -114,6 +114,11 @@ The Portal rodents control data is included in the LDATS package:
 data(rodents)
 
 head(rodents[[1]])
+
+periods <- 1:436
+control_plots <- c(2, 4, 8, 11, 12, 14, 17, 22)
+species_list <- c('BA', 'DM', 'DO', 'DS', 'NA', 'OL', 'OT', 'PB', 'PE', 'PF', 
+                  'PH', 'PI', 'PL', 'PM', 'PP', 'RF', 'RM', 'RO', 'SF', 'SH', 'SO')
 ```
 
 Load the data used in Christensen et al:
@@ -123,32 +128,36 @@ source(here::here('vignettes', 'christensenetal-comparison-files',
                   'christensenetal-2018-files', 'rodent_data_for_LDA.r'))
 
 # assemble `paper_dat`, the data from Christensen et al. 2018
-periods <- 1:436
-control_plots <- c(2, 4, 8, 11, 12, 14, 17, 22)
-species_list <- c('BA', 'DM', 'DO', 'DS', 'NA', 'OL', 'OT', 'PB', 'PE', 'PF', 
-                  'PH', 'PI', 'PL', 'PM', 'PP', 'RF', 'RM', 'RO', 'SF', 'SH', 'SO')
 
 paper_dat <- create_rodent_table(period_first = min(periods),
                            period_last = max(periods),
                            selected_plots = control_plots,
                            selected_species = species_list)
 
-# assemble `paper_dates`, the associated dates for `paper_dat`
+# assemble `paper_covariates`, the associated dates and covariate data
 moondat <- read.csv("https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/moon_dates.csv", 
                     stringsAsFactors = F)
+
 paper_dates <- moondat %>%
   dplyr::filter(period %>% dplyr::between(min(periods), max(periods))) %>% 
   dplyr::pull(censusdate) %>%
   as.Date()
 
-rm(list = c('create_rodent_table'))
+paper_covariates <- data.frame(
+  index = seq_along(paper_dates), 
+  date = paper_dates, 
+  year_continuous = lubridate::decimal_date(paper_dates), 
+  sin_year = sin(year_continuous * 2 * pi), 
+  cos_year = cos(year_continuous * 2 * pi)
+)
+
+rm(list = c("create_rodent_table", "paper_dates"))
 
 ```
 
 Compare paper data to LDATS data:
 
 ```{r rodent data comparison}
-
 compare <- rodents[[1]] == paper_dat
 
 length(which(rowSums(compare) < ncol(compare)))
@@ -168,8 +177,8 @@ nplots_controls = aggregate(trap_table_controls$sampled,by=list(period = trap_ta
 # adjust species counts by number of plots trapped that month
 r_table_adjusted = as.data.frame.matrix(r_table)
 for (n in 1:436) {
-#divide by number of control plots actually trapped (should be 8) and multiply by 8 to estimate captures as if all plots were trapped
-r_table_adjusted[n,] = round(r_table_adjusted[n,]/nplots_controls$x[n]*8)
+  #divide by number of control plots actually trapped (should be 8) and multiply by 8 to estimate captures as if all plots were trapped
+  r_table_adjusted[n,] = round(r_table_adjusted[n,]/nplots_controls$x[n]*8)
 }
 
 return(r_table_adjusted)
@@ -189,6 +198,7 @@ trap_table_controls <- dplyr::filter(trap_table, plot %in% control_plots)
 nplots_controls <- aggregate(trap_table_controls$sampled, 
                             by = list(period = trap_table_controls$period), 
                             FUN = sum)
+
 # adjust species counts by number of plots trapped that month
 #   divide by number of control plots actually trapped (should be 8) and 
 #   multiply by 8 to estimate captures as if all plots were trapped
@@ -203,7 +213,8 @@ length(which(rowSums(compare_adjusted) < ncol(compare_adjusted)))
 ```
 
 ```{r data adjustment cleanup, include = FALSE}
-rm(list = c('compare', 'compare_adjusted', 'compare_raw', 'n', 'ldats_rodents_adjusted', 'nplots_controls', 'trap_table', 'trap_table_controls'))
+rm(list = c('compare', 'compare_adjusted', 'compare_raw', 'n', 'ldats_rodents_adjusted', 
+            'nplots_controls', 'trap_table', 'trap_table_controls'))
 ```
 
 
@@ -221,7 +232,8 @@ head(rodents$document_covariate_table)
 
 new_cov_table <- dplyr::left_join(rodents$document_covariate_table, 
                                   dplyr::select(moondat, newmoonnumber, censusdate), 
-                                  by = c("newmoon" = "newmoonnumber"))
+                                  by = c("newmoon" = "newmoonnumber")) %>%
+  dplyr::rename(date = censusdate)
 
 rodents$document_covariate_table <- new_cov_table
 ```
@@ -248,16 +260,18 @@ save(ldats_lda_selected, file = here::here('vignettes', 'christensenetal-compari
 Paper LDAS:
 
 ```{r create dat for paper lda, include = F}
-dat = paper_dat
+dat <- paper_dat
 ```
 
 ```{r paper LDAs, eval = F}
-source(here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files', 'AIC_model_selection.R'))
-source(here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files', 'LDA-distance.R'))
+source(here::here('vignettes', 'christensenetal-comparison-files', 
+                  'christensenetal-2018-files', 'AIC_model_selection.R'))
+source(here::here('vignettes', 'christensenetal-comparison-files', 
+                  'christensenetal-2018-files', 'LDA-distance.R'))
 
 # Fit a bunch of LDA models with different seeds
 # Only use even numbers for seeds because consecutive seeds give identical results
-seeds = 2*seq(200)
+seeds <- 2 * seq(200)
 
 # repeat LDA model fit and AIC calculation with a bunch of different seeds to test robustness of the analysis
 best_ntopic = repeat_VEM(paper_dat,
@@ -291,7 +305,7 @@ ldamodel = LDA(paper_dat,ntopics, control = list(seed = SEED),method='VEM')
 save(ldamodel, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_ldamodel.Rds'))
 ```
 
-### Plot LDAS
+### Plot LDATS
 
 #### Paper LDA
 ```{r plot paper LDA, fig.width=7, fig.height=6}
@@ -327,15 +341,8 @@ Having divided the data to generate catch-per-effort, the paper changepoint mode
 
 ```{r run LDATS LDA and paper cpt, eval = F}
 #### Run changepoint ####
-source(here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files', 'changepointmodel.r'))
-
-paper_covariates <- data.frame(
-  index = seq_along(paper_dates), 
-  date = paper_dates, 
-  year_continuous = lubridate::decimal_date(paper_dates), 
-  sin_year = sin(year_continuous * 2 * pi), 
-  cos_year = cos(year_continuous * 2 * pi)
-)
+source(here::here('vignettes', 'christensenetal-comparison-files', 
+                  'christensenetal-2018-files', 'changepointmodel.r'))
 
 find_changepoints <- function(lda_model, paper_covariates, n_changepoints = 1:6)
 {
@@ -426,7 +433,8 @@ save(paper_paper_results, file = here::here('vignettes', 'christensenetal-compar
 
 ```{r select paper LDA and paper cpt, eval = F}
 #### Changepoint model selection ####
-load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_paper.Rds'))
+load(here::here('vignettes', 'christensenetal-comparison-files', 
+                'model-cache', 'paper_paper.Rds'))
 ```
 
 ```{r select paper-paper, eval = T}
@@ -473,12 +481,22 @@ ldats_ldats_cpt_selected$nchangepoints
 
 ### Get dates associated with changepoints
 
-```{r get ldats lda + ldats cpt dates}
-ldats_dates <- dplyr::select(moondat, 
-                             index = newmoonnumber, 
-                             date = newmoondate) %>%
-  dplyr::mutate(date = as.Date(date))
+Unlike the paper changepoint model, LDATS can recognize that sampling periods may not be equidistant, and can place changepoint estimates at new moons if they fall between nonconsecutive sampling periods. We can estimate the dates corresponding to those new moons, extrapolating from the census dates for adjacent census periods.
 
+```{r construct lookup table for LDATS output for changepoint times}
+full_index <- seq(min(rodents$document_covariate_table$newmoon), 
+                  max(rodents$document_covariate_table$newmoon))
+ldats_dates <- approx(rodents$document_covariate_table$newmoon, 
+                     as.Date(rodents$document_covariate_table$date), 
+                     full_index) %>%
+  as.data.frame() %>%
+  mutate(index = x, 
+         date = as.Date(y, origin = "1970-01-01")) %>%
+  select(index, date)
+```
+
+
+```{r get ldats lda + ldats cpt dates}
 ldats_ldats_cpt_dates <- ldats_ldats_cpt_selected$rhos %>%
   as.data.frame() %>%
   reshape::melt() %>%
@@ -486,7 +504,6 @@ ldats_ldats_cpt_dates <- ldats_ldats_cpt_selected$rhos %>%
 ```
 
 ### Paper LDA and LDATS changepoint
-
 
 ```{r load paper LDA for LDATS cpt, eval = F}
 
@@ -527,41 +544,15 @@ paper_ldats_cpt_selected$nchangepoints
 
 #### Get dates
 
-Unlike the paper changepoint model, LDATS can recognize that sampling periods may not be equidistant, and can place changepoint estimates at new moons if they fall between nonconsecutive sampling periods. We can estimate the dates corresponding to those new moons, extrapolating from the census dates for adjacent census periods.
-
 ```{r get paper lda + ldats cpt dates}
 
-
-
-
-paper_ldats_cpt_dates <- paper_ldats_cpt_selected$rho_summary$Mean
-paper_ldats_cpt_dates <- round(paper_ldats_cpt_dates)
-
-paper_ldats_cpt_dates <- as.data.frame(paper_ldats_cpt_dates)
-colnames(paper_ldats_cpt_dates) <- 'newmoon'
-paper_ldats_cpt_dates <- dplyr::left_join(paper_ldats_cpt_dates, rodents$document_covariate_table, by = 'newmoon')
-
-halfinterval = as.integer((as.Date(rodents$document_covariate_table$censusdate[ which(rodents$document_covariate_table$newmoon == paper_ldats_cpt_dates$newmoon[1] + 1)]) - as.Date(rodents$document_covariate_table$censusdate[ which(rodents$document_covariate_table$newmoon == paper_ldats_cpt_dates$newmoon[1] - 1)]))/2)
-
-newdate <- lubridate::ymd(rodents$document_covariate_table$censusdate[ which(rodents$document_covariate_table$newmoon == paper_ldats_cpt_dates$newmoon[1] -1 )]) + lubridate::days(halfinterval)
-
-paper_ldats_cpt_dates$censusdate[1] <- as.character(newdate)
-
-
-
-halfinterval =as.integer((as.Date(rodents$document_covariate_table$censusdate[ which(rodents$document_covariate_table$newmoon == paper_ldats_cpt_dates$newmoon[3] + 2)]) - as.Date(rodents$document_covariate_table$censusdate[ which(rodents$document_covariate_table$newmoon == paper_ldats_cpt_dates$newmoon[3] - 1)]))/3)
-
-newdate <- lubridate::ymd(rodents$document_covariate_table$censusdate[ which(rodents$document_covariate_table$newmoon == paper_ldats_cpt_dates$newmoon[3] -2 )]) + lubridate::days(halfinterval)
-
-paper_ldats_cpt_dates$censusdate[3] <- as.character(newdate)
-
-paper_ldats_cpt_dates <- paper_ldats_cpt_dates$censusdate
+paper_ldats_cpt_dates <- paper_ldats_cpt_selected$rhos %>%
+  as.data.frame() %>%
+  reshape::melt() %>%
+  dplyr::left_join(ldats_dates, by = c("value" = "index"))
 ```
 
-
-
 All of the models find four changepoints.
-
 
 ### Plot changepoint models
 
@@ -619,7 +610,9 @@ The results of the changepoint model appear extremely robust to both choice of L
 ```{r report cpt dates, include = F}
 
 cpt_dates <- dplyr::bind_rows("paperLDA_papercpt" = paper_paper_cpt_dates, 
+                              "ldatsLDA_papercpt" = ldats_paper_cpt_dates, 
                               "ldatsLDA_ldatscpt" = ldats_ldats_cpt_dates, 
+                              "paperLDA_ldatscpt" = paper_ldats_cpt_dates, 
                               .id = "analysis") %>%
   dplyr::group_by(analysis, variable) %>%
   dplyr::summarize(date = mean(date)) %>%
