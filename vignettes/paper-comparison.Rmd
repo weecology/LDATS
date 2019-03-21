@@ -31,18 +31,18 @@ This document prodives a side-by-side comparison of LDATS (v0.1.0) results with 
 To obtain the most recent version of **LDATS**, install the most recent
 version from GitHub:
 
-```{r, eval=FALSE}
+```{r, eval = FALSE}
 install.packages("devtools")
 devtools::install_github("weecology/LDATS")
 ```
 
-```{r, eval = T}
+```{r}
 library(LDATS)
 library(dplyr)
-load(here::here('vignettes', 'christensenetal-comparison-files',  'data_files.Rdata'))
-load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache',  'ldas.RData'))
-load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_changepoints.RData'))
-load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_changepoints.RData'))
+# load(here::here('vignettes', 'christensenetal-comparison-files',  'data_files.Rdata'))
+# load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache',  'ldas.RData'))
+# load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_changepoints.RData'))
+# load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_changepoints.RData'))
 ```
 
 ## Christensen 2018 analysis files
@@ -77,33 +77,28 @@ Figure scripts:
 - contains functions for making main plots in manuscript (Fig 1). Called from rodent_LDA_analysis.R
 
 
-```{r download Christensen, eval = F}
+```{r download Christensen, eval = TRUE}
+#paper_filepath <- here::here('vignettes', 'christensenetal-comparison-files', 
+#                             'christensenetal-2018-files')
+paper_filepath <- tempdir()
 
-paper_filepath <- here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files')
-test_filepath <- here::here('vignettes', 'christensenetal-comparison-files', 'christensenetal-2018-files', 'rodent_LDA_analysis.r')
+test_file <- file.path(paper_filepath, "rodent_LDA_analysis.r")
 
-if (!file.exists(test_filepath)) {
-  
+if (!file.exists(test_file))
+{
   files_to_download <- c('rodent_LDA_analysis.r', 'rodent_data_for_LDA.r', 
                          'AIC_model_selection.R', 'changepointmodel.r', 
-                         'LDA-distance.R', 'Rodent_table_dat.csv', 'LDA_figure_scripts.R')
+                         'LDA-distance.R', 'Rodent_table_dat.csv', 
+                         'LDA_figure_scripts.R')
+  github_path <- "https://raw.githubusercontent.com/emchristensen/Extreme-events-LDA/master/"
   
-  for(i in 1:length(files_to_download)) {
-    download.file(url = paste0("https://raw.githubusercontent.com/emchristensen/Extreme-events-LDA/master/", 
-                               files_to_download[i]),
-                  destfile = paste0(paper_filepath, '/', files_to_download[i]))
+  for (file in files_to_download)
+  {
+    download.file(url = paste0(github_path, file),
+                  destfile = file.path(paper_filepath, file))
   }
-  
-  rm(files_to_download)
-  rm(i)
-  
 }
-
-rm(test_filepath)
-rm(paper_filepath)
 ```
-
-
 
 ## Data
 
@@ -123,15 +118,13 @@ species_list <- c('BA', 'DM', 'DO', 'DS', 'NA', 'OL', 'OT', 'PB', 'PE', 'PF',
 Load the data used in Christensen et al:
 
 ```{r Paper data, eval = TRUE}
-source(here::here('vignettes', 'christensenetal-comparison-files', 
-                  'christensenetal-2018-files', 'rodent_data_for_LDA.r'))
+source(file.path(paper_filepath, 'rodent_data_for_LDA.r'))
 
 # assemble `paper_dat`, the data from Christensen et al. 2018
-
 paper_dat <- create_rodent_table(period_first = min(periods),
-                           period_last = max(periods),
-                           selected_plots = control_plots,
-                           selected_species = species_list)
+                                 period_last = max(periods),
+                                 selected_plots = control_plots,
+                                 selected_species = species_list)
 
 # assemble `paper_covariates`, the associated dates and covariate data
 moondat <- read.csv("https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/moon_dates.csv", 
@@ -151,11 +144,10 @@ paper_covariates <- data.frame(
     cos_year = cos(year_continuous * 2 * pi)
   )
 
-rm(list = c("create_rodent_table", "paper_dates"))
-
+# rm(list = c("create_rodent_table", "paper_dates"))
 ```
 
-Compare paper data to LDATS data:
+### Compare the data from Christensen et al. with the included data in `LDATS`
 
 ```{r rodent data comparison}
 compare <- rodents[[1]] == paper_dat
@@ -163,8 +155,7 @@ compare <- rodents[[1]] == paper_dat
 length(which(rowSums(compare) < ncol(compare)))
 ```
 
-
-There are 16 rows where the data included in LDATS differs from the paper data. This is because the LDATS data is not adjusted to account for trapping effort, but the paper data has divided all census counts by the actual number of plots trapped and multiplied by 8 to account for incompletely-trapped censuses.
+There are 16 rows where the data included in LDATS differs from the paper data. This is because the LDATS data is not adjusted to account for trapping effort, while the paper data does, by dividing all census counts by the actual number of plots trapped and multiplying by 8 to account for incompletely-trapped censuses.
 
 To confirm this, refer to lines 36-46 in `rodent_data_for_LDA.r`:
 
@@ -185,15 +176,14 @@ return(r_table_adjusted)
 
 ```  
 
-Running the same procedure on the LDATS data, we modify 16 rows, and finish with a data frame that matches the one from the paper.
+We can run the same procedure on the LDATS data to verify that we obtain a data.frame that matches.
 
-```{r adjust LDATS data after Christensen et al, eval = F}
-
-trap_table = read.csv('https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent_trapping.csv')
-
+```{r adjust LDATS data after Christensen et al, eval = TRUE}
+trap_table <- read.csv('https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent_trapping.csv')
 ```
 
 ```{r continue adjust LDATS after paper}
+# get the trapping effort for each sample
 trap_table_controls <- dplyr::filter(trap_table, plot %in% control_plots)
 nplots_controls <- aggregate(trap_table_controls$sampled, 
                             by = list(period = trap_table_controls$period), 
@@ -204,7 +194,11 @@ nplots_controls <- aggregate(trap_table_controls$sampled,
 #   multiply by 8 to estimate captures as if all plots were trapped
 ldats_rodents_adjusted <- as.data.frame.matrix(rodents[[1]])
 ldats_rodents_adjusted[periods, ] <- round(ldats_rodents_adjusted[periods, ] / nplots_controls$x[periods] * 8)
+```
 
+Now we can compare the adjusted ldats dataset with both the original ldats dataset and the dataset from the paper:
+
+```{r dataset comparisons}
 compare_raw <- rodents[[1]] == ldats_rodents_adjusted
 length(which(rowSums(compare_raw) < ncol(compare_raw)))
 
@@ -213,17 +207,15 @@ length(which(rowSums(compare_adjusted) < ncol(compare_adjusted)))
 ```
 
 ```{r data adjustment cleanup, include = FALSE}
-rm(list = c('compare', 'compare_adjusted', 'compare_raw', 'n', 'ldats_rodents_adjusted', 
-            'nplots_controls', 'trap_table', 'trap_table_controls'))
+# rm(list = c('compare', 'compare_adjusted', 'compare_raw', 'n', 'ldats_rodents_adjusted', 
+#             'nplots_controls', 'trap_table', 'trap_table_controls'))
 ```
-
 
 Because the LDA procedure weights the information from documents (census periods) according to the number of words (rodents captured), we now believe it is most appropriate to run the LDA on _unadjusted_ trapping data, and we recommend that users of LDATS do so. However, to maintain consistency with Christensen et al 2018, we will proceed using the _adjusted_ rodent table in this vignette.
 
 ```{r switch to adjusted rodents}
 rodents[[1]] <- paper_dat
 ```
-
 
 The LDATS rodent data comes with a `document_covariate_table`, which we will use later as the predictor variables for the changepoint models. In this table, time is expressed as new moon numbers. Later we will want to be able to interpret the results in terms of census dates. We will add a column to the `document_covariate_table` to convert new moon numbers to census dates. We will not reference this column in any of the formulas we pass to the changepoint models, so it will be ignored until we need it.
 
@@ -247,14 +239,14 @@ rm(new_cov_table)
 
 While LDATS can run start-to-finish with `LDATS::LDA_TS`, here we will work through the process function-by-function to isolate differences with the paper. For a breakdown of the `LDA_TS` pipeline, see the [`codebase` vignette](https://weecology.github.io/LDATS/articles/LDATS_codebase.html).
 
-```{r LDATS LDAs, eval = F}
+```{r LDATS LDAs, eval = FALSE}
 
-ldats_ldas <- LDATS::LDA_set(document_term_table = rodents$document_term_table, topics = c(2:6), nseeds = 100)
+ldats_ldas <- LDATS::LDA_set(document_term_table = rodents$document_term_table, 
+                             topics = c(2:6), nseeds = 100)
 ldats_lda_selected <- LDATS::select_LDA(LDA_models = ldats_ldas)
 
-save(ldats_ldas, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_ldas.Rds'))
-save(ldats_lda_selected, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_lda_selected.Rds'))
-
+saveRDS(ldats_ldas, file = file.path(paper_filepath, 'ldats_ldas.Rds'))
+saveRDS(ldats_lda_selected, file = file.path(paper_filepath, 'ldats_lda_selected.Rds'))
 ```
 
 Paper LDAS:
@@ -264,10 +256,8 @@ dat <- paper_dat
 ```
 
 ```{r paper LDAs, eval = F}
-source(here::here('vignettes', 'christensenetal-comparison-files', 
-                  'christensenetal-2018-files', 'AIC_model_selection.R'))
-source(here::here('vignettes', 'christensenetal-comparison-files', 
-                  'christensenetal-2018-files', 'LDA-distance.R'))
+source(file.path(paper_filepath, 'AIC_model_selection.R'))
+source(file.path(paper_filepath, 'LDA-distance.R'))
 
 # Fit a bunch of LDA models with different seeds
 # Only use even numbers for seeds because consecutive seeds give identical results
@@ -302,7 +292,7 @@ ntopics = 4
 SEED = unlist(best_seed)[1]  # For the paper, use seed 206
 ldamodel = LDA(paper_dat,ntopics, control = list(seed = SEED),method='VEM')
 
-save(ldamodel, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_ldamodel.Rds'))
+saveRDS(ldamodel, file = file.path(paper_filepath, 'paper_ldamodel.Rds'))
 ```
 
 ### Plot LDATS
@@ -322,7 +312,6 @@ plot(ldats_lda_selected[[1]], cols = NULL, option = "D")
 
 The paper method finds 4 topics and LDATS finds 6. This is because of an update to the model selection procedure. The paper conservatively overestimates the number of parameters (by counting all of the variational parameteres) and therefore overpenalizes the AIC for models with more topics. Comparatively, the LDATS method now uses the number of parameters remaining after the variational approximation, as returned by the LDA object. For this vignette, we will compare the results from using both LDA models.
 
-
 ## Changepoint models
 
 We will compare four combinations of LDA + changepoint models:
@@ -338,11 +327,9 @@ Having divided the data to generate catch-per-effort, the paper changepoint mode
 
 #### LDATS LDA and paper changepoint
 
-
 ```{r run LDATS LDA and paper cpt, eval = FALSE}
 #### Run changepoint ####
-source(here::here('vignettes', 'christensenetal-comparison-files', 
-                  'christensenetal-2018-files', 'changepointmodel.r'))
+source(file.path(paper_filepath, 'changepointmodel.r'))
 
 find_changepoints <- function(lda_model, paper_covariates, n_changepoints = 1:6)
 {
@@ -364,15 +351,13 @@ find_changepoints <- function(lda_model, paper_covariates, n_changepoints = 1:6)
 }
 
 ldats_paper_results <- find_changepoints(ldats_lda_selected[[1]], paper_covariates)
-save(ldats_paper_results, file = here::here('vignettes', 'christensenetal-comparison-files', 
-                                            'model-cache', 'ldats_paper.Rds'))
+saveRDS(ldats_paper_results, file = file.path(paper_filepath, 'ldats_paper.Rds'))
 rm(ldats_paper_results)
 ```
 
 ```{r select LDATS LDA and paper cpt, eval = TRUE}
 #### Changepoint model selection ####
-load(here::here('vignettes', 'christensenetal-comparison-files', 
-                'model-cache', 'ldats_paper.Rds'))
+ldats_paper_results <- readRDS(file.path(paper_filepath, 'ldats_paper.Rds'))
 ```
 
 ```{r select LDATS-paper, eval = T}
@@ -413,32 +398,24 @@ saveRDS(ldats_paper_cpt_dates, here::here('vignettes', 'christensenetal-comparis
 
 #### Paper LDA and paper changepoint
 
-```{r load paper LDA for paper cpt, eval = F}
-
+```{r load paper LDA for paper cpt, eval = FALSE}
 #### Load LDA ####
-load(here::here('vignettes', 'christensenetal-comparison-files', 
-                'model-cache', 'paper_ldamodel.Rds'))
-
+ldats_paper_cpt_dates <- readRDS(file.path(paper_filepath, 'paper_ldamodel.Rds'))
 ```
 
-```{r run paper LDA and paper cpt, eval = F}
+```{r run paper LDA and paper cpt, eval = FALSE}
 #### Run changepoint ####
-source(here::here('vignettes', 'christensenetal-comparison-files', 
-                  'christensenetal-2018-files', 'changepointmodel.r'))
-
 paper_paper_results <- find_changepoints(ldamodel, paper_covariates)
-save(paper_paper_results, file = here::here('vignettes', 'christensenetal-comparison-files', 
-                                            'model-cache', 'paper_paper.Rds'))
+saveRDS(paper_paper_results, file = here::here(file.path(paper_filepath, 'paper_paper.Rds'))
 ```
 
-```{r select paper LDA and paper cpt, eval = F}
+```{r select paper LDA and paper cpt, eval = FALSE}
 #### Changepoint model selection ####
-load(here::here('vignettes', 'christensenetal-comparison-files', 
-                'model-cache', 'paper_paper.Rds'))
+paper_paper_results <- readRDS(file.path(paper_filepath, 'paper_paper.Rds'))
 ```
 
-```{r select paper-paper, eval = T}
-paper_paper_changepoints <- compute_cpt(ldats_paper_results, 
+```{r select paper-paper, eval = TRUE}
+paper_paper_changepoints <- compute_cpt(paper_paper_results, 
                                         ntopics = ldamodel@k)
 paper_paper_cpt_dates <- paper_paper_changepoints %>%
   reshape::melt() %>%
@@ -451,9 +428,8 @@ paper_paper_cpt_dates <- paper_paper_changepoints %>%
 
 #### Run the TS models
 
-```{r run LDATS LDA and LDATS changepoint, eval = F}
+```{r run LDATS LDA and LDATS changepoint, eval = FALSE}
 #### Run LDATS changepoint ####
-
 ldats_ldats_cpt <- TS_on_LDA(LDA_models = ldats_lda_selected,
                              document_covariate_table = rodents$document_covariate_table,
                              formulas = ~ sin_year + cos_year,
@@ -462,8 +438,7 @@ ldats_ldats_cpt <- TS_on_LDA(LDA_models = ldats_lda_selected,
                              control = TS_controls_list(timename = 'newmoon', 
                                                         nit = 1000))
 
-save(ldats_ldats_cpt, file = here::here('vignettes', 'christensenetal-comparison-files', 
-                                        'model-cache', 'ldats_ldats.Rds'))
+saveRDS(ldats_ldats_cpt, file = file.path(paper_filepath, 'ldats_ldats.Rds'))
 rm(ldats_ldats_cpt)
 rm(ldats_lda_selected)
 ```
@@ -506,17 +481,13 @@ ldats_ldats_cpt_dates <- ldats_ldats_cpt_selected$rhos %>%
 ### Paper LDA and LDATS changepoint
 
 ```{r load paper LDA for LDATS cpt, eval = F}
-
 #### Load LDA ####
-load(here::here('vignettes', 'christensenetal-comparison-files', 
-                'model-cache', 'paper_ldamodel.Rds'))
-
+ldamodel <- readRDS(file.path(paper_filepath, 'paper_ldamodel.Rds'))
 ```
 #### Run the TS models
 
 ```{r run paper LDA and LDATS changepoint, eval = F}
 #### Run LDATS changepoint ####
-
 paper_ldats_cpt <- TS_on_LDA(LDA_models = ldamodel,
                              document_covariate_table = rodents$document_covariate_table,
                              formulas = ~ sin_year + cos_year,
@@ -525,8 +496,7 @@ paper_ldats_cpt <- TS_on_LDA(LDA_models = ldamodel,
                              control = TS_controls_list(timename = 'newmoon'))
 
 
-save(paper_ldats_cpt, file = here::here('vignettes', 'christensenetal-comparison-files', 
-                                        'model-cache', 'paper_ldats.Rds'))
+saveRDS(paper_ldats_cpt, file = file.path(paper_filepath, 'paper_ldats.Rds'))
 rm(paper_ldats_cpt)
 rm(ldamodel)
 ```
