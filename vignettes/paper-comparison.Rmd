@@ -239,8 +239,7 @@ rm(new_cov_table)
 
 While LDATS can run start-to-finish with `LDATS::LDA_TS`, here we will work through the process function-by-function to isolate differences with the paper. For a breakdown of the `LDA_TS` pipeline, see the [`codebase` vignette](https://weecology.github.io/LDATS/articles/LDATS_codebase.html).
 
-```{r LDATS LDAs, eval = FALSE}
-
+```{r LDATS LDAs, eval = TRUE}
 ldats_ldas <- LDATS::LDA_set(document_term_table = rodents$document_term_table, 
                              topics = c(2:6), nseeds = 100)
 ldats_lda_selected <- LDATS::select_LDA(LDA_models = ldats_ldas)
@@ -290,7 +289,7 @@ max_dist = unlist(best_seed)[3]
 # ==================================================================
 ntopics = 4
 SEED = unlist(best_seed)[1]  # For the paper, use seed 206
-ldamodel = LDA(paper_dat,ntopics, control = list(seed = SEED),method='VEM')
+ldamodel <- LDA(paper_dat, ntopics, control = list(seed = SEED), method = 'VEM')
 
 saveRDS(ldamodel, file = file.path(paper_filepath, 'paper_ldamodel.Rds'))
 ```
@@ -327,7 +326,7 @@ Having divided the data to generate catch-per-effort, the paper changepoint mode
 
 #### LDATS LDA and paper changepoint
 
-```{r run LDATS LDA and paper cpt, eval = FALSE}
+```{r run LDATS LDA and paper cpt, eval = TRUE}
 #### Run changepoint ####
 source(file.path(paper_filepath, 'changepointmodel.r'))
 
@@ -352,7 +351,7 @@ find_changepoints <- function(lda_model, paper_covariates, n_changepoints = 1:6)
 
 ldats_paper_results <- find_changepoints(ldats_lda_selected[[1]], paper_covariates)
 saveRDS(ldats_paper_results, file = file.path(paper_filepath, 'ldats_paper.Rds'))
-rm(ldats_paper_results)
+rm("ldats_paper_results")
 ```
 
 ```{r select LDATS LDA and paper cpt, eval = TRUE}
@@ -371,7 +370,7 @@ compute_cpt <- function(cpt_results, ntopics)
   cpt_results$mean_deviances <- vapply(cpt_results$cpt_model, 
                                        function(cpt_model) {mean(cpt_model$saved_lls)}, 
                                        0)
-  
+
   # compute AIC = ( -2 * log likelihood) + 2 * (#parameters)
   cpt_results$AIC <- cpt_results$mean_deviances * -2 + 
     2 * (3 * (ntopics - 1) * (cpt_results$n_changepoints + 1) +
@@ -381,7 +380,7 @@ compute_cpt <- function(cpt_results, ntopics)
   best_cpt_model <- cpt_results$cpt_model[[which.min(cpt_results$AIC)]]
   
   # transform the time index into actual dates
-  return(as.data.frame(t(ldats_paper_cpt_selected$saved[,1,])))
+  return(as.data.frame(t(best_cpt_model$saved[,1,])))
 }
 
 ldats_paper_changepoints <- compute_cpt(ldats_paper_results, 
@@ -390,9 +389,6 @@ ldats_paper_changepoints <- compute_cpt(ldats_paper_results,
 ldats_paper_cpt_dates <- ldats_paper_changepoints %>% 
   reshape::melt() %>%
   dplyr::left_join(paper_covariates, by = c("value" = "index"))
-
-saveRDS(ldats_paper_cpt_dates, here::here('vignettes', 'christensenetal-comparison-files', 
-                                       'model-cache', 'paper_ldamodel.Rds'))
 ```
 
 
@@ -400,7 +396,7 @@ saveRDS(ldats_paper_cpt_dates, here::here('vignettes', 'christensenetal-comparis
 
 ```{r load paper LDA for paper cpt, eval = FALSE}
 #### Load LDA ####
-ldats_paper_cpt_dates <- readRDS(file.path(paper_filepath, 'paper_ldamodel.Rds'))
+lda_model <- readRDS(file.path(paper_filepath, 'paper_ldamodel.Rds'))
 ```
 
 ```{r run paper LDA and paper cpt, eval = FALSE}
@@ -480,7 +476,7 @@ ldats_ldats_cpt_dates <- ldats_ldats_cpt_selected$rhos %>%
 
 ### Paper LDA and LDATS changepoint
 
-```{r load paper LDA for LDATS cpt, eval = F}
+```{r load paper LDA for LDATS cpt, eval = TRUE}
 #### Load LDA ####
 ldamodel <- readRDS(file.path(paper_filepath, 'paper_ldamodel.Rds'))
 ```
@@ -553,13 +549,6 @@ plot(ldats_ldats_cpt_selected)
 
 #### Paper LDA and paper changepoint
 ```{r plot paper LDA and paper cpt, fig.width=7, fig.height=6}
-
-source(here::here('vignettes', 'christensenetal-comparison-files', 
-                  'christensenetal-2018-files', 'LDA_figure_scripts.R'))
-source(here::here('vignettes', 'christensenetal-comparison-files', 
-                  'christensenetal-2018-files', 'changepointmodel.r'))
-
-
 paper_cpts <- find_changepoint_location(paper_paper_cpt_selected)
 ntopics <- ldamodel@k
 paper_cpt_plot <- get_ll_non_memoized_plot(ldamodel, x, paper_cpts, make_plot = T,
