@@ -45,6 +45,11 @@ library(dplyr)
 # load(here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_changepoints.RData'))
 ```
 
+```{r}
+nseeds <- 10
+nit <- 500
+```
+
 ## Christensen 2018 analysis files
 
 Download Christensen 2018 analysis scripts & data files from [Extreme-events-LDA repo:](https://github.com/emchristensen/Extreme-events-LDA)
@@ -143,8 +148,6 @@ paper_covariates <- data.frame(
     sin_year = sin(year_continuous * 2 * pi), 
     cos_year = cos(year_continuous * 2 * pi)
   )
-
-# rm(list = c("create_rodent_table", "paper_dates"))
 ```
 
 ### Compare the data from Christensen et al. with the included data in `LDATS`
@@ -163,7 +166,9 @@ To confirm this, refer to lines 36-46 in `rodent_data_for_LDA.r`:
 # retrieve data on number of plots trapped per month
 trap_table = read.csv('https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent_trapping.csv')
 trap_table_controls = filter(trap_table, plot %in% selected_plots)
-nplots_controls = aggregate(trap_table_controls$sampled,by=list(period = trap_table_controls$period),FUN=sum)
+nplots_controls = aggregate(trap_table_controls$sampled, 
+                            by = list(period = trap_table_controls$period), 
+                            FUN=sum)
 
 # adjust species counts by number of plots trapped that month
 r_table_adjusted = as.data.frame.matrix(r_table)
@@ -173,7 +178,6 @@ for (n in 1:436) {
 }
 
 return(r_table_adjusted)
-
 ```  
 
 We can run the same procedure on the LDATS data to verify that we obtain a data.frame that matches.
@@ -230,7 +234,7 @@ new_cov_table <- dplyr::left_join(rodents$document_covariate_table,
 rodents$document_covariate_table <- new_cov_table
 ```
 
-```{r cleanup dates, include = F}
+```{r cleanup dates, include = F, eval = FALSE}
 rm(moondat)
 rm(new_cov_table)
 ```
@@ -241,11 +245,11 @@ While LDATS can run start-to-finish with `LDATS::LDA_TS`, here we will work thro
 
 ```{r LDATS LDAs, eval = TRUE}
 ldats_ldas <- LDATS::LDA_set(document_term_table = rodents$document_term_table, 
-                             topics = c(2:6), nseeds = 100)
+                             topics = c(2:6), nseeds = nseeds)
 ldats_lda_selected <- LDATS::select_LDA(LDA_models = ldats_ldas)
 
-saveRDS(ldats_ldas, file = file.path(paper_filepath, 'ldats_ldas.Rds'))
-saveRDS(ldats_lda_selected, file = file.path(paper_filepath, 'ldats_lda_selected.Rds'))
+saveRDS(ldats_ldas, file = file.path(paper_filepath, 'ldats_ldas.RDS'))
+saveRDS(ldats_lda_selected, file = file.path(paper_filepath, 'ldats_lda_selected.RDS'))
 ```
 
 Paper LDAS:
@@ -254,44 +258,52 @@ Paper LDAS:
 dat <- paper_dat
 ```
 
-```{r paper LDAs, eval = F}
+```{r paper LDAs, eval = TRUE}
 source(file.path(paper_filepath, 'AIC_model_selection.R'))
 source(file.path(paper_filepath, 'LDA-distance.R'))
 
 # Fit a bunch of LDA models with different seeds
 # Only use even numbers for seeds because consecutive seeds give identical results
-seeds <- 2 * seq(200)
+seeds <- 2 * seq(nseeds)
 
 # repeat LDA model fit and AIC calculation with a bunch of different seeds to test robustness of the analysis
-best_ntopic = repeat_VEM(paper_dat,
-                         seeds,
-                         topic_min=2,
-                         topic_max=6)
-hist(best_ntopic$k, breaks=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5), xlab='best # of topics', main='')
+best_ntopic <- repeat_VEM(paper_dat,
+                          seeds,
+                          topic_min = 2,
+                          topic_max = 6)
+hist(best_ntopic$k, breaks = seq(from = 0.5, to = 9.5), 
+     xlab = "best # of topics", main = "")
 
 # 2b. how different is species composition of 4 community-types when LDA is run with different seeds?
 # ==================================================================
 # get the best 100 seeds where 4 topics was the best LDA model
-seeds_4topics = best_ntopic %>%
+seeds_4topics <- best_ntopic %>%
   filter(k == 4) %>%
   arrange(aic) %>%
-  head(100) %>%
+  head(min(100, nseeds)) %>%
   pull(SEED)
 
 # choose seed with highest log likelihood for all following analyses
 #    (also produces plot of community composition for 'best' run compared to 'worst')
-best_seed = calculate_LDA_distance(paper_dat,seeds_4topics)
-mean_dist = unlist(best_seed)[2]
-max_dist = unlist(best_seed)[3]
+
+png(file.path(paper_filepath, "a.png"), width = 800, height = 400)
+best_seed <- calculate_LDA_distance(paper_dat, seeds_4topics)
+dev.off()
+mean_dist <- unlist(best_seed)[2]
+max_dist <- unlist(best_seed)[3]
 
 # ==================================================================
 # 3. run LDA model
 # ==================================================================
 ntopics = 4
-SEED = unlist(best_seed)[1]  # For the paper, use seed 206
+SEED <- unlist(best_seed)[1]  # For the paper, use seed 206
 ldamodel <- LDA(paper_dat, ntopics, control = list(seed = SEED), method = 'VEM')
 
-saveRDS(ldamodel, file = file.path(paper_filepath, 'paper_ldamodel.Rds'))
+saveRDS(ldamodel, file = file.path(paper_filepath, 'paper_ldamodel.RDS'))
+```
+
+```{r}
+knitr::include_graphics(file.path(paper_filepath, "a.png"))
 ```
 
 ### Plot LDATS
@@ -343,20 +355,20 @@ find_changepoints <- function(lda_model, paper_covariates, n_changepoints = 1:6)
   cpt_results$cpt_model <- lapply(cpt_results$n_changepoints,
                                   function(n_changepoints)
                                   {
-                                    changepoint_model(lda_model, x, n_changepoints, maxit = 1000, 
+                                    changepoint_model(lda_model, x, n_changepoints, maxit = nit, 
                                                       weights = rep(1, NROW(x)))
                                   })
   return(cpt_results)
 }
 
 ldats_paper_results <- find_changepoints(ldats_lda_selected[[1]], paper_covariates)
-saveRDS(ldats_paper_results, file = file.path(paper_filepath, 'ldats_paper.Rds'))
-rm("ldats_paper_results")
+saveRDS(ldats_paper_results, file = file.path(paper_filepath, "ldats_paper.RDS"))
+# rm(ldats_paper_results)
 ```
 
 ```{r select LDATS LDA and paper cpt, eval = TRUE}
 #### Changepoint model selection ####
-ldats_paper_results <- readRDS(file.path(paper_filepath, 'ldats_paper.Rds'))
+ldats_paper_results <- readRDS(file.path(paper_filepath, "ldats_paper.RDS"))
 ```
 
 ```{r select LDATS-paper, eval = T}
@@ -378,15 +390,15 @@ compute_cpt <- function(cpt_results, ntopics)
   
   # select the best model
   best_cpt_model <- cpt_results$cpt_model[[which.min(cpt_results$AIC)]]
-  
-  # transform the time index into actual dates
-  return(as.data.frame(t(best_cpt_model$saved[,1,])))
+  return(best_cpt_model)
 }
 
-ldats_paper_changepoints <- compute_cpt(ldats_paper_results, 
-                                        ntopics = ldats_lda_selected[[1]]@k)
+ldats_paper_cpt <- compute_cpt(ldats_paper_results, 
+                               ntopics = ldats_lda_selected[[1]]@k)
 
-ldats_paper_cpt_dates <- ldats_paper_changepoints %>% 
+ldats_paper_cpt_dates <- ldats_paper_cpt$saved[,1,] %>%
+  t() %>%
+  as.data.frame() %>%
   reshape::melt() %>%
   dplyr::left_join(paper_covariates, by = c("value" = "index"))
 ```
@@ -396,24 +408,26 @@ ldats_paper_cpt_dates <- ldats_paper_changepoints %>%
 
 ```{r load paper LDA for paper cpt, eval = FALSE}
 #### Load LDA ####
-lda_model <- readRDS(file.path(paper_filepath, 'paper_ldamodel.Rds'))
+ldamodel <- readRDS(file.path(paper_filepath, 'paper_ldamodel.RDS'))
 ```
 
-```{r run paper LDA and paper cpt, eval = FALSE}
+```{r run paper LDA and paper cpt, eval = TRUE}
 #### Run changepoint ####
 paper_paper_results <- find_changepoints(ldamodel, paper_covariates)
-saveRDS(paper_paper_results, file = here::here(file.path(paper_filepath, 'paper_paper.Rds'))
+saveRDS(paper_paper_results, file = here::here(file.path(paper_filepath, 'paper_paper.RDS'))
 ```
 
 ```{r select paper LDA and paper cpt, eval = FALSE}
 #### Changepoint model selection ####
-paper_paper_results <- readRDS(file.path(paper_filepath, 'paper_paper.Rds'))
+paper_paper_results <- readRDS(file.path(paper_filepath, 'paper_paper.RDS'))
 ```
 
 ```{r select paper-paper, eval = TRUE}
-paper_paper_changepoints <- compute_cpt(paper_paper_results, 
-                                        ntopics = ldamodel@k)
-paper_paper_cpt_dates <- paper_paper_changepoints %>%
+paper_paper_cpt <- compute_cpt(paper_paper_results, 
+                               ntopics = ldamodel@k)
+
+paper_paper_cpt_dates <- paper_paper_cpt$saved[,1,] %>%
+  t() %>%
   reshape::melt() %>%
   dplyr::left_join(paper_covariates, by = c("value" = "index"))
 ```
@@ -432,11 +446,11 @@ ldats_ldats_cpt <- TS_on_LDA(LDA_models = ldats_lda_selected,
                              nchangepoints = 1:6,
                              weights = NULL,
                              control = TS_controls_list(timename = 'newmoon', 
-                                                        nit = 1000))
+                                                        nit = nit))
 
-saveRDS(ldats_ldats_cpt, file = file.path(paper_filepath, 'ldats_ldats.Rds'))
-rm(ldats_ldats_cpt)
-rm(ldats_lda_selected)
+saveRDS(ldats_ldats_cpt, file = file.path(paper_filepath, 'ldats_ldats.RDS'))
+# rm(ldats_ldats_cpt)
+# rm(ldats_lda_selected)
 ```
 
 
@@ -478,7 +492,7 @@ ldats_ldats_cpt_dates <- ldats_ldats_cpt_selected$rhos %>%
 
 ```{r load paper LDA for LDATS cpt, eval = TRUE}
 #### Load LDA ####
-ldamodel <- readRDS(file.path(paper_filepath, 'paper_ldamodel.Rds'))
+ldamodel <- readRDS(file.path(paper_filepath, 'paper_ldamodel.RDS'))
 ```
 #### Run the TS models
 
@@ -489,12 +503,12 @@ paper_ldats_cpt <- TS_on_LDA(LDA_models = ldamodel,
                              formulas = ~ sin_year + cos_year,
                              nchangepoints = 1:6,
                              weights = NULL,
-                             control = TS_controls_list(timename = 'newmoon'))
+                             control = TS_controls_list(timename = 'newmoon', 
+                                                        nit = nit))
 
-
-saveRDS(paper_ldats_cpt, file = file.path(paper_filepath, 'paper_ldats.Rds'))
-rm(paper_ldats_cpt)
-rm(ldamodel)
+saveRDS(paper_ldats_cpt, file = file.path(paper_filepath, 'paper_ldats.RDS'))
+# rm(paper_ldats_cpt)
+# rm(ldamodel)
 ```
 
 
@@ -549,11 +563,11 @@ plot(ldats_ldats_cpt_selected)
 
 #### Paper LDA and paper changepoint
 ```{r plot paper LDA and paper cpt, fig.width=7, fig.height=6}
-paper_cpts <- find_changepoint_location(paper_paper_cpt_selected)
+paper_cpts <- find_changepoint_location(paper_paper_cpt)
 ntopics <- ldamodel@k
 paper_cpt_plot <- get_ll_non_memoized_plot(ldamodel, x, paper_cpts, make_plot = T,
                                            weights = rep(1, NROW(x)))
-annual_hist(paper_paper_cpt_selected, paper_covariates$year_continuous)
+annual_hist(paper_paper_cpt, paper_covariates$year_continuous)
 paper_cpt_plot
 
 ```
@@ -561,11 +575,11 @@ paper_cpt_plot
 
 #### LDATS LDA and paper changepoint
 ```{r plot LDATS lda and paper cpt, fig.width=7, fig.height=6}
-ldats_cpts <- find_changepoint_location(ldats_paper_cpt_selected)
+ldats_cpts <- find_changepoint_location(ldats_paper_cpt)
 ntopics <- ldats_lda_selected[[1]]@k
 ldats_cpt_plot <- get_ll_non_memoized_plot(ldats_lda_selected[[1]], x, ldats_cpts,
                                            make_plot = T, weights = rep(1, NROW(x)))
-annual_hist(ldats_paper_cpt_selected, paper_covariates$year_continuous)
+annual_hist(ldats_paper_cpt, paper_covariates$year_continuous)
 ldats_cpt_plot
 ```
 
