@@ -260,11 +260,6 @@ new_cov_table <- dplyr::left_join(rodents$document_covariate_table,
 rodents$document_covariate_table <- new_cov_table
 ```
 
-```{r cleanup dates, include = F, eval = FALSE}
-rm(moondat)
-rm(new_cov_table)
-```
-
 ## Stage 1: LDA
 
 While LDATS can run start-to-finish with `LDATS::LDA_TS`, here we will work through the process function-by-function to isolate differences with the paper. For a breakdown of the `LDA_TS` pipeline, see the [`codebase` vignette](https://weecology.github.io/LDATS/articles/LDATS_codebase.html).
@@ -566,13 +561,13 @@ All of the models find four changepoints.
 
 ```{r plot paper LDA and LDATS cpts, fig.width=7, fig.height=6}
 
-plot(paper_ldats_cpt_selected)
+plot(paper_ldats_cpt)
 
 ```
 
 #### LDATS LDA and LDATS changepoint
 ```{r plot ldats LDA and LDATS cpt, fig.width=7, fig.height=6}
-plot(ldats_ldats_cpt_selected)
+plot(ldats_ldats_cpt)
 ```
 
 #### Paper LDA and paper changepoint
@@ -588,7 +583,6 @@ paper_cpt_plot
 
 ```
 
-
 #### LDATS LDA and paper changepoint
 ```{r plot LDATS lda and paper cpt, fig.width=7, fig.height=6}
 
@@ -599,7 +593,6 @@ ldats_cpt_plot <- get_ll_non_memoized_plot(ldats_lda_selected[[1]], paper_covari
 annual_hist(ldats_paper_cpt, paper_covariates$year_continuous)
 ldats_cpt_plot
 ```
-
 
 The results of the changepoint model appear extremely robust to both choice of LDA model and choice of changepoint model.
 
