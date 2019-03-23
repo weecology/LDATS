@@ -6,6 +6,9 @@ vignette: >
   %\VignetteIndexEntry{paper-comparison}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+params:
+  run_models: FALSE
+
 ---
   
 ```{r setup, include=FALSE}
@@ -28,17 +31,17 @@ This document prodives a side-by-side comparison of LDATS (v0.1.0) results with 
 
 ## LDATS Installation
 
-To obtain the most recent version of **LDATS**, install the most recent
-version from GitHub:
+To obtain the most recent version of **LDATS**, install the most recent version from GitHub:
 
 ```{r, eval = FALSE}
-install.packages("devtools")
+# install.packages("devtools")
 devtools::install_github("weecology/LDATS")
 ```
 
 ```{r}
 library(LDATS)
 library(dplyr)
+set.seed(42)
 
 # load(here::here("vignettes", "christensenetal-comparison-files",  "data_files.Rdata"))
 # load(here::here("vignettes", "christensenetal-comparison-files", "model-cache",  "ldas.RData"))
@@ -47,8 +50,8 @@ library(dplyr)
 ```
 
 ```{r}
-nseeds <- 10
-nit <- 500
+nseeds <- 200
+nit <- 10000
 ```
 
 
@@ -59,24 +62,30 @@ Download Christensen 2018 analysis scripts & data files from [Extreme-events-LDA
 Main Analysis Scripts:
 
 * `rodent_LDA_analysis.R`
-- main script for analyzing rodent community change using LDA
+  - main script for analyzing rodent community change using LDA
 
 * `rodent_data_for_LDA.R`
-- contains a function that creates the rodent data table used in analyses
+  - contains a function that creates the rodent data table used in analyses
 
 * `AIC_model_selection.R`
-- contains functions for calculating AIC for different candidate LDA models
+  - contains functions for calculating AIC for different candidate LDA models
 
 * `changepointmodel.r`
-- contains change-point model code
+  - contains change-point model code
 
 * `LDA-distance.R`
-- function for computing Hellinger distance analyses
+  - function for computing Hellinger distance analyses
 
 Data:
 
 * `Rodent_table_dat.csv`
-- table of rodent data, created by rodent_data_for_LDA.R
+  - table of rodent data, created by rodent_data_for_LDA.R
+
+* `moon_dates.csv`
+  - table of census dates (downloaded from the PortalData repository)
+  
+* `Portal_rodent_trapping.csv`
+  - table of trapping effort (downlaoded from the PortalData repository)
 
 Figure scripts:
 
@@ -84,49 +93,62 @@ Figure scripts:
 - contains functions for making main plots in manuscript (Fig 1). Called from rodent_LDA_analysis.R
 
 
-```{r download Christensen, eval = TRUE}
-#paper_filepath <- here::here("vignettes", "christensenetal-comparison-files", 
-#                             "christensenetal-2018-files")
+```{r set download location}
+vignette_files <- here::here("vignettes", "temp_files")
 
-paper_filepath <- tempdir()
+```
 
-test_file <- file.path(paper_filepath, "rodent_LDA_analysis.r")
+
+```{r download scripts, eval = TRUE}
+test_file <- file.path(vignette_files, "rodent_LDA_analysis.r")
 
 if (!file.exists(test_file))
 {
+  # from the Extreme-events-LDA repo
+  github_path <- "https://raw.githubusercontent.com/emchristensen/Extreme-events-LDA/master/"
   files_to_download <- c("rodent_LDA_analysis.r", "rodent_data_for_LDA.r", 
                          "AIC_model_selection.R", "changepointmodel.r", 
                          "LDA-distance.R", "Rodent_table_dat.csv", 
                          "LDA_figure_scripts.R")
-  github_path <- "https://raw.githubusercontent.com/emchristensen/Extreme-events-LDA/master/"
   
   for (file in files_to_download)
   {
     download.file(url = paste0(github_path, file),
-                  destfile = file.path(paper_filepath, file))
+                  destfile = file.path(vignette_files, file))
+  }
+  
+  # from the PortalData repo
+  github_path <- "https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/"
+  files_to_download <- c("moon_dates.csv", "Portal_rodent_trapping.csv")
+  
+  for (file in files_to_download)
+  {
+    download.file(url = paste0(github_path, file),
+                  destfile = file.path(vignette_files, file))
   }
 }
 ```
 
 ## Data
 
-The Portal rodents control data is included in the LDATS package:
+The dataset of Portal rodents on control plots is included in the LDATS package:
 
 ```{r LDATS data}
 data(rodents)
 
 head(rodents[[1]])
+```
 
+We can compare this against the data used in Christensen et al:
+
+```{r Paper data, eval = TRUE}
+# parameters for subsetting the full Portal rodents data
 periods <- 1:436
 control_plots <- c(2, 4, 8, 11, 12, 14, 17, 22)
 species_list <- c("BA", "DM", "DO", "DS", "NA", "OL", "OT", "PB", "PE", "PF", 
                   "PH", "PI", "PL", "PM", "PP", "RF", "RM", "RO", "SF", "SH", "SO")
-```
 
-Load the data used in Christensen et al:
-
-```{r Paper data, eval = TRUE}
-source(file.path(paper_filepath, "rodent_data_for_LDA.r"))
+source(file.path(vignette_files, "rodent_data_for_LDA.r"))
 
 # assemble `paper_dat`, the data from Christensen et al. 2018
 paper_dat <- create_rodent_table(period_first = min(periods),
@@ -135,8 +157,7 @@ paper_dat <- create_rodent_table(period_first = min(periods),
                                  selected_species = species_list)
 
 # assemble `paper_covariates`, the associated dates and covariate data
-moondat <- read.csv("https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/moon_dates.csv", 
-                    stringsAsFactors = F)
+moondat <- read.csv(file.path(vignette_files, "moon_dates.csv"), stringsAsFactors = F)
 
 paper_dates <- moondat %>%
   dplyr::filter(period %>% dplyr::between(min(periods), max(periods))) %>% 
@@ -169,7 +190,7 @@ To confirm this, refer to lines 36-46 in `rodent_data_for_LDA.r`:
 
 ```{r, eval = FALSE}
 # retrieve data on number of plots trapped per month
-trap_table <- read.csv("https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent_trapping.csv")
+trap_table <- read.csv('https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent_trapping.csv')
 trap_table_controls <- filter(trap_table, plot %in% selected_plots)
 nplots_controls <- aggregate(trap_table_controls$sampled, 
                             by = list(period = trap_table_controls$period), 
@@ -188,11 +209,11 @@ return(r_table_adjusted)
 We can run the same procedure on the LDATS data to verify that we obtain a data.frame that matches.
 
 ```{r adjust LDATS data after Christensen et al, eval = TRUE}
-trap_table <- read.csv("https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent_trapping.csv")
 ```
 
-```{r continue adjust LDATS after paper}
+```{r adjust LDATS data after Christensen et al, eval = TRUE}
 # get the trapping effort for each sample
+trap_table <- read.csv(file.path(vignette_files, "Portal_rodent_trapping.csv"))
 trap_table_controls <- dplyr::filter(trap_table, plot %in% control_plots)
 nplots_controls <- aggregate(trap_table_controls$sampled, 
                             by = list(period = trap_table_controls$period), 
@@ -248,13 +269,14 @@ rm(new_cov_table)
 
 While LDATS can run start-to-finish with `LDATS::LDA_TS`, here we will work through the process function-by-function to isolate differences with the paper. For a breakdown of the `LDA_TS` pipeline, see the [`codebase` vignette](https://weecology.github.io/LDATS/articles/LDATS_codebase.html).
 
-```{r LDATS LDAs, eval = TRUE}
+```{r LDATS LDAs, eval = params$run_models}
+# run LDA models to identify the number of topics
 ldats_ldas <- LDATS::LDA_set(document_term_table = rodents$document_term_table, 
-                             topics = c(2:6), nseeds = nseeds)
+                             topics = 2:6, nseeds = nseeds)
 ldats_lda_selected <- LDATS::select_LDA(LDA_models = ldats_ldas)
 
-saveRDS(ldats_ldas, file = file.path(paper_filepath, "ldats_ldas.RDS"))
-saveRDS(ldats_lda_selected, file = file.path(paper_filepath, "ldats_lda_selected.RDS"))
+saveRDS(ldats_ldas, file = file.path(vignette_files, "ldats_ldas.RDS"))
+saveRDS(ldats_lda_selected, file = file.path(vignette_files, "ldats_ldamodel.RDS"))
 ```
 
 Paper LDAS:
@@ -263,9 +285,9 @@ Paper LDAS:
 dat <- paper_dat
 ```
 
-```{r paper LDAs, eval = TRUE}
-source(file.path(paper_filepath, "AIC_model_selection.R"))
-source(file.path(paper_filepath, "LDA-distance.R"))
+```{r paper LDAs, eval = params$run_models}
+source(file.path(vignette_files, "AIC_model_selection.R"))
+source(file.path(vignette_files, "LDA-distance.R"))
 
 # Fit a bunch of LDA models with different seeds
 # Only use even numbers for seeds because consecutive seeds give identical results
@@ -291,7 +313,8 @@ seeds_4topics <- best_ntopic %>%
 # choose seed with highest log likelihood for all following analyses
 #    (also produces plot of community composition for "best" run compared to "worst")
 
-png(file.path(paper_filepath, "lda_plot.png"), width = 800, height = 400)
+png(file.path(vignette_files, "lda_plot.png"), width = 800, height = 400)
+dat <- paper_dat # calculate_LDA_distance has some required named variables
 best_seed <- calculate_LDA_distance(paper_dat, seeds_4topics)
 dev.off()
 mean_dist <- unlist(best_seed)[2]
@@ -304,11 +327,15 @@ ntopics <- 4
 SEED <- unlist(best_seed)[1]  # For the paper, use seed 206
 ldamodel <- LDA(paper_dat, ntopics, control = list(seed = SEED), method = "VEM")
 
-saveRDS(ldamodel, file = file.path(paper_filepath, "paper_ldamodel.Rds"))
+saveRDS(ldamodel, file = file.path(vignette_files, "paper_ldamodel.RDS"))
+```
+
+```{r, include = FALSE}
+ldamodel <- readRDS(file.path(vignette_files, "paper_ldamodel.RDS"))
 ```
 
 ```{r}
-knitr::include_graphics(file.path(paper_filepath, "lda_plot.png"))
+knitr::include_graphics(file.path(vignette_files, "lda_plot.png"))
 ```
 
 ### Plot LDATS
@@ -322,6 +349,8 @@ plot(ldamodel, cols = NULL, option = "D")
 
 #### LDATS LDA
 ```{r plot LDATS LDA, fig.width=7, fig.height=6}
+ldats_lda_selected <- readRDS(file.path(vignette_files, "ldats_ldamodel.RDS"))
+
 # LDATS
 plot(ldats_lda_selected[[1]], cols = NULL, option = "D")
 ```
@@ -341,11 +370,13 @@ Having divided the data to generate catch-per-effort, the paper changepoint mode
 
 ### Running paper changepoint models
 
-#### LDATS LDA and paper changepoint
+#### Code
 
-```{r run LDATS LDA and paper cpt, eval = TRUE}
+We define a few helper functions for running the changepoints model of Christensen et al. and processing the output to obtain the dates:
+
+```{r paper changepoint models}
 #### Run changepoint ####
-source(file.path(paper_filepath, "changepointmodel.r"))
+source(file.path(vignette_files, "changepointmodel.r"))
 
 find_changepoints <- function(lda_model, paper_covariates, n_changepoints = 1:6)
 {
@@ -366,22 +397,11 @@ find_changepoints <- function(lda_model, paper_covariates, n_changepoints = 1:6)
   return(cpt_results)
 }
 
-ldats_paper_results <- find_changepoints(ldats_lda_selected[[1]], paper_covariates)
-saveRDS(ldats_paper_results, file = file.path(paper_filepath, "ldats_paper.RDS"))
-# rm(ldats_paper_results)
-```
-
-```{r select LDATS LDA and paper cpt, eval = TRUE}
-#### Changepoint model selection ####
-ldats_paper_results <- readRDS(file.path(paper_filepath, "ldats_paper.RDS"))
-```
-
-```{r select LDATS-paper, eval = T}
 # Among a selection of models with different # of changepoints, 
 #   - compute AIC
 #   - select the model with the best AIC
 #   - get the posterior distributions for the changepoints
-compute_cpt <- function(cpt_results, ntopics)
+select_cpt_model <- function(cpt_results, ntopics)
 {
   # compute log likelihood as the mean deviance
   cpt_results$mean_deviances <- vapply(cpt_results$cpt_model, 
@@ -394,48 +414,61 @@ compute_cpt <- function(cpt_results, ntopics)
            (cpt_results$n_changepoints))
   
   # select the best model
-  best_cpt_model <- cpt_results$cpt_model[[which.min(cpt_results$AIC)]]
-  return(best_cpt_model)
+  cpt <- cpt_results$cpt_model[[which.min(cpt_results$AIC)]]
+  return(cpt)
 }
 
-ldats_paper_cpt <- compute_cpt(ldats_paper_results, 
-                               ntopics = ldats_lda_selected[[1]]@k)
-
-ldats_paper_cpt_dates <- ldats_paper_cpt$saved[,1,] %>%
-  t() %>%
-  as.data.frame() %>%
-  reshape::melt() %>%
-  dplyr::left_join(paper_covariates, by = c("value" = "index"))
+# transform the output from `compute_cpt` and match up the time indices with 
+#   dates from the original data
+get_dates <- function(cpt, covariates = paper_covariates)
+{
+  cpt$saved[,1,] %>%
+    t() %>%
+    as.data.frame() %>%
+    reshape::melt() %>%
+    dplyr::left_join(covariates, by = c("value" = "index"))
+}
 ```
 
+
+#### LDATS LDA and paper changepoint
+
+Run the Christensen et al. time series model to identify changepoints on the LDA topics selected by LDATS:
+```{r run LDATS LDA and paper cpt, eval = params$run_models}
+ldats_lda_selected <- readRDS(file.path(vignette_files, "ldats_ldamodel.RDS"))
+
+ldats_paper_results <- find_changepoints(ldats_lda_selected[[1]], paper_covariates)
+
+saveRDS(ldats_paper_results, file = file.path(vignette_files, "ldats_paper.RDS"))
+```
+
+Extract the dates of the changepoints:
+```{r compute changepoints for LDATS LDA and paper cpt}
+ldats_paper_results <- readRDS(file.path(vignette_files, "ldats_paper.RDS"))
+
+ldats_paper_cpt <- select_cpt_model(ldats_paper_results, 
+                                    ntopics = ldats_lda_selected[[1]]@k)
+ldats_paper_cpt_dates <- get_dates(ldats_paper_cpt)
+```
 
 #### Paper LDA and paper changepoint
 
-```{r load paper LDA for paper cpt, eval = FALSE}
-#### Load LDA ####
-ldamodel <- readRDS(file.path(paper_filepath, "paper_ldamodel.RDS"))
-```
+Run the Christensen et al. time series model to identify changepoints on the LDA topics selected by the Christensen et al.:
+```{r run paper LDA and paper cpt, eval = params$run_models}
+ldamodel <- readRDS(file.path(vignette_files, "paper_ldamodel.RDS"))
 
-```{r run paper LDA and paper cpt, eval = TRUE}
-#### Run changepoint ####
 paper_paper_results <- find_changepoints(ldamodel, paper_covariates)
-saveRDS(paper_paper_results, file = file.path(paper_filepath, "paper_paper.RDS"))
+
+saveRDS(paper_paper_results, file = file.path(vignette_files, "paper_paper.RDS"))
 ```
 
-```{r select paper LDA and paper cpt, eval = FALSE}
-#### Changepoint model selection ####
-paper_paper_results <- readRDS(file.path(paper_filepath, "paper_paper.RDS"))
-```
+Extract the dates of the changepoints:
+```{r compute changepoints for paper LDA and paper cpt}
+paper_paper_results <- readRDS(file.path(vignette_files, "paper_paper.RDS"))
 
-```{r select paper-paper, eval = TRUE}
-paper_paper_cpt <- compute_cpt(paper_paper_results, 
-                               ntopics = ldamodel@k)
-
-paper_paper_cpt_dates <- paper_paper_cpt$saved[,1,] %>%
-  t() %>%
-  as.data.frame() %>%
-  reshape::melt() %>%
-  dplyr::left_join(paper_covariates, by = c("value" = "index"))
+paper_paper_cpt <- select_cpt_model(paper_paper_results, 
+                                    ntopics = ldamodel@k)
+paper_paper_cpt_dates <- get_dates(ldats_paper_cpt)
 ```
 
 ### Running LDATS changepoint models
@@ -444,9 +477,8 @@ paper_paper_cpt_dates <- paper_paper_cpt$saved[,1,] %>%
 
 #### Run the TS models
 
-```{r run LDATS LDA and LDATS changepoint, eval = TRUE}
-#### Run LDATS changepoint ####
-ldats_ldats_cpt <- TS_on_LDA(LDA_models = ldats_lda_selected,
+```{r run LDATS LDA and LDATS cpt, eval = params$run_models}
+ldats_ldats_results <- TS_on_LDA(LDA_models = ldats_lda_selected,
                              document_covariate_table = rodents$document_covariate_table,
                              formulas = ~ sin_year + cos_year,
                              nchangepoints = 1:6,
@@ -454,23 +486,10 @@ ldats_ldats_cpt <- TS_on_LDA(LDA_models = ldats_lda_selected,
                              control = TS_controls_list(timename = "newmoon", 
                                                         nit = nit))
 
-saveRDS(ldats_ldats_cpt, file = file.path(paper_filepath, "ldats_ldats.RDS"))
-# rm(ldats_ldats_cpt)
-# rm(ldats_lda_selected)
+saveRDS(ldats_ldats_results, file = file.path(vignette_files, "ldats_ldats.RDS"))
 ```
 
-
-### Select model
-
-```{r select ldats lda + ldats cpt}
-
-ldats_ldats_cpt_selected <- select_TS(ldats_ldats_cpt)
-
-ldats_ldats_cpt_selected$nchangepoints
-
-```
-
-### Get dates associated with changepoints
+### Select the changepoint model and get the associated dates
 
 Unlike the paper changepoint model, LDATS can recognize that sampling periods may not be equidistant, and can place changepoint estimates at new moons if they fall between nonconsecutive sampling periods. We can estimate the dates corresponding to those new moons, extrapolating from the census dates for adjacent census periods.
 
@@ -487,8 +506,12 @@ ldats_dates <- approx(rodents$document_covariate_table$newmoon,
 ```
 
 
-```{r get ldats lda + ldats cpt dates}
-ldats_ldats_cpt_dates <- ldats_ldats_cpt_selected$rhos %>%
+```{r compute changepoints for LDATS LDA and LDATS cpt}
+ldats_ldats_results <- readRDS(file.path(vignette_files, "ldats_ldats.RDS"))
+  
+ldats_ldats_cpt <- select_TS(ldats_ldats_results)
+
+ldats_ldats_cpt_dates <- ldats_ldats_cpt$rhos %>%
   as.data.frame() %>%
   reshape::melt() %>%
   dplyr::left_join(ldats_dates, by = c("value" = "index"))
@@ -496,15 +519,10 @@ ldats_ldats_cpt_dates <- ldats_ldats_cpt_selected$rhos %>%
 
 ### Paper LDA and LDATS changepoint
 
-```{r load paper LDA for LDATS cpt, eval = TRUE}
-#### Load LDA ####
-ldamodel <- readRDS(file.path(paper_filepath, "paper_ldamodel.RDS"))
-```
 #### Run the TS models
 
-```{r run paper LDA and LDATS changepoint, eval = F}
-#### Run LDATS changepoint ####
-paper_ldats_cpt <- TS_on_LDA(LDA_models = ldamodel,
+```{r run paper LDA and LDATS cpt, eval = params$run_models}
+paper_ldats_results <- TS_on_LDA(LDA_models = ldamodel,
                              document_covariate_table = rodents$document_covariate_table,
                              formulas = ~ sin_year + cos_year,
                              nchangepoints = 1:6,
@@ -512,27 +530,17 @@ paper_ldats_cpt <- TS_on_LDA(LDA_models = ldamodel,
                              control = TS_controls_list(timename = "newmoon", 
                                                         nit = nit))
 
-saveRDS(paper_ldats_cpt, file = file.path(paper_filepath, "paper_ldats.RDS"))
-# rm(paper_ldats_cpt)
-# rm(ldamodel)
+saveRDS(paper_ldats_results, file = file.path(vignette_files, "paper_ldats.RDS"))
 ```
 
-
-### Select model
+### Select the changepoint model and get the associated dates
 
 ```{r select paper lda + ldats cpt}
+paper_ldats_results <- readRDS(file.path(vignette_files, "ldats_ldats.RDS"))
+  
+paper_ldats_cpt <- select_TS(paper_ldats_results)
 
-paper_ldats_cpt_selected <- select_TS(paper_ldats_cpt)
-
-paper_ldats_cpt_selected$nchangepoints
-
-```
-
-#### Get dates
-
-```{r get paper lda + ldats cpt dates}
-
-paper_ldats_cpt_dates <- paper_ldats_cpt_selected$rhos %>%
+paper_ldats_cpt_dates <- paper_ldats_cpt$rhos %>%
   as.data.frame() %>%
   reshape::melt() %>%
   dplyr::left_join(ldats_dates, by = c("value" = "index"))
