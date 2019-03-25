@@ -50,7 +50,9 @@ Suggests:
     rmarkdown,
     testthat, 
     vdiffr (>= 0.3.0.9000), 
-    clue
+    clue, 
+    RCurl, 
+    tidyr
 VignetteBuilder:
     knitr
 RoxygenNote: 6.1.1
