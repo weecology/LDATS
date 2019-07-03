@@ -1,5 +1,10 @@
 context("Check ptMCMC functions")
 
+# use old RNG method for sample (for test reproducibility)
+if ("sample.kind" %in% names(formals(RNGkind)))
+{
+  suppressWarnings(RNGkind(sample.kind = "Rounding"))
+}
 
 data(rodents)
 lda_data <- rodents$document_term_table
@@ -240,3 +245,4 @@ test_that("check prep_temp_sequence", {
   expect_equal(round(prep_temp_sequence(TS_controls_list(q = 1))[3], 1), 2.8)
   expect_error(prep_temp_sequence(LDA_controls_list()))
 })
+
