@@ -173,7 +173,7 @@ select_LDA <- function(LDA_models = NULL, control = LDA_controls_list()){
     stop("LDA_models must be of class LDA_set")
   }
   
-  lda_measured <- sapply(LDA_models, measurer) %>%
+  lda_measured <- vapply(LDA_models, measurer, 0) %>%
                   matrix(ncol = 1)
   lda_selected <- apply(lda_measured, 2, selector) 
   which_selected <- which(lda_measured %in% lda_selected)

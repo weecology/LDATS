@@ -262,7 +262,7 @@ propose_step <- function(i, cpts, inputs){
   }
   prop_changepts[selection] <- prop_changepts_s
   mods <- proposed_step_mods(prop_changepts, inputs)
-  lls <- sapply(mods, logLik)
+  lls <- vapply(mods, logLik, 0)
   list(changepts = prop_changepts, lls = lls)
 }
 

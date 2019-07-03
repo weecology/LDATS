@@ -180,7 +180,7 @@ package_chunk_fits <- function(chunks, fits){
   nchunks <- nrow(chunks)
   chunk_times <- paste0("(", chunks[ , "start"], " - ", chunks[ , "end"], ")")
   names(fits) <- paste("chunk", 1:nchunks, chunk_times, "model")
-  ll <- sum(sapply(fits, logLik))
+  ll <- sum(vapply(fits, logLik, 0))
   out <- list("chunk models" = fits, "logLik" = ll, "chunks" = chunks)
   class(out) <- c("multinom_TS_fit", "list")
   out

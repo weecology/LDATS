@@ -48,8 +48,10 @@ Suggests:
     knitr,
     pkgdown,
     rmarkdown,
-    testthat,
-    vdiffr
+    testthat, 
+    vdiffr (>= 0.3.0.9000)
 VignetteBuilder:
     knitr
 RoxygenNote: 6.1.1
+Remotes:  
+    r-lib/vdiffr

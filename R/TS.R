@@ -394,7 +394,7 @@ measure_eta_vcov <- function(etas){
 #'
 summarize_rhos <- function(rhos, control = TS_controls_list()){
   check_control(control, "TS_controls")
-  if(is.null(rhos)){
+  if (is.null(rhos)) {
     return()
   }
   prob <- control$summary_prob
@@ -411,7 +411,7 @@ summarize_rhos <- function(rhos, control = TS_controls_list()){
   out <- data.frame(Mean, Median, Mode, Lower, Upper, SD, MCMCerr, AC10, ESS)
   colnames(out)[4:5] <- paste0(c("Lower_", "Upper_"), paste0(prob*100, "%"))
   colnames(out)[8] <- "AC10"
-  rownames(out) <- sprintf("Changepoint_%d", 1:nrow(out))
+  rownames(out) <- sprintf("Changepoint_%d", seq_len(nrow(out)))
   out
 }
 
@@ -423,7 +423,7 @@ summarize_rhos <- function(rhos, control = TS_controls_list()){
 #' @export
 #'
 measure_rho_vcov <- function(rhos){
-  if (is.null(rhos)){
+  if (is.null(rhos)) {
     return()
   }
   if (!is.matrix(rhos)){

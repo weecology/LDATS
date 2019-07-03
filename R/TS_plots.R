@@ -147,7 +147,7 @@ trace_plot <- function(x, ylab = "parameter value"){
   ext <- 0.01 * length(x)
   points(c(-ext, length(x) + ext), rep(median(x), 2), type = "l", lwd = 2, 
         lty = 2)
-  points(1:length(x), x, type = "l", col = rgb(0.4, 0.4, 0.4, alpha = 0.9))
+  points(seq_along(x), x, type = "l", col = rgb(0.4, 0.4, 0.4, alpha = 0.9))
 }
 
 #' @title Produce the posterior distribution ECDF panel for the TS 
@@ -402,12 +402,12 @@ pred_gamma_TS_plot <- function(x, selection = "median", cols, xlab = NULL){
 #'
 #' @export
 #'
-rho_lines <- function(spec_rhos){
-  if(is.null(spec_rhos)){
+rho_lines <- function(spec_rhos) {
+  if(is.null(spec_rhos)) {
     return()
   }
-  for (i in 1:length(spec_rhos)){
-    points(rep(spec_rhos[i], 2), c(0, 1), type = "l", lwd = 4, 
+  for (spec_rho in spec_rhos) {
+    points(rep(spec_rho, 2), c(0, 1), type = "l", lwd = 4, 
            col = rgb(0.3, 0.3, 0.3, 0.6))
   }
 }
