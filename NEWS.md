@@ -1,5 +1,16 @@
 # LDATS (development version)
 
+# LDATS 0.2.0]
+*Active Development*
+
+##
+
+## Fixed and updated example code to improve user experience
+* Reduced the complexity of the example in the README ([addresses issue 115](https://github.com/weecology/LDATS/issues/115))
+* Added `control` input in the `plot` call in the example in the README ([addresses issue 116](https://github.com/weecology/LDATS/issues/116))
+* Reduced the number of seeds in the rodent vignette example ([addresses issue 117](https://github.com/weecology/LDATS/issues/117))
+
+
 # [LDATS 0.1.0](https://github.com/weecology/LDATS/pull/105)
 *2019-02-11*
 

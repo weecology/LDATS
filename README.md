@@ -43,7 +43,7 @@ weights <- document_weights(dtt)
 TS_controls <- TS_controls_list(timename = "newmoon")
 controls <- LDA_TS_controls_list(TS_control = TS_controls)
 r_LDATS <- LDA_TS(dtt, dct, topics = 2:5, nseeds = 2, 
-                  formulas = c(~1, ~newmoon), nchangepoints = 0:2,
+                  formulas = c(~1), nchangepoints = 0:1,
                   weights = weights, control = controls)
 ```
 Which conducts two replicates (`nseeds`) for each of two to five topics in an
@@ -63,7 +63,7 @@ print(r_LDATS)
 ```
 prints the selected LDA and TS models and 
 ```r
-plot(r_LDATS)
+plot(r_LDATS, conrol = controls)
 ```
 produces a 4-panel figure of them a la Figure 1 from
 [Christensen et al. 2018](https://doi.org/10.1002/ecy.2373).

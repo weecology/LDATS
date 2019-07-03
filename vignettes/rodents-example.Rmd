@@ -57,25 +57,25 @@ head(rodents$document_covariate_table, 10)
 
 ## Stage 1: LDA models
 
-We use `LDA_set()` to run replicate LDA models (each with its own seed) with varying numbers of topics (`2:6`) and `select_LDA()` to select the best model.
+We use `LDA_set()` to run replicate LDA models (each with its own seed) with varying numbers of topics (`2:5`) and `select_LDA()` to select the best model.
 
 We use `LDA_controls_list())` to pass controls to the LDA function. In this case, we can set `quiet = TRUE` to make the model run quietly. 
 
 ```{r lda_set, eval =F}
 lda_model_set <- LDA_set(document_term_table = rodents$document_term_table,
-                         topics = c(2:6),
-                         nseeds = 100,
-                        control = LDA_controls_list(quiet = TRUE))
+                         topics = c(2:5),
+                         nseeds = 10,
+                         control = LDA_controls_list(quiet = TRUE))
 
 ```
 
 
-If we do not pass any controls, by default, `quiet = FALSE` (here run with only `2:3` topics and  `10` seeds, to keep output short): 
+If we do not pass any controls, by default, `quiet = FALSE` (here run with only `2:3` topics and `2` seeds, to keep output short): 
 
 ```{r lda set not quiet}
 lda_model_set2 <- LDA_set(document_term_table = rodents$document_term_table,
                          topics = c(2:3),
-                         nseeds = 10)
+                         nseeds = 2)
 ```
 
 `LDA_set()` returns a list of LDA models. We use `select_LDA()` to identify the best number of topics and choice of seed from our set of models. By default, we will choose models based on minimum AIC. To use different selection criteria, define the appropriate functions and specify them using `LDA_controls_list(measurer = [measurer function], selector = [max, min, etc])`. 
