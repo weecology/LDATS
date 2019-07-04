@@ -5,7 +5,8 @@
 \title{Prepare the inputs for the ptMCMC algorithm estimation of 
   change points}
 \usage{
-prep_ptMCMC_inputs(data, formula, nchangepoints, weights, control)
+prep_ptMCMC_inputs(data, formula, nchangepoints, weights, timename,
+  control)
 }
 \arguments{
 \item{data}{Class \code{data.frame} object including [1] the time variable
@@ -34,6 +35,9 @@ proportions, which does not account for size differences among documents.
 For most models, a scaling of the weights (so that the average is 1) is
 most appropriate, and this is accomplished using 
 \code{\link{document_weights}}.}
+
+\item{timename}{\code{character} element indicating the time variable
+used in the time series.}
 
 \item{control}{Class \code{TS_controls} list, holding control parameters
 for the Time Series model including the parallel tempering Markov Chain 

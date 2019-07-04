@@ -6,11 +6,12 @@
 \title{Conduct a set of Time Series analyses on a set of LDA models}
 \usage{
 TS_on_LDA(LDA_models, document_covariate_table, formulas = ~1,
-  nchangepoints = 0, weights = NULL, control = TS_controls_list())
+  nchangepoints = 0, weights = NULL, timename = "time",
+  control = TS_controls_list())
 
 check_TS_on_LDA_inputs(LDA_models, document_covariate_table,
   formulas = ~1, nchangepoints = 0, weights = NULL,
-  control = TS_controls_list())
+  timename = "time", control = TS_controls_list())
 }
 \arguments{
 \item{LDA_models}{List of LDA models (class \code{LDA_set}, produced by
@@ -20,7 +21,7 @@ produced by \code{\link[topicmodels]{LDA}}).}
 \item{document_covariate_table}{Document covariate table (rows: documents,
 columns: time index and covariate options). Every model needs a
 covariate to describe the time value for each document (in whatever 
-units and whose name in the table is input in \code{control$timename})
+units and whose name in the table is input in \code{timename})
 that dictates the application of the change points. 
 In addition, all covariates named within specific models in
 \code{formula} must be included. Must be a conformable to a data table,
@@ -48,6 +49,9 @@ as the result of \code{\link[topicmodels]{LDA}} is a matrix of
 proportions, which does not account for size differences among documents.
 For most models, a scaling of the weights (so that the average is 1) is
 most appropriate, and this is accomplished using \code{document_weights}.}
+
+\item{timename}{\code{character} element indicating the time variable
+used in the time series. Defaults to \code{"time"}.}
 
 \item{control}{Class \code{TS_controls} list, holding control parameters
 for the Time Series model including the parallel tempering Markov Chain 
@@ -80,9 +84,9 @@ This is a wrapper function that expands the main Time Series
   LDA_models <- select_LDA(LDAs)
   weights <- document_weights(document_term_table)
   formulas <- c(~ 1, ~ newmoon)
-  controls <- TS_controls_list(timename = "newmoon")
   mods <- TS_on_LDA(LDA_models, document_covariate_table, formulas,
-                    nchangepoints = 0:1, weights, controls)
+                    nchangepoints = 0:1, weights, timename = "newmoon",
+                    controls)
 }
 
 }

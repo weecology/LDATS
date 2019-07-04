@@ -345,7 +345,7 @@ paper_paper_cpt_dates
 #                               formulas = ~ sin_year + cos_year,
 #                               nchangepoints = 1:6,
 #                               weights = NULL,
-#                               control = TS_controls_list(timename = 'newmoon'))
+#                               timename = 'newmoon')
 #  
 #  
 #  save(ldats_ldats_cpt, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_ldats.Rds'))
@@ -383,7 +383,7 @@ ldats_ldats_cpt_dates <- ldats_ldats_cpt_dates$censusdate
 #                               formulas = ~ sin_year + cos_year,
 #                               nchangepoints = 1:6,
 #                               weights = NULL,
-#                                control = TS_controls_list(timename = 'newmoon'))
+#                               timename = 'newmoon')
 #  
 #  
 #  save(paper_ldats_cpt, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_ldats.Rds'))

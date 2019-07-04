@@ -4,9 +4,9 @@
 \alias{TS_controls_list}
 \title{Create the controls list for the Time Series model}
 \usage{
-TS_controls_list(memoise = TRUE, response = "gamma",
-  timename = "time", lambda = 0, measurer = AIC, selector = min,
-  ntemps = 6, penultimate_temp = 2^6, ultimate_temp = 1e+10, q = 0,
+TS_controls_list(memoise = TRUE, response = "gamma", lambda = 0,
+  measurer = AIC, selector = min, ntemps = 6,
+  penultimate_temp = 2^6, ultimate_temp = 1e+10, q = 0,
   nit = 10000, magnitude = 12, quiet = FALSE, burnin = 0,
   thin_frac = 1, summary_prob = 0.95, seed = NULL)
 }
@@ -18,9 +18,6 @@ Memoisation happens to both \code{\link{multinom_TS}} and
 
 \item{response}{\code{character} element indicating the response variable 
 used in the time series.}
-
-\item{timename}{\code{character} element indicating the time variable
-used in the time series. Defaults to \code{"time"}.}
 
 \item{lambda}{\code{numeric} "weight" decay term used to set the prior
 on the regressors within each chunk-level model. Defaults to 0, 
@@ -62,6 +59,9 @@ distributions (via the highest posterior density interval, see
 \code{\link[coda]{HPDinterval}}).}
 
 \item{seed}{Input to \code{set.seed} for replication purposes.}
+
+\item{timename}{\code{character} element indicating the time variable
+used in the time series. Defaults to \code{"time"}.}
 }
 \value{
 List of class \code{TS_controls}, with named elements corresponding

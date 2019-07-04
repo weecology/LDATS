@@ -115,7 +115,7 @@ functions:
             * `count_trips()`
           * `summarize_rhos()`
           * `measure_rho_vcov()`
-          * `summarize_ets()`
+          * `summarize_etas()`
           * `measure_eta_vcov()`
     * `select_TS()`
       * applies the `measurer` and `selector` functions supplied via `TS_controls_list()`

@@ -9,8 +9,8 @@ nseeds <- 1
 formulas <- ~ 1
 nchangepoints <- 0
 weights <- document_weights(document_term_table)
-TS_controls <- TS_controls_list(timename = "newmoon")
-control <- LDA_TS_controls_list(TS_control = TS_controls)
+timename <- "newmoon"
+control <- LDA_TS_controls_list()
 LDAs <- LDA_set(document_term_table, topics, nseeds, control$LDA_control)
 LDA_models <- select_LDA(LDAs, control$LDA_control)
 control <- control$TS_control
@@ -39,12 +39,12 @@ test_that("check prep_TS_data", {
 
 test_that("check select_TS", {
   mods <- TS_on_LDA(LDA_models, document_covariate_table, formulas, 
-                  nchangepoints = 0:1, weights, 
-                  control = TS_controls_list(nit = 1e3, timename = "newmoon"))
+                  nchangepoints = 0:1, weights, timename,
+                  control = TS_controls_list(nit = 1e3))
   sel_mod <- select_TS(mods, control)
 
   expect_equal(length(mods), 2)
-  expect_equal(length(sel_mod), 16)
+  expect_equal(length(sel_mod), 17)
   expect_is(mods, "TS_on_LDA")
   expect_is(sel_mod, "TS_fit")
   expect_error(select_TS(mods, LDA_controls_list()))
@@ -64,9 +64,8 @@ test_that("check package_TS_on_LDA", {
     formula_i <- mods$formula[[i]]
     nchangepoints_i <- mods$nchangepoints[i]
     data_i <- prep_TS_data(document_covariate_table, LDA_models, mods, i)
-    TSmods[[i]] <- TS(data_i, formula_i, nchangepoints_i, weights, 
-                      control = TS_controls_list(nit = 1e3, 
-                                                 timename = "newmoon"))
+    TSmods[[i]] <- TS(data_i, formula_i, nchangepoints_i, weights, timename,
+                      control = TS_controls_list(nit = 1e3))
   }
   expect_is(package_TS_on_LDA(TSmods, LDA_models, mods), "TS_on_LDA")
   expect_is(package_TS_on_LDA(TSmods, LDA_models[[1]], mods), "TS_on_LDA")
@@ -78,9 +77,8 @@ test_that("check package_TS_on_LDA", {
 
 test_that("check TS_on_LDA", {
   mods <- TS_on_LDA(LDA_models, document_covariate_table, formulas, 
-                  nchangepoints = 0:1, weights, 
-                  control = TS_controls_list(nit = 1e3, 
-                                                 timename = "newmoon"))
+                  nchangepoints = 0:1, weights, timename, 
+                  control = TS_controls_list(nit = 1e3))
   expect_is(mods, "TS_on_LDA")
   expect_equal(length(mods), 2)
   expect_is(mods[[1]], "TS_fit")
@@ -88,24 +86,26 @@ test_that("check TS_on_LDA", {
 
   expect_error(TS_on_LDA())
   expect_error(TS_on_LDA("ok", document_covariate_table, formulas, 
-                  nchangepoints, weights, control ))
+                  nchangepoints, weights, timename, control ))
   expect_error(TS_on_LDA(LDA_models, "ok", formulas, 
-                  nchangepoints, weights, control ))
+                  nchangepoints, weights, timename, control ))
   expect_error(TS_on_LDA(LDA_models, document_covariate_table, "ok", 
-                  nchangepoints, weights, control ))
+                  nchangepoints, weights, timename, control ))
   expect_error(TS_on_LDA(LDA_models, document_covariate_table, formulas, 
-                  "ok", weights, control ))
+                  "ok", weights, timename, control ))
   expect_error(TS_on_LDA(LDA_models, document_covariate_table, formulas, 
-                  nchangepoints, "ok", control ))
+                  nchangepoints, "ok", timename, control ))
   expect_error(TS_on_LDA(LDA_models, document_covariate_table, formulas, 
-                  nchangepoints, weights, "ok"))
+                  nchangepoints, weights, "ok", control))
+  expect_error(TS_on_LDA(LDA_models, document_covariate_table, formulas, 
+                  nchangepoints, weights, timename, "ok"))
 })
 
 
 test_that("check printing for TS_on_LDA", {
   m1 <- TS_on_LDA(LDA_models, document_covariate_table, formulas, 
-                  nchangepoints, weights, 
-                  control = TS_controls_list(nit = 1e4, timename = "newmoon"))
+                  nchangepoints, weights, timename,
+                  control = TS_controls_list(nit = 1e4))
   expect_output(print(m1))
 })
 
@@ -180,12 +180,12 @@ test_that("check check_document_covariate_table", {
 })
 
 test_that("check check_timename", {
-  expect_silent(check_timename(document_covariate_table, control$timename))
-  expect_error(check_timename("ok", control$timename))
+  expect_silent(check_timename(document_covariate_table, timename))
+  expect_error(check_timename("ok", timename))
   expect_error(check_timename(document_covariate_table, "ok"))
   expect_error(check_timename(document_covariate_table, 1))
   expect_error(check_timename(document_covariate_table, 
-                              rep(control$timename, 2)))
+                              rep(timename, 2)))
   expect_error(check_timename(document_covariate_table, 1))
   expect_error(check_timename(data.frame(letters), "letters"))
 })
@@ -205,24 +205,27 @@ test_that("check check_formulas", {
 test_that("check check_TS_on_LDA_inputs", {
   expect_silent(
     check_TS_on_LDA_inputs(LDA_models, document_covariate_table, formulas, 
-                           nchangepoints, weights, control))
+                           nchangepoints, weights, timename, control))
   expect_error(
     check_TS_on_LDA_inputs(LDA_models, document_covariate_table, formulas, 
-                           nchangepoints, weights, "ok"))
+                           nchangepoints, weights, timename, "ok"))
   expect_error(
     check_TS_on_LDA_inputs(LDA_models, document_covariate_table, formulas, 
-                           nchangepoints, "ok", control))
+                           nchangepoints, "ok", timename, control))
   expect_error(
     check_TS_on_LDA_inputs(LDA_models, document_covariate_table, formulas, 
-                           "ok", weights, control))
+                           "ok", weights, timename, control))
   expect_error(
     check_TS_on_LDA_inputs(LDA_models, document_covariate_table, "ok", 
-                           nchangepoints, weights, control))
+                           nchangepoints, weights, timename, control))
   expect_error(
     check_TS_on_LDA_inputs(LDA_models, "ok", formulas, 
-                           nchangepoints, weights, control))
+                           nchangepoints, weights, timename, control))
   expect_error(
     check_TS_on_LDA_inputs("ok", document_covariate_table, formulas, 
-                           nchangepoints, weights, control))
+                           nchangepoints, weights, timename,  control))
+  expect_error(
+    check_TS_on_LDA_inputs(LDA_models, document_covariate_table, formulas, 
+                           nchangepoints, weights, "ok",  control))
 
 })

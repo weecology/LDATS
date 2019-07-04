@@ -5,8 +5,7 @@
 \title{Prepare the time chunk table for a multinomial change point 
   Time Series model}
 \usage{
-prep_chunks(data, changepoints = NULL,
-  timename = TS_controls_list()$timename)
+prep_chunks(data, changepoints = NULL, timename = "time")
 }
 \arguments{
 \item{data}{Class \code{data.frame} object including the predictor and 
@@ -16,9 +15,8 @@ by the \code{timename} input.}
 \item{changepoints}{Numeric vector indicating locations of the change 
 points. Must be conformable to \code{integer} values.}
 
-\item{timename}{The name of the column containing the time variable used 
-to chunk out the time series. Generally contained in the \code{control}
-(class \code{TS_controls}) list.}
+\item{timename}{\code{character} name of the column containing the time
+variable used to chunk out the time series.}
 }
 \value{
 Data frame of \code{start} and \code{end} times for each chunk 

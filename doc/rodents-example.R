@@ -21,15 +21,15 @@ head(rodents$document_covariate_table, 10)
 
 ## ----lda_set, eval =F----------------------------------------------------
 #  lda_model_set <- LDA_set(document_term_table = rodents$document_term_table,
-#                           topics = c(2:6),
-#                           nseeds = 100,
-#                          control = LDA_controls_list(quiet = TRUE))
+#                           topics = c(2:5),
+#                           nseeds = 10,
+#                           control = LDA_controls_list(quiet = TRUE))
 #  
 
 ## ----lda set not quiet---------------------------------------------------
 lda_model_set2 <- LDA_set(document_term_table = rodents$document_term_table,
                          topics = c(2:3),
-                         nseeds = 10)
+                         nseeds = 2)
 
 ## ----load lda model set, include = F-------------------------------------
 load(here::here('vignettes', 'rodents-example-files', 'lda_model_set.Rds'))
@@ -56,9 +56,10 @@ plot(selected_lda_model[[1]])
 #  changepoint_models <- TS_on_LDA(LDA_models = selected_lda_model,
 #                                  document_covariate_table = rodents$document_covariate_table,
 #                                  formulas = ~ sin_year + cos_year,
-#                                  nchangepoints = c(0:6),
+#                                  nchangepoints = c(0:1),
 #                                  weights = document_weights(rodents$document_term_table),
-#                                  control = TS_controls_list(nit = 1000, timename = "newmoon"))
+#                                  timename = "newmoon",
+#                                  control = TS_controls_list(nit = 1000))
 #  
 
 ## ----reload ts, include = F----------------------------------------------
@@ -85,13 +86,14 @@ plot(selected_changepoint_model)
 ## ----lda_ts, eval = F----------------------------------------------------
 #  lda_ts_results <- LDA_TS(document_term_table = rodents$document_term_table,
 #                           document_covariate_table = rodents$document_covariate_table,
-#                           nseeds = 100,
-#                           topics = 2:6,
+#                           nseeds = 10,
+#                           topics = 2:5,
 #                           formulas = ~ sin_year + cos_year,
-#                           nchangepoints= 0:6,
+#                           nchangepoints= 0:1,
 #                           weights = document_weights(rodents$document_term_table),
+#                           timename = "newmoon",
 #                           control = LDA_TS_controls_list(
-#                             TS_control = TS_controls_list(nit = 1000, timename = "newmoon")))
+#                             TS_control = TS_controls_list(nit = 1000)))
 
 ## ----load ldats results, include = F-------------------------------------
 load(here::here('vignettes', 'rodents-example-files', 'lda_ts_results.Rds'))
@@ -109,6 +111,5 @@ lda_ts_results$`Selected TS model`$nchangepoints
 lda_ts_results$`Selected TS model`$rho_summary
 
 ## ----plot LDA_TS results, fig.height = 16, fig.width = 7, echo = F-------
-plot(lda_ts_results, control = LDA_TS_controls_list(
-                           TS_control = TS_controls_list(timename = "newmoon")))
+plot(lda_ts_results)
 

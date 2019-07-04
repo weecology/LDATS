@@ -40,11 +40,9 @@ data(rodents)
 dtt <- rodents$document_term_table
 dct <- rodents$document_covariate_table
 weights <- document_weights(dtt)
-TS_controls <- TS_controls_list(timename = "newmoon")
-controls <- LDA_TS_controls_list(TS_control = TS_controls)
 r_LDATS <- LDA_TS(dtt, dct, topics = 2:5, nseeds = 2, 
                   formulas = c(~1), nchangepoints = 0:1,
-                  weights = weights, control = controls)
+                  weights = weights, timename = "newmoon")
 ```
 Which conducts two replicates (`nseeds`) for each of two to five topics in an
 LDA model using the document term table, selects the best (AIC) of those, 
@@ -63,7 +61,7 @@ print(r_LDATS)
 ```
 prints the selected LDA and TS models and 
 ```r
-plot(r_LDATS, conrol = controls)
+plot(r_LDATS, timename = "newmoon")
 ```
 produces a 4-panel figure of them a la Figure 1 from
 [Christensen et al. 2018](https://doi.org/10.1002/ecy.2373).

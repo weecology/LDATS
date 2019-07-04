@@ -3,7 +3,8 @@
 # LDATS 0.2.0]
 *Active Development*
 
-##
+## API updates
+* `timename` has been moved from within the `TS_controls_list` to a main argument in all associated functions.
 
 ## Fixed and updated example code to improve user experience
 * Reduced the complexity of the example in the README ([addresses issue 115](https://github.com/weecology/LDATS/issues/115))

@@ -356,13 +356,14 @@ pred_gamma_TS_plot <- function(x, selection = "median", cols, xlab = NULL){
   } else{
     spec_rhos <- NULL
   }
-  seg_mods <- multinom_TS(x$data, x$formula, spec_rhos, x$weights, x$control)
+  seg_mods <- multinom_TS(x$data, x$formula, spec_rhos, x$weights, 
+                          x$timename, x$control)
   nsegs <- length(seg_mods[[1]])
-  t1 <- min(x$data[, x$control$timename])
-  t2 <- max(x$data[, x$control$timename])
+  t1 <- min(x$data[, x$timename])
+  t2 <- max(x$data[, x$timename])
 
   if (is.null(xlab)){
-    xlab <- x$control$timename
+    xlab <- x$timename
   }
   par(mar = c(4.5, 5, 1, 1))
   plot(1, 1, type = "n", bty = "L", xlab = xlab, ylab = "", xaxt = "n", 
@@ -437,7 +438,7 @@ rho_hist <- function(x, cols, bin_width = 1, xlab = NULL, border = NA){
   rhos <- x$rhos
   nrhos <- ncol(rhos)
   niter <- nrow(rhos)
-  timeobs <- x$data[, x$control$timename]
+  timeobs <- x$data[, x$timename]
   timerange <- range(timeobs)
   timevals <- seq(timerange[1], timerange[2], 1)
   ntimes <- length(timevals) 

@@ -47,15 +47,18 @@ test_that("check mirror_vcov", {
   nchangepoints <- 2
   weights <- document_weights(document_term_table)
   control <- LDA_TS_controls_list()
+  timename <- "newmoon"
   LDAs <- LDA_set(document_term_table, topics, nseeds, control$LDA_control)
   LDA_models <- select_LDA(LDAs, control$LDA_control)
-  control <- TS_controls_list(nit = 1e2, seed = 1, timename = "newmoon")
+  control <- TS_controls_list(nit = 1e2, seed = 1)
   mods <- expand_TS(LDA_models, formulas, nchangepoints)
   formula <- mods$formula[[1]]
   nchangepoints <- mods$nchangepoints[1]
   data <- prep_TS_data(document_covariate_table, LDA_models, mods, 1)
-  rho_dist <- est_changepoints(data, formula, nchangepoints, weights, control)
-  mod <- multinom_TS(data, formula, changepoints = NULL, weights, control)
+  rho_dist <- est_changepoints(data, formula, nchangepoints, weights, 
+                               timename, control)
+  mod <- multinom_TS(data, formula, changepoints = NULL, weights, 
+                     timename, control)
   expect_equal(isSymmetric(vcov(mod[[1]][[1]])), FALSE)
   expect_equal(isSymmetric(mirror_vcov(mod[[1]][[1]])), TRUE)
 

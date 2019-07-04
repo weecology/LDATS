@@ -6,14 +6,14 @@
 \title{Fit a multinomial change point Time Series model}
 \usage{
 multinom_TS(data, formula, changepoints = NULL, weights = NULL,
-  control = TS_controls_list())
+  timename = "time", control = TS_controls_list())
 
 check_multinom_TS_inputs(data, formula, changepoints = NULL,
-  weights = NULL, control = TS_controls_list())
+  weights = NULL, timename = "time", control = TS_controls_list())
 }
 \arguments{
 \item{data}{\code{data.frame} including [1] the time variable (indicated 
-in \code{control$timename}), [2] the predictor variables (required by
+in \code{timename}), [2] the predictor variables (required by
 \code{formula}) and [3], the multinomial response variable (indicated in
 \code{formula}) as verified by \code{\link{check_timename}} and 
 \code{\link{check_formula}}. Note that the response variables should be
@@ -41,6 +41,9 @@ proportions, which does not account for size differences among documents.
 For most models, a scaling of the weights (so that the average is 1) is
 most appropriate, and this is accomplished using 
 \code{\link{document_weights}}.}
+
+\item{timename}{\code{character} element indicating the time variable
+used in the time series. Defaults to \code{"time"}.}
 
 \item{control}{Class \code{TS_controls} list, holding control parameters
 for the Time Series model including the parallel tempering Markov Chain 
@@ -72,7 +75,7 @@ Fit a set of multinomial regression models (via
   dct$gamma <- lda[[1]]@gamma
   weights <- document_weights(dtt)
   mts <- multinom_TS(dct, formula = gamma ~ 1, changepoints = c(20,50),
-                     weights = weights) 
+                     weights = weights, timename = "newmoon") 
 }
 
 }

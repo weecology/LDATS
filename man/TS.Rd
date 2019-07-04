@@ -5,13 +5,14 @@
 \alias{check_TS_inputs}
 \title{Conduct a single multinomial Bayesian Time Series analysis}
 \usage{
-TS(data, formula, nchangepoints, weights, control = TS_controls_list())
+TS(data, formula, nchangepoints, weights, timename = "time",
+  control = TS_controls_list())
 
-check_TS_inputs(data, formula, nchangepoints, weights, control)
+check_TS_inputs(data, formula, nchangepoints, weights, timename, control)
 }
 \arguments{
 \item{data}{\code{data.frame} including [1] the time variable (indicated 
-in \code{control$timename}), [2] the predictor variables (required by
+in \code{timename}), [2] the predictor variables (required by
 \code{formula}) and [3], the multinomial response variable (indicated in
 \code{formula}) as verified by \code{\link{check_timename}} and 
 \code{\link{check_formula}}. Note that the response variables should be
@@ -41,6 +42,9 @@ as the result of \code{\link[topicmodels]{LDA}} is a matrix of
 proportions, which does not account for size differences among documents.
 For most models, a scaling of the weights (so that the average is 1) is
 most appropriate, and this is accomplished using \code{document_weights}.}
+
+\item{timename}{\code{character} element indicating the time variable
+used in the time series. Defaults to \code{"time"}.}
 
 \item{control}{Class \code{TS_controls} list, holding control parameters
 for the Time Series model including the parallel tempering Markov Chain 
@@ -110,8 +114,7 @@ This is the main interface function for the LDATS application
   data <- document_covariate_table
   data$gamma <- LDA_models@gamma
   weights <- document_weights(document_term_table)
-  controls <- TS_controls_list(timename = "newmoon")
-  TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, weights, controls)
+  TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, weights, "newmoon")
 }
 
 }
