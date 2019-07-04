@@ -7,6 +7,7 @@ dct <- rodents$document_covariate_table
 mts_data <- data.frame(dct)
 mts_data$gamma <- lda[[1]]@gamma
 timename <- "newmoon"
+control <- TS_controls_list()
 
 test_that("check packaging of chunk fits", {
   TS_chunk_memo <- memoise_fun(multinom_TS_chunk, control$memoise)
