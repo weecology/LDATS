@@ -1,8 +1,7 @@
 context("Check ptMCMC functions")
 
 # use old RNG method for sample (for test reproducibility)
-if ("sample.kind" %in% names(formals(RNGkind)))
-{
+if ("sample.kind" %in% names(formals(RNGkind))){
   suppressWarnings(RNGkind(sample.kind = "Rounding"))
 }
 

@@ -1,6 +1,6 @@
 # LDATS (development version)
 
-# LDATS 0.2.0]
+# LDATS 0.2.0
 *Active Development*
 
 ## API updates
@@ -12,6 +12,9 @@
 * Added `control` input in the `plot` call in the example in the README ([addresses issue 116](https://github.com/weecology/LDATS/issues/116))
 * Reduced the number of seeds in the rodent vignette example ([addresses issue 117](https://github.com/weecology/LDATS/issues/117))
 
+## Updated calculation of the number of observations in LDA
+* The number of observations for a VEM-fit LDA is now calculated as the number of entries in the document-term matrix (following Hoffman et al. and Buntine, see `?logLik.LDA_VEM` for references.
+* Associated, we now include an AICc function that is general and works in this specific case as defined  ([addresses issue 129](https://github.com/weecology/LDATS/issues/129))
 
 # [LDATS 0.1.0](https://github.com/weecology/LDATS/pull/105)
 *2019-02-11*

@@ -144,6 +144,8 @@ test_that("check check_nchangepoints", {
 
 
 test_that("check check_weights", {
+  expect_equal(check_weights(TRUE), NULL)
+  expect_error(check_weights(FALSE))
   expect_silent(check_weights(weights))
   expect_silent(check_weights(1))
   expect_silent(check_weights(NULL))

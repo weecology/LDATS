@@ -1,3 +1,23 @@
+#' @title Calculate AICc
+#'
+#' @description Calculate the small sample size correction of
+#'   \code{\link{AIC}} for the input object. 
+#'
+#' @param object An object for which \code{\link{AIC}} and 
+#'   \code{\link{logLik}} have defined methods.
+#'
+#' @return \code{numeric} value of AICc.
+#' 
+#' @export 
+#'
+AICc <- function(object){
+  aic <- AIC(object)
+  ll <- logLik(object)
+  np <- attr(ll, "df")
+  no <- attr(ll, "nobs")
+  aic + (2 * np^2 + 2 * np)/(no - np - 1)
+}
+
 #' @title Replace if TRUE
 #'
 #' @description If the focal input is \code{TRUE}, replace it with 

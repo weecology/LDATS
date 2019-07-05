@@ -1,10 +1,24 @@
 context("Check utilities")
 
+# use old RNG method for sample (for test reproducibility)
+if ("sample.kind" %in% names(formals(RNGkind))){
+  suppressWarnings(RNGkind(sample.kind = "Rounding"))
+}
+
 test_that("check iftrue", {
   expect_equal(iftrue(TRUE,1), 1)
   expect_equal(iftrue(1,2), 1)
 })
 
+test_that("check AICc", {
+  data(rodents)
+  set.seed(123)
+  lda_data <- rodents$document_term_table
+  r_LDA <- LDA_set(lda_data, topics = 2, nseeds = 1)[[1]]
+  expect_is(AICc(r_LDA), "numeric")
+  expect_equal(round(AICc(r_LDA)), 95865)
+  expect_error(AICc("ok"))
+})
 
 
 test_that("check modalvalue", {

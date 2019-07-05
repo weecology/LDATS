@@ -44,6 +44,20 @@ test_that("Check LDA_TS_controls_list", {
   expect_error(LDA_TS_controls_list(quiet = "ok"))
 })
 
+test_that("Check conform_LDA_TS_data", {
+  expect_is(conform_LDA_TS_data(rodents), "list")
+  expect_is(conform_LDA_TS_data(rodents[[1]]), "list")
+  expect_output(conform_LDA_TS_data(rodents[[1]]))
+  expect_error(conform_LDA_TS_data(list(term1 = 1, term2 = 2)))
+
+  expect_is(conform_LDA_TS_data(list(term = rodents[[1]])), "list")
+  expect_output(conform_LDA_TS_data(list(term = rodents[[1]])))
+
+  expect_error(conform_LDA_TS_data(list(term = rodents[[1]], covariate1 = 1,
+                                        covariate2 = 2)))
+  expect_error(conform_LDA_TS_data("ok"))
+})
+
 test_that("Check package_LDA_TS", {
   topics <- 2
   nseeds <- 1
