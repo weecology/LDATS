@@ -36,6 +36,9 @@
 #'   used to segement the data for each formula (entry in \code{formulas}) 
 #'   component of the TS model, for each selected LDA model.
 #'
+#' @param timename \code{character} element indicating the time variable
+#'   used in the time series. Defaults to \code{"time"}.
+#'
 #' @param weights Optional class \code{numeric} vector of weights for each 
 #'   document. Defaults to \code{NULL}, translating to an equal weight for
 #'   each document. When using \code{multinom_TS} in a standard LDATS 
@@ -44,9 +47,6 @@
 #'   proportions, which does not account for size differences among documents.
 #'   For most models, a scaling of the weights (so that the average is 1) is
 #'   most appropriate, and this is accomplished using \code{document_weights}.
-#'
-#' @param timename \code{character} element indicating the time variable
-#'   used in the time series. Defaults to \code{"time"}.
 #'
 #' @param control Class \code{TS_controls} list, holding control parameters
 #'   for the Time Series model including the parallel tempering Markov Chain 
@@ -66,17 +66,17 @@
 #'   weights <- document_weights(document_term_table)
 #'   formulas <- c(~ 1, ~ newmoon)
 #'   mods <- TS_on_LDA(LDA_models, document_covariate_table, formulas,
-#'                     nchangepoints = 0:1, weights, timename = "newmoon",
+#'                     nchangepoints = 0:1, timename = "newmoon", weights, 
 #'                     controls)
 #' }
 #'
 #' @export
 #'
 TS_on_LDA <- function(LDA_models, document_covariate_table, formulas = ~ 1, 
-                      nchangepoints = 0, weights = NULL, timename = "time",
+                      nchangepoints = 0, timename = "time", weights = NULL, 
                       control = TS_controls_list()){
   check_TS_on_LDA_inputs(LDA_models, document_covariate_table, formulas, 
-                         nchangepoints, weights, timename, control)
+                         nchangepoints, timename, weights, control)
   mods <- expand_TS(LDA_models, formulas, nchangepoints)
   nmods <- nrow(mods)
   TSmods <- vector("list", nmods)
@@ -365,6 +365,13 @@ check_nchangepoints <- function(nchangepoints){
 #' @export
 #'
 check_weights <- function(weights){
+  if(is.logical(weights)){
+    if(weights){
+      return()
+    } else{
+      stop("if logical, weights need to be TRUE")
+    }   
+  }
   if(!is.null(weights)){
     if (!is.numeric(weights)){
       stop("weights vector must be numeric")
@@ -522,8 +529,9 @@ check_formulas <- function(formulas, document_covariate_table, control){
 #' @export
 #'
 check_TS_on_LDA_inputs <- function(LDA_models, document_covariate_table, 
-                            formulas = ~ 1, nchangepoints = 0, weights = NULL, 
-                            timename = "time", control = TS_controls_list()){
+                            formulas = ~ 1, nchangepoints = 0,  
+                            timename = "time", weights = NULL,
+                            control = TS_controls_list()){
   check_LDA_models(LDA_models)
   check_document_covariate_table(document_covariate_table, LDA_models)
   check_timename(document_covariate_table, timename)

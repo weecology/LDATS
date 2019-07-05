@@ -344,8 +344,8 @@ paper_paper_cpt_dates
 #                               document_covariate_table = rodents$document_covariate_table,
 #                               formulas = ~ sin_year + cos_year,
 #                               nchangepoints = 1:6,
-#                               weights = NULL,
-#                               timename = 'newmoon')
+#                               timename = 'newmoon',
+#                               weights = NULL)
 #  
 #  
 #  save(ldats_ldats_cpt, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_ldats.Rds'))
@@ -382,8 +382,8 @@ ldats_ldats_cpt_dates <- ldats_ldats_cpt_dates$censusdate
 #                               document_covariate_table = rodents$document_covariate_table,
 #                               formulas = ~ sin_year + cos_year,
 #                               nchangepoints = 1:6,
-#                               weights = NULL,
-#                               timename = 'newmoon')
+#                               timename = 'newmoon',
+#                               weights = NULL)
 #  
 #  
 #  save(paper_ldats_cpt, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_ldats.Rds'))

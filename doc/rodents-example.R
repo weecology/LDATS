@@ -57,8 +57,8 @@ plot(selected_lda_model[[1]])
 #                                  document_covariate_table = rodents$document_covariate_table,
 #                                  formulas = ~ sin_year + cos_year,
 #                                  nchangepoints = c(0:1),
-#                                  weights = document_weights(rodents$document_term_table),
 #                                  timename = "newmoon",
+#                                  weights = document_weights(rodents$document_term_table),
 #                                  control = TS_controls_list(nit = 1000))
 #  
 
@@ -84,13 +84,11 @@ head(selected_changepoint_model$rhos)
 plot(selected_changepoint_model)
 
 ## ----lda_ts, eval = F----------------------------------------------------
-#  lda_ts_results <- LDA_TS(document_term_table = rodents$document_term_table,
-#                           document_covariate_table = rodents$document_covariate_table,
+#  lda_ts_results <- LDA_TS(data = rodents,
 #                           nseeds = 10,
 #                           topics = 2:5,
 #                           formulas = ~ sin_year + cos_year,
 #                           nchangepoints= 0:1,
-#                           weights = document_weights(rodents$document_term_table),
 #                           timename = "newmoon",
 #                           control = LDA_TS_controls_list(
 #                             TS_control = TS_controls_list(nit = 1000)))

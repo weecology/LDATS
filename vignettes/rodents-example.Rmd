@@ -123,8 +123,8 @@ changepoint_models <- TS_on_LDA(LDA_models = selected_lda_model,
                                 document_covariate_table = rodents$document_covariate_table,
                                 formulas = ~ sin_year + cos_year,
                                 nchangepoints = c(0:1), 
-                                weights = document_weights(rodents$document_term_table),
                                 timename = "newmoon",
+                                weights = document_weights(rodents$document_term_table),
                                 control = TS_controls_list(nit = 1000))
 
 ```
@@ -167,16 +167,14 @@ plot(selected_changepoint_model)
 
 ## Full analysis with `LDA_TS`
 
-Finally, we can perform an entire LDATS analysis, including all of the above steps, using the `LDA_TS()` function and passing options to the LDA and TS functions using `LDA_TS_controls_list()`.
+Finally, we can perform an entire LDATS analysis, including all of the above steps, using the `LDA_TS()` function and passing options to the LDA and TS functions using `LDA_TS_controls_list()`. The default is for `LDA_TS` to weight the time series model based on the document sizes, so we do not need to tell it to do so.
 
 ```{r lda_ts, eval = F}
-lda_ts_results <- LDA_TS(document_term_table = rodents$document_term_table,
-                         document_covariate_table = rodents$document_covariate_table,
+lda_ts_results <- LDA_TS(data = rodents,
                          nseeds = 10, 
                          topics = 2:5,
                          formulas = ~ sin_year + cos_year,
                          nchangepoints= 0:1,
-                         weights = document_weights(rodents$document_term_table),
                          timename = "newmoon",
                          control = LDA_TS_controls_list(
                            TS_control = TS_controls_list(nit = 1000)))

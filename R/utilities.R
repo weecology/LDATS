@@ -1,3 +1,24 @@
+#' @title Replace if TRUE
+#'
+#' @description If the focal input is \code{TRUE}, replace it with 
+#'   alternative. 
+#'
+#' @param x Focal input.
+#'
+#' @param alt Alternative value.
+#'
+#' @return \code{x} if not \code{TRUE}, \code{alt} otherwise.
+#' 
+#' @export 
+#'
+iftrue <- function(x = TRUE, alt = NULL){
+  if (is.logical(x) && x){
+    x <- alt
+  }
+  x
+}
+
+
 #' @title Determine the mode of a distribution
 #'
 #' @description Find the most common entry in a vector. Ties are not allowed,

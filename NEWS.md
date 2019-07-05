@@ -4,6 +4,7 @@
 *Active Development*
 
 ## API updates
+* At the `LDA_TS` function level, the separate inputs for data tables (`document_term_table` and `document_covariate_table`) have been merged into a single input `data`, which can be just the `document_term_table` or a list including the `document_term_table` and optionally also a `document_covariate_table`. If covariates aren't provided, the function now constructs a covariate table assuming equi-spaced observations. If using a list, the function assumes that one and only one element of the list will have a name containing the letters "term", and at most one element containing the letters "covariate" (regular expressions are used for matching). ([addresses issue 119](https://github.com/weecology/LDATS/issues/119))
 * `timename` has been moved from within the `TS_controls_list` to a main argument in all associated functions.
 
 ## Fixed and updated example code to improve user experience

@@ -1,5 +1,12 @@
 context("Check utilities")
 
+test_that("check iftrue", {
+  expect_equal(iftrue(TRUE,1), 1)
+  expect_equal(iftrue(1,2), 1)
+})
+
+
+
 test_that("check modalvalue", {
   xx <- c(1, 2, 3, 4, 5, 4, 3, 2, 1, 2)
   expect_equal(modalvalue(xx), 2)

@@ -272,7 +272,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 
 
-<p>This vignette walks through an example of <strong>LDATS</strong> at the command line and was constructed using <strong>LDATS</strong> version 0.2.0 on 2019-07-03.</p>
+<p>This vignette walks through an example of <strong>LDATS</strong> at the command line and was constructed using <strong>LDATS</strong> version 0.2.0 on 2019-07-05.</p>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
 <p>To obtain the most recent version of <strong>LDATS</strong>, install and load the most recent version from GitHub:</p>
@@ -358,8 +358,8 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <a class="sourceLine" id="cb8-2" data-line-number="2">                                <span class="dt">document_covariate_table =</span> rodents<span class="op">$</span>document_covariate_table,</a>
 <a class="sourceLine" id="cb8-3" data-line-number="3">                                <span class="dt">formulas =</span> <span class="op">~</span><span class="st"> </span>sin_year <span class="op">+</span><span class="st"> </span>cos_year,</a>
 <a class="sourceLine" id="cb8-4" data-line-number="4">                                <span class="dt">nchangepoints =</span> <span class="kw">c</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1</span>), </a>
-<a class="sourceLine" id="cb8-5" data-line-number="5">                                <span class="dt">weights =</span> <span class="kw">document_weights</span>(rodents<span class="op">$</span>document_term_table),</a>
-<a class="sourceLine" id="cb8-6" data-line-number="6">                                <span class="dt">timename =</span> <span class="st">&quot;newmoon&quot;</span>,</a>
+<a class="sourceLine" id="cb8-5" data-line-number="5">                                <span class="dt">timename =</span> <span class="st">&quot;newmoon&quot;</span>,</a>
+<a class="sourceLine" id="cb8-6" data-line-number="6">                                <span class="dt">weights =</span> <span class="kw">document_weights</span>(rodents<span class="op">$</span>document_term_table),</a>
 <a class="sourceLine" id="cb8-7" data-line-number="7">                                <span class="dt">control =</span> <span class="kw">TS_controls_list</span>(<span class="dt">nit =</span> <span class="dv">1000</span>))</a></code></pre>
 <p>We can adjust options for both TS functions using <code>TS_controls_list()</code>. For a full list see <code>?TS_controls_list</code>. Here we illustrate adjusting the number of ptMCMC iterations - the default is 10000, but it is convenient to use fewer iterations for code development.</p>
 <p>Also, it is important to note that by default the TS functions take the name of the time-step column from the <code>document_covariate_table</code> to be <code>&quot;time&quot;</code>. To pass a different column name, use the <code>timename</code> argument in <code>TS_on_LDA()</code>.</p>
@@ -393,17 +393,15 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 </div>
 <div id="full-analysis-with-lda_ts" class="section level2">
 <h2>Full analysis with <code>LDA_TS</code></h2>
-<p>Finally, we can perform an entire LDATS analysis, including all of the above steps, using the <code>LDA_TS()</code> function and passing options to the LDA and TS functions using <code>LDA_TS_controls_list()</code>.</p>
-<pre class="sourceCode r" id="cb12"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">lda_ts_results &lt;-<span class="st"> </span><span class="kw">LDA_TS</span>(<span class="dt">document_term_table =</span> rodents<span class="op">$</span>document_term_table,</a>
-<a class="sourceLine" id="cb12-2" data-line-number="2">                         <span class="dt">document_covariate_table =</span> rodents<span class="op">$</span>document_covariate_table,</a>
-<a class="sourceLine" id="cb12-3" data-line-number="3">                         <span class="dt">nseeds =</span> <span class="dv">10</span>, </a>
-<a class="sourceLine" id="cb12-4" data-line-number="4">                         <span class="dt">topics =</span> <span class="dv">2</span><span class="op">:</span><span class="dv">5</span>,</a>
-<a class="sourceLine" id="cb12-5" data-line-number="5">                         <span class="dt">formulas =</span> <span class="op">~</span><span class="st"> </span>sin_year <span class="op">+</span><span class="st"> </span>cos_year,</a>
-<a class="sourceLine" id="cb12-6" data-line-number="6">                         <span class="dt">nchangepoints=</span> <span class="dv">0</span><span class="op">:</span><span class="dv">1</span>,</a>
-<a class="sourceLine" id="cb12-7" data-line-number="7">                         <span class="dt">weights =</span> <span class="kw">document_weights</span>(rodents<span class="op">$</span>document_term_table),</a>
-<a class="sourceLine" id="cb12-8" data-line-number="8">                         <span class="dt">timename =</span> <span class="st">&quot;newmoon&quot;</span>,</a>
-<a class="sourceLine" id="cb12-9" data-line-number="9">                         <span class="dt">control =</span> <span class="kw">LDA_TS_controls_list</span>(</a>
-<a class="sourceLine" id="cb12-10" data-line-number="10">                           <span class="dt">TS_control =</span> <span class="kw">TS_controls_list</span>(<span class="dt">nit =</span> <span class="dv">1000</span>)))</a></code></pre>
+<p>Finally, we can perform an entire LDATS analysis, including all of the above steps, using the <code>LDA_TS()</code> function and passing options to the LDA and TS functions using <code>LDA_TS_controls_list()</code>. The default is for <code>LDA_TS</code> to weight the time series model based on the document sizes, so we do not need to tell it to do so.</p>
+<pre class="sourceCode r" id="cb12"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">lda_ts_results &lt;-<span class="st"> </span><span class="kw">LDA_TS</span>(<span class="dt">data =</span> rodents,</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">                         <span class="dt">nseeds =</span> <span class="dv">10</span>, </a>
+<a class="sourceLine" id="cb12-3" data-line-number="3">                         <span class="dt">topics =</span> <span class="dv">2</span><span class="op">:</span><span class="dv">5</span>,</a>
+<a class="sourceLine" id="cb12-4" data-line-number="4">                         <span class="dt">formulas =</span> <span class="op">~</span><span class="st"> </span>sin_year <span class="op">+</span><span class="st"> </span>cos_year,</a>
+<a class="sourceLine" id="cb12-5" data-line-number="5">                         <span class="dt">nchangepoints=</span> <span class="dv">0</span><span class="op">:</span><span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb12-6" data-line-number="6">                         <span class="dt">timename =</span> <span class="st">&quot;newmoon&quot;</span>,</a>
+<a class="sourceLine" id="cb12-7" data-line-number="7">                         <span class="dt">control =</span> <span class="kw">LDA_TS_controls_list</span>(</a>
+<a class="sourceLine" id="cb12-8" data-line-number="8">                           <span class="dt">TS_control =</span> <span class="kw">TS_controls_list</span>(<span class="dt">nit =</span> <span class="dv">1000</span>)))</a></code></pre>
 <p><code>LDA_TS()</code> returns a list of all the model objects, and we can access their contents as above:</p>
 <pre class="sourceCode r" id="cb13"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">names</span>(lda_ts_results)</a>
 <a class="sourceLine" id="cb13-2" data-line-number="2"><span class="co">#&gt; [1] &quot;LDA models&quot;         &quot;Selected LDA model&quot; &quot;TS models&quot;         </span></a>

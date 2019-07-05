@@ -6,12 +6,12 @@
 \title{Conduct a set of Time Series analyses on a set of LDA models}
 \usage{
 TS_on_LDA(LDA_models, document_covariate_table, formulas = ~1,
-  nchangepoints = 0, weights = NULL, timename = "time",
+  nchangepoints = 0, timename = "time", weights = NULL,
   control = TS_controls_list())
 
 check_TS_on_LDA_inputs(LDA_models, document_covariate_table,
-  formulas = ~1, nchangepoints = 0, weights = NULL,
-  timename = "time", control = TS_controls_list())
+  formulas = ~1, nchangepoints = 0, timename = "time",
+  weights = NULL, control = TS_controls_list())
 }
 \arguments{
 \item{LDA_models}{List of LDA models (class \code{LDA_set}, produced by
@@ -41,6 +41,9 @@ change points. Each element in the vector is the number of change points
 used to segement the data for each formula (entry in \code{formulas}) 
 component of the TS model, for each selected LDA model.}
 
+\item{timename}{\code{character} element indicating the time variable
+used in the time series. Defaults to \code{"time"}.}
+
 \item{weights}{Optional class \code{numeric} vector of weights for each 
 document. Defaults to \code{NULL}, translating to an equal weight for
 each document. When using \code{multinom_TS} in a standard LDATS 
@@ -49,9 +52,6 @@ as the result of \code{\link[topicmodels]{LDA}} is a matrix of
 proportions, which does not account for size differences among documents.
 For most models, a scaling of the weights (so that the average is 1) is
 most appropriate, and this is accomplished using \code{document_weights}.}
-
-\item{timename}{\code{character} element indicating the time variable
-used in the time series. Defaults to \code{"time"}.}
 
 \item{control}{Class \code{TS_controls} list, holding control parameters
 for the Time Series model including the parallel tempering Markov Chain 
@@ -85,7 +85,7 @@ This is a wrapper function that expands the main Time Series
   weights <- document_weights(document_term_table)
   formulas <- c(~ 1, ~ newmoon)
   mods <- TS_on_LDA(LDA_models, document_covariate_table, formulas,
-                    nchangepoints = 0:1, weights, timename = "newmoon",
+                    nchangepoints = 0:1, timename = "newmoon", weights, 
                     controls)
 }
 

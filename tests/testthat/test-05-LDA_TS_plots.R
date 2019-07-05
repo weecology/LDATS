@@ -6,9 +6,8 @@ lda_data <- rodents$document_term_table
 document_term_table <- rodents$document_term_table
 document_covariate_table <- rodents$document_covariate_table
    
-mod <- LDA_TS(document_term_table, document_covariate_table,
+mod <- LDA_TS(rodents,
               topics = 2, nseeds = 1, formulas = ~ 1, nchangepoints = 1,
-              weights = document_weights(document_term_table), 
               timename = "newmoon",
               control = LDA_TS_controls_list(
                         TS_control = TS_controls_list(nit = 100, seed = 1)))
