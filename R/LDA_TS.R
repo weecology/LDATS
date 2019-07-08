@@ -178,7 +178,7 @@ check_LDA_TS_inputs <- function(data = NULL,
                               nchangepoints = 0,
                               timename = "time", 
                               weights = TRUE, 
-                              control = LDA_TS_controls_list()){
+                              control = list()){
   check_control(control)
   control <- do.call("LDA_TS_control", control)
   data <- conform_LDA_TS_data(data)
@@ -282,9 +282,6 @@ package_LDA_TS <- function(LDAs, sel_LDA, TSs, sel_TSs){
 #'
 #' @param response \code{character} element indicating the response variable 
 #'   used in the time series. Should be set to \code{"gamma"} for LDATS.
-#'
-#' @param timename \code{character} element indicating the time variable
-#'   used in the time series. Defaults to \code{"time"}.
 #'
 #' @param lambda \code{numeric} "weight" decay term used to set the prior
 #'   on the regressors within each chunk-level model. Defaults to 0, 

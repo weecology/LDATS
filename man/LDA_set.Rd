@@ -25,8 +25,8 @@ value of \code{topics}. Must be conformable to \code{integer} value.}
 \item{control}{A \code{list} of parameters to control the running and 
 selecting of LDA models. Values not input assume default values set 
 by \code{\link{LDA_set_control}}. Values for running the LDAs replace 
-defaults in \code{\link[topicmodels]{LDAcontrol}} (but if \code{seed} is 
-given, it will be overwritten; use \code{iseed} instead).}
+defaults in (\code{LDAcontol}, see \code{\link[topicmodels]{LDA}} (but if
+ \code{seed} is given, it will be overwritten; use \code{iseed} instead).}
 }
 \value{
 List (class: \code{LDA_set}) of LDA models (class: \code{LDA_VEM}).

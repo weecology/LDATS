@@ -17,6 +17,11 @@
 * The number of observations for a VEM-fit LDA is now calculated as the number of entries in the document-term matrix (following Hoffman et al. and Buntine, see `?logLik.LDA_VEM` for references.
 * Associated, we now include an AICc function that is general and works in this specific case as defined  ([addresses issue 129](https://github.com/weecology/LDATS/issues/129))
 
+## Fixed bug in plotting across multiple outputs
+* A few plotting functions use `devAskNewPage` to help flip through multiple outputs, but were only resetting it with `devAskNewPage(FALSE)` at the end of a clean execution. The code has been updated with `on.exit(devAskNewPage(FALSE))`, which accounts for failed executions. ([addresses issue 118](https://github.com/weecology/LDATS/issues/118))
+
+
+
 # [LDATS 0.1.0](https://github.com/weecology/LDATS/pull/105)
 *2019-02-11*
 

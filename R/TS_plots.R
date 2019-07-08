@@ -79,6 +79,7 @@ TS_diagnostics_plot <- function(x, interactive = TRUE){
 #' @export 
 #'
 eta_diagnostics_plots <- function(x, interactive){
+  on.exit(devAskNewPage(FALSE))
   etas <- x$etas
   if (is.null(etas)){
     return()
@@ -99,7 +100,6 @@ eta_diagnostics_plots <- function(x, interactive){
     posterior_plot(etas[ , i], lab)
     autocorr_plot(etas[ , i])
   }  
-  devAskNewPage(FALSE)
 }
 
 #' @rdname TS_diagnostics_plot
@@ -110,6 +110,7 @@ eta_diagnostics_plots <- function(x, interactive){
 #' @export 
 #'
 rho_diagnostics_plots <- function(x, interactive){
+  on.exit(devAskNewPage(FALSE))
   rhos <- x$rhos
   if (is.null(rhos)){
     return()
@@ -124,7 +125,6 @@ rho_diagnostics_plots <- function(x, interactive){
     posterior_plot(rhos[ , i], lab)
     autocorr_plot(rhos[ , i])
   }  
-  devAskNewPage(FALSE)
 }
 
 #' @title Produce the trace plot panel for the TS diagnostic plot of a 

@@ -801,9 +801,6 @@ check_formula <- function(data, formula){
 #' @param response \code{character} element indicating the response variable 
 #'   used in the time series. 
 #'
-#' @param timename \code{character} element indicating the time variable
-#'   used in the time series. Defaults to \code{"time"}.
-#'
 #' @param lambda \code{numeric} "weight" decay term used to set the prior
 #'   on the regressors within each chunk-level model. Defaults to 0, 
 #'   corresponding to a fully vague prior.

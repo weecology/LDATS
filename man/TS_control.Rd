@@ -59,9 +59,6 @@ distributions (via the highest posterior density interval, see
 \code{\link[coda]{HPDinterval}}).}
 
 \item{seed}{Input to \code{set.seed} for replication purposes.}
-
-\item{timename}{\code{character} element indicating the time variable
-used in the time series. Defaults to \code{"time"}.}
 }
 \value{
 \code{list}, with named elements corresponding to the arguments.

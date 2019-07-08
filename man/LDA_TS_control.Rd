@@ -70,9 +70,6 @@ replication purposes.}
 
 \item{...}{Additional arguments to be passed to 
 \code{\link[topicmodels]{LDA}} as a \code{control} input.}
-
-\item{timename}{\code{character} element indicating the time variable
-used in the time series. Defaults to \code{"time"}.}
 }
 \value{
 \code{list}, with named elements corresponding to the arguments.

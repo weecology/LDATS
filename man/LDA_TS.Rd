@@ -15,7 +15,7 @@ conform_LDA_TS_data(data, quiet = FALSE)
 
 check_LDA_TS_inputs(data = NULL, topics = 2, nseeds = 1,
   formulas = ~1, nchangepoints = 0, timename = "time",
-  weights = TRUE, control = LDA_TS_controls_list())
+  weights = TRUE, control = list())
 }
 \arguments{
 \item{data}{Either a document term table or a list including at least
