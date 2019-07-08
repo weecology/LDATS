@@ -42,7 +42,10 @@ used to segement the data for each formula (entry in \code{formulas})
 component of the TS model, for each selected LDA model.}
 
 \item{timename}{\code{character} element indicating the time variable
-used in the time series. Defaults to \code{"time"}.}
+used in the time series. Defaults to \code{"time"}. The variable must be
+integer-conformable or a \code{Date}. If the variable named
+is a \code{Date}, the input is converted to an integer, resulting in the
+timestep being 1 day, which is often not desired behavior.}
 
 \item{weights}{Optional class \code{numeric} vector of weights for each 
 document. Defaults to \code{NULL}, translating to an equal weight for

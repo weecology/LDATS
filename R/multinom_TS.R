@@ -26,7 +26,10 @@
 #'   \code{\link{verify_changepoint_locations}}.
 #'
 #' @param timename \code{character} element indicating the time variable
-#'   used in the time series. Defaults to \code{"time"}.
+#'   used in the time series. Defaults to \code{"time"}. The variable must be
+#'   integer-conformable or a \code{Date}. If the variable named
+#'   is a \code{Date}, the input is converted to an integer, resulting in the
+#'   timestep being 1 day, which is often not desired behavior.
 #'
 #' @param weights Optional class \code{numeric} vector of weights for each 
 #'   document. Defaults to \code{NULL}, translating to an equal weight for
@@ -209,8 +212,11 @@ package_chunk_fits <- function(chunks, fits){
 #' @param changepoints Numeric vector indicating locations of the change 
 #'   points. Must be conformable to \code{integer} values. 
 #'
-#' @param timename \code{character} name of the column containing the time
-#'   variable used to chunk out the time series. 
+#' @param timename \code{character} element indicating the time variable
+#'   used in the time series. Defaults to \code{"time"}. The variable must be
+#'   integer-conformable or a \code{Date}. If the variable named
+#'   is a \code{Date}, the input is converted to an integer, resulting in the
+#'   timestep being 1 day, which is often not desired behavior.
 #'
 #' @return Data frame of \code{start} and \code{end} times for each chunk 
 #'   (row).
@@ -235,8 +241,11 @@ prep_chunks <- function(data, changepoints = NULL,
 #' @param changepoints Numeric vector indicating locations of the change 
 #'   points. Must be conformable to \code{integer} values. 
 #'
-#' @param timename \code{character} name of the column containing the time
-#'   variable used to chunk out the time series.  
+#' @param timename \code{character} element indicating the time variable
+#'   used in the time series. Defaults to \code{"time"}. The variable must be
+#'   integer-conformable or a \code{Date}. If the variable named
+#'   is a \code{Date}, the input is converted to an integer, resulting in the
+#'   timestep being 1 day, which is often not desired behavior.
 #'
 #' @return Logical indicator of the check passing \code{TRUE} or failing
 #'   \code{FALSE}.
@@ -284,7 +293,10 @@ verify_changepoint_locations <- function(data, changepoints = NULL,
 #'   most appropriate, and this is accomplished using \code{document_weights}.
 #'
 #' @param timename \code{character} element indicating the time variable
-#'   used in the time series. Defaults to \code{"time"}.
+#'   used in the time series. Defaults to \code{"time"}. The variable must be
+#'   integer-conformable or a \code{Date}. If the variable named
+#'   is a \code{Date}, the input is converted to an integer, resulting in the
+#'   timestep being 1 day, which is often not desired behavior.
 #'
 #' @param control A \code{list} of parameters to control the fitting of the
 #'   Time Series model including the parallel tempering Markov Chain 

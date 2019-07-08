@@ -53,7 +53,10 @@
 #'   component of the TS model, for each selected LDA model.
 #' 
 #' @param timename \code{character} element indicating the time variable
-#'   used in the time series. Defaults to \code{"time"}.
+#'   used in the time series. Defaults to \code{"time"}. The variable must be
+#'   integer-conformable or a \code{Date}. If the variable named
+#'   is a \code{Date}, the input is converted to an integer, resulting in the
+#'   timestep being 1 day, which is often not desired behavior.
 #'
 #' @param weights Optional input for overriding standard weighting for 
 #'   documents in the time series. Defaults to \code{TRUE},

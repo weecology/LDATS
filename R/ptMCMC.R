@@ -407,7 +407,10 @@ update_ids <- function(ids, swaps){
 #'   for each continuous model and each LDA model.
 #'
 #' @param timename \code{character} element indicating the time variable
-#'   used in the time series.
+#'   used in the time series. Defaults to \code{"time"}. The variable must be
+#'   integer-conformable or a \code{Date}. If the variable named
+#'   is a \code{Date}, the input is converted to an integer, resulting in the
+#'   timestep being 1 day, which is often not desired behavior.
 #'
 #' @param weights Optional class \code{numeric} vector of weights for each 
 #'   document. Defaults to \code{NULL}, translating to an equal weight for
@@ -622,7 +625,10 @@ process_saves <- function(saves, control = list()){
 #'   for each continuous model and each LDA model.
 #'
 #' @param timename \code{character} element indicating the time variable
-#'   used in the time series. 
+#'   used in the time series. Defaults to \code{"time"}. The variable must be
+#'   integer-conformable or a \code{Date}. If the variable named
+#'   is a \code{Date}, the input is converted to an integer, resulting in the
+#'   timestep being 1 day, which is often not desired behavior.
 #'
 #' @param weights Optional class \code{numeric} vector of weights for each 
 #'   document. Defaults to \code{NULL}, translating to an equal weight for

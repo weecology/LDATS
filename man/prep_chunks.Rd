@@ -15,8 +15,11 @@ by the \code{timename} input.}
 \item{changepoints}{Numeric vector indicating locations of the change 
 points. Must be conformable to \code{integer} values.}
 
-\item{timename}{\code{character} name of the column containing the time
-variable used to chunk out the time series.}
+\item{timename}{\code{character} element indicating the time variable
+used in the time series. Defaults to \code{"time"}. The variable must be
+integer-conformable or a \code{Date}. If the variable named
+is a \code{Date}, the input is converted to an integer, resulting in the
+timestep being 1 day, which is often not desired behavior.}
 }
 \value{
 Data frame of \code{start} and \code{end} times for each chunk 

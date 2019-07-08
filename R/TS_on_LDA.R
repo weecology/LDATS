@@ -37,7 +37,10 @@
 #'   component of the TS model, for each selected LDA model.
 #'
 #' @param timename \code{character} element indicating the time variable
-#'   used in the time series. Defaults to \code{"time"}.
+#'   used in the time series. Defaults to \code{"time"}. The variable must be
+#'   integer-conformable or a \code{Date}. If the variable named
+#'   is a \code{Date}, the input is converted to an integer, resulting in the
+#'   timestep being 1 day, which is often not desired behavior.
 #'
 #' @param weights Optional class \code{numeric} vector of weights for each 
 #'   document. Defaults to \code{NULL}, translating to an equal weight for
@@ -454,7 +457,10 @@ check_document_covariate_table <- function(document_covariate_table,
 #' @title Check that the time vector is proper
 #' 
 #' @description Check that the vector of time values is included in the 
-#'   document covariate table and that it is either numeric or a date.
+#'   document covariate table and that it is either a integer-conformable or
+#'   a \code{date}. If it is a \code{date}, the input is converted to an 
+#'   integer, resulting in the timestep being 1 day, which is often not 
+#'   desired behavior. 
 #'   
 #' @param document_covariate_table Document covariate table used to query
 #'   for the time column.
@@ -475,8 +481,9 @@ check_timename <- function(document_covariate_table, timename){
     stop("timename not present in document covariate table")
   }
   time_covariate <- document_covariate_table[ , timename]
-  if (!(is.numeric(time_covariate)) & !(is.Date(time_covariate))){
-    stop("covariate indicated by timename is not numeric or temporal")
+  if (!(is.Date(time_covariate)) & 
+      !is.numeric(time_covariate) || !all(time_covariate %% 1 == 0)){
+    stop("covariate indicated by timename is not an integer or a date")
   }
 }
 

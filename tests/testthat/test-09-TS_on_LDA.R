@@ -189,6 +189,10 @@ test_that("check check_timename", {
                               rep(timename, 2)))
   expect_error(check_timename(document_covariate_table, 1))
   expect_error(check_timename(data.frame(letters), "letters"))
+
+  dct2 <- document_covariate_table
+  dct2[,timename] <- dct2[,timename] + 0.1
+  expect_error(check_timename(dct2, timename))
 })
 
 test_that("check check_formulas", {
