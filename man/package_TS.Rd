@@ -83,7 +83,7 @@ coefficients across the segments (columns), as estimated by
                    (\code{lls}).}
     \item{nparams}{Total number of parameters in the full model,
                    including the change point locations and regressors.}
-    \item{deviance}{Penalized negative log-likelihood, based on 
+    \item{AIC}{Penalized negative log-likelihood, based on 
                     \code{logLik} and \code{nparams}.}
   }
 }

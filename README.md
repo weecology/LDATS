@@ -14,11 +14,11 @@ Dirichlet Allocation (LDA) and Bayesian time series (TS) analyses.
 For a full description of the math underlying the `LDATS` package, see the
 [*draft* technical manuscript](https://github.com/weecology/LDATS/blob/master/manuscript/simonis_et_al.pdf).
 
-## Status: Stable Version Available, In Development
+## Status: In Development, Stable Version Available Soon
 
 The package is currently in active development by the 
-[Weecology Team](https://www.weecology.org), although a stable version (0.1.0)
-has been submitted to CRAN. The API is well defined at this point and should 
+[Weecology Team](https://www.weecology.org), although a stable version
+will soon be submitted to CRAN. The API is well defined at this point and should 
 not change substantially.
 
 ## Installation
@@ -37,21 +37,17 @@ Here is an example of a full LDA-TS analysis using the
 ```r
 library(LDATS)
 data(rodents)
-dtt <- rodents$document_term_table
-dct <- rodents$document_covariate_table
-weights <- document_weights(dtt)
-r_LDATS <- LDA_TS(dtt, dct, topics = 2:5, nseeds = 2, 
-                  formulas = c(~1), nchangepoints = 0:1,
-                  weights = weights, timename = "newmoon")
+r_LDATS <- LDA_TS(rodents, topics = 2:5, nseeds = 2, formulas = ~1,  
+                  nchangepoints = 0:1, timename = "newmoon")
 ```
 Which conducts two replicates (`nseeds`) for each of two to five topics in an
 LDA model using the document term table, selects the best (AIC) of those, 
-then conducts six time series models on it (each of an intercept only and
-newmoon-based regression under 0, 1, and 2 changepoints), then selects the 
-best (AIC) of the time series, and packages all the models together. This uses
-the document term table to weight the samples by their sizes (number of words)
-and instructs the function to use the column named `"newmoon"` in the
-document covariates table as the time variable.
+then conducts two time series models on it (an intercept-only model under 
+0 and 1 changepoints), then selects the best (AIC) of the time series, and 
+packages all the models together. This uses the document term table to 
+weight the samples by their sizes (number of words) and instructs the 
+function to use the column named `"newmoon"` in the document covariates table
+as the time variable.
 
 The resulting object is of class `LDA_TS`, which has a few basic routines 
 available:
@@ -61,7 +57,7 @@ print(r_LDATS)
 ```
 prints the selected LDA and TS models and 
 ```r
-plot(r_LDATS, timename = "newmoon")
+plot(r_LDATS)
 ```
 produces a 4-panel figure of them a la Figure 1 from
 [Christensen et al. 2018](https://doi.org/10.1002/ecy.2373).

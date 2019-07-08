@@ -246,7 +246,7 @@ check_TS_inputs <- function(data, formula, nchangepoints, timename, weights,
 #'                    (\code{lls}).}
 #'     \item{nparams}{Total number of parameters in the full model,
 #'                    including the change point locations and regressors.}
-#'     \item{deviance}{Penalized negative log-likelihood, based on 
+#'     \item{AIC}{Penalized negative log-likelihood, based on 
 #'                     \code{logLik} and \code{nparams}.}
 #'   }
 #'
@@ -282,7 +282,7 @@ package_TS <- function(data, formula, timename, weights, control, rho_dist,
   logLik <- mean(lls)
   ncoefs <- ncol(eta_dist)
   nparams <- nchangepoints + ncoefs 
-  deviance <- -2 * logLik + 2 * nparams
+  AIC <- -2 * logLik + 2 * nparams
 
   out <- list(data = data, formula = formula, nchangepoints = nchangepoints,
               timename = timename, weights = weights,
@@ -290,7 +290,7 @@ package_TS <- function(data, formula, timename, weights, control, rho_dist,
               etas = eta_dist, ptMCMC_diagnostics = ptMCMC_diagnostics,
               rho_summary = rho_summary, rho_vcov = rho_vcov,
               eta_summary = eta_summary, eta_vcov = eta_vcov,
-              logLik = logLik, nparams = nparams, deviance = deviance)
+              logLik = logLik, nparams = nparams, AIC = AIC)
   class(out) <- c("TS_fit", "list")
   to_hide <- c("data", "weights", "control", "lls", "rhos", "etas", 
                "rho_vcov", "eta_vcov")
@@ -860,19 +860,24 @@ TS_control <- function(memoise = TRUE, response = "gamma", lambda = 0,
 
 }
 
-#' @title Determine the AIC (deviance) value of a Time Series model
+#' @title Determine the log likelihood of a Time Series model
 #'
-#' @description Convenience function to extract the AIC (deviance) element of 
-#'   \code{TS_fit}-class object fit by \code{\link{multinom_TS}}.
+#' @description Convenience function to extract and format the log likelihood
+#'   of a \code{TS_fit}-class object fit by \code{\link{multinom_TS}}.
 #'
 #' @param object Class \code{TS_fit} object to be evaluated.
 #'
 #' @param ... Not used, simply included to maintain method compatability.
 #'
-#' @param k Not used, simply included to maintain method compatability.
+#' @return Log likelihood of the model \code{logLik}, also with \code{df}
+#'   (degrees of freedom) and \code{nobs} (number of observations) values.
 #'
 #' @export
 #'
-AIC.TS_fit <- function(object, ..., k = 2){
-  object$deviance
+logLik.TS_fit <- function(object, ...){
+  val <- object$logLik
+  attr(val, "df") <- object$nparams
+  attr(val, "nobs") <- nrow(object$data)
+  class(val) <- "logLik"
+  val
 }

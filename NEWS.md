@@ -26,6 +26,11 @@
 ## Improved pkgdown site
 * Function organization ([addresses issue 122](https://github.com/weecology/LDATS/issues/122)) and navbar formatting.
 
+## Editing of output from `TS`
+* Due to a misread of earlier code, the AIC value in the output from `TS` was named "deviance". The output has been updated to return the AIC.
+
+## Replacement of `AIC` method with `logLik` method for `TS_fit`
+
 # [LDATS 0.1.0](https://github.com/weecology/LDATS/pull/105)
 *2019-02-11*
 
