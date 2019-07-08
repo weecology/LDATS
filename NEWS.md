@@ -20,7 +20,11 @@
 ## Fixed bug in plotting across multiple outputs
 * A few plotting functions use `devAskNewPage` to help flip through multiple outputs, but were only resetting it with `devAskNewPage(FALSE)` at the end of a clean execution. The code has been updated with `on.exit(devAskNewPage(FALSE))`, which accounts for failed executions. ([addresses issue 118](https://github.com/weecology/LDATS/issues/118))
 
+## Renamed functions
+* `summarize_TS` has been renamed `package_TS` to align with the other `package_` functions that package model output.
 
+## Improved pkgdown site
+* Function organization ([addresses issue 122](https://github.com/weecology/LDATS/issues/122)) and navbar formatting.
 
 # [LDATS 0.1.0](https://github.com/weecology/LDATS/pull/105)
 *2019-02-11*

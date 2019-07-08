@@ -449,7 +449,7 @@ prep_ptMCMC_inputs <- function(data, formula, nchangepoints, timename,
 }
 
 
-#' @title Pre-claculate the change point proposal distribution for the ptMCMC 
+#' @title Pre-calculate the change point proposal distribution for the ptMCMC 
 #'   algorithm
 #'
 #' @description Calculate the proposal distribution in advance of actually

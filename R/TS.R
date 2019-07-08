@@ -146,7 +146,7 @@ TS <- function(data, formula, nchangepoints, timename = "time",
                                weights, control)
   eta_dist <- est_regressors(rho_dist, data, formula, timename, weights, 
                              control)
-  summarize_TS(data, formula, timename, weights, control, rho_dist, eta_dist)
+  package_TS(data, formula, timename, weights, control, rho_dist, eta_dist)
 }
 
 #' @rdname TS
@@ -252,7 +252,7 @@ check_TS_inputs <- function(data, formula, nchangepoints, timename, weights,
 #'
 #' @export
 #'
-summarize_TS <- function(data, formula, timename, weights, control, rho_dist, 
+package_TS <- function(data, formula, timename, weights, control, rho_dist, 
                          eta_dist){
 
   check_formula(data, formula) 

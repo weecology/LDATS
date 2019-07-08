@@ -2,7 +2,7 @@
 % Please edit documentation in R/ptMCMC.R
 \name{prep_proposal_dist}
 \alias{prep_proposal_dist}
-\title{Pre-claculate the change point proposal distribution for the ptMCMC 
+\title{Pre-calculate the change point proposal distribution for the ptMCMC 
   algorithm}
 \usage{
 prep_proposal_dist(nchangepoints, control = list())

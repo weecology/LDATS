@@ -138,27 +138,27 @@ test_that("check est_regressors", {
                control))
 })
 
-test_that("check summarize_TS", {
-  summ <- summarize_TS(data, formula, timename, weights,  control, 
+test_that("check package_TS", {
+  summ <- package_TS(data, formula, timename, weights,  control, 
                        rho_dist, eta_dist)
   expect_is(summ, "TS_fit")
   expect_equal(length(summ), 17)
   expect_equal(names(summ)[3], "nchangepoints")
   expect_error(
-    summarize_TS("ok", formula, timename, weights, control, rho_dist, 
+    package_TS("ok", formula, timename, weights, control, rho_dist, 
                   eta_dist))
-  expect_error(summarize_TS(data, formula, "ok", weights,control, rho_dist,
+  expect_error(package_TS(data, formula, "ok", weights,control, rho_dist,
                             eta_dist))
-  expect_error(summarize_TS(data, "ok", timename, weights, control, rho_dist,
+  expect_error(package_TS(data, "ok", timename, weights, control, rho_dist,
                             eta_dist))
 
-  expect_error(summarize_TS(data, formula, timename, weights,"ok", rho_dist,
+  expect_error(package_TS(data, formula, timename, weights,"ok", rho_dist,
                             eta_dist))
-  expect_error(summarize_TS(data, formula, timename,weights, control, "ok",
+  expect_error(package_TS(data, formula, timename,weights, control, "ok",
                             eta_dist))
-  expect_error(summarize_TS(data, formula, timename,weights, control,
+  expect_error(package_TS(data, formula, timename,weights, control,
                             rho_dist, "ok"))
-  expect_error(summarize_TS("ok", formula, timename,weights, control,
+  expect_error(package_TS("ok", formula, timename,weights, control,
                             rho_dist, eta_dist))
 })
 
