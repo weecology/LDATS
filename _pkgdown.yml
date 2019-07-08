@@ -2,18 +2,19 @@ url: https://weecology.github.io/ldats
 
 navbar:
   title: "ldats"
-  left:
-    - text: "Vignettes"
-      href: articles/index.html
-    - text: "Functions"
-      href: reference/index.html
-    - text: "News"
-      href: news/index.html
-  right:
-   - icon: fa-twitter
-     href: https://twitter.com/weecology
-   - icon: fa-github
-     href: https://github.com/weecology/ldats
+  structure:
+    left: [home, articles, reference, news]
+    right: [twitter, github] 
+  components: 
+    articles:
+      text: "Vignettes"
+    reference: 
+      text: "Functions"
+    news: 
+      text: "News"
+    twitter:
+      icon: fa-twitter
+      href: https://twitter.com/weecology
 
 reference:
   - title: "Joint LDA and Time Series"
@@ -48,7 +49,7 @@ reference:
       - ecdf_plot
       - posterior_plot
       - autocorr_plot
-      - set_TS_summary_cols
+      - set_TS_summary_plot_cols
       - TS_summary_plot
       - pred_gamma_TS_plot
       - rho_lines
@@ -92,7 +93,7 @@ reference:
       - expand_TS
       - prep_TS_data
       - select_TS
-      - print_model_run_msg
+      - print_model_run_message
   - title: "Control options"
     desc: "Functions to set function options defined through control lists"
     contents:
@@ -126,3 +127,9 @@ reference:
       - memoise_fun
       - mirror_vcov
       - normalize
+  - title: "Data and Package"
+    desc: "Datasets provided and the package"
+    contents:
+      - jornada
+      - rodents
+      - LDATS
