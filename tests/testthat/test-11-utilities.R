@@ -67,19 +67,19 @@ test_that("check mirror_vcov", {
   formulas <- ~ newmoon
   nchangepoints <- 2
   weights <- document_weights(document_term_table)
-  control <- LDA_TS_controls_list()
+  control <- list()
   timename <- "newmoon"
-  LDAs <- LDA_set(document_term_table, topics, nseeds, control$LDA_control)
-  LDA_models <- select_LDA(LDAs, control$LDA_control)
-  control <- TS_controls_list(nit = 1e2, seed = 1)
+  LDAs <- LDA_set(document_term_table, topics, nseeds, list())
+  LDA_models <- select_LDA(LDAs, list())
+  control <- list(nit = 1e2, seed = 1)
   mods <- expand_TS(LDA_models, formulas, nchangepoints)
   formula <- mods$formula[[1]]
   nchangepoints <- mods$nchangepoints[1]
   data <- prep_TS_data(document_covariate_table, LDA_models, mods, 1)
-  rho_dist <- est_changepoints(data, formula, nchangepoints, weights, 
-                               timename, control)
-  mod <- multinom_TS(data, formula, changepoints = NULL, weights, 
-                     timename, control)
+  rho_dist <- est_changepoints(data, formula, nchangepoints, timename, 
+                               weights, control)
+  mod <- multinom_TS(data, formula, changepoints = NULL, timename, weights, 
+                     control)
   expect_equal(isSymmetric(vcov(mod[[1]][[1]])), FALSE)
   expect_equal(isSymmetric(mirror_vcov(mod[[1]][[1]])), TRUE)
 
@@ -103,12 +103,10 @@ test_that("check memoise_fun", {
 })
 
 test_that("check check_control", {
-  expect_silent(check_control(TS_controls_list(), "TS_controls"))
-  expect_silent(check_control(LDA_TS_controls_list(), "LDA_TS_controls"))
-  expect_silent(check_control(LDA_controls_list(), "LDA_controls"))
-  expect_error(check_control(TS_controls_list(), "LDA_controls"))
-  expect_error(check_control(LDA_controls_list(), "TS_controls"))
-  expect_error(check_control(LDA_TS_controls_list(), "LDA_controls"))
+  expect_silent(check_control(list(), "list"))
+  expect_silent(check_control(list()))
+  expect_error(check_control(list(), 1))
+  expect_error(check_control(1, "list"))
 })
 
 

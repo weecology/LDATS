@@ -3,7 +3,7 @@ tenv <- "cran"
 
 data(rodents)
 lda_data <- rodents$document_term_table
-ldas <- LDA_set(lda_data, c(2, 4), 2, LDA_controls_list(quiet = TRUE))
+ldas <- LDA_set(lda_data, c(2, 4), 2, list(quiet = TRUE))
 lda <- ldas[[1]]
 xtime <- rodents$newmoon
 

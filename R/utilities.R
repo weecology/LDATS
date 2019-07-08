@@ -38,7 +38,6 @@ iftrue <- function(x = TRUE, alt = NULL){
   x
 }
 
-
 #' @title Determine the mode of a distribution
 #'
 #' @description Find the most common entry in a vector. Ties are not allowed,
@@ -198,9 +197,9 @@ memoise_fun <- function(fun, memoise_tf){
 #'
 #' @export
 #'
-check_control <- function(control, eclass = "TS_controls"){
+check_control <- function(control, eclass = "list"){
   if (!(eclass %in% class(control))){
-    stop(paste0("control is not of class ", eclass))
+    stop(paste0("control is not a ", eclass))
   }
 }
 

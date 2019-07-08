@@ -272,7 +272,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 
 
-<p>This vignette walks through an example of <strong>LDATS</strong> at the command line and was constructed using <strong>LDATS</strong> version 0.2.0 on 2019-07-05.</p>
+<p>This vignette walks through an example of <strong>LDATS</strong> at the command line and was constructed using <strong>LDATS</strong> version 0.2.0 on 2019-07-07.</p>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
 <p>To obtain the most recent version of <strong>LDATS</strong>, install and load the most recent version from GitHub:</p>
@@ -315,11 +315,11 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="stage-1-lda-models" class="section level2">
 <h2>Stage 1: LDA models</h2>
 <p>We use <code>LDA_set()</code> to run replicate LDA models (each with its own seed) with varying numbers of topics (<code>2:5</code>) and <code>select_LDA()</code> to select the best model.</p>
-<p>We use <code>LDA_controls_list())</code> to pass controls to the LDA function. In this case, we can set <code>quiet = TRUE</code> to make the model run quietly.</p>
+<p>We use the <code>control</code> argument to pass controls to the LDA function via a <code>list</code>. In this case, we can set <code>quiet = TRUE</code> to make the model run quietly.</p>
 <pre class="sourceCode r" id="cb3"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">lda_model_set &lt;-<span class="st"> </span><span class="kw">LDA_set</span>(<span class="dt">document_term_table =</span> rodents<span class="op">$</span>document_term_table,</a>
 <a class="sourceLine" id="cb3-2" data-line-number="2">                         <span class="dt">topics =</span> <span class="kw">c</span>(<span class="dv">2</span><span class="op">:</span><span class="dv">5</span>),</a>
 <a class="sourceLine" id="cb3-3" data-line-number="3">                         <span class="dt">nseeds =</span> <span class="dv">10</span>,</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">                         <span class="dt">control =</span> <span class="kw">LDA_controls_list</span>(<span class="dt">quiet =</span> <span class="ot">TRUE</span>))</a></code></pre>
+<a class="sourceLine" id="cb3-4" data-line-number="4">                         <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">quiet =</span> <span class="ot">TRUE</span>))</a></code></pre>
 <p>If we do not pass any controls, by default, <code>quiet = FALSE</code> (here run with only <code>2:3</code> topics and <code>2</code> seeds, to keep output short):</p>
 <pre class="sourceCode r" id="cb4"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">lda_model_set2 &lt;-<span class="st"> </span><span class="kw">LDA_set</span>(<span class="dt">document_term_table =</span> rodents<span class="op">$</span>document_term_table,</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2">                         <span class="dt">topics =</span> <span class="kw">c</span>(<span class="dv">2</span><span class="op">:</span><span class="dv">3</span>),</a>
@@ -328,7 +328,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">#&gt; Running LDA with 2 topics (seed 4)</span></a>
 <a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt; Running LDA with 3 topics (seed 2)</span></a>
 <a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt; Running LDA with 3 topics (seed 4)</span></a></code></pre>
-<p><code>LDA_set()</code> returns a list of LDA models. We use <code>select_LDA()</code> to identify the best number of topics and choice of seed from our set of models. By default, we will choose models based on minimum AIC. To use different selection criteria, define the appropriate functions and specify them using <code>LDA_controls_list(measurer = [measurer function], selector = [max, min, etc])</code>.</p>
+<p><code>LDA_set()</code> returns a list of LDA models. We use <code>select_LDA()</code> to identify the best number of topics and choice of seed from our set of models. By default, we will choose models based on minimum AIC. To use different selection criteria, define the appropriate functions and specify them by passing <code>list(measurer = [measurer function], selector = [max, min, etc])</code> to the <code>control</code> argument.</p>
 <pre class="sourceCode r" id="cb5"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">selected_lda_model &lt;-<span class="st"> </span><span class="kw">select_LDA</span>(lda_model_set)</a></code></pre>
 <p>We can access the results of the model:</p>
 <pre class="sourceCode r" id="cb6"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co"># Number of topics:</span></a>
@@ -360,10 +360,10 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <a class="sourceLine" id="cb8-4" data-line-number="4">                                <span class="dt">nchangepoints =</span> <span class="kw">c</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1</span>), </a>
 <a class="sourceLine" id="cb8-5" data-line-number="5">                                <span class="dt">timename =</span> <span class="st">&quot;newmoon&quot;</span>,</a>
 <a class="sourceLine" id="cb8-6" data-line-number="6">                                <span class="dt">weights =</span> <span class="kw">document_weights</span>(rodents<span class="op">$</span>document_term_table),</a>
-<a class="sourceLine" id="cb8-7" data-line-number="7">                                <span class="dt">control =</span> <span class="kw">TS_controls_list</span>(<span class="dt">nit =</span> <span class="dv">1000</span>))</a></code></pre>
-<p>We can adjust options for both TS functions using <code>TS_controls_list()</code>. For a full list see <code>?TS_controls_list</code>. Here we illustrate adjusting the number of ptMCMC iterations - the default is 10000, but it is convenient to use fewer iterations for code development.</p>
+<a class="sourceLine" id="cb8-7" data-line-number="7">                                <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">nit =</span> <span class="dv">1000</span>))</a></code></pre>
+<p>We can adjust options (default settings can be seen using <code>TS_control()</code>) for both TS functions by passing a list to the <code>control</code> argument. For a full list see <code>?TS_control</code>. Here we illustrate adjusting the number of ptMCMC iterations - the default is 10000, but it is convenient to use fewer iterations for code development.</p>
 <p>Also, it is important to note that by default the TS functions take the name of the time-step column from the <code>document_covariate_table</code> to be <code>&quot;time&quot;</code>. To pass a different column name, use the <code>timename</code> argument in <code>TS_on_LDA()</code>.</p>
-<p><code>select_TS()</code> will identify the best-fit changepoint model of the models from <code>TS_on_LDA()</code>. As with <code>select_LDA()</code>, we can adjust the <code>measurer</code> and <code>selector</code> using <code>TS_controls_list()</code>.</p>
+<p><code>select_TS()</code> will identify the best-fit changepoint model of the models from <code>TS_on_LDA()</code>. As with <code>select_LDA()</code>, we can adjust the <code>measurer</code> and <code>selector</code> functions using the <code>control</code> argument list.</p>
 <pre class="sourceCode r" id="cb9"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">selected_changepoint_model &lt;-<span class="st"> </span><span class="kw">select_TS</span>(changepoint_models)</a></code></pre>
 <p>We can access the results of the selected changepoint model:</p>
 <pre class="sourceCode r" id="cb10"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co"># Number of changepoints</span></a>
@@ -393,15 +393,14 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 </div>
 <div id="full-analysis-with-lda_ts" class="section level2">
 <h2>Full analysis with <code>LDA_TS</code></h2>
-<p>Finally, we can perform an entire LDATS analysis, including all of the above steps, using the <code>LDA_TS()</code> function and passing options to the LDA and TS functions using <code>LDA_TS_controls_list()</code>. The default is for <code>LDA_TS</code> to weight the time series model based on the document sizes, so we do not need to tell it to do so.</p>
+<p>Finally, we can perform an entire LDATS analysis, including all of the above steps, using the <code>LDA_TS()</code> function and passing options to the LDA and TS functions as a <code>list</code> to the <code>control</code> argument. The default is for <code>LDA_TS</code> to weight the time series model based on the document sizes, so we do not need to tell it to do so.</p>
 <pre class="sourceCode r" id="cb12"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">lda_ts_results &lt;-<span class="st"> </span><span class="kw">LDA_TS</span>(<span class="dt">data =</span> rodents,</a>
 <a class="sourceLine" id="cb12-2" data-line-number="2">                         <span class="dt">nseeds =</span> <span class="dv">10</span>, </a>
 <a class="sourceLine" id="cb12-3" data-line-number="3">                         <span class="dt">topics =</span> <span class="dv">2</span><span class="op">:</span><span class="dv">5</span>,</a>
 <a class="sourceLine" id="cb12-4" data-line-number="4">                         <span class="dt">formulas =</span> <span class="op">~</span><span class="st"> </span>sin_year <span class="op">+</span><span class="st"> </span>cos_year,</a>
 <a class="sourceLine" id="cb12-5" data-line-number="5">                         <span class="dt">nchangepoints=</span> <span class="dv">0</span><span class="op">:</span><span class="dv">1</span>,</a>
 <a class="sourceLine" id="cb12-6" data-line-number="6">                         <span class="dt">timename =</span> <span class="st">&quot;newmoon&quot;</span>,</a>
-<a class="sourceLine" id="cb12-7" data-line-number="7">                         <span class="dt">control =</span> <span class="kw">LDA_TS_controls_list</span>(</a>
-<a class="sourceLine" id="cb12-8" data-line-number="8">                           <span class="dt">TS_control =</span> <span class="kw">TS_controls_list</span>(<span class="dt">nit =</span> <span class="dv">1000</span>)))</a></code></pre>
+<a class="sourceLine" id="cb12-7" data-line-number="7">                         <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">nit =</span> <span class="dv">1000</span>))</a></code></pre>
 <p><code>LDA_TS()</code> returns a list of all the model objects, and we can access their contents as above:</p>
 <pre class="sourceCode r" id="cb13"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">names</span>(lda_ts_results)</a>
 <a class="sourceLine" id="cb13-2" data-line-number="2"><span class="co">#&gt; [1] &quot;LDA models&quot;         &quot;Selected LDA model&quot; &quot;TS models&quot;         </span></a>

@@ -9,8 +9,7 @@ test_that("LDA_TS on 0 changepoints", {
   mod0 <- LDA_TS(rodents,
                  topics = 2, nseeds = 1, formulas = ~ 1, nchangepoints = 0,
                  timename = "newmoon",
-                 control = LDA_TS_controls_list(
-                           TS_control = TS_controls_list(nit = 100)))
+                 control = list(nit = 100))
   expect_is(mod0, "LDA_TS")
   expect_equal(length(names(mod0)), 4)
   expect_is(mod0[[4]], "TS_fit")
@@ -20,8 +19,7 @@ test_that("LDA_TS on 1 changepoints", {
   mod1 <- LDA_TS(rodents,
                  topics = 2, nseeds = 1, formulas = ~ 1, nchangepoints = 1,
                  timename = "newmoon",
-                 control = LDA_TS_controls_list(
-                           TS_control = TS_controls_list(nit = 100)))
+                 control = list(nit = 100))
   expect_is(mod1, "LDA_TS")
   expect_equal(length(names(mod1)), 4)
   expect_is(mod1[[4]], "TS_fit")
@@ -31,17 +29,13 @@ test_that("check print on LDA_TS", {
   mod1 <- LDA_TS(rodents,
                  topics = 2, nseeds = 1, formulas = ~ 1, nchangepoints = 1,
                  timename = "newmoon",
-                 control = LDA_TS_controls_list(
-                           TS_control = TS_controls_list(nit = 100)))
+                 control = list(nit = 100))
   expect_output(print(mod1))
 })
 
 test_that("Check LDA_TS_controls_list", {
-  expect_is(LDA_TS_controls_list(), "LDA_TS_controls")
-  expect_equal(length(LDA_TS_controls_list()), 3)
-  expect_error(LDA_TS_controls_list(LDA_control = "ok"))
-  expect_error(LDA_TS_controls_list(TS_control = "ok"))
-  expect_error(LDA_TS_controls_list(quiet = "ok"))
+  expect_is(LDA_TS_control(), "list")
+  expect_equal(length(LDA_TS_control()), 3)
 })
 
 test_that("Check conform_LDA_TS_data", {
@@ -65,9 +59,10 @@ test_that("Check package_LDA_TS", {
   nchangepoints <- 1
   weights <- document_weights(document_term_table)
   timename <-  "newmoon"
-  control <- LDA_TS_controls_list(TS_control = TS_controls_list(nit = 100))
-  LDAs <- LDA_set(document_term_table, topics, nseeds, control$LDA_control)
-  sel_LDA <- select_LDA(LDAs, control$LDA_control)
+  control <- LDA_TS_control(nit = 100)
+  LDAs <- LDA_set(document_term_table, topics, nseeds, 
+                  control$LDA_set_control)
+  sel_LDA <- select_LDA(LDAs, control$LDA_set_control)
   TSs <- TS_on_LDA(sel_LDA, document_covariate_table, formulas, nchangepoints,
                    timename, weights, control$TS_control)
   sel_TSs <- select_TS(TSs, control$TS_control)

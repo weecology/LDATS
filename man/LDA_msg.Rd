@@ -4,7 +4,7 @@
 \alias{LDA_msg}
 \title{Create the model-running-message for an LDA}
 \usage{
-LDA_msg(mod_topics, mod_seeds, control)
+LDA_msg(mod_topics, mod_seeds, control = list())
 }
 \arguments{
 \item{mod_topics}{\code{integer} value corresponding to the number of 

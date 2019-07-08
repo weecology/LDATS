@@ -59,13 +59,13 @@ head(rodents$document_covariate_table, 10)
 
 We use `LDA_set()` to run replicate LDA models (each with its own seed) with varying numbers of topics (`2:5`) and `select_LDA()` to select the best model.
 
-We use `LDA_controls_list())` to pass controls to the LDA function. In this case, we can set `quiet = TRUE` to make the model run quietly. 
+We use the `control` argument to pass controls to the LDA function via a `list`. In this case, we can set `quiet = TRUE` to make the model run quietly. 
 
 ```{r lda_set, eval =F}
 lda_model_set <- LDA_set(document_term_table = rodents$document_term_table,
                          topics = c(2:5),
                          nseeds = 10,
-                         control = LDA_controls_list(quiet = TRUE))
+                         control = list(quiet = TRUE))
 
 ```
 
@@ -78,7 +78,7 @@ lda_model_set2 <- LDA_set(document_term_table = rodents$document_term_table,
                          nseeds = 2)
 ```
 
-`LDA_set()` returns a list of LDA models. We use `select_LDA()` to identify the best number of topics and choice of seed from our set of models. By default, we will choose models based on minimum AIC. To use different selection criteria, define the appropriate functions and specify them using `LDA_controls_list(measurer = [measurer function], selector = [max, min, etc])`. 
+`LDA_set()` returns a list of LDA models. We use `select_LDA()` to identify the best number of topics and choice of seed from our set of models. By default, we will choose models based on minimum AIC. To use different selection criteria, define the appropriate functions and specify them by passing `list(measurer = [measurer function], selector = [max, min, etc])` to the `control` argument. 
 
 ```{r load lda model set, include = F}
 load(here::here('vignettes', 'rodents-example-files', 'lda_model_set.Rds'))
@@ -125,16 +125,16 @@ changepoint_models <- TS_on_LDA(LDA_models = selected_lda_model,
                                 nchangepoints = c(0:1), 
                                 timename = "newmoon",
                                 weights = document_weights(rodents$document_term_table),
-                                control = TS_controls_list(nit = 1000))
+                                control = list(nit = 1000))
 
 ```
 
 
-We can adjust options for both TS functions using `TS_controls_list()`. For a full list see `?TS_controls_list`. Here we illustrate adjusting the number of ptMCMC iterations - the default is 10000, but it is convenient to use fewer iterations for code development.
+We can adjust options (default settings can be seen using `TS_control()`) for both TS functions by passing a list to the `control` argument. For a full list see `?TS_control`. Here we illustrate adjusting the number of ptMCMC iterations - the default is 10000, but it is convenient to use fewer iterations for code development.
 
 Also, it is important to note that by default the TS functions take the name of the time-step column from the `document_covariate_table` to be `"time"`. To pass a different column name, use the `timename` argument in `TS_on_LDA()`. 
 
-`select_TS()` will identify the best-fit changepoint model of the models from `TS_on_LDA()`. As with `select_LDA()`, we can adjust the `measurer` and `selector` using `TS_controls_list()`. 
+`select_TS()` will identify the best-fit changepoint model of the models from `TS_on_LDA()`. As with `select_LDA()`, we can adjust the `measurer` and `selector` functions using the `control` argument list. 
 
 ```{r reload ts, include = F}
 load(here::here('vignettes', 'rodents-example-files', 'changepoint_models.Rds'))
@@ -167,7 +167,7 @@ plot(selected_changepoint_model)
 
 ## Full analysis with `LDA_TS`
 
-Finally, we can perform an entire LDATS analysis, including all of the above steps, using the `LDA_TS()` function and passing options to the LDA and TS functions using `LDA_TS_controls_list()`. The default is for `LDA_TS` to weight the time series model based on the document sizes, so we do not need to tell it to do so.
+Finally, we can perform an entire LDATS analysis, including all of the above steps, using the `LDA_TS()` function and passing options to the LDA and TS functions as a `list` to the `control` argument. The default is for `LDA_TS` to weight the time series model based on the document sizes, so we do not need to tell it to do so.
 
 ```{r lda_ts, eval = F}
 lda_ts_results <- LDA_TS(data = rodents,
@@ -176,8 +176,7 @@ lda_ts_results <- LDA_TS(data = rodents,
                          formulas = ~ sin_year + cos_year,
                          nchangepoints= 0:1,
                          timename = "newmoon",
-                         control = LDA_TS_controls_list(
-                           TS_control = TS_controls_list(nit = 1000)))
+                         control = list(nit = 1000))
 ```
 
 ```{r load ldats results, include = F}

@@ -356,8 +356,9 @@ pred_gamma_TS_plot <- function(x, selection = "median", cols, xlab = NULL){
   } else{
     spec_rhos <- NULL
   }
-  seg_mods <- multinom_TS(x$data, x$formula, spec_rhos, x$weights, 
-                          x$timename, x$control)
+  x$control$timename <- NULL # to remove from v0.1.0 model fits
+  seg_mods <- multinom_TS(x$data, x$formula, spec_rhos,  
+                          x$timename, x$weights, x$control)
   nsegs <- length(seg_mods[[1]])
   t1 <- min(x$data[, x$timename])
   t2 <- max(x$data[, x$timename])

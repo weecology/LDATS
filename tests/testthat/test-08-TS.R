@@ -9,20 +9,19 @@ nseeds <- 1
 formulas <- ~ 1
 nchangepoints <- 1
 weights <- document_weights(document_term_table)
-control <- LDA_TS_controls_list()
-LDAs <- LDA_set(document_term_table, topics, nseeds, control$LDA_control)
-LDA_models <- select_LDA(LDAs, control$LDA_control)
-control <- TS_controls_list(nit = 1e3, seed = 1)
+LDAs <- LDA_set(document_term_table, topics, nseeds)
+LDA_models <- select_LDA(LDAs)
+control <- list(nit = 1e3, seed = 1)
 timename <- "newmoon"
 mods <- expand_TS(LDA_models, formulas, nchangepoints)
 formula <- mods$formula[[1]]
 nchangepoints <- mods$nchangepoints[1]
 data <- prep_TS_data(document_covariate_table, LDA_models, mods, 1)
-TSmod <- TS(data, formula, nchangepoints, weights, timename, control)
+TSmod <- TS(data, formula, nchangepoints, timename, weights, control)
 
-rho_dist <- est_changepoints(data, formula, nchangepoints, weights, timename,
+rho_dist <- est_changepoints(data, formula, nchangepoints, timename, weights,
                              control)
-eta_dist <- est_regressors(rho_dist, data, formula, weights, timename, 
+eta_dist <- est_regressors(rho_dist, data, formula, timename, weights,
                            control)
 set.seed(1)
 test_that("check measure_eta_vcov", {
@@ -36,8 +35,8 @@ test_that("check measure_rho_vcov", {
   nchangepoints <- dim(rho_dist$cpts)[1]
   if (is.null(nchangepoints)){
     nchangepoints <- 0
-    mod <- multinom_TS(data, formula, changepoints = NULL, weights,
-                       timename, control)
+    mod <- multinom_TS(data, formula, changepoints = NULL, 
+                       timename, weights, control)
     mod <- mod[[1]][[1]]
     lls <- as.numeric(logLik(mod))
     rhos <- NULL
@@ -65,8 +64,8 @@ test_that("check summarize_rhos", {
   nchangepoints <- dim(rho_dist$cpts)[1]
   if (is.null(nchangepoints)){
     nchangepoints <- 0
-    mod <- multinom_TS(data, formula, changepoints = NULL, weights, 
-                       timename, control)
+    mod <- multinom_TS(data, formula, changepoints = NULL, 
+                       timename, weights, control)
     mod <- mod[[1]][[1]]
     lls <- as.numeric(logLik(mod))
     rhos <- NULL
@@ -86,7 +85,7 @@ test_that("check summarize_rhos", {
 
 test_that("check est_changepoints", {
   set.seed(1)
-  rhos <- est_changepoints(data, formula, nchangepoints, weights, timename,
+  rhos <- est_changepoints(data, formula, nchangepoints, timename, weights,
                            control)
   expect_is(rhos, "list")
   expect_equal(length(rhos), 5)
@@ -95,105 +94,101 @@ test_that("check est_changepoints", {
   expect_equal(dim(rhos[[1]]), c(1, 6, 1000))
   expect_equal(round(sum(rhos$lls), 1), -1253579.6)
 
-  expect_error(est_changepoints(data, formula, nchangepoints, weights, 
-               timename, "ok"))
-  expect_error(est_changepoints(data, formula, nchangepoints, weights, "ok",
+  expect_error(est_changepoints(data, formula, nchangepoints,  
+               timename, weights,"ok"))
+  expect_error(est_changepoints(data, formula, nchangepoints, "ok", weights,
                control))
-  expect_error(est_changepoints(data, formula, nchangepoints, "ok", 
-               timename, control))
-  expect_error(est_changepoints(data, formula, "ok", weights,  
-               timename, control))
-  expect_error(est_changepoints(data, "ok", nchangepoints, weights,  
-               timename, control))
-  expect_error(est_changepoints("ok", formula, nchangepoints, weights,  
-               timename, control))
+  expect_error(est_changepoints(data, formula, nchangepoints, "timename", 
+               "ok", control))
+  expect_error(est_changepoints(data, formula, "ok",   
+               timename, weights, control))
+  expect_error(est_changepoints(data, "ok", nchangepoints,   
+               timename, weights, control))
+  expect_error(est_changepoints("ok", formula, nchangepoints,   
+               timename, weights, control))
 })
 
 test_that("check est_regressors", {
   set.seed(1)
-  rhos <- est_changepoints(data, formula, nchangepoints, weights,  
-               timename, control)
-  etas <- est_regressors(rhos, data, formula, weights, timename, control)
+  rhos <- est_changepoints(data, formula, nchangepoints,   
+               timename, weights, control)
+  etas <- est_regressors(rhos, data, formula, timename, weights, control)
   set.seed(1)
-  rhos2 <- est_changepoints(data, formula, nchangepoints = 2, weights, 
-                timename, TS_controls_list(nit = 1e2, seed = 1))
-  etas2 <- est_regressors(rhos2, data, formula, weights, timename, 
-                 TS_controls_list(nit = 1e2, seed = 1))
+  rhos2 <- est_changepoints(data, formula, nchangepoints = 2,  
+                timename, weights, list(nit = 1e2, seed = 1))
+  etas2 <- est_regressors(rhos2, data, formula, timename, weights,
+                   list(nit = 1e2, seed = 1))
 
   expect_is(etas, "matrix")
   expect_equal(colnames(etas), c("1_2:(Intercept)", "2_2:(Intercept)"))
   expect_equal(dim(etas), c(1000, 2))
   expect_equal(round(sum(etas[ , 1]), 1), 2132.2)
   expect_equal(round(sum(etas2[1:10 , 1]), 1), 20.9)
-  expect_error(est_regressors("ok", data, formula, weights, timename,
+  expect_error(est_regressors("ok", data, formula, timename,weights,
                 control))
-  expect_error(est_regressors(rhos, data, formula, weights,  
-               timename, "ok"))
-  expect_error(est_regressors(rhos, data, formula, "ok",  
+  expect_error(est_regressors(rhos, data, formula, weights,timename, "ok"))
+  expect_error(est_regressors(rhos, data, formula, "ok",  weights, control))
+  expect_error(est_regressors(rhos, data, timename, "ok", 
                timename, control))
-  expect_error(est_regressors(rhos, data, "ok", weights,  
-               timename, control))
-  expect_error(est_regressors(rhos, "ok", formula, weights,  
-               timename, control))
-  expect_error(est_regressors(rhos, data, formula, weights,  
-               "ok", control))
+  expect_error(est_regressors(rhos, "ok", formula, timename, weights,control))
+  expect_error(est_regressors(rhos, data, "ok", timename, weights,control))
   rhosx <- rhos
   names(rhosx)[1] <- "ok"
-  expect_error(est_regressors(rhosx, data, formula, weights,  
-               timename, control))
+  expect_error(est_regressors(rhosx, data, formula, timename, weights,
+               control))
 })
 
 test_that("check summarize_TS", {
-  summ <- summarize_TS(data, formula, weights, timename, control, 
+  summ <- summarize_TS(data, formula, timename, weights,  control, 
                        rho_dist, eta_dist)
   expect_is(summ, "TS_fit")
   expect_equal(length(summ), 17)
   expect_equal(names(summ)[3], "nchangepoints")
   expect_error(
-    summarize_TS("ok", formula, weights, timename, control, rho_dist, 
+    summarize_TS("ok", formula, timename, weights, control, rho_dist, 
                   eta_dist))
-  expect_error(summarize_TS(data, formula, weights, "ok", control, rho_dist,
+  expect_error(summarize_TS(data, formula, "ok", weights,control, rho_dist,
                             eta_dist))
-  expect_error(summarize_TS(data, "ok", weights, timename, control, rho_dist,
+  expect_error(summarize_TS(data, "ok", timename, weights, control, rho_dist,
                             eta_dist))
-  expect_error(summarize_TS(data, formula, "ok", timename, control, rho_dist,
+
+  expect_error(summarize_TS(data, formula, timename, weights,"ok", rho_dist,
                             eta_dist))
-  expect_error(summarize_TS(data, formula, weights, timename, "ok", rho_dist,
+  expect_error(summarize_TS(data, formula, timename,weights, control, "ok",
                             eta_dist))
-  expect_error(summarize_TS(data, formula, weights, timename, control, "ok",
-                            eta_dist))
-  expect_error(summarize_TS(data, formula, weights, timename, control,
+  expect_error(summarize_TS(data, formula, timename,weights, control,
                             rho_dist, "ok"))
+  expect_error(summarize_TS("ok", formula, timename,weights, control,
+                            rho_dist, eta_dist))
 })
 
 test_that("check TS", {
   expect_is(TSmod, "TS_fit")
   expect_equal(length(TSmod), 17)
   expect_equal(TSmod$nchangepoints, 1)
-  expect_error(TS(data, formula, nchangepoints = 0, weights, timename, "ok"))
-  expect_error(TS(data, formula, nchangepoints = 0, "ok", timename, control))
-  expect_error(TS(data, "ok", nchangepoints = 0, weights, timename, control))
-  expect_error(TS("ok", formula, nchangepoints = 0, weights, timename, 
+  expect_error(TS(data, formula, nchangepoints = 0, timename, weights, "ok"))
+  expect_error(TS(data, formula, nchangepoints = 0, "ok", weights, control))
+  expect_error(TS(data, "ok", nchangepoints = 0, timename, "ok", control))
+  expect_error(TS("ok", formula, nchangepoints = 0, timename, weights, 
                    control))
-  expect_error(TS(data, formula, "ok", weights, timename, control))
-  expect_error(TS(data, formula, nchangepoints = 0, weights, "ok", control))
+  expect_error(TS(data, formula, "ok", timename, weights, control))
 })
 
 test_that("check check_TS_inputs", {
-  expect_silent(check_TS_inputs(data, formula, nchangepoints, weights, 
-                                timename, control))
-  expect_error(check_TS_inputs(data, formula, nchangepoints, weights, 
-                               timename, "ok"))
-  expect_error(check_TS_inputs(data, formula, nchangepoints, "ok", 
-                               timename, control))
-  expect_error(check_TS_inputs(data, formula, "ok", weights,  
-                               timename, control))
-  expect_error(check_TS_inputs(data, "ok", nchangepoints, weights,  
-                               timename, control))
-  expect_error(check_TS_inputs("ok", formula, nchangepoints, weights,  
-                               timename, control))
-  expect_error(check_TS_inputs(data, formula, nchangepoints, weights,  
-                               "ok", control))
+  expect_silent(check_TS_inputs(data, formula, nchangepoints, 
+                                timename, weights, control))
+  expect_error(check_TS_inputs(data, formula, nchangepoints,  
+                               timename, weights, "ok"))
+  expect_error(check_TS_inputs(data, formula, nchangepoints,
+                               timename, "ok", control))
+  expect_error(check_TS_inputs(data, formula, "ok",   
+                               timename, weights, control))
+  expect_error(check_TS_inputs(data, "ok", nchangepoints,   
+                               timename, weights, control))
+  expect_error(check_TS_inputs("ok", formula, nchangepoints,   
+                               timename, weights, control))
+  expect_error(check_TS_inputs(data, formula, nchangepoints,   
+                               "ok",weights,  control))
 })
 
 test_that("check print for TS_fit", {
@@ -202,16 +197,16 @@ test_that("check print for TS_fit", {
 
 test_that("check progress bar functions", {
   expect_is(prep_pbar(), "progress_bar")
-  expect_silent(prep_pbar(TS_controls_list(quiet = TRUE)))
-  expect_error(prep_pbar(LDA_controls_list()))
-  expect_error(prep_pbar(TS_controls_list(), "ok"))
+  expect_silent(prep_pbar(list(quiet = TRUE)))
+  expect_error(prep_pbar("ok"))
+  expect_error(prep_pbar(list(), "ok"))
   expect_error(prep_pbar(nr = 0.5))
   pp <- prep_pbar()
   expect_is(update_pbar(pp), "progress_bar")
-  expect_silent(update_pbar(pp, TS_controls_list(quiet = TRUE)))
+  expect_silent(update_pbar(pp, list(quiet = TRUE)))
 
-  expect_error(update_pbar(pp, LDA_controls_list()))
-  expect_error(update_pbar("ok", TS_controls_list()))
+  expect_error(update_pbar(pp, "ok"))
+  expect_error(update_pbar("ok", list()))
 })
 
 
@@ -226,7 +221,7 @@ test_that("check check_formula", {
   expect_error(check_formula(document_covariate_table, formula))
 })
 
-test_that("check TS_controls_list", {
-  expect_is(TS_controls_list(), "TS_controls")
-  expect_equal(length(TS_controls_list()), 16)
+test_that("check TS_control", {
+  expect_is(TS_control(), "list")
+  expect_equal(length(TS_control()), 16)
 })

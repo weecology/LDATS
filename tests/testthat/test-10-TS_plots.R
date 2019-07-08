@@ -10,16 +10,15 @@ nseeds <- 1
 formulas <- ~ 1
 nchangepoints <- 1
 weights <- document_weights(document_term_table)
-control <- LDA_TS_controls_list()
-LDAs <- LDA_set(document_term_table, topics, nseeds, control$LDA_control)
-LDA_models <- select_LDA(LDAs, control$LDA_control)
-control <- TS_controls_list(nit = 1e3, seed = 1)
+LDAs <- LDA_set(document_term_table, topics, nseeds)
+LDA_models <- select_LDA(LDAs)
+control <- list(nit = 1e3, seed = 1)
 timename <- "newmoon"
 mods <- expand_TS(LDA_models, formulas, nchangepoints)
 formula <- mods$formula[[1]]
 nchangepoints <- mods$nchangepoints[1]
 data <- prep_TS_data(document_covariate_table, LDA_models, mods, 1)
-TSmod <- TS(data, formula, nchangepoints, weights, timename, control)
+TSmod <- TS(data, formula, nchangepoints, timename, weights, control)
 
 
 test_that("check rho_hist color generator", {
@@ -148,7 +147,7 @@ test_that("check plotting of TS_fit", {
 })
 
 test_that("check TS_diagnostics_plot", {
-  TSmod0 <- TS(data, formula, nchangepoints = 0, weights, timename, control)
+  TSmod0 <- TS(data, formula, nchangepoints = 0, timename, weights, control)
   if (tenv == "cran"){
     expect_silent(TS_diagnostics_plot(TSmod0, interactive = FALSE))
   } else{

@@ -4,7 +4,7 @@
 \alias{select_LDA}
 \title{Select the best LDA model(s) for use in time series}
 \usage{
-select_LDA(LDA_models = NULL, control = LDA_controls_list())
+select_LDA(LDA_models = NULL, control = list())
 }
 \arguments{
 \item{LDA_models}{An object of class \code{LDA_set} produced by

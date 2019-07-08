@@ -9,15 +9,11 @@ document_covariate_table <- rodents$document_covariate_table
 mod <- LDA_TS(rodents,
               topics = 2, nseeds = 1, formulas = ~ 1, nchangepoints = 1,
               timename = "newmoon",
-              control = LDA_TS_controls_list(
-                        TS_control = TS_controls_list(nit = 100, seed = 1)))
+              control = list(nit = 100, seed = 1))
 
 test_that("check plot for LDA_TS", {
   if (tenv == "cran"){
-    expect_silent(plot(mod, 
-                       control = LDA_TS_controls_list(
-                                       TS_control = TS_controls_list(
-                                                     nit = 100, seed = 1)),
+    expect_silent(plot(mod, control = list(nit = 100, seed = 1),
                            interactive = FALSE))
   } else{
     plot(mod, interactive = FALSE)
