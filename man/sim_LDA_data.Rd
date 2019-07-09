@@ -40,7 +40,8 @@ For a given set of parameters \code{alpha} and \code{Beta} and
   alpha <- 1.2
   Beta <- matrix(c(0.1, 0.1, 0.8, 0.2, 0.6, 0.2), 2, 3, byrow = TRUE)
   sim_LDA_data(N, Beta, alpha = alpha)
-  Theta <- matrix(c(), 4, 2
+  Theta <- matrix(c(0.2, 0.8, 0.8, 0.2, 0.5, 0.5, 0.9, 0.1), 4, 2, 
+               byrow = TRUE)
   sim_LDA_data(N, Beta, Theta = Theta)
 
 }

@@ -1,7 +1,9 @@
 # LDATS (development version)
 
-# LDATS 0.2.0
-*Active Development*
+Version numbers follow [Semantic Versioning](https://semver.org/).
+
+# [LDATS 0.2.0](https://github.com/weecology/ldats/releases/tag/v0.2.0)
+*2019-07-09*
 
 ## API updates
 * At the `LDA_TS` function level, the separate inputs for data tables (`document_term_table` and `document_covariate_table`) have been merged into a single input `data`, which can be just the `document_term_table` or a list including the `document_term_table` and optionally also a `document_covariate_table`. If covariates aren't provided, the function now constructs a covariate table assuming equi-spaced observations. If using a list, the function assumes that one and only one element of the list will have a name containing the letters "term", and at most one element containing the letters "covariate" (regular expressions are used for matching). ([addresses issue 119](https://github.com/weecology/LDATS/issues/119))
