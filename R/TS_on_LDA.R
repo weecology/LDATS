@@ -482,7 +482,7 @@ check_timename <- function(document_covariate_table, timename){
   }
   time_covariate <- document_covariate_table[ , timename]
   if (!(is.Date(time_covariate)) & 
-      !is.numeric(time_covariate) || !all(time_covariate %% 1 == 0)){
+      (!is.numeric(time_covariate) || !all(time_covariate %% 1 == 0))){
     stop("covariate indicated by timename is not an integer or a date")
   }
 }
