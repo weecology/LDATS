@@ -10,8 +10,8 @@
 #' @importFrom mvtnorm rmvnorm
 #' @importFrom nnet multinom
 #' @importFrom progress progress_bar
-#' @importFrom stats acf AIC as.formula coef ecdf logLik median rgeom runif sd
-#'   terms var vcov
+#' @importFrom stats acf AIC as.formula coef ecdf logLik median rgeom rnorm
+#'   runif sd terms var vcov
 #' @importFrom topicmodels LDA
 #' @importFrom viridis viridis
 #'
