@@ -95,10 +95,11 @@ reference:
       - select_TS
       - print_model_run_message
   - title: "Simulation"
-    desc: "Functions for simulating data"
+    desc: "Functions for simulating input data"
     contents:
       - sim_LDA_data
       - sim_TS_data
+      - sim_LDA_TS_data
   - title: "Control options"
     desc: "Functions to set function options defined through control lists"
     contents:

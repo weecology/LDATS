@@ -31,10 +31,11 @@ of length M (as determined by \code{X}).}
 A document-by-topic \code{matrix} of probabilities (dim: M x k).
 }
 \description{
-
-}
-\details{
-
+For a given set of covariates \code{X}; parameters \code{Eta},
+  \code{rho}, and \code{err}; and document-specific time stamps \code{tD},
+  simulate a document-by-topic matrix. Additional structuring variables 
+  (numbers of topics (k), documents (M), segments (S), and 
+  covariates per segment (C)) are inferred from input objects.
 }
 \examples{
   tD <- c(1, 3, 4, 6)
@@ -43,6 +44,6 @@ A document-by-topic \code{matrix} of probabilities (dim: M x k).
          nrow = length(tD), ncol = 4, byrow = TRUE)
   Eta <- matrix(c(0.5, 1.2, 0.3, 1.1, 0.9, 0.1, 0.5, 0.5), 
           nrow = ncol(X), ncol = 2, byrow = TRUE)
-  sim_TS_data(X, Eta, rho, tD)
+  sim_TS_data(X, Eta, rho, tD, err = 1)
   
 }

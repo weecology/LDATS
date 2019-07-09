@@ -27,6 +27,7 @@
 * Basic simulation functionality has been added for help with generating data sets to analyze. ([addresses issue 114](https://github.com/weecology/LDATS/issues/114))
 * `sim_LDA_data` simulates an LDA model's document-term-matrix
 * `sim_TS_data` simulates an TS model's document-topic distribution matrix
+* `sim_LDA_TS_data` simulates an LDA_TS model's document-term-matrix
 * `softmax` and `logsumexp` are added as utility functions
 
 ## Improved pkgdown site
