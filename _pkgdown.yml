@@ -41,7 +41,7 @@ reference:
     contents:
       - TS
       - package_TS
-      - AIC.TS_fit
+      - logLik.TS_fit
       - print.TS_fit
       - plot.TS_fit
       - TS_diagnostics_plot
