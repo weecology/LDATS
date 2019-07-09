@@ -94,6 +94,11 @@ reference:
       - prep_TS_data
       - select_TS
       - print_model_run_message
+  - title: "Simulation"
+    desc: "Functions for simulating data"
+    contents:
+      - sim_LDA_data
+      - sim_TS_data
   - title: "Control options"
     desc: "Functions to set function options defined through control lists"
     contents:
@@ -122,11 +127,13 @@ reference:
       - AICc
       - document_weights
       - iftrue
+      - logsumexp
       - modalvalue
-      - qprint
       - memoise_fun
       - mirror_vcov
       - normalize
+      - qprint
+      - softmax
   - title: "Data and Package"
     desc: "Datasets provided and the package"
     contents:

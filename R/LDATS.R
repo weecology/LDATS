@@ -1,5 +1,6 @@
 #' @importFrom coda as.mcmc autocorr autocorr.diag effectiveSize HPDinterval
 #' @importFrom digest digest
+#' @importFrom extraDistr rcat rdirichlet
 #' @importFrom graphics abline axis hist mtext par plot points rect text
 #' @importFrom grDevices devAskNewPage rgb
 #' @importFrom lubridate is.Date

@@ -5,6 +5,24 @@ if ("sample.kind" %in% names(formals(RNGkind))){
   suppressWarnings(RNGkind(sample.kind = "Rounding"))
 }
 
+test_that("check logsumexp", {
+  expect_is(logsumexp(c(1,2)), "numeric")
+  expect_equal(length(logsumexp(c(1,2))), 1)
+  expect_equal(round(logsumexp(c(1,2)), 2), 2.31)
+  expect_error(logsumexp("ok"))
+})
+
+test_that("check softmax", {
+  expect_is(softmax(c(1,2)), "numeric")
+  expect_equal(length(softmax(c(1,2))), 2)
+  expect_equal(round(softmax(c(1,2)), 2)[1], 0.27)
+  expect_is(softmax(matrix(1, nrow = 2, ncol = 2)), "matrix")
+  expect_equal(dim(softmax(matrix(1, nrow = 2, ncol = 2))), c(2,2))
+  expect_equal((softmax(matrix(1, nrow = 2, ncol = 2)))[1,1], 0.5)
+  expect_error(softmax("ok"))
+  expect_error(softmax(array(1, dim = c(2, 2, 2))))
+})
+
 test_that("check iftrue", {
   expect_equal(iftrue(TRUE,1), 1)
   expect_equal(iftrue(1,2), 1)

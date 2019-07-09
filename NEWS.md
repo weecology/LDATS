@@ -23,6 +23,12 @@
 ## Renamed functions
 * `summarize_TS` has been renamed `package_TS` to align with the other `package_` functions that package model output.
 
+## Simulate functions
+* Basic simulation functionality has been added for help with generating data sets to analyze. ([addresses issue 114](https://github.com/weecology/LDATS/issues/114))
+* `sim_LDA_data` simulates an LDA model's document-term-matrix
+* `sim_TS_data` simulates an TS model's document-topic distribution matrix
+* `softmax` and `logsumexp` are added as utility functions
+
 ## Improved pkgdown site
 * Function organization ([addresses issue 122](https://github.com/weecology/LDATS/issues/122)) and navbar formatting.
 

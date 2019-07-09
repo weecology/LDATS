@@ -30,6 +30,7 @@ Imports:
     coda,
     digest,
     dplyr,
+    extraDistr,
     graphics,
     grDevices,
     here,

@@ -1,3 +1,50 @@
+#' @title Caclulate the log-sum-exponential (LSE) of a vector
+#'
+#' @description Calculate the exponent of a vector (offset by the max), sum
+#'   the elements, calculate the log, remove the offset. 
+#'
+#' @param x \code{numeric} vector
+#' 
+#' @return The LSE. 
+#'
+#' @export
+#'
+logsumexp <- function(x){
+  if(!is.numeric(x)){
+    stop("x must be numeric")
+  }
+  y <- max(x)
+  y + log(sum(exp(x - y)))
+}
+
+#' @title Caclulate the softmax of a vector or matrix of values
+#'
+#' @description Calculate the softmax (normalized exponential) of a vector
+#'  of values or a set of vectors stacked rowwise. 
+#'
+#' @param x \code{numeric} vector or matrix
+#' 
+#' @return The softmax of \code{x}. 
+#'
+#' @export
+#'
+softmax <- function(x){
+  if(!is.numeric(x)){
+    stop("x must be numeric")
+  }
+  if(length(dim(x)) == 0){
+    exp(x - logsumexp(x))
+  } else if (length(dim(x)) == 2){
+    outm <- matrix(NA, nrow = nrow(x), ncol = ncol(x))
+    for(i in 1:nrow(x)){
+      outm[i,] <- exp(x[i,] - logsumexp(x[i,]))
+    }
+    outm
+  } else{
+    stop("currently only defined for vector or matrix")
+  }
+}
+
 #' @title Calculate AICc
 #'
 #' @description Calculate the small sample size correction of
