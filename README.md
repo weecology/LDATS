@@ -4,6 +4,8 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/weecology/LDATS/master/LICENSE)
 [![Lifecycle:maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![Codecov test coverage](https://img.shields.io/codecov/c/github/weecology/LDATS/master.svg)](https://codecov.io/github/weecology/LDATS/branch/master)
+[![DOI](https://zenodo.org/badge/114135612.svg)](https://zenodo.org/badge/latestdoi/114135612)
+
 
 ## Overview
 
@@ -14,9 +16,9 @@ Dirichlet Allocation (LDA) and Bayesian time series (TS) analyses.
 For a full description of the math underlying the `LDATS` package, see the
 [*draft* technical manuscript](https://github.com/weecology/LDATS/blob/master/manuscript/simonis_et_al.pdf).
 
-## Status: In Development, Stable Version Available Soon
+## Status: Ongoing Development, Stable Version Available
 
-The package is currently in active development by the 
+The package is in ongoing development by the 
 [Weecology Team](https://www.weecology.org), although a stable version
 will soon be submitted to CRAN. The API is well defined at this point and should 
 not change substantially.
