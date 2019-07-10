@@ -13,8 +13,10 @@ check_formulas(formulas, document_covariate_table, control)
 \item{document_covariate_table}{Document covariate table used to evaluate
 the availability of the data required by the formula inputs.}
 
-\item{control}{Class \code{TS_controls} list, holding control parameters
-for the Time Series model.}
+\item{control}{A \code{list} of parameters to control the fitting of the
+Time Series model including the parallel tempering Markov Chain 
+Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
+\code{\link{TS_control}}.}
 }
 \description{
 Check that the vector of formulas is actually formatted

@@ -1,8 +1,7 @@
 context("Check ptMCMC functions")
 
 # use old RNG method for sample (for test reproducibility)
-if ("sample.kind" %in% names(formals(RNGkind)))
-{
+if ("sample.kind" %in% names(formals(RNGkind))){
   suppressWarnings(RNGkind(sample.kind = "Rounding"))
 }
 
@@ -15,26 +14,28 @@ nseeds <- 1
 formulas <- ~ 1
 nchangepoints <- 1
 weights <- document_weights(document_term_table)
-TS_controls <- TS_controls_list(timename = "newmoon")
-control <- LDA_TS_controls_list(TS_control = TS_controls)
-LDAs <- LDA_set(document_term_table, topics, nseeds, control$LDA_control)
-LDA_models <- select_LDA(LDAs, control$LDA_control)
-control <- TS_controls_list(nit = 1e3, seed = 1, timename = "newmoon")
+timename <- "newmoon"
+LDAs <- LDA_set(document_term_table, topics, nseeds)
+LDA_models <- select_LDA(LDAs)
+control <- list(nit = 1e3, seed = 1)
 mods <- expand_TS(LDA_models, formulas, nchangepoints)
 formula <- mods$formula[[1]]
 nchangepoints <- mods$nchangepoints[1]
 data <- prep_TS_data(document_covariate_table, LDA_models, mods, 1)
 
 set.seed(1)
-rho_dist0 <- est_changepoints(data, formula, nchangepoints = 0, weights, 
-                              control)
-rho_dist <- est_changepoints(data, formula, nchangepoints, weights, control)
-eta_dist <- est_regressors(rho_dist, data, formula, weights, control)
+rho_dist0 <- est_changepoints(data, formula, nchangepoints = 0, timename, 
+                              weights, control)
+rho_dist <- est_changepoints(data, formula, nchangepoints, timename, 
+                              weights, control)
+eta_dist <- est_regressors(rho_dist, data, formula, timename, weights, 
+                           control)
 
 
 saves <- prep_saves(nchangepoints, control)
-inputs <- prep_ptMCMC_inputs(data, formula, nchangepoints, weights, control)
-cpts <- prep_cpts(data, formula, nchangepoints, weights, control)
+inputs <- prep_ptMCMC_inputs(data, formula, nchangepoints, timename, weights, 
+                             control)
+cpts <- prep_cpts(data, formula, nchangepoints, timename, weights, control)
 ids <- prep_ids(control)
 
 test_that("check prep_proposal_dist", {
@@ -51,32 +52,36 @@ test_that("check prep_proposal_dist", {
 
 
 test_that("check prep_ptMCMC_inputs", {
-  inpts <- prep_ptMCMC_inputs(data, formula, nchangepoints, weights, control)
+  inpts <- prep_ptMCMC_inputs(data, formula, nchangepoints, timename, weights, 
+                              control)
   expect_is(inpts, "ptMCMC_inputs")
   expect_equal(length(inpts[[2]]), 6)
 
   expect_error(
-    prep_ptMCMC_inputs("ok", formula, nchangepoints, weights, control))
+    prep_ptMCMC_inputs("ok", formula, nchangepoints, timename, weights,  
+                        control))
   expect_error(
-    prep_ptMCMC_inputs(data, "ok", nchangepoints, weights, control))
+    prep_ptMCMC_inputs(data, "ok", nchangepoints, timename, weights, control))
   expect_error(
-    prep_ptMCMC_inputs(data, formula, "ok", weights, control))
+    prep_ptMCMC_inputs(data, formula, "ok", timename, weights, control))
   expect_error(
-    prep_ptMCMC_inputs(data, formula, nchangepoints, "ok", control))
+    prep_ptMCMC_inputs(data, formula, nchangepoints, timename, "ok", control))
   expect_error(
-    prep_ptMCMC_inputs(data, formula, nchangepoints, weights, "ok"))
-  
+    prep_ptMCMC_inputs(data, formula, nchangepoints, "ok", weights, control))
+  expect_error(suppressWarnings(
+    prep_ptMCMC_inputs(data, formula, nchangepoints, timename, weights,  
+                       "ok")))  
 })
 
 
 
 test_that("check prep_ids", {
-  expect_equal(prep_ids(TS_controls_list()), 1:6)
+  expect_equal(prep_ids(TS_control()), 1:6)
   expect_error(prep_ids("ok"))
   expect_error(prep_ids(list(ntemps = 0.3)))
 })
 test_that("check update_ids", {
-  set.seed(1)
+  set.seed(123)
   steps <- step_chains(1, cpts, inputs)
   swaps <- swap_chains(steps, inputs, ids)
   ids <- update_ids(ids, swaps)
@@ -172,8 +177,9 @@ test_that("check prep_saves", {
 test_that("check update_saves", {
   set.seed(1)
   saves <- prep_saves(nchangepoints, control)
-  inputs <- prep_ptMCMC_inputs(data, formula, nchangepoints, weights, control)
-  cpts <- prep_cpts(data, formula, nchangepoints, weights, control)
+  inputs <- prep_ptMCMC_inputs(data, formula, nchangepoints,  
+                               timename, weights, control)
+  cpts <- prep_cpts(data, formula, nchangepoints, timename, weights, control)
   ids <- prep_ids(control)
   steps <- step_chains(1, cpts, inputs)
   swaps <- swap_chains(steps, inputs, ids)
@@ -187,8 +193,9 @@ test_that("check update_saves", {
 test_that("check process_saves", {
   set.seed(1)
   saves <- prep_saves(nchangepoints, control)
-  inputs <- prep_ptMCMC_inputs(data, formula, nchangepoints, weights, control)
-  cpts <- prep_cpts(data, formula, nchangepoints, weights, control)
+  inputs <- prep_ptMCMC_inputs(data, formula, nchangepoints,  
+                               timename, weights, control)
+  cpts <- prep_cpts(data, formula, nchangepoints, timename, weights, control)
   ids <- prep_ids(control)
   for(i in 1:control$nit){
     steps <- step_chains(i, cpts, inputs)
@@ -203,7 +210,7 @@ test_that("check process_saves", {
   expect_equal(dim(out[[1]]), c(1, 6, 1000))
   expect_equal(out[[1]][1, 1, 1], 272)
   expect_equal(out[[1]][1, 1, 1000], 272)
-  out2 <- process_saves(saves, TS_controls_list(burnin = 10, nit = 1e3))
+  out2 <- process_saves(saves, list(burnin = 10, nit = 1e3))
   expect_is(out2, "list")
   expect_equal(length(out2), 5)
   expect_equal(dim(out2[[1]]), c(1, 6, 990))
@@ -213,22 +220,29 @@ test_that("check process_saves", {
 
 test_that("check prep_cpts", {
   set.seed(1)
-  cpts <- prep_cpts(data, formula, nchangepoints, weights, control)
+  cpts <- prep_cpts(data, formula, nchangepoints, timename, weights, control)
   expect_is(cpts, "list")
   expect_equal(length(cpts), 2)
   expect_equal(cpts[[1]][1,1], 268)
 
-  expect_error(prep_cpts("ok", formula, nchangepoints, weights, control))
-  expect_error(prep_cpts(data, "ok", nchangepoints, weights, control))
-  expect_error(prep_cpts(data, formula, "ok", weights, control))
-  expect_error(prep_cpts(data, formula, nchangepoints, "ok", control))
-  expect_error(prep_cpts(data, formula, nchangepoints, weights, "ok"))
+  expect_error(prep_cpts("ok", formula, nchangepoints, timename, weights, 
+                         control))
+  expect_error(prep_cpts(data, "ok", nchangepoints, timename, weights, 
+                         control))
+  expect_error(prep_cpts(data, formula, "ok", timename, weights, control))
+  expect_error(prep_cpts(data, formula, nchangepoints, "ok", weights, 
+                         control))
+  expect_error(prep_cpts(data, formula, nchangepoints, timename, "ok", 
+                         control))
+  expect_error(prep_cpts(data, formula, nchangepoints, timename, weights,  
+                         "ok"))
 })
 test_that("check update_cpts", {
   set.seed(1)
   saves <- prep_saves(nchangepoints, control)
-  inputs <- prep_ptMCMC_inputs(data, formula, nchangepoints, weights, control)
-  cpts <- prep_cpts(data, formula, nchangepoints, weights, control)
+  inputs <- prep_ptMCMC_inputs(data, formula, nchangepoints, timename, 
+                               weights, control)
+  cpts <- prep_cpts(data, formula, nchangepoints, timename, weights, control)
   ids <- prep_ids(control)
   steps <- step_chains(1, cpts, inputs)
   swaps <- swap_chains(steps, inputs, ids)
@@ -240,9 +254,9 @@ test_that("check update_cpts", {
 
 test_that("check prep_temp_sequence", {
   expect_equal(length(prep_temp_sequence()), 6)
-  expect_equal(length(prep_temp_sequence(TS_controls_list(ntemps = 9))), 9)
+  expect_equal(length(prep_temp_sequence(list(ntemps = 9))), 9)
   expect_equal(round(prep_temp_sequence()[3], 2), 8)
-  expect_equal(round(prep_temp_sequence(TS_controls_list(q = 1))[3], 1), 2.8)
-  expect_error(prep_temp_sequence(LDA_controls_list()))
+  expect_equal(round(prep_temp_sequence(list(q = 1))[3], 1), 2.8)
+  expect_error(prep_temp_sequence(123))
 })
 

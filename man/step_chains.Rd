@@ -48,9 +48,9 @@ This set of functions steps the chains forward one iteration
   update of the configuration (made by \code{take_step}). 
   \cr \cr
   This set of functions was designed to work within \code{\link{TS}} and 
-  specifically \code{\link{est_changepoints}}. They are still hardcoded to do
-  so, but have the capacity to be generalized to work with any estimation
-  via ptMCMC with additional coding work.
+  specifically \code{\link{est_changepoints}}. They are still hardcoded to
+  do so, but have the capacity to be generalized to work with any 
+  estimation via ptMCMC with additional coding work.
 }
 \details{
 For each iteration of the ptMCMC algorithm, all of the chains

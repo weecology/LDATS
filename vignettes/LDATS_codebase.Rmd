@@ -128,9 +128,10 @@ independently, as well.
 
 To minimize the length of argument lists and facilitate simple default usage
 throughout the pipeline, we implement an options/controls list approach, where
-each of the main functions (`LDA_TS`, `LDA_set`, and `TS`) has a controls 
-list (although `LDA_set` is referenced as `LDA` in the naming scheme)
+each of the main functions (`LDA_TS`, `LDA_set`, and `TS`) and its subfunctions
+have a `control` argument that takes a `list` to replace the defaults returned 
+by its `_control` function:
 
-* `LDA_TS_controls_list()`
-* `LDA_controls_list()`
-* `TS_controls_list()`
+* `LDA_TS_control()`
+* `LDA_set_control()`
+* `TS_control()`

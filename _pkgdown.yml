@@ -1,0 +1,143 @@
+url: https://weecology.github.io/ldats
+
+navbar:
+  title: "ldats"
+  structure:
+    left: [home, articles, reference, news]
+    right: [twitter, github] 
+  components: 
+    articles:
+      text: "Vignettes"
+    reference: 
+      text: "Functions"
+    news: 
+      text: "News"
+    twitter:
+      icon: fa-twitter
+      href: https://twitter.com/weecology
+
+reference:
+  - title: "Joint LDA and Time Series"
+    desc: "Functions for top-level LDATS modeling"
+    contents:
+      - LDA_TS
+      - package_LDA_TS
+      - print.LDA_TS
+      - plot.LDA_TS
+      - set_LDA_TS_plot_cols
+  - title: "Latent Dirichlet Allocation"
+    desc: "Functions to extend exisiting LDA functionality"
+    contents:
+      - LDA_set
+      - package_LDA_set
+      - logLik.LDA_VEM
+      - select_LDA
+      - LDA_msg
+      - plot.LDA_set
+      - plot.LDA_VEM
+      - set_LDA_plot_colors
+  - title: "Time Series"
+    desc: "Functions to execute and evaluate the overall TS model with changepoints and regression components"
+    contents:
+      - TS
+      - package_TS
+      - logLik.TS_fit
+      - print.TS_fit
+      - plot.TS_fit
+      - TS_diagnostics_plot
+      - trace_plot
+      - ecdf_plot
+      - posterior_plot
+      - autocorr_plot
+      - set_TS_summary_plot_cols
+      - TS_summary_plot
+      - pred_gamma_TS_plot
+      - rho_lines
+      - rho_hist
+      - set_rho_hist_colors
+      - set_gamma_colors
+      - summarize_etas
+      - summarize_rhos
+      - est_regressors
+      - est_changepoints
+      - prep_pbar
+  - title: "Multinomial Time Series modeling"
+    desc: "Functions to fit the multinomial time series models making up an overall TS model"
+    contents:
+      - multinom_TS
+      - logLik.multinom_TS_fit
+      - multinom_TS_chunk
+      - prep_chunks
+      - package_chunk_fits
+      - verify_changepoint_locations
+  - title: "Parallel tempering Markov Chain Monte Carlo"
+    desc: "Functions to execute ptMCMC optimization"
+    contents:
+      - prep_ptMCMC_inputs
+      - prep_ids
+      - prep_proposal_dist
+      - prep_saves
+      - prep_cpts
+      - prep_temp_sequence
+      - diagnose_ptMCMC
+      - count_trips
+      - swap_chains
+      - step_chains
+      - proposed_step_mods
+  - title: "Time Series on LDA output"
+    desc: "Functions to facilitate connection running multiple TS models on LDA output"
+    contents:
+      - TS_on_LDA
+      - package_TS_on_LDA
+      - print.TS_on_LDA
+      - expand_TS
+      - prep_TS_data
+      - select_TS
+      - print_model_run_message
+  - title: "Simulation"
+    desc: "Functions for simulating input data"
+    contents:
+      - sim_LDA_data
+      - sim_TS_data
+      - sim_LDA_TS_data
+  - title: "Control options"
+    desc: "Functions to set function options defined through control lists"
+    contents:
+      - LDA_TS_control
+      - LDA_set_control
+      - TS_control
+      - prep_LDA_control
+  - title: "Input checking"
+    desc: "Functions to tidy code by condensing input object verification"
+    contents:
+      - check_changepoints
+      - check_control
+      - check_document_covariate_table
+      - check_document_term_table
+      - check_formula
+      - check_formulas
+      - check_LDA_models
+      - check_nchangepoints
+      - check_seeds
+      - check_timename
+      - check_topics
+      - check_weights
+  - title: "Utilities"
+    desc: "A variety of helpful little functions"
+    contents:
+      - AICc
+      - document_weights
+      - iftrue
+      - logsumexp
+      - modalvalue
+      - memoise_fun
+      - mirror_vcov
+      - normalize
+      - qprint
+      - softmax
+  - title: "Data and Package"
+    desc: "Datasets provided and the package"
+    contents:
+      - jornada
+      - rodents
+      - LDATS

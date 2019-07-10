@@ -8,7 +8,7 @@ check_formula(data, formula)
 }
 \arguments{
 \item{data}{\code{data.frame} including [1] the time variable (indicated 
-in \code{control$timename}), [2] the predictor variables (required by
+in \code{timename}), [2] the predictor variables (required by
 \code{formula}) and [3], the multinomial response variable (indicated in
 \code{formula}) as verified by \code{\link{check_timename}} and 
 \code{\link{check_formula}}. Note that the response variables should be

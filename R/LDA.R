@@ -21,8 +21,11 @@
 #' @param nseeds Number of seeds (replicate starts) to use for each 
 #'   value of \code{topics}. Must be conformable to \code{integer} value.
 #'
-#' @param control Class \code{LDA_controls} list of control parameters to be
-#'   used in \code{LDA} (note that \code{seed} will be overwritten).
+#' @param control A \code{list} of parameters to control the running and 
+#'   selecting of LDA models. Values not input assume default values set 
+#'   by \code{\link{LDA_set_control}}. Values for running the LDAs replace 
+#'   defaults in (\code{LDAcontol}, see \code{\link[topicmodels]{LDA}} (but if
+#'    \code{seed} is given, it will be overwritten; use \code{iseed} instead).
 #' 
 #' @return List (class: \code{LDA_set}) of LDA models (class: \code{LDA_VEM}).
 #' 
@@ -46,10 +49,12 @@
 #' @export
 #'
 LDA_set <- function(document_term_table, topics = 2, nseeds = 1, 
-                    control = LDA_controls_list()){
+                    control = list()){
   check_LDA_set_inputs(document_term_table, topics, nseeds, control)
+  control <- do.call("LDA_set_control", control)
   mod_topics <- rep(topics, each = length(seq(2, nseeds * 2, 2)))
-  mod_seeds <- rep(seq(2, nseeds * 2, 2), length(topics))
+  iseed <- control$iseed
+  mod_seeds <- rep(seq(iseed, iseed + (nseeds - 1)* 2, 2), length(topics))
   nmods <- length(mod_topics)
   mods <- vector("list", length = nmods)
   for (i in 1:nmods){
@@ -63,9 +68,13 @@ LDA_set <- function(document_term_table, topics = 2, nseeds = 1,
 
 #' @title Calculate the log likelihood of a VEM LDA model fit
 #'
-#' @description Imported calculations from topicmodels package, as applied to
-#'   Latent Dirichlet Allocation fit with Variational Expectation Maximization
-#'   via \code{\link[topicmodels]{LDA}}. 
+#' @description Imported but updated calculations from topicmodels package, as
+#'   applied to Latent Dirichlet Allocation fit with Variational Expectation 
+#'   Maximization via \code{\link[topicmodels]{LDA}}. 
+#'
+#' @details The number of degrees of freedom is 1 (for alpha) plus the number
+#'   of entries in the document-topic matrix. The number of observations is 
+#'   the number of entries in the document-term matrix.
 #'
 #' @param object A \code{LDA_VEM}-class object.
 #'
@@ -75,9 +84,18 @@ LDA_set <- function(document_term_table, topics = 2, nseeds = 1,
 #'   (degrees of freedom) and \code{nobs} (number of observations) values.
 #'
 #' @references 
+#'   Buntine, W. 2002. Variational extentions to EM and multinomial PCA. 
+#'   \emph{European Conference on Machine Learning, Lecture Notes in Computer 
+#'   Science} \strong{2430}:23-34. \href{https://bit.ly/327sltH}{link}.
+#'
 #'   Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
 #'   Models. \emph{Journal of Statistical Software} \strong{40}:13.
 #'   \href{https://www.jstatsoft.org/article/view/v040i13}{link}.
+#'
+#'   Hoffman, M. D., D. M. Blei, and F. Bach. 2010. Online learning for 
+#'   latent Dirichlet allocation. \emph{Advances in Neural Information 
+#'   Processing Systems} \strong{23}:856-864.
+#'   \href{https://bit.ly/2LEr5sb}{link}.
 #'
 #' @export
 #'
@@ -85,7 +103,7 @@ logLik.LDA_VEM <- function(object, ...){
   val <- sum(object@loglikelihood)
   df <- as.integer(object@control@estimate.alpha) + length(object@beta)
   attr(val, "df") <- df
-  attr(val, "nobs") <- object@Dim[1]
+  attr(val, "nobs") <- object@Dim[1] * object@Dim[2]
   class(val) <- "logLik"
   val
 }
@@ -104,16 +122,15 @@ check_LDA_set_inputs <- function(document_term_table, topics, nseeds,
   check_document_term_table(document_term_table)
   check_topics(topics)
   check_seeds(nseeds)
-  check_control(control, "LDA_controls")
+  check_control(control)
 }
 
 #' @title Set the control inputs to include the seed
 #' 
 #' @description Update the control list for the LDA model with the specific
-#'   seed as indicated.
+#'   seed as indicated. And remove controls not used within the LDA itself.
 #'   
-#' @param seed \code{number} of seeds (replicate starts) to use for the 
-#'   specific model.
+#' @param seed \code{integer} used to set the seed of the specific model. 
 #'
 #' @param control Named list of control parameters to be used in 
 #'   \code{\link[topicmodels]{LDA}} Note that is \code{control} has an 
@@ -124,17 +141,12 @@ check_LDA_set_inputs <- function(document_term_table, topics, nseeds,
 #' 
 #' @export
 #'
-prep_LDA_control <- function(seed, control = NULL){
-  if("LDA_controls" %in% class(control)){
-    class(control) <- "list"
-    control$quiet <- NULL
-    control$measurer <- NULL
-    control$selector <- NULL
-    control$seed <- seed
-  }
-  if(is.null(control)){
-    control <- list(seed = seed)
-  }
+prep_LDA_control <- function(seed, control = list()){
+  control$quiet <- NULL
+  control$measurer <- NULL
+  control$selector <- NULL
+  control$iseed <- NULL
+  control$seed <- seed
   control
 }
 
@@ -147,9 +159,11 @@ prep_LDA_control <- function(seed, control = NULL){
 #' @param LDA_models An object of class \code{LDA_set} produced by
 #'   \code{\link{LDA_set}}.
 #'
-#' @param control Class \code{LDA_controls} list (generated by
-#'   \code{\link{LDA_controls_list}}) including named elements
-#'   corresponding to the \code{measurer} and \code{evaluator} functions.
+#' @param control A \code{list} of parameters to control the running and 
+#'   selecting of LDA models. Values not input assume default values set 
+#'   by \code{\link{LDA_set_control}}. Values for running the LDAs replace 
+#'   defaults in (\code{LDAcontol}, see \code{\link[topicmodels]{LDA}} (but if
+#'    \code{seed} is given, it will be overwritten; use \code{iseed} instead).
 #'
 #' @return A reduced version of \code{LDA_models} that only includes the 
 #'   selected LDA model(s). The returned object is still an object of
@@ -165,14 +179,13 @@ prep_LDA_control <- function(seed, control = NULL){
 #'
 #' @export
 #'
-select_LDA <- function(LDA_models = NULL, control = LDA_controls_list()){
-
-  measurer <- control$measurer
-  selector <- control$selector
+select_LDA <- function(LDA_models = NULL, control = list()){
   if("LDA_set" %in% attr(LDA_models, "class") == FALSE){
     stop("LDA_models must be of class LDA_set")
   }
-  
+  control <- do.call("LDA_set_control", control)
+  measurer <- control$measurer
+  selector <- control$selector  
   lda_measured <- vapply(LDA_models, measurer, 0) %>%
                   matrix(ncol = 1)
   lda_selected <- apply(lda_measured, 2, selector) 
@@ -227,7 +240,8 @@ package_LDA_set <- function(mods, mod_topics, mod_seeds){
 #'
 #' @export
 #'
-LDA_msg <- function(mod_topics, mod_seeds, control){
+LDA_msg <- function(mod_topics, mod_seeds, control = list()){
+  control <- do.call("LDA_set_control", control)
   check_topics(mod_topics)
   check_seeds(mod_seeds)
   topic_msg <- paste0("Running LDA with ", mod_topics, " topics ")
@@ -235,7 +249,7 @@ LDA_msg <- function(mod_topics, mod_seeds, control){
   qprint(paste0(topic_msg, seed_msg), "", control$quiet)
 }
 
-#' @title Create control list for LDA model
+#' @title Create control list for set of LDA models
 #'
 #' @description This function provides a simple creation and definition of 
 #'   the list used to control the set of LDA models. It is set up to be easy
@@ -250,6 +264,8 @@ LDA_msg <- function(mod_topics, mod_seeds, control){
 #'   and \code{selector} operates on the values to choose the model(s) to 
 #'   pass on. 
 #'
+#' @param iseed \code{integer} initial seed for the model set. 
+#'
 #' @param ... Additional arguments to be passed to 
 #'   \code{\link[topicmodels]{LDA}} as a \code{control} input.
 #'
@@ -257,9 +273,8 @@ LDA_msg <- function(mod_topics, mod_seeds, control){
 #'
 #' @export
 #'
-LDA_controls_list <- function(quiet = FALSE, measurer = AIC, selector = min,
-                              ...){
-  out <- list(quiet = quiet, measurer = measurer, selector = selector, ...)
-  class(out) <- c("LDA_controls", "list")
-  out
+LDA_set_control <- function(quiet = FALSE, measurer = AIC, selector = min,
+                            iseed = 2, ...){
+  list(quiet = quiet, measurer = measurer, selector = selector, 
+       iseed = iseed, ...)
 }

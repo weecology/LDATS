@@ -6,7 +6,7 @@
 \title{Run a set of Latent Dirichlet Allocation models}
 \usage{
 LDA_set(document_term_table, topics = 2, nseeds = 1,
-  control = LDA_controls_list())
+  control = list())
 
 check_LDA_set_inputs(document_term_table, topics, nseeds, control)
 }
@@ -22,8 +22,11 @@ Must be conformable to \code{integer} values.}
 \item{nseeds}{Number of seeds (replicate starts) to use for each 
 value of \code{topics}. Must be conformable to \code{integer} value.}
 
-\item{control}{Class \code{LDA_controls} list of control parameters to be
-used in \code{LDA} (note that \code{seed} will be overwritten).}
+\item{control}{A \code{list} of parameters to control the running and 
+selecting of LDA models. Values not input assume default values set 
+by \code{\link{LDA_set_control}}. Values for running the LDAs replace 
+defaults in (\code{LDAcontol}, see \code{\link[topicmodels]{LDA}} (but if
+ \code{seed} is given, it will be overwritten; use \code{iseed} instead).}
 }
 \value{
 List (class: \code{LDA_set}) of LDA models (class: \code{LDA_VEM}).

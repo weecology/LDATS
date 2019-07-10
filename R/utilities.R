@@ -1,3 +1,90 @@
+#' @title Caclulate the log-sum-exponential (LSE) of a vector
+#'
+#' @description Calculate the exponent of a vector (offset by the max), sum
+#'   the elements, calculate the log, remove the offset. 
+#'
+#' @param x \code{numeric} vector
+#' 
+#' @return The LSE. 
+#'
+#' @export
+#'
+logsumexp <- function(x){
+  if(!is.numeric(x)){
+    stop("x must be numeric")
+  }
+  y <- max(x)
+  y + log(sum(exp(x - y)))
+}
+
+#' @title Caclulate the softmax of a vector or matrix of values
+#'
+#' @description Calculate the softmax (normalized exponential) of a vector
+#'  of values or a set of vectors stacked rowwise. 
+#'
+#' @param x \code{numeric} vector or matrix
+#' 
+#' @return The softmax of \code{x}. 
+#'
+#' @export
+#'
+softmax <- function(x){
+  if(!is.numeric(x)){
+    stop("x must be numeric")
+  }
+  if(length(dim(x)) == 0){
+    exp(x - logsumexp(x))
+  } else if (length(dim(x)) == 2){
+    outm <- matrix(NA, nrow = nrow(x), ncol = ncol(x))
+    for(i in 1:nrow(x)){
+      outm[i,] <- exp(x[i,] - logsumexp(x[i,]))
+    }
+    outm
+  } else{
+    stop("currently only defined for vector or matrix")
+  }
+}
+
+#' @title Calculate AICc
+#'
+#' @description Calculate the small sample size correction of
+#'   \code{\link{AIC}} for the input object. 
+#'
+#' @param object An object for which \code{\link{AIC}} and 
+#'   \code{\link{logLik}} have defined methods.
+#'
+#' @return \code{numeric} value of AICc.
+#' 
+#' @export 
+#'
+AICc <- function(object){
+  aic <- AIC(object)
+  ll <- logLik(object)
+  np <- attr(ll, "df")
+  no <- attr(ll, "nobs")
+  aic + (2 * np^2 + 2 * np)/(no - np - 1)
+}
+
+#' @title Replace if TRUE
+#'
+#' @description If the focal input is \code{TRUE}, replace it with 
+#'   alternative. 
+#'
+#' @param x Focal input.
+#'
+#' @param alt Alternative value.
+#'
+#' @return \code{x} if not \code{TRUE}, \code{alt} otherwise.
+#' 
+#' @export 
+#'
+iftrue <- function(x = TRUE, alt = NULL){
+  if (is.logical(x) && x){
+    x <- alt
+  }
+  x
+}
+
 #' @title Determine the mode of a distribution
 #'
 #' @description Find the most common entry in a vector. Ties are not allowed,
@@ -157,9 +244,9 @@ memoise_fun <- function(fun, memoise_tf){
 #'
 #' @export
 #'
-check_control <- function(control, eclass = "TS_controls"){
+check_control <- function(control, eclass = "list"){
   if (!(eclass %in% class(control))){
-    stop(paste0("control is not of class ", eclass))
+    stop(paste0("control is not a ", eclass))
   }
 }
 
