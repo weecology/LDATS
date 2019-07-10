@@ -15,7 +15,7 @@ Performs two-stage analysis of multivariate temporal data
 }
 \section{Documentation}{
 
-  \href{https://bit.ly/2Jq73A5}{Technical mathematical manuscript}
+  \href{https://bit.ly/30n9sRJ}{Technical mathematical manuscript}
   \cr \cr 
   \href{https://bit.ly/2Jvj9GS}{End-user-focused vignette worked example}
   \cr \cr 

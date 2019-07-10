@@ -2,6 +2,20 @@
 
 Version numbers follow [Semantic Versioning](https://semver.org/).
 
+# [LDATS 0.2.1](https://github.com/weecology/ldats/releases/tag/v0.2.1)
+*2019-07-09*
+
+## Vignette update
+* Incorporates Hao's feedback and edits on the paper comparison vignette
+* Updates the vignette to work with the contemporary version of the package
+* Allowed removal of the large model cache files
+
+## Zenodo json
+* Inclusion of the json file for the Zenodo page
+
+## Tidying of the model doc
+* The .pdf describing the model (the manuscript work in progress) is now at the top level and named "LDATS_model.pdf", to allow the full model description to remain stable while the ms development happens elsewhere.
+
 # [LDATS 0.2.0](https://github.com/weecology/ldats/releases/tag/v0.2.0)
 *2019-07-09*
 
