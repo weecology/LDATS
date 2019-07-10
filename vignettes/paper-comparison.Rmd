@@ -177,7 +177,8 @@ if (!file.exists(test_file))
   for (file in files_to_download)
   {
     download.file(url = paste0(github_path, file),
-                  destfile = file.path(vignette_files, file))
+                  destfile = file.path(vignette_files, file), 
+                  mode = "wb")
   }
 }
 ```
