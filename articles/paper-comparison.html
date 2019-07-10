@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -93,7 +93,7 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Comparison to Christensen et al. 2018</h1>
-                        <h4 class="author">Renata Diaz</h4>
+                        <h4 class="author">Renata Diaz and Hao Ye</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/weecology/LDATS/blob/master/vignettes/paper-comparison.Rmd"><code>vignettes/paper-comparison.Rmd</code></a></small>
@@ -106,7 +106,7 @@
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>This document prodives a side-by-side comparison of LDATS (v0.2.1) results with analysis from <a href="https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2373">Christensen et al. 2018</a>.</p>
+<p>This document provides a side-by-side comparison of <strong><code>LDATS</code></strong> (version 0.2.2) results with analysis from <a href="https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2373">Christensen et al. 2018</a>.</p>
 <div id="summary" class="section level2">
 <h2 class="hasAnchor">
 <a href="#summary" class="anchor"></a>Summary</h2>
@@ -232,7 +232,7 @@
 <li>
 <code>Portal_rodent_trapping.csv</code>
 <ul>
-<li>table of trapping effort (downlaoded from the PortalData repository)</li>
+<li>table of trapping effort (downloaded from the PortalData repository)</li>
 </ul>
 </li>
 </ul>
@@ -517,7 +517,7 @@
 <a class="sourceLine" id="cb16-44" data-line-number="44"></a>
 <a class="sourceLine" id="cb16-45" data-line-number="45"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/readRDS">saveRDS</a></span>(ldamodel, <span class="dt">file =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/file.path">file.path</a></span>(vignette_files, <span class="st">"paper_ldamodel.RDS"</span>))</a></code></pre></div>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/knitr/topics/include_graphics">include_graphics</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/file.path">file.path</a></span>(vignette_files, <span class="st">"lda_distances.png"</span>))</a></code></pre></div>
-<p><img src="../../../../../../tmp/RtmpeeeHEi/lda_distances.png"><!-- --></p>
+<p><img src="../../../../../../tmp/RtmpK36euG/lda_distances.png"><!-- --></p>
 <div id="plots" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plots" class="anchor"></a>Plots</h2>
@@ -530,7 +530,7 @@
 <p>How the LDATS LDA model assigns species to topics:</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(ldats_ldamodel, <span class="dt">cols =</span> <span class="ot">NULL</span>, <span class="dt">option =</span> <span class="st">"D"</span>)</a></code></pre></div>
 <p><img src="paper-comparison_files/figure-html/plot%20LDATS%20LDA-1.png" width="672"></p>
-<p>The paper method finds 4 topics and LDATS finds 6. This is because of an update to the model selection procedure. The paper conservatively overestimates the number of parameters (by counting all of the variational parameteres) and therefore overpenalizes the AIC for models with more topics. Comparatively, the LDATS method now uses the number of parameters remaining after the variational approximation, as returned by the LDA object. For this vignette, we will compare the results from using both LDA models.</p>
+<p>The paper method finds 4 topics and LDATS finds 6. This is because of an update to the model selection procedure. The paper conservatively overestimates the number of parameters (by counting all of the variational parameters) and therefore overpenalizes the AIC for models with more topics. Comparatively, the LDATS method now uses the number of parameters remaining after the variational approximation, as returned by the LDA object. For this vignette, we will compare the results from using both LDA models.</p>
 </div>
 </div>
 <div id="changepoint-models" class="section level1">

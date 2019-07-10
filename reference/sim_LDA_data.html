@@ -66,7 +66,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -189,16 +189,16 @@ probabilities, use <code>alpha</code>.</p></td>
   <span class='no'>alpha</span> <span class='kw'>&lt;-</span> <span class='fl'>1.2</span>
   <span class='no'>Beta</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.1</span>, <span class='fl'>0.1</span>, <span class='fl'>0.8</span>, <span class='fl'>0.2</span>, <span class='fl'>0.6</span>, <span class='fl'>0.2</span>), <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='kw'>byrow</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
   <span class='fu'>sim_LDA_data</span>(<span class='no'>N</span>, <span class='no'>Beta</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='no'>alpha</span>)</div><div class='output co'>#&gt;      [,1] [,2] [,3]
-#&gt; [1,]    5    4    1
-#&gt; [2,]    5   13    4
-#&gt; [3,]    2    3   10
-#&gt; [4,]    2    8   21</div><div class='input'>  <span class='no'>Theta</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.2</span>, <span class='fl'>0.8</span>, <span class='fl'>0.8</span>, <span class='fl'>0.2</span>, <span class='fl'>0.5</span>, <span class='fl'>0.5</span>, <span class='fl'>0.9</span>, <span class='fl'>0.1</span>), <span class='fl'>4</span>, <span class='fl'>2</span>,
+#&gt; [1,]    1    1    8
+#&gt; [2,]    1    4   17
+#&gt; [3,]    3    3    9
+#&gt; [4,]    5   21    5</div><div class='input'>  <span class='no'>Theta</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.2</span>, <span class='fl'>0.8</span>, <span class='fl'>0.8</span>, <span class='fl'>0.2</span>, <span class='fl'>0.5</span>, <span class='fl'>0.5</span>, <span class='fl'>0.9</span>, <span class='fl'>0.1</span>), <span class='fl'>4</span>, <span class='fl'>2</span>,
                <span class='kw'>byrow</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
   <span class='fu'>sim_LDA_data</span>(<span class='no'>N</span>, <span class='no'>Beta</span>, <span class='kw'>Theta</span> <span class='kw'>=</span> <span class='no'>Theta</span>)</div><div class='output co'>#&gt;      [,1] [,2] [,3]
-#&gt; [1,]    2    4    4
-#&gt; [2,]    0    6   16
-#&gt; [3,]    2    7    6
-#&gt; [4,]    4    6   21</div><div class='input'>
+#&gt; [1,]    1    7    2
+#&gt; [2,]    3    4   15
+#&gt; [3,]    1    5    9
+#&gt; [4,]    2    4   25</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
