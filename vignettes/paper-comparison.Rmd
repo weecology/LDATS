@@ -1,6 +1,6 @@
 ---
 title: "Comparison to Christensen et al. 2018"
-author: "Renata Diaz"
+author: "Renata Diaz and Hao Ye"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{paper-comparison}
@@ -16,10 +16,13 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+```{r, include=FALSE}
+vers <- packageVersion("LDATS")
+```
 
 # Introduction
 
-This document prodives a side-by-side comparison of LDATS (v0.2.1) results with analysis from [Christensen et al. 2018](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2373).
+This document prodives a side-by-side comparison of **`LDATS`** (version `r vers`) results with analysis from [Christensen et al. 2018](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2373).
 
 ## Summary
 

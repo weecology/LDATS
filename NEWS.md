@@ -2,6 +2,15 @@
 
 Version numbers follow [Semantic Versioning](https://semver.org/).
 
+# [LDATS 0.2.2](https://github.com/weecology/ldats/releases/tag/v0.2.2)
+*2019-07-10*
+
+## Edits for submission to CRAN
+* Including appropriate files in the Rbuildignore
+
+## Minor patching of vignette code
+* Handling the downloads so they work robustly locally
+
 # [LDATS 0.2.1](https://github.com/weecology/ldats/releases/tag/v0.2.1)
 *2019-07-09*
 
