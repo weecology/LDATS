@@ -12,7 +12,7 @@ high-dimensional data using a two-stage approach comprised of Latent
 Dirichlet Allocation (LDA) and Bayesian time series (TS) analyses.
 
 For a full description of the math underlying the `LDATS` package, see the
-[*draft* technical manuscript](https://github.com/weecology/LDATS/blob/master/manuscript/simonis_et_al.pdf).
+[technical document](https://github.com/weecology/LDATS/blob/master/LDATS_model.pdf).
 
 ## Status: In Development, Stable Version Available Soon
 

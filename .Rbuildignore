@@ -1,6 +1,6 @@
 ^Meta$
 ^doc$
-^manuscript$
+^LDATS_model.pdf$
 ^.travis.yml$
 ^.*\.Rproj$
 ^\.Rproj\.user$

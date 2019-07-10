@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-This document prodives a side-by-side comparison of LDATS (v0.2.0) results with analysis from [Christensen et al. 2018](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2373).
+This document prodives a side-by-side comparison of LDATS (v0.2.1) results with analysis from [Christensen et al. 2018](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2373).
 
 ## Summary
 
