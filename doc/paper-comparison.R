@@ -7,6 +7,9 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 
+## ---- include=FALSE------------------------------------------------------
+vers <- packageVersion("LDATS")
+
 ## ---- eval = FALSE-------------------------------------------------------
 #  # install.packages("devtools")
 #  devtools::install_github("weecology/LDATS")

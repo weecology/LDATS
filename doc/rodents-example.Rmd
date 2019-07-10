@@ -21,8 +21,8 @@ vers <- packageVersion("LDATS")
 today <- Sys.Date()
 ```
 
-This vignette walks through an example of **LDATS** at the command line and
-was constructed using **LDATS** version `r vers` on `r today`.
+This vignette walks through an example of **`LDATS`** at the command line and
+was constructed using **`LDATS`** version `r vers` on `r today`.
 
 
 ## Installation
