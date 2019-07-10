@@ -1,5 +1,6 @@
 #' @importFrom coda as.mcmc autocorr autocorr.diag effectiveSize HPDinterval
 #' @importFrom digest digest
+#' @importFrom extraDistr rcat rdirichlet
 #' @importFrom graphics abline axis hist mtext par plot points rect text
 #' @importFrom grDevices devAskNewPage rgb
 #' @importFrom lubridate is.Date
@@ -9,8 +10,8 @@
 #' @importFrom mvtnorm rmvnorm
 #' @importFrom nnet multinom
 #' @importFrom progress progress_bar
-#' @importFrom stats acf AIC as.formula coef ecdf logLik median rgeom runif sd
-#'   terms var vcov
+#' @importFrom stats acf AIC as.formula coef ecdf logLik median rgeom rnorm
+#'   runif sd terms var vcov
 #' @importFrom topicmodels LDA
 #' @importFrom viridis viridis
 #'
@@ -23,12 +24,15 @@
 #'   2003) and Bayesian Time Series models (Western and Kleykamp 2004) that we
 #'   extend for multinomial data using softmax regression (Venables and Ripley
 #'   2002) following Christensen \emph{et al.} (2018).
-#'   \cr \cr  
-#'   \href{https://github.com/weecology/LDATS/blob/master/manuscript/simonis_et_al.pdf}{Technical mathematical manuscript}
+#'   
+#' @section Documentation:
+#'   \href{https://bit.ly/2Jq73A5}{Technical mathematical manuscript}
 #'   \cr \cr 
-#'   \href{https://weecology.github.io/LDATS/articles/rodents-example.html}{End-user-focused vignette worked example}
+#'   \href{https://bit.ly/2Jvj9GS}{End-user-focused vignette worked example}
 #'   \cr \cr 
-#'   \href{https://weecology.github.io/LDATS/articles/LDATS_codebase.html}{Computational pipeline vignette}
+#'   \href{https://bit.ly/2xFzJOW}{Computational pipeline vignette}
+#'   \cr \cr 
+#'   \href{https://bit.ly/2NFTVLh}{Comparison to Christensen \emph{et al.}}
 #'
 #' @references 
 #'

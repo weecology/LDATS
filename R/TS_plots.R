@@ -79,6 +79,7 @@ TS_diagnostics_plot <- function(x, interactive = TRUE){
 #' @export 
 #'
 eta_diagnostics_plots <- function(x, interactive){
+  on.exit(devAskNewPage(FALSE))
   etas <- x$etas
   if (is.null(etas)){
     return()
@@ -99,7 +100,6 @@ eta_diagnostics_plots <- function(x, interactive){
     posterior_plot(etas[ , i], lab)
     autocorr_plot(etas[ , i])
   }  
-  devAskNewPage(FALSE)
 }
 
 #' @rdname TS_diagnostics_plot
@@ -110,6 +110,7 @@ eta_diagnostics_plots <- function(x, interactive){
 #' @export 
 #'
 rho_diagnostics_plots <- function(x, interactive){
+  on.exit(devAskNewPage(FALSE))
   rhos <- x$rhos
   if (is.null(rhos)){
     return()
@@ -124,7 +125,6 @@ rho_diagnostics_plots <- function(x, interactive){
     posterior_plot(rhos[ , i], lab)
     autocorr_plot(rhos[ , i])
   }  
-  devAskNewPage(FALSE)
 }
 
 #' @title Produce the trace plot panel for the TS diagnostic plot of a 
@@ -356,13 +356,15 @@ pred_gamma_TS_plot <- function(x, selection = "median", cols, xlab = NULL){
   } else{
     spec_rhos <- NULL
   }
-  seg_mods <- multinom_TS(x$data, x$formula, spec_rhos, x$weights, x$control)
+  x$control$timename <- NULL # to remove from v0.1.0 model fits
+  seg_mods <- multinom_TS(x$data, x$formula, spec_rhos,  
+                          x$timename, x$weights, x$control)
   nsegs <- length(seg_mods[[1]])
-  t1 <- min(x$data[, x$control$timename])
-  t2 <- max(x$data[, x$control$timename])
+  t1 <- min(x$data[, x$timename])
+  t2 <- max(x$data[, x$timename])
 
   if (is.null(xlab)){
-    xlab <- x$control$timename
+    xlab <- x$timename
   }
   par(mar = c(4.5, 5, 1, 1))
   plot(1, 1, type = "n", bty = "L", xlab = xlab, ylab = "", xaxt = "n", 
@@ -437,7 +439,7 @@ rho_hist <- function(x, cols, bin_width = 1, xlab = NULL, border = NA){
   rhos <- x$rhos
   nrhos <- ncol(rhos)
   niter <- nrow(rhos)
-  timeobs <- x$data[, x$control$timename]
+  timeobs <- x$data[, x$timename]
   timerange <- range(timeobs)
   timevals <- seq(timerange[1], timerange[2], 1)
   ntimes <- length(timevals) 

@@ -5,7 +5,7 @@
 \title{Verify the change points of a multinomial time series model}
 \usage{
 verify_changepoint_locations(data, changepoints = NULL,
-  timename = TS_controls_list()$timename)
+  timename = "time")
 }
 \arguments{
 \item{data}{Class \code{data.frame} object including the predictor and 
@@ -14,9 +14,11 @@ response variables.}
 \item{changepoints}{Numeric vector indicating locations of the change 
 points. Must be conformable to \code{integer} values.}
 
-\item{timename}{\code{character} name of the column in the 
-\code{document_covariate_table} that contains the time index to use
-for assignment of the change points.}
+\item{timename}{\code{character} element indicating the time variable
+used in the time series. Defaults to \code{"time"}. The variable must be
+integer-conformable or a \code{Date}. If the variable named
+is a \code{Date}, the input is converted to an integer, resulting in the
+timestep being 1 day, which is often not desired behavior.}
 }
 \value{
 Logical indicator of the check passing \code{TRUE} or failing

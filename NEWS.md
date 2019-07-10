@@ -1,5 +1,45 @@
 # LDATS (development version)
 
+Version numbers follow [Semantic Versioning](https://semver.org/).
+
+# [LDATS 0.2.0](https://github.com/weecology/ldats/releases/tag/v0.2.0)
+*2019-07-09*
+
+## API updates
+* At the `LDA_TS` function level, the separate inputs for data tables (`document_term_table` and `document_covariate_table`) have been merged into a single input `data`, which can be just the `document_term_table` or a list including the `document_term_table` and optionally also a `document_covariate_table`. If covariates aren't provided, the function now constructs a covariate table assuming equi-spaced observations. If using a list, the function assumes that one and only one element of the list will have a name containing the letters "term", and at most one element containing the letters "covariate" (regular expressions are used for matching). ([addresses issue 119](https://github.com/weecology/LDATS/issues/119))
+* `timename` has been moved from within the `TS_controls_list` to a main argument in all associated functions.
+* The control lists have been made easier to interact with. Primarily, the arguments that previously required `LDA_controls_list`, `TS_controls_list`, or `LDA_TS_controls_list` inputs now take general `list` inputs (so  `LDA_TS` does not need to have a nested set of control functions). Each control list is passed through a function (`LDA_set_control`, `TS_control`, or `LDA_TS_control`) to set any non-input values to their defaults. This also allows the removal of those controls list class definitions. ([addresses issue 130](https://github.com/weecology/LDATS/issues/130))
+
+## Fixed and updated example code to improve user experience
+* Reduced the complexity of the example in the README ([addresses issue 115](https://github.com/weecology/LDATS/issues/115))
+* Added `control` input in the `plot` call in the example in the README ([addresses issue 116](https://github.com/weecology/LDATS/issues/116))
+* Reduced the number of seeds in the rodent vignette example ([addresses issue 117](https://github.com/weecology/LDATS/issues/117))
+
+## Updated calculation of the number of observations in LDA
+* The number of observations for a VEM-fit LDA is now calculated as the number of entries in the document-term matrix (following Hoffman et al. and Buntine, see `?logLik.LDA_VEM` for references.
+* Associated, we now include an AICc function that is general and works in this specific case as defined  ([addresses issue 129](https://github.com/weecology/LDATS/issues/129))
+
+## Fixed bug in plotting across multiple outputs
+* A few plotting functions use `devAskNewPage` to help flip through multiple outputs, but were only resetting it with `devAskNewPage(FALSE)` at the end of a clean execution. The code has been updated with `on.exit(devAskNewPage(FALSE))`, which accounts for failed executions. ([addresses issue 118](https://github.com/weecology/LDATS/issues/118))
+
+## Renamed functions
+* `summarize_TS` has been renamed `package_TS` to align with the other `package_` functions that package model output.
+
+## Simulate functions
+* Basic simulation functionality has been added for help with generating data sets to analyze. ([addresses issue 114](https://github.com/weecology/LDATS/issues/114))
+* `sim_LDA_data` simulates an LDA model's document-term-matrix
+* `sim_TS_data` simulates an TS model's document-topic distribution matrix
+* `sim_LDA_TS_data` simulates an LDA_TS model's document-term-matrix
+* `softmax` and `logsumexp` are added as utility functions
+
+## Improved pkgdown site
+* Function organization ([addresses issue 122](https://github.com/weecology/LDATS/issues/122)) and navbar formatting.
+
+## Editing of output from `TS`
+* Due to a misread of earlier code, the AIC value in the output from `TS` was named "deviance". The output has been updated to return the AIC.
+
+## Replacement of `AIC` method with `logLik` method for `TS_fit`
+
 # [LDATS 0.1.0](https://github.com/weecology/LDATS/pull/105)
 *2019-02-11*
 

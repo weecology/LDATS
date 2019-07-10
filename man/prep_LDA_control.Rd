@@ -4,11 +4,10 @@
 \alias{prep_LDA_control}
 \title{Set the control inputs to include the seed}
 \usage{
-prep_LDA_control(seed, control = NULL)
+prep_LDA_control(seed, control = list())
 }
 \arguments{
-\item{seed}{\code{number} of seeds (replicate starts) to use for the 
-specific model.}
+\item{seed}{\code{integer} used to set the seed of the specific model.}
 
 \item{control}{Named list of control parameters to be used in 
 \code{\link[topicmodels]{LDA}} Note that is \code{control} has an 
@@ -20,5 +19,5 @@ List (class: \code{list}) of controls to be used in the LDA.
 }
 \description{
 Update the control list for the LDA model with the specific
-  seed as indicated.
+  seed as indicated. And remove controls not used within the LDA itself.
 }

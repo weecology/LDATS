@@ -11,7 +11,7 @@ prep_TS_data(document_covariate_table, LDA_models, mods, i)
 \item{document_covariate_table}{Document covariate table (rows: documents,
 columns: time index and covariate options). Every model needs a
 covariate to describe the time value for each document (in whatever 
-units and whose name in the table is input in \code{control$timename})
+units and whose name in the table is input in \code{timename})
 that dictates the application of the change points. 
 In addition, all covariates named within specific models in
 \code{formula} must be included. Must be a conformable to a data table,

@@ -499,8 +499,8 @@ ldats_ldats_cpt <- TS_on_LDA(LDA_models = ldats_lda_selected,
                              document_covariate_table = rodents$document_covariate_table,
                              formulas = ~ sin_year + cos_year,
                              nchangepoints = 1:6,
-                             weights = NULL,
-                             control = TS_controls_list(timename = 'newmoon'))
+                             timename = 'newmoon',
+                             weights = NULL)
 
 
 save(ldats_ldats_cpt, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'ldats_ldats.Rds'))
@@ -550,8 +550,8 @@ paper_ldats_cpt <- TS_on_LDA(LDA_models = ldamodel,
                              document_covariate_table = rodents$document_covariate_table,
                              formulas = ~ sin_year + cos_year,
                              nchangepoints = 1:6,
-                             weights = NULL,
-                              control = TS_controls_list(timename = 'newmoon'))
+                             timename = 'newmoon',
+                             weights = NULL)
 
 
 save(paper_ldats_cpt, file = here::here('vignettes', 'christensenetal-comparison-files', 'model-cache', 'paper_ldats.Rds'))

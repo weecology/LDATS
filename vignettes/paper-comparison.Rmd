@@ -552,9 +552,11 @@ paper_ldats_results <- TS_on_LDA(LDA_models = ldamodel,
                              document_covariate_table = rodents$document_covariate_table,
                              formulas = ~ sin_year + cos_year,
                              nchangepoints = 1:6,
+
                              timename = "newmoon",
                              weights = NULL,
                              control = list(nit = nit))
+
 
 saveRDS(paper_ldats_results, file = file.path(vignette_files, "paper_ldats.RDS"))
 ```

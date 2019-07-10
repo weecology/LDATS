@@ -14,5 +14,8 @@ for the time column.}
 }
 \description{
 Check that the vector of time values is included in the 
-  document covariate table and that it is either numeric or a date.
+  document covariate table and that it is either a integer-conformable or
+  a \code{date}. If it is a \code{date}, the input is converted to an 
+  integer, resulting in the timestep being 1 day, which is often not 
+  desired behavior.
 }

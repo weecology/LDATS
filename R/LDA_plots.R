@@ -20,11 +20,11 @@
 #' @export 
 #'
 plot.LDA_set <- function(x, ...){
+  on.exit(devAskNewPage(FALSE))
   if (length(x) > 1){
     devAskNewPage(TRUE)
   }
   lapply(x, plot, ...)
-  devAskNewPage(FALSE)
 }
 
 #' @title Plot the results of an LDATS LDA model

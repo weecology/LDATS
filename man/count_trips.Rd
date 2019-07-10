@@ -31,5 +31,5 @@ Count the full trips (from one extreme temperature chain to
 Katzgraber, H. G., S. Trebst, D. A. Huse. And M. Troyer. 2006. 
   Feedback-optimized parallel tempering Monte Carlo. \emph{Journal of 
   Statistical Mechanics: Theory and Experiment} \strong{3}:P03018
-  \href{http://iopscience.iop.org/article/10.1088/1742-5468/2006/03/P03018}{link}.
+  \href{https://bit.ly/2LICGXh}{link}.
 }

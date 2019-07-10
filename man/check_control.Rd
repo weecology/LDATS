@@ -4,7 +4,7 @@
 \alias{check_control}
 \title{Check that a control list is proper}
 \usage{
-check_control(control, eclass = "TS_controls")
+check_control(control, eclass = "list")
 }
 \arguments{
 \item{control}{Control list to evaluate.}

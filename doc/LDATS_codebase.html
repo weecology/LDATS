@@ -274,7 +274,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <div id="overview" class="section level2">
 <h2>Overview</h2>
-<p>This vignette outlines the code base for the <strong>LDATS</strong> package. It was constructed using <strong>LDATS</strong> version 0.1.0 on 2019-02-14.</p>
+<p>This vignette outlines the code base for the <strong>LDATS</strong> package. It was constructed using <strong>LDATS</strong> version 0.2.0 on 2019-07-09.</p>
 </div>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
@@ -406,7 +406,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 </ul></li>
 <li><code>summarize_rhos()</code></li>
 <li><code>measure_rho_vcov()</code></li>
-<li><code>summarize_ets()</code></li>
+<li><code>summarize_etas()</code></li>
 <li><code>measure_eta_vcov()</code></li>
 </ul></li>
 </ul></li>
@@ -423,11 +423,11 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 </div>
 <div id="controls-lists" class="section level2">
 <h2>Controls Lists</h2>
-<p>To minimize the length of argument lists and facilitate simple default usage throughout the pipeline, we implement an options/controls list approach, where each of the main functions (<code>LDA_TS</code>, <code>LDA_set</code>, and <code>TS</code>) has a controls list (although <code>LDA_set</code> is referenced as <code>LDA</code> in the naming scheme)</p>
+<p>To minimize the length of argument lists and facilitate simple default usage throughout the pipeline, we implement an options/controls list approach, where each of the main functions (<code>LDA_TS</code>, <code>LDA_set</code>, and <code>TS</code>) and its subfunctions have a <code>control</code> argument that takes a <code>list</code> to replace the defaults returned by its <code>_control</code> function:</p>
 <ul>
-<li><code>LDA_TS_controls_list()</code></li>
-<li><code>LDA_controls_list()</code></li>
-<li><code>TS_controls_list()</code></li>
+<li><code>LDA_TS_control()</code></li>
+<li><code>LDA_set_control()</code></li>
+<li><code>TS_control()</code></li>
 </ul>
 </div>
 
