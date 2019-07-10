@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create the controls list for the LDATS model — LDA_TS_controls_list • LDATS</title>
+<title>Calculate AICc — AICc • LDATS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,10 @@
 
 
 
-<meta property="og:title" content="Create the controls list for the LDATS model — LDA_TS_controls_list" />
+<meta property="og:title" content="Calculate AICc — AICc" />
 
-<meta property="og:description" content="Create and define a list of control options used to run the
-  LDATS model, as implemented by LDA_TS." />
+<meta property="og:description" content="Calculate the small sample size correction of
+  AIC for the input object." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -64,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -76,12 +76,9 @@
      
   </a>
 </li>
-<li>
-  <a href="../reference/index.html">Reference</a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Vignettes
      
     <span class="caret"></span>
   </a>
@@ -98,12 +95,21 @@
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
+  <a href="https://twitter.com/weecology">
+    <span class="fa fa-twitter"></span>
+     
+  </a>
+</li>
+<li>
   <a href="https://github.com/weecology/LDATS">
     <span class="fa fa-github fa-lg"></span>
      
@@ -121,49 +127,33 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create the controls list for the LDATS model</h1>
-    <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/LDA_TS.R'><code>R/LDA_TS.R</code></a></small>
-    <div class="hidden name"><code>LDA_TS_controls_list.Rd</code></div>
+    <h1>Calculate AICc</h1>
+    <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/utilities.R'><code>R/utilities.R</code></a></small>
+    <div class="hidden name"><code>AICc.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Create and define a list of control options used to run the
-  LDATS model, as implemented by <code><a href='LDA_TS.html'>LDA_TS</a></code>.</p>
+    <p>Calculate the small sample size correction of
+  <code><a href='https://www.rdocumentation.org/packages/stats/topics/AIC'>AIC</a></code> for the input object.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>LDA_TS_controls_list</span>(<span class='kw'>TS_control</span> <span class='kw'>=</span> <span class='fu'><a href='TS_controls_list.html'>TS_controls_list</a></span>(),
-  <span class='kw'>LDA_control</span> <span class='kw'>=</span> <span class='fu'><a href='LDA_controls_list.html'>LDA_controls_list</a></span>(), <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>AICc</span>(<span class='no'>object</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>TS_control</th>
-      <td><p>Class <code>TS_controls</code> list, a named list generally 
-created by <code><a href='TS_controls_list.html'>TS_controls_list</a></code> that holds control parameters
-for the Time Series model including the parallel tempering Markov Chain 
-Monte Carlo (ptMCMC) controls.</p></td>
-    </tr>
-    <tr>
-      <th>LDA_control</th>
-      <td><p>Named list of control parameters to be used in 
-<code><a href='LDA_set.html'>LDA_set</a></code> and <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code>,
-as generally created by <code><a href='LDA_controls_list.html'>LDA_controls_list</a></code>. Note that 
-<code>seed</code> will be overwritten.</p></td>
-    </tr>
-    <tr>
-      <th>quiet</th>
-      <td><p><code>logical</code> indicator of whether the model should run 
-quietly at the top level.</p></td>
+      <th>object</th>
+      <td><p>An object for which <code><a href='https://www.rdocumentation.org/packages/stats/topics/AIC'>AIC</a></code> and 
+<code><a href='https://www.rdocumentation.org/packages/stats/topics/logLik'>logLik</a></code> have defined methods.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>control Class <code>LDA_TS_controls</code> list that contains 
-  <code>LDA_controls</code>, <code>TS_controls</code>, and the top-level <code>quiet</code>.</p>
+    <p><code>numeric</code> value of AICc.</p>
     
 
   </div>

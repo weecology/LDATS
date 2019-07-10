@@ -60,7 +60,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -72,12 +72,9 @@
      
   </a>
 </li>
-<li>
-  <a href="reference/index.html">Reference</a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Vignettes
      
     <span class="caret"></span>
   </a>
@@ -94,12 +91,21 @@
   </ul>
 </li>
 <li>
-  <a href="news/index.html">Changelog</a>
+  <a href="reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="news/index.html">News</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
+  <a href="https://twitter.com/weecology">
+    <span class="fa fa-twitter"></span>
+     
+  </a>
+</li>
+<li>
   <a href="https://github.com/weecology/LDATS">
     <span class="fa fa-github fa-lg"></span>
      
@@ -188,7 +194,7 @@ newfunc &lt;- function() ...</code></pre>
 <li>Run <code><a href="https://www.rdocumentation.org/packages/devtools/topics/install">devtools::install()</a></code> to install the new version of the package.</li>
 <li>Run <code><a href="https://www.rdocumentation.org/packages/devtools/topics/test">devtools::test()</a></code> to run the test scripts on the new version of the package.</li>
 </ol>
-<p>If you are also prepping the package as a whole, then you will also want to run <code><a href="https://www.rdocumentation.org/packages/devtools/topics/check">devtools::check()</a></code> and/or <code><a href="https://www.rdocumentation.org/packages/devtools/topics/devtools-deprecated">devtools::check_cran()</a></code> to make sure that the package is complete. Note that you need an up-to-date TeX/LaTeX distribution for running <code><a href="https://www.rdocumentation.org/packages/devtools/topics/check">devtools::check()</a></code> and/or <code><a href="https://www.rdocumentation.org/packages/devtools/topics/devtools-deprecated">devtools::check_cran()</a></code> due to the rendering of the package manual.</p>
+<p>If you are also prepping the package as a whole, then you will also want to run <code><a href="https://www.rdocumentation.org/packages/devtools/topics/check">devtools::check()</a></code> and/or <code>devtools::check_cran()</code> to make sure that the package is complete. Note that you need an up-to-date TeX/LaTeX distribution for running <code><a href="https://www.rdocumentation.org/packages/devtools/topics/check">devtools::check()</a></code> and/or <code>devtools::check_cran()</code> due to the rendering of the package manual.</p>
 <p>For more info, see the <a href="https://github.com/hadley/devtools">GitHub repo</a> for the <code>devtools</code> package.</p>
 </div>
 <div id="attribution" class="section level2">

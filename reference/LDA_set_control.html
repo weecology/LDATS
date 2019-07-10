@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create the model-running-message for an LDA — LDA_msg • LDATS</title>
+<title>Create control list for set of LDA models — LDA_set_control • LDATS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,12 @@
 
 
 
-<meta property="og:title" content="Create the model-running-message for an LDA — LDA_msg" />
+<meta property="og:title" content="Create control list for set of LDA models — LDA_set_control" />
 
-<meta property="og:description" content="Produce and print the message for a given LDA model." />
+<meta property="og:description" content="This function provides a simple creation and definition of 
+  the list used to control the set of LDA models. It is set up to be easy
+  to work with the existing control capacity of 
+  LDA." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -126,38 +129,52 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create the model-running-message for an LDA</h1>
+    <h1>Create control list for set of LDA models</h1>
     <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/LDA.R'><code>R/LDA.R</code></a></small>
-    <div class="hidden name"><code>LDA_msg.Rd</code></div>
+    <div class="hidden name"><code>LDA_set_control.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Produce and print the message for a given LDA model.</p>
+    <p>This function provides a simple creation and definition of 
+  the list used to control the set of LDA models. It is set up to be easy
+  to work with the existing control capacity of 
+  <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code>.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>LDA_msg</span>(<span class='no'>mod_topics</span>, <span class='no'>mod_seeds</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>())</pre>
+    <pre class="usage"><span class='fu'>LDA_set_control</span>(<span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>measurer</span> <span class='kw'>=</span> <span class='no'>AIC</span>, <span class='kw'>selector</span> <span class='kw'>=</span> <span class='no'>min</span>,
+  <span class='kw'>iseed</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>mod_topics</th>
-      <td><p><code>integer</code> value corresponding to the number of 
-topics in the model.</p></td>
+      <th>quiet</th>
+      <td><p><code>logical</code> indicator of whether the model should run 
+quietly.</p></td>
     </tr>
     <tr>
-      <th>mod_seeds</th>
-      <td><p><code>integer</code> value corresponding to the seed used for 
-the model.</p></td>
+      <th>measurer, selector</th>
+      <td><p>Function names for use in evaluation of the LDA
+models. <code>measurer</code> is used to create a value for each model
+and <code>selector</code> operates on the values to choose the model(s) to 
+pass on.</p></td>
     </tr>
     <tr>
-      <th>control</th>
-      <td><p>Class <code>LDA_controls</code> list of control parameters to be
-used in <code>LDA</code> (note that "seed" will be overwritten).</p></td>
+      <th>iseed</th>
+      <td><p><code>integer</code> initial seed for the model set.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Additional arguments to be passed to 
+<code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code> as a <code>control</code> input.</p></td>
     </tr>
     </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Class <code>LDA_controls</code> list for controlling the LDA model fit.</p>
     
 
   </div>
@@ -165,7 +182,9 @@ used in <code>LDA</code> (note that "seed" will be overwritten).</p></td>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#value">Value</a></li>
+          </ul>
 
   </div>
 </div>

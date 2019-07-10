@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Use ptMCMC to estimate the distribution of change point locations — est_changepoints • LDATS</title>
+<title>Simulate LDA data from an LDA structure given parameters — sim_LDA_data • LDATS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,12 @@
 
 
 
-<meta property="og:title" content="Use ptMCMC to estimate the distribution of change point locations — est_changepoints" />
+<meta property="og:title" content="Simulate LDA data from an LDA structure given parameters — sim_LDA_data" />
 
-<meta property="og:description" content="This function executes ptMCMC-based estimation of the 
-  change point location distributions for multinomial Time Series analyses." />
+<meta property="og:description" content="For a given set of parameters alpha and Beta and
+  document-specific total word counts, simulate a document-by-term matrix.
+  Additional structuring variables (the numbers of topics (k),
+  documents (M), terms (V)) are inferred from input objects." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -127,85 +129,77 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Use ptMCMC to estimate the distribution of change point locations</h1>
-    <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/TS.R'><code>R/TS.R</code></a></small>
-    <div class="hidden name"><code>est_changepoints.Rd</code></div>
+    <h1>Simulate LDA data from an LDA structure given parameters</h1>
+    <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/simulate.R'><code>R/simulate.R</code></a></small>
+    <div class="hidden name"><code>sim_LDA_data.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function executes ptMCMC-based estimation of the 
-  change point location distributions for multinomial Time Series analyses.</p>
+    <p>For a given set of parameters <code>alpha</code> and <code>Beta</code> and
+  document-specific total word counts, simulate a document-by-term matrix.
+  Additional structuring variables (the numbers of topics (k),
+  documents (M), terms (V)) are inferred from input objects.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>est_changepoints</span>(<span class='no'>data</span>, <span class='no'>formula</span>, <span class='no'>nchangepoints</span>, <span class='no'>timename</span>, <span class='no'>weights</span>,
-  <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>())</pre>
+    <pre class="usage"><span class='fu'>sim_LDA_data</span>(<span class='no'>N</span>, <span class='no'>Beta</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>Theta</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data</th>
-      <td><p><code>data.frame</code> including [1] the time variable (indicated 
-in <code>timename</code>), [2] the predictor variables (required by
-<code>formula</code>) and [3], the multinomial response variable (indicated in
-<code>formula</code>) as verified by <code><a href='check_timename.html'>check_timename</a></code> and 
-<code><a href='check_formula.html'>check_formula</a></code>. Note that the response variables should be
-formatted as a <code>data.frame</code> object named as indicated by the 
-<code>response</code> entry in the <code>control</code> list, such as <code>gamma</code> 
-for a standard TS analysis on LDA output.</p></td>
+      <th>N</th>
+      <td><p>A vector of document sizes (total word counts). Must be integer
+conformable. Is used to infer the total number of documents.</p></td>
     </tr>
     <tr>
-      <th>formula</th>
-      <td><p><code><a href='https://www.rdocumentation.org/packages/stats/topics/formula'>formula</a></code> defining the regression between
-relationship the change points. Any 
-predictor variable included must also be a column in 
-<code>data</code> and any (multinomial) response variable must be a set of
-columns in <code>data</code>, as verified by <code><a href='check_formula.html'>check_formula</a></code>.</p></td>
+      <th>Beta</th>
+      <td><p><code>matrix</code> of categorical distribution parameters defining
+terms within topics. Dimension: k x V (number of topics x number of 
+terms). Used to infer both (k) and (V). Must be non-negative and sum to 
+1 within topics.</p></td>
     </tr>
     <tr>
-      <th>nchangepoints</th>
-      <td><p><code>integer</code> corresponding to the number of 
-change points to include in the model. 0 is a valid input (corresponding
-to no change points, so a singular time series model), and the current 
-implementation can reasonably include up to 6 change points. The 
-number of change points is used to dictate the segementation of the 
-time series into chunks fit with separate models dictated by 
-<code>formula</code>.</p></td>
+      <th>alpha</th>
+      <td><p>Single positive numeric value for the Dirichlet distribution
+parameter defining topics within documents. To specifically define
+document topic probabilities, use <code>Theta</code>.</p></td>
     </tr>
     <tr>
-      <th>timename</th>
-      <td><p><code>character</code> element indicating the time variable
-used in the time series.</p></td>
+      <th>Theta</th>
+      <td><p><code>matrix</code> of probabilities defining topics within 
+documents. Dimension: M x k (documents x topics). Must be non-negative 
+and sum to 1 within documents. To generally define document topic 
+probabilities, use <code>alpha</code>.</p></td>
     </tr>
     <tr>
-      <th>weights</th>
-      <td><p>Optional class <code>numeric</code> vector of weights for each 
-document. Defaults to <code>NULL</code>, translating to an equal weight for
-each document. When using <code>multinom_TS</code> in a standard LDATS 
-analysis, it is advisable to weight the documents by their total size,
-as the result of <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code> is a matrix of 
-proportions, which does not account for size differences among documents.
-For most models, a scaling of the weights (so that the average is 1) is
-most appropriate, and this is accomplished using <code>document_weights</code>.</p></td>
-    </tr>
-    <tr>
-      <th>control</th>
-      <td><p>A <code>list</code> of parameters to control the fitting of the
-Time Series model including the parallel tempering Markov Chain 
-Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
-<code><a href='TS_control.html'>TS_control</a></code>.</p></td>
+      <th>seed</th>
+      <td><p>Input to <code><a href='https://www.rdocumentation.org/packages/base/topics/Random'>set.seed</a></code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>List of saved data objects from the ptMCMC estimation of
-  change point locations (unless <code>nchangepoints</code> is 0, then 
-  <code>NULL</code> is returned).</p>
+    <p>A document-by-term <code>matrix</code> of counts (dim: M x V).</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>  <span class='no'>N</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>22</span>, <span class='fl'>15</span>, <span class='fl'>31</span>)
+  <span class='no'>alpha</span> <span class='kw'>&lt;-</span> <span class='fl'>1.2</span>
+  <span class='no'>Beta</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.1</span>, <span class='fl'>0.1</span>, <span class='fl'>0.8</span>, <span class='fl'>0.2</span>, <span class='fl'>0.6</span>, <span class='fl'>0.2</span>), <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='kw'>byrow</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='fu'>sim_LDA_data</span>(<span class='no'>N</span>, <span class='no'>Beta</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='no'>alpha</span>)</div><div class='output co'>#&gt;      [,1] [,2] [,3]
+#&gt; [1,]    0    3    7
+#&gt; [2,]    4   11    7
+#&gt; [3,]    2    9    4
+#&gt; [4,]    6   15   10</div><div class='input'>  <span class='no'>Theta</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.2</span>, <span class='fl'>0.8</span>, <span class='fl'>0.8</span>, <span class='fl'>0.2</span>, <span class='fl'>0.5</span>, <span class='fl'>0.5</span>, <span class='fl'>0.9</span>, <span class='fl'>0.1</span>), <span class='fl'>4</span>, <span class='fl'>2</span>,
+               <span class='kw'>byrow</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='fu'>sim_LDA_data</span>(<span class='no'>N</span>, <span class='no'>Beta</span>, <span class='kw'>Theta</span> <span class='kw'>=</span> <span class='no'>Theta</span>)</div><div class='output co'>#&gt;      [,1] [,2] [,3]
+#&gt; [1,]    1    5    4
+#&gt; [2,]    5    2   15
+#&gt; [3,]    0    6    9
+#&gt; [4,]    3    3   25</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -213,7 +207,9 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

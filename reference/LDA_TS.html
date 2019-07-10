@@ -42,6 +42,8 @@
   (TS) models (Western and Kleykamp 2004) via TS_on_LDA on
   the chosen LDA model(s), and selecting the best TS model via 
   select_TS.
+conform_LDA_TS_data converts the data input to
+  match internal and sub-function specifications.
 check_LDA_TS_inputs checks that the inputs to 
   LDA_TS are of proper classes for a full analysis." />
 <meta name="twitter:card" content="summary" />
@@ -74,7 +76,7 @@ check_LDA_TS_inputs checks that the inputs to
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -86,12 +88,9 @@ check_LDA_TS_inputs checks that the inputs to
      
   </a>
 </li>
-<li>
-  <a href="../reference/index.html">Reference</a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Vignettes
      
     <span class="caret"></span>
   </a>
@@ -108,12 +107,21 @@ check_LDA_TS_inputs checks that the inputs to
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
+  <a href="https://twitter.com/weecology">
+    <span class="fa fa-twitter"></span>
+     
+  </a>
+</li>
+<li>
   <a href="https://github.com/weecology/LDATS">
     <span class="fa fa-github fa-lg"></span>
      
@@ -147,41 +155,48 @@ check_LDA_TS_inputs checks that the inputs to
   (TS) models (Western and Kleykamp 2004) via <code><a href='TS_on_LDA.html'>TS_on_LDA</a></code> on
   the chosen LDA model(s), and selecting the best TS model via 
   <code><a href='select_TS.html'>select_TS</a></code>.</p>
+<p><code>conform_LDA_TS_data</code> converts the <code>data</code> input to
+  match internal and sub-function specifications.</p>
 <p><code>check_LDA_TS_inputs</code> checks that the inputs to 
   <code>LDA_TS</code> are of proper classes for a full analysis.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>LDA_TS</span>(<span class='no'>document_term_table</span>, <span class='no'>document_covariate_table</span>, <span class='kw'>topics</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='kw'>nseeds</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>formulas</span> <span class='kw'>=</span> ~<span class='fl'>1</span>, <span class='kw'>nchangepoints</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>weights</span> <span class='kw'>=</span> <span class='fu'><a href='document_weights.html'>document_weights</a></span>(<span class='no'>document_term_table</span>),
-  <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='LDA_TS_controls_list.html'>LDA_TS_controls_list</a></span>())
+    <pre class="usage"><span class='fu'>LDA_TS</span>(<span class='no'>data</span>, <span class='kw'>topics</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>nseeds</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>formulas</span> <span class='kw'>=</span> ~<span class='fl'>1</span>,
+  <span class='kw'>nchangepoints</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>timename</span> <span class='kw'>=</span> <span class='st'>"time"</span>, <span class='kw'>weights</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>())
 
-<span class='fu'>check_LDA_TS_inputs</span>(<span class='no'>document_term_table</span>, <span class='no'>document_covariate_table</span>,
-  <span class='kw'>topics</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>nseeds</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>formulas</span> <span class='kw'>=</span> ~<span class='fl'>1</span>, <span class='kw'>nchangepoints</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>weights</span> <span class='kw'>=</span> <span class='fu'><a href='document_weights.html'>document_weights</a></span>(<span class='no'>document_term_table</span>),
-  <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='LDA_TS_controls_list.html'>LDA_TS_controls_list</a></span>())</pre>
+<span class='fu'>conform_LDA_TS_data</span>(<span class='no'>data</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+<span class='fu'>check_LDA_TS_inputs</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>topics</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>nseeds</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>formulas</span> <span class='kw'>=</span> ~<span class='fl'>1</span>, <span class='kw'>nchangepoints</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>timename</span> <span class='kw'>=</span> <span class='st'>"time"</span>,
+  <span class='kw'>weights</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>())</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>document_term_table</th>
-      <td><p>Table of observation count data (rows: 
-documents, columns: terms. May be a class <code>matrix</code> or 
-<code>data.frame</code> but must be conformable to a matrix of integers,
-as verified by <code><a href='check_document_term_table.html'>check_document_term_table</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>document_covariate_table</th>
-      <td><p>Document covariate table (rows: documents,
-columns: time index and covariate options). Every model needs a
-covariate to describe the time value for each document (in whatever 
-units and whose name in the table is input in <code>control$timename</code>)
-that dictates the application of the change points. 
-In addition, all covariates named within specific models in
-<code>formula</code> must be included. Must be a conformable to a data table,
-as verified by <code><a href='check_document_covariate_table.html'>check_document_covariate_table</a></code>.</p></td>
+      <th>data</th>
+      <td><p>Either a document term table or a list including at least
+a document term table (with the word "term" in the name of the element)
+and optionally also a document covariate table  (with the word 
+"covariate" in the name of the element). 
+<br /> <br /> 
+The document term table is a table of observation count data (rows: 
+documents, columns: terms) that may be a <code>matrix</code> or 
+<code>data.frame</code>, but must be conformable to a matrix of integers,
+as verified by <code><a href='check_document_term_table.html'>check_document_term_table</a></code>.   
+<br /> <br />
+The document covariate table is a table of associated data (rows: 
+documents, columns: time index and covariate options) that may be a
+<code>matrix</code> or <code>data.frame</code>, but must be a conformable to a data 
+table, as verified by <code><a href='check_document_covariate_table.html'>check_document_covariate_table</a></code>. Every 
+model needs a covariate to describe the time value for each document 
+(in whatever units and whose name in the table is input in 
+<code>timename</code>) that dictates the application of the change points. 
+<strong><em>If a covariate table is not provided, the model assumes the 
+observations were equi-spaced in time</em></strong>. All covariates named within 
+specific models in <code>formulas</code> must be included.</p></td>
     </tr>
     <tr>
       <th>topics</th>
@@ -213,29 +228,40 @@ used to segement the data for each formula (entry in <code>formulas</code>)
 component of the TS model, for each selected LDA model.</p></td>
     </tr>
     <tr>
+      <th>timename</th>
+      <td><p><code>character</code> element indicating the time variable
+used in the time series. Defaults to <code>"time"</code>. The variable must be
+integer-conformable or a <code>Date</code>. If the variable named
+is a <code>Date</code>, the input is converted to an integer, resulting in the
+timestep being 1 day, which is often not desired behavior.</p></td>
+    </tr>
+    <tr>
       <th>weights</th>
-      <td><p>Optional class <code>numeric</code> vector of weights for each 
-document. Defaults to <code>NULL</code>, translating to an equal weight for
-each document. When using <code>multinom_TS</code> in a standard LDATS 
-analysis, it is advisable to weight the documents by their total size,
-as the result of <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code> is a matrix of 
-proportions, which does not account for size differences among documents.
-For most models, a scaling of the weights (so that the average is 1) is
-most appropriate, and this is accomplished using <code>document_weights</code>.</p></td>
+      <td><p>Optional input for overriding standard weighting for 
+documents in the time series. Defaults to <code>TRUE</code>,
+translating to an appropriate weighting of the documents
+based on the size (number of words) each document (the result of 
+<code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code> is a matrix of proportions, which does not
+account for size differences among documents. Alternatively can be 
+<code>NULL</code> for an equal weighting among documents or a <code>numeric</code>
+vector.</p></td>
     </tr>
     <tr>
       <th>control</th>
-      <td><p>Class <code>LDA_TS_controls</code> list (as generated by
-<code><a href='LDA_TS_controls_list.html'>LDA_TS_controls_list</a></code>) that contains 
-<code>LDA_controls</code> (<code><a href='LDA_controls_list.html'>LDA_controls_list</a></code>), 
-<code>TS_controls</code> (<code><a href='TS_controls_list.html'>TS_controls_list</a></code>), and the single 
-top-level control <code>quiet</code>.</p></td>
+      <td><p>A <code>list</code> of parameters to control the running and 
+selecting of LDA and TS models. Values not input assume default values 
+set by <code><a href='LDA_TS_control.html'>LDA_TS_control</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>quiet</th>
+      <td><p>Logical indicator for <code>conform_LDA_TS_data</code> to indicate
+if messages should be printed.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>LDATS</code> returns a class <code>LDA_TS</code> list object including all 
+    <p><code>LDA_TS</code> returns a class <code>LDA_TS</code> list object including all 
   fitted LDA and TS models and selected models specifically as elements 
   <code>"LDA models"</code> (from <code><a href='LDA_set.html'>LDA_set</a></code>),
   <code>"Selected LDA model"</code> (from <code><a href='select_LDA.html'>select_LDA</a></code>), 
@@ -264,14 +290,8 @@ top-level control <code>quiet</code>.</p></td>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
   <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>rodents</span>)
-  <span class='no'>document_term_table</span> <span class='kw'>&lt;-</span> <span class='no'>rodents</span>$<span class='no'>document_term_table</span>
-  <span class='no'>document_covariate_table</span> <span class='kw'>&lt;-</span> <span class='no'>rodents</span>$<span class='no'>document_covariate_table</span>
-  <span class='no'>TS_controls</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='TS_controls_list.html'>TS_controls_list</a></span>(<span class='kw'>timename</span> <span class='kw'>=</span> <span class='st'>"newmoon"</span>)
-  <span class='no'>controls</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='LDA_TS_controls_list.html'>LDA_TS_controls_list</a></span>(<span class='kw'>TS_control</span> <span class='kw'>=</span> <span class='no'>TS_controls</span>)
-  <span class='no'>mod</span> <span class='kw'>&lt;-</span> <span class='fu'>LDA_TS</span>(<span class='no'>document_term_table</span>, <span class='no'>document_covariate_table</span>,
-                <span class='kw'>topics</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>nseeds</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>formulas</span> <span class='kw'>=</span> ~ <span class='fl'>1</span>, <span class='kw'>nchangepoints</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-                <span class='kw'>weights</span> <span class='kw'>=</span> <span class='fu'><a href='document_weights.html'>document_weights</a></span>(<span class='no'>document_term_table</span>),
-                <span class='kw'>control</span> <span class='kw'>=</span> <span class='no'>controls</span>)
+  <span class='no'>mod</span> <span class='kw'>&lt;-</span> <span class='fu'>LDA_TS</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>rodents</span>, <span class='kw'>topics</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>nseeds</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>formulas</span> <span class='kw'>=</span> ~<span class='fl'>1</span>,
+                <span class='kw'>nchangepoints</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>timename</span> <span class='kw'>=</span> <span class='st'>"newmoon"</span>)
 <span class='co'># }</span><div class='input'>
 </div></pre>
   </div>

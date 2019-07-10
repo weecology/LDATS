@@ -5,4 +5,7 @@ articles:
   LDATS_codebase: LDATS_codebase.html
   paper-comparison: paper-comparison.html
   rodents-example: rodents-example.html
+urls:
+  reference: https://weecology.github.io/ldats/reference
+  article: https://weecology.github.io/ldats/articles
 

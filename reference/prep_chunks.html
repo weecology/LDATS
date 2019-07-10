@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -81,12 +81,9 @@
      
   </a>
 </li>
-<li>
-  <a href="../reference/index.html">Reference</a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Vignettes
      
     <span class="caret"></span>
   </a>
@@ -103,12 +100,21 @@
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
+  <a href="https://twitter.com/weecology">
+    <span class="fa fa-twitter"></span>
+     
+  </a>
+</li>
+<li>
   <a href="https://github.com/weecology/LDATS">
     <span class="fa fa-github fa-lg"></span>
      
@@ -142,8 +148,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>prep_chunks</span>(<span class='no'>data</span>, <span class='kw'>changepoints</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>timename</span> <span class='kw'>=</span> <span class='fu'><a href='TS_controls_list.html'>TS_controls_list</a></span>()$<span class='no'>timename</span>)</pre>
+    <pre class="usage"><span class='fu'>prep_chunks</span>(<span class='no'>data</span>, <span class='kw'>changepoints</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>timename</span> <span class='kw'>=</span> <span class='st'>"time"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -161,9 +166,11 @@ points. Must be conformable to <code>integer</code> values.</p></td>
     </tr>
     <tr>
       <th>timename</th>
-      <td><p>The name of the column containing the time variable used 
-to chunk out the time series. Generally contained in the <code>control</code>
-(class <code>TS_controls</code>) list.</p></td>
+      <td><p><code>character</code> element indicating the time variable
+used in the time series. Defaults to <code>"time"</code>. The variable must be
+integer-conformable or a <code>Date</code>. If the variable named
+is a <code>Date</code>, the input is converted to an integer, resulting in the
+timestep being 1 day, which is often not desired behavior.</p></td>
     </tr>
     </table>
     

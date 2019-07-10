@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Use ptMCMC to estimate the distribution of change point locations — est_changepoints • LDATS</title>
+<title>Create the controls list for the Time Series model — TS_control • LDATS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,11 @@
 
 
 
-<meta property="og:title" content="Use ptMCMC to estimate the distribution of change point locations — est_changepoints" />
+<meta property="og:title" content="Create the controls list for the Time Series model — TS_control" />
 
-<meta property="og:description" content="This function executes ptMCMC-based estimation of the 
-  change point location distributions for multinomial Time Series analyses." />
+<meta property="og:description" content="This function provides a simple creation and definition of a
+  list used to control the time series model fit occurring within 
+  TS." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -127,83 +128,112 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Use ptMCMC to estimate the distribution of change point locations</h1>
+    <h1>Create the controls list for the Time Series model</h1>
     <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/TS.R'><code>R/TS.R</code></a></small>
-    <div class="hidden name"><code>est_changepoints.Rd</code></div>
+    <div class="hidden name"><code>TS_control.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function executes ptMCMC-based estimation of the 
-  change point location distributions for multinomial Time Series analyses.</p>
+    <p>This function provides a simple creation and definition of a
+  list used to control the time series model fit occurring within 
+  <code><a href='TS.html'>TS</a></code>.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>est_changepoints</span>(<span class='no'>data</span>, <span class='no'>formula</span>, <span class='no'>nchangepoints</span>, <span class='no'>timename</span>, <span class='no'>weights</span>,
-  <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>())</pre>
+    <pre class="usage"><span class='fu'>TS_control</span>(<span class='kw'>memoise</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>response</span> <span class='kw'>=</span> <span class='st'>"gamma"</span>, <span class='kw'>lambda</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+  <span class='kw'>measurer</span> <span class='kw'>=</span> <span class='no'>AIC</span>, <span class='kw'>selector</span> <span class='kw'>=</span> <span class='no'>min</span>, <span class='kw'>ntemps</span> <span class='kw'>=</span> <span class='fl'>6</span>,
+  <span class='kw'>penultimate_temp</span> <span class='kw'>=</span> <span class='fl'>2</span>^<span class='fl'>6</span>, <span class='kw'>ultimate_temp</span> <span class='kw'>=</span> <span class='fl'>1e+10</span>, <span class='kw'>q</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+  <span class='kw'>nit</span> <span class='kw'>=</span> <span class='fl'>10000</span>, <span class='kw'>magnitude</span> <span class='kw'>=</span> <span class='fl'>12</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>burnin</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+  <span class='kw'>thin_frac</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>summary_prob</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data</th>
-      <td><p><code>data.frame</code> including [1] the time variable (indicated 
-in <code>timename</code>), [2] the predictor variables (required by
-<code>formula</code>) and [3], the multinomial response variable (indicated in
-<code>formula</code>) as verified by <code><a href='check_timename.html'>check_timename</a></code> and 
-<code><a href='check_formula.html'>check_formula</a></code>. Note that the response variables should be
-formatted as a <code>data.frame</code> object named as indicated by the 
-<code>response</code> entry in the <code>control</code> list, such as <code>gamma</code> 
-for a standard TS analysis on LDA output.</p></td>
+      <th>memoise</th>
+      <td><p><code>logical</code> indicator of whether the multinomial 
+functions should be memoised (via <code><a href='https://www.rdocumentation.org/packages/memoise/topics/memoise'>memoise</a></code>). 
+Memoisation happens to both <code><a href='multinom_TS.html'>multinom_TS</a></code> and 
+<code><a href='multinom_TS_chunk.html'>multinom_TS_chunk</a></code>.</p></td>
     </tr>
     <tr>
-      <th>formula</th>
-      <td><p><code><a href='https://www.rdocumentation.org/packages/stats/topics/formula'>formula</a></code> defining the regression between
-relationship the change points. Any 
-predictor variable included must also be a column in 
-<code>data</code> and any (multinomial) response variable must be a set of
-columns in <code>data</code>, as verified by <code><a href='check_formula.html'>check_formula</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>nchangepoints</th>
-      <td><p><code>integer</code> corresponding to the number of 
-change points to include in the model. 0 is a valid input (corresponding
-to no change points, so a singular time series model), and the current 
-implementation can reasonably include up to 6 change points. The 
-number of change points is used to dictate the segementation of the 
-time series into chunks fit with separate models dictated by 
-<code>formula</code>.</p></td>
-    </tr>
-    <tr>
-      <th>timename</th>
-      <td><p><code>character</code> element indicating the time variable
+      <th>response</th>
+      <td><p><code>character</code> element indicating the response variable 
 used in the time series.</p></td>
     </tr>
     <tr>
-      <th>weights</th>
-      <td><p>Optional class <code>numeric</code> vector of weights for each 
-document. Defaults to <code>NULL</code>, translating to an equal weight for
-each document. When using <code>multinom_TS</code> in a standard LDATS 
-analysis, it is advisable to weight the documents by their total size,
-as the result of <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code> is a matrix of 
-proportions, which does not account for size differences among documents.
-For most models, a scaling of the weights (so that the average is 1) is
-most appropriate, and this is accomplished using <code>document_weights</code>.</p></td>
+      <th>lambda</th>
+      <td><p><code>numeric</code> "weight" decay term used to set the prior
+on the regressors within each chunk-level model. Defaults to 0, 
+corresponding to a fully vague prior.</p></td>
     </tr>
     <tr>
-      <th>control</th>
-      <td><p>A <code>list</code> of parameters to control the fitting of the
-Time Series model including the parallel tempering Markov Chain 
-Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
-<code><a href='TS_control.html'>TS_control</a></code>.</p></td>
+      <th>measurer, selector</th>
+      <td><p>Function names for use in evaluation of the TS
+models. <code>measurer</code> is used to create a value for each model
+and <code>selector</code> operates on the values to choose the model.</p></td>
+    </tr>
+    <tr>
+      <th>ntemps</th>
+      <td><p><code>integer</code> number of temperatures (chains) to use in the 
+ptMCMC algorithm.</p></td>
+    </tr>
+    <tr>
+      <th>penultimate_temp</th>
+      <td><p>Penultimate temperature in the ptMCMC sequence.</p></td>
+    </tr>
+    <tr>
+      <th>ultimate_temp</th>
+      <td><p>Ultimate temperature in the ptMCMC sequence.</p></td>
+    </tr>
+    <tr>
+      <th>q</th>
+      <td><p>Exponent controlling the ptMCMC temperature sequence from the 
+focal chain (reference with temperature = 1) to the penultimate chain. 0
+(default) implies a geometric sequence. 1 implies squaring before 
+exponentiating.</p></td>
+    </tr>
+    <tr>
+      <th>nit</th>
+      <td><p><code>integer</code> number of iterations (steps) used in the ptMCMC
+algorithm.</p></td>
+    </tr>
+    <tr>
+      <th>magnitude</th>
+      <td><p>Average magnitude (defining a geometric distribution)
+for the proposed step size in the ptMCMC algorithm.</p></td>
+    </tr>
+    <tr>
+      <th>quiet</th>
+      <td><p><code>logical</code> indicator of whether the model should run 
+quietly (if <code>FALSE</code>, a progress bar and notifications are printed).</p></td>
+    </tr>
+    <tr>
+      <th>burnin</th>
+      <td><p><code>integer</code> number of iterations to remove from the 
+beginning of the ptMCMC algorithm.</p></td>
+    </tr>
+    <tr>
+      <th>thin_frac</th>
+      <td><p>Fraction of iterations to retain, must be \((0, 1]\),
+and the default value of 1 represents no thinning.</p></td>
+    </tr>
+    <tr>
+      <th>summary_prob</th>
+      <td><p>Probability used for summarizing the posterior 
+distributions (via the highest posterior density interval, see
+<code><a href='https://www.rdocumentation.org/packages/coda/topics/HPDinterval'>HPDinterval</a></code>).</p></td>
+    </tr>
+    <tr>
+      <th>seed</th>
+      <td><p>Input to <code>set.seed</code> for replication purposes.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>List of saved data objects from the ptMCMC estimation of
-  change point locations (unless <code>nchangepoints</code> is 0, then 
-  <code>NULL</code> is returned).</p>
+    <p><code>list</code>, with named elements corresponding to the arguments.</p>
     
 
   </div>

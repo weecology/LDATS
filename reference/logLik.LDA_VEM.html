@@ -32,9 +32,9 @@
 
 <meta property="og:title" content="Calculate the log likelihood of a VEM LDA model fit — logLik.LDA_VEM" />
 
-<meta property="og:description" content="Imported calculations from topicmodels package, as applied to
-  Latent Dirichlet Allocation fit with Variational Expectation Maximization
-  via LDA." />
+<meta property="og:description" content="Imported but updated calculations from topicmodels package, as
+  applied to Latent Dirichlet Allocation fit with Variational Expectation 
+  Maximization via LDA." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -65,7 +65,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -77,12 +77,9 @@
      
   </a>
 </li>
-<li>
-  <a href="../reference/index.html">Reference</a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Vignettes
      
     <span class="caret"></span>
   </a>
@@ -99,12 +96,21 @@
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
+  <a href="https://twitter.com/weecology">
+    <span class="fa fa-twitter"></span>
+     
+  </a>
+</li>
+<li>
   <a href="https://github.com/weecology/LDATS">
     <span class="fa fa-github fa-lg"></span>
      
@@ -129,9 +135,9 @@
 
     <div class="ref-description">
     
-    <p>Imported calculations from topicmodels package, as applied to
-  Latent Dirichlet Allocation fit with Variational Expectation Maximization
-  via <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code>.</p>
+    <p>Imported but updated calculations from topicmodels package, as
+  applied to Latent Dirichlet Allocation fit with Variational Expectation 
+  Maximization via <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code>.</p>
     
     </div>
 
@@ -156,11 +162,24 @@
     <p>Log likelihood of the model <code>logLik</code>, also with <code>df</code>
   (degrees of freedom) and <code>nobs</code> (number of observations) values.</p>
     
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The number of degrees of freedom is 1 (for alpha) plus the number
+  of entries in the document-topic matrix. The number of observations is 
+  the number of entries in the document-term matrix.</p>
+    
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
+    <p>Buntine, W. 2002. Variational extentions to EM and multinomial PCA. 
+  <em>European Conference on Machine Learning, Lecture Notes in Computer 
+  Science</em> <strong>2430</strong>:23-34. <a href='https://bit.ly/327sltH'>link</a>.</p>
+<p>Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
   Models. <em>Journal of Statistical Software</em> <strong>40</strong>:13.
   <a href='https://www.jstatsoft.org/article/view/v040i13'>link</a>.</p>
+<p>Hoffman, M. D., D. M. Blei, and F. Bach. 2010. Online learning for 
+  latent Dirichlet allocation. <em>Advances in Neural Information 
+  Processing Systems</em> <strong>23</strong>:856-864.
+  <a href='https://bit.ly/2LEr5sb'>link</a>.</p>
     
 
   </div>
@@ -170,6 +189,8 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
 
       <li><a href="#references">References</a></li>
           </ul>

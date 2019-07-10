@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create control list for LDA model — LDA_controls_list • LDATS</title>
+<title>Replace if TRUE — iftrue • LDATS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,12 +30,10 @@
 
 
 
-<meta property="og:title" content="Create control list for LDA model — LDA_controls_list" />
+<meta property="og:title" content="Replace if TRUE — iftrue" />
 
-<meta property="og:description" content="This function provides a simple creation and definition of 
-  the list used to control the set of LDA models. It is set up to be easy
-  to work with the existing control capacity of 
-  LDA." />
+<meta property="og:description" content="If the focal input is TRUE, replace it with 
+  alternative." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -66,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -78,12 +76,9 @@
      
   </a>
 </li>
-<li>
-  <a href="../reference/index.html">Reference</a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Vignettes
      
     <span class="caret"></span>
   </a>
@@ -100,12 +95,21 @@
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
+  <a href="https://twitter.com/weecology">
+    <span class="fa fa-twitter"></span>
+     
+  </a>
+</li>
+<li>
   <a href="https://github.com/weecology/LDATS">
     <span class="fa fa-github fa-lg"></span>
      
@@ -123,47 +127,36 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create control list for LDA model</h1>
-    <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/LDA.R'><code>R/LDA.R</code></a></small>
-    <div class="hidden name"><code>LDA_controls_list.Rd</code></div>
+    <h1>Replace if TRUE</h1>
+    <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/utilities.R'><code>R/utilities.R</code></a></small>
+    <div class="hidden name"><code>iftrue.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function provides a simple creation and definition of 
-  the list used to control the set of LDA models. It is set up to be easy
-  to work with the existing control capacity of 
-  <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code>.</p>
+    <p>If the focal input is <code>TRUE</code>, replace it with 
+  alternative.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>LDA_controls_list</span>(<span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>measurer</span> <span class='kw'>=</span> <span class='no'>AIC</span>, <span class='kw'>selector</span> <span class='kw'>=</span> <span class='no'>min</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>iftrue</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>alt</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>quiet</th>
-      <td><p><code>logical</code> indicator of whether the model should run 
-quietly.</p></td>
+      <th>x</th>
+      <td><p>Focal input.</p></td>
     </tr>
     <tr>
-      <th>measurer, selector</th>
-      <td><p>Function names for use in evaluation of the LDA
-models. <code>measurer</code> is used to create a value for each model
-and <code>selector</code> operates on the values to choose the model(s) to 
-pass on.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Additional arguments to be passed to 
-<code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code> as a <code>control</code> input.</p></td>
+      <th>alt</th>
+      <td><p>Alternative value.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Class <code>LDA_controls</code> list for controlling the LDA model fit.</p>
+    <p><code>x</code> if not <code>TRUE</code>, <code>alt</code> otherwise.</p>
     
 
   </div>

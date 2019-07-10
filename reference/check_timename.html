@@ -33,7 +33,10 @@
 <meta property="og:title" content="Check that the time vector is proper — check_timename" />
 
 <meta property="og:description" content="Check that the vector of time values is included in the 
-  document covariate table and that it is either numeric or a date." />
+  document covariate table and that it is either a integer-conformable or
+  a date. If it is a date, the input is converted to an 
+  integer, resulting in the timestep being 1 day, which is often not 
+  desired behavior." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -64,7 +67,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -76,12 +79,9 @@
      
   </a>
 </li>
-<li>
-  <a href="../reference/index.html">Reference</a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Vignettes
      
     <span class="caret"></span>
   </a>
@@ -98,12 +98,21 @@
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
+  <a href="https://twitter.com/weecology">
+    <span class="fa fa-twitter"></span>
+     
+  </a>
+</li>
+<li>
   <a href="https://github.com/weecology/LDATS">
     <span class="fa fa-github fa-lg"></span>
      
@@ -129,7 +138,10 @@
     <div class="ref-description">
     
     <p>Check that the vector of time values is included in the 
-  document covariate table and that it is either numeric or a date.</p>
+  document covariate table and that it is either a integer-conformable or
+  a <code>date</code>. If it is a <code>date</code>, the input is converted to an 
+  integer, resulting in the timestep being 1 day, which is often not 
+  desired behavior.</p>
     
     </div>
 

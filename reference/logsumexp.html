@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Determine the AIC (deviance) value of a Time Series model — AIC.TS_fit • LDATS</title>
+<title>Caclulate the log-sum-exponential (LSE) of a vector — logsumexp • LDATS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,10 @@
 
 
 
-<meta property="og:title" content="Determine the AIC (deviance) value of a Time Series model — AIC.TS_fit" />
+<meta property="og:title" content="Caclulate the log-sum-exponential (LSE) of a vector — logsumexp" />
 
-<meta property="og:description" content="Convenience function to extract the AIC (deviance) element of 
-  TS_fit-class object fit by multinom_TS." />
+<meta property="og:description" content="Calculate the exponent of a vector (offset by the max), sum
+  the elements, calculate the log, remove the offset." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -64,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -76,12 +76,9 @@
      
   </a>
 </li>
-<li>
-  <a href="../reference/index.html">Reference</a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Vignettes
      
     <span class="caret"></span>
   </a>
@@ -98,12 +95,21 @@
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
+  <a href="https://twitter.com/weecology">
+    <span class="fa fa-twitter"></span>
+     
+  </a>
+</li>
+<li>
   <a href="https://github.com/weecology/LDATS">
     <span class="fa fa-github fa-lg"></span>
      
@@ -121,37 +127,32 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Determine the AIC (deviance) value of a Time Series model</h1>
-    <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/TS.R'><code>R/TS.R</code></a></small>
-    <div class="hidden name"><code>AIC.TS_fit.Rd</code></div>
+    <h1>Caclulate the log-sum-exponential (LSE) of a vector</h1>
+    <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/utilities.R'><code>R/utilities.R</code></a></small>
+    <div class="hidden name"><code>logsumexp.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Convenience function to extract the AIC (deviance) element of 
-  <code>TS_fit</code>-class object fit by <code><a href='multinom_TS.html'>multinom_TS</a></code>.</p>
+    <p>Calculate the exponent of a vector (offset by the max), sum
+  the elements, calculate the log, remove the offset.</p>
     
     </div>
 
-    <pre class="usage"><span class='co'># S3 method for TS_fit</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/AIC'>AIC</a></span>(<span class='no'>object</span>, <span class='no'>...</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>2</span>)</pre>
+    <pre class="usage"><span class='fu'>logsumexp</span>(<span class='no'>x</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>object</th>
-      <td><p>Class <code>TS_fit</code> object to be evaluated.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Not used, simply included to maintain method compatability.</p></td>
-    </tr>
-    <tr>
-      <th>k</th>
-      <td><p>Not used, simply included to maintain method compatability.</p></td>
+      <th>x</th>
+      <td><p><code>numeric</code> vector</p></td>
     </tr>
     </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>The LSE.</p>
     
 
   </div>
@@ -159,7 +160,9 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#value">Value</a></li>
+          </ul>
 
   </div>
 </div>

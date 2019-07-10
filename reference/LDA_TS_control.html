@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create the controls list for the Time Series model — TS_controls_list • LDATS</title>
+<title>Create the controls list for the LDATS model — LDA_TS_control • LDATS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,11 +30,10 @@
 
 
 
-<meta property="og:title" content="Create the controls list for the Time Series model — TS_controls_list" />
+<meta property="og:title" content="Create the controls list for the LDATS model — LDA_TS_control" />
 
-<meta property="og:description" content="This function provides a simple creation and definition of a
-  list used to control the time series model fit occurring within 
-  TS." />
+<meta property="og:description" content="Create and define a list of control options used to run the
+  LDATS model, as implemented by LDA_TS." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -65,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -77,12 +76,9 @@
      
   </a>
 </li>
-<li>
-  <a href="../reference/index.html">Reference</a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Vignettes
      
     <span class="caret"></span>
   </a>
@@ -99,12 +95,21 @@
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
+  <a href="https://twitter.com/weecology">
+    <span class="fa fa-twitter"></span>
+     
+  </a>
+</li>
+<li>
   <a href="https://github.com/weecology/LDATS">
     <span class="fa fa-github fa-lg"></span>
      
@@ -122,28 +127,43 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create the controls list for the Time Series model</h1>
-    <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/TS.R'><code>R/TS.R</code></a></small>
-    <div class="hidden name"><code>TS_controls_list.Rd</code></div>
+    <h1>Create the controls list for the LDATS model</h1>
+    <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/LDA_TS.R'><code>R/LDA_TS.R</code></a></small>
+    <div class="hidden name"><code>LDA_TS_control.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function provides a simple creation and definition of a
-  list used to control the time series model fit occurring within 
-  <code><a href='TS.html'>TS</a></code>.</p>
+    <p>Create and define a list of control options used to run the
+  LDATS model, as implemented by <code><a href='LDA_TS.html'>LDA_TS</a></code>.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>TS_controls_list</span>(<span class='kw'>memoise</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>response</span> <span class='kw'>=</span> <span class='st'>"gamma"</span>,
-  <span class='kw'>timename</span> <span class='kw'>=</span> <span class='st'>"time"</span>, <span class='kw'>lambda</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>measurer</span> <span class='kw'>=</span> <span class='no'>AIC</span>, <span class='kw'>selector</span> <span class='kw'>=</span> <span class='no'>min</span>,
-  <span class='kw'>ntemps</span> <span class='kw'>=</span> <span class='fl'>6</span>, <span class='kw'>penultimate_temp</span> <span class='kw'>=</span> <span class='fl'>2</span>^<span class='fl'>6</span>, <span class='kw'>ultimate_temp</span> <span class='kw'>=</span> <span class='fl'>1e+10</span>, <span class='kw'>q</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>nit</span> <span class='kw'>=</span> <span class='fl'>10000</span>, <span class='kw'>magnitude</span> <span class='kw'>=</span> <span class='fl'>12</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>burnin</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>thin_frac</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>summary_prob</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>LDA_TS_control</span>(<span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>measurer_LDA</span> <span class='kw'>=</span> <span class='no'>AIC</span>, <span class='kw'>selector_LDA</span> <span class='kw'>=</span> <span class='no'>min</span>,
+  <span class='kw'>iseed</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>memoise</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>response</span> <span class='kw'>=</span> <span class='st'>"gamma"</span>, <span class='kw'>lambda</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+  <span class='kw'>measurer_TS</span> <span class='kw'>=</span> <span class='no'>AIC</span>, <span class='kw'>selector_TS</span> <span class='kw'>=</span> <span class='no'>min</span>, <span class='kw'>ntemps</span> <span class='kw'>=</span> <span class='fl'>6</span>,
+  <span class='kw'>penultimate_temp</span> <span class='kw'>=</span> <span class='fl'>2</span>^<span class='fl'>6</span>, <span class='kw'>ultimate_temp</span> <span class='kw'>=</span> <span class='fl'>1e+10</span>, <span class='kw'>q</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+  <span class='kw'>nit</span> <span class='kw'>=</span> <span class='fl'>10000</span>, <span class='kw'>magnitude</span> <span class='kw'>=</span> <span class='fl'>12</span>, <span class='kw'>burnin</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>thin_frac</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>summary_prob</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>quiet</th>
+      <td><p><code>logical</code> indicator of whether the model should run 
+quietly.</p></td>
+    </tr>
+    <tr>
+      <th>measurer_LDA, selector_LDA</th>
+      <td><p>Function names for use in evaluation of 
+the LDA models. <code>measurer_LDA</code> is used to create a value for each 
+model and <code>selector_LDA</code> operates on the values to choose the model.</p></td>
+    </tr>
+    <tr>
+      <th>iseed</th>
+      <td><p><code>integer</code> initial seed for the LDA model set.</p></td>
+    </tr>
     <tr>
       <th>memoise</th>
       <td><p><code>logical</code> indicator of whether the multinomial 
@@ -154,12 +174,7 @@ Memoisation happens to both <code><a href='multinom_TS.html'>multinom_TS</a></co
     <tr>
       <th>response</th>
       <td><p><code>character</code> element indicating the response variable 
-used in the time series.</p></td>
-    </tr>
-    <tr>
-      <th>timename</th>
-      <td><p><code>character</code> element indicating the time variable
-used in the time series. Defaults to <code>"time"</code>.</p></td>
+used in the time series. Should be set to <code>"gamma"</code> for LDATS.</p></td>
     </tr>
     <tr>
       <th>lambda</th>
@@ -168,10 +183,10 @@ on the regressors within each chunk-level model. Defaults to 0,
 corresponding to a fully vague prior.</p></td>
     </tr>
     <tr>
-      <th>measurer, selector</th>
-      <td><p>Function names for use in evaluation of the TS
-models. <code>measurer</code> is used to create a value for each model
-and <code>selector</code> operates on the values to choose the model.</p></td>
+      <th>measurer_TS, selector_TS</th>
+      <td><p>Function names for use in evaluation of the 
+TS models. <code>measurer_TS</code> is used to create a value for each model
+and <code>selector_TS</code> operates on the values to choose the model.</p></td>
     </tr>
     <tr>
       <th>ntemps</th>
@@ -204,36 +219,36 @@ algorithm.</p></td>
 for the proposed step size in the ptMCMC algorithm.</p></td>
     </tr>
     <tr>
-      <th>quiet</th>
-      <td><p><code>logical</code> indicator of whether the model should run 
-quietly (if <code>FALSE</code>, a progress bar and notifications are printed).</p></td>
-    </tr>
-    <tr>
       <th>burnin</th>
       <td><p><code>integer</code> number of iterations to remove from the 
 beginning of the ptMCMC algorithm.</p></td>
     </tr>
     <tr>
       <th>thin_frac</th>
-      <td><p>Fraction of iterations to retain, must be \((0, 1]\),
-and the default value of 1 represents no thinning.</p></td>
+      <td><p>Fraction of iterations to retain, from the ptMCMC. Must be
+\((0, 1]\), and the default value of 1 represents no thinning.</p></td>
     </tr>
     <tr>
       <th>summary_prob</th>
       <td><p>Probability used for summarizing the posterior 
 distributions (via the highest posterior density interval, see
-<code><a href='https://www.rdocumentation.org/packages/coda/topics/HPDinterval'>HPDinterval</a></code>).</p></td>
+<code><a href='https://www.rdocumentation.org/packages/coda/topics/HPDinterval'>HPDinterval</a></code>) of the TS model.</p></td>
     </tr>
     <tr>
       <th>seed</th>
-      <td><p>Input to <code>set.seed</code> for replication purposes.</p></td>
+      <td><p>Input to <code>set.seed</code> in the time series model for 
+replication purposes.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Additional arguments to be passed to 
+<code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code> as a <code>control</code> input.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>List of class <code>TS_controls</code>, with named elements corresponding
-  to the arguments.</p>
+    <p><code>list</code>, with named elements corresponding to the arguments.</p>
     
 
   </div>

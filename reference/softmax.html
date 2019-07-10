@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create the model-running-message for an LDA — LDA_msg • LDATS</title>
+<title>Caclulate the softmax of a vector or matrix of values — softmax • LDATS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,10 @@
 
 
 
-<meta property="og:title" content="Create the model-running-message for an LDA — LDA_msg" />
+<meta property="og:title" content="Caclulate the softmax of a vector or matrix of values — softmax" />
 
-<meta property="og:description" content="Produce and print the message for a given LDA model." />
+<meta property="og:description" content="Calculate the softmax (normalized exponential) of a vector
+ of values or a set of vectors stacked rowwise." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -126,38 +127,32 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create the model-running-message for an LDA</h1>
-    <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/LDA.R'><code>R/LDA.R</code></a></small>
-    <div class="hidden name"><code>LDA_msg.Rd</code></div>
+    <h1>Caclulate the softmax of a vector or matrix of values</h1>
+    <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/utilities.R'><code>R/utilities.R</code></a></small>
+    <div class="hidden name"><code>softmax.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Produce and print the message for a given LDA model.</p>
+    <p>Calculate the softmax (normalized exponential) of a vector
+ of values or a set of vectors stacked rowwise.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>LDA_msg</span>(<span class='no'>mod_topics</span>, <span class='no'>mod_seeds</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>())</pre>
+    <pre class="usage"><span class='fu'>softmax</span>(<span class='no'>x</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>mod_topics</th>
-      <td><p><code>integer</code> value corresponding to the number of 
-topics in the model.</p></td>
-    </tr>
-    <tr>
-      <th>mod_seeds</th>
-      <td><p><code>integer</code> value corresponding to the seed used for 
-the model.</p></td>
-    </tr>
-    <tr>
-      <th>control</th>
-      <td><p>Class <code>LDA_controls</code> list of control parameters to be
-used in <code>LDA</code> (note that "seed" will be overwritten).</p></td>
+      <th>x</th>
+      <td><p><code>numeric</code> vector or matrix</p></td>
     </tr>
     </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>The softmax of <code>x</code>.</p>
     
 
   </div>
@@ -165,7 +160,9 @@ used in <code>LDA</code> (note that "seed" will be overwritten).</p></td>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#value">Value</a></li>
+          </ul>
 
   </div>
 </div>

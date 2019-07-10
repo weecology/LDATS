@@ -60,7 +60,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -72,12 +72,9 @@
      
   </a>
 </li>
-<li>
-  <a href="../reference/index.html">Reference</a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Vignettes
      
     <span class="caret"></span>
   </a>
@@ -94,12 +91,21 @@
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
+  <a href="https://twitter.com/weecology">
+    <span class="fa fa-twitter"></span>
+     
+  </a>
+</li>
+<li>
   <a href="https://github.com/weecology/LDATS">
     <span class="fa fa-github fa-lg"></span>
      
@@ -131,42 +137,73 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-joint-lda-and-time-series" class="hasAnchor"><a href="#section-joint-lda-and-time-series" class="anchor"></a>Joint LDA and Time Series</h2>
+          <p class="section-desc"><p>Functions for top-level LDATS modeling</p></p>
         </th>
       </tr>
       <tr>
         
         <td>
-          <p><code><a href="AIC.TS_fit.html">AIC(<i>&lt;TS_fit&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Determine the AIC (deviance) value of a Time Series model</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="LDATS.html">LDATS</a></code> </p>
-        </td>
-        <td><p>Package to conduct two-stage analyses combining Latent Dirichlet 
-  Allocation with Bayesian Time Series models</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="LDA_TS.html">LDA_TS()</a></code> <code><a href="LDA_TS.html">check_LDA_TS_inputs()</a></code> </p>
+          <p><code><a href="LDA_TS.html">LDA_TS()</a></code> <code><a href="LDA_TS.html">conform_LDA_TS_data()</a></code> <code><a href="LDA_TS.html">check_LDA_TS_inputs()</a></code> </p>
         </td>
         <td><p>Run a full set of Latent Dirichlet Allocations and Time 
   Series models</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="LDA_TS_controls_list.html">LDA_TS_controls_list()</a></code> </p>
+          <p><code><a href="package_LDA_TS.html">package_LDA_TS()</a></code> </p>
         </td>
-        <td><p>Create the controls list for the LDATS model</p></td>
+        <td><p>Package the output of LDA_TS</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="LDA_controls_list.html">LDA_controls_list()</a></code> </p>
+          <p><code><a href="print.LDA_TS.html">print(<i>&lt;LDA_TS&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Create control list for LDA model</p></td>
+        <td><p>Print the selected LDA and TS models of LDA_TS object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plot.LDA_TS.html">plot(<i>&lt;LDA_TS&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Plot the key results from a full LDATS analysis</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="set_LDA_TS_plot_cols.html">set_LDA_TS_plot_cols()</a></code> </p>
+        </td>
+        <td><p>Create the list of colors for the LDATS summary plot</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-latent-dirichlet-allocation" class="hasAnchor"><a href="#section-latent-dirichlet-allocation" class="anchor"></a>Latent Dirichlet Allocation</h2>
+          <p class="section-desc"><p>Functions to extend exisiting LDA functionality</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="LDA_set.html">LDA_set()</a></code> <code><a href="LDA_set.html">check_LDA_set_inputs()</a></code> </p>
+        </td>
+        <td><p>Run a set of Latent Dirichlet Allocation models</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="package_LDA_set.html">package_LDA_set()</a></code> </p>
+        </td>
+        <td><p>Package the output from LDA_set</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="logLik.LDA_VEM.html">logLik(<i>&lt;LDA_VEM&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Calculate the log likelihood of a VEM LDA model fit</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="select_LDA.html">select_LDA()</a></code> </p>
+        </td>
+        <td><p>Select the best LDA model(s) for use in time series</p></td>
       </tr><tr>
         
         <td>
@@ -176,10 +213,30 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="LDA_set.html">LDA_set()</a></code> <code><a href="LDA_set.html">check_LDA_set_inputs()</a></code> </p>
+          <p><code><a href="plot.LDA_set.html">plot(<i>&lt;LDA_set&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Run a set of Latent Dirichlet Allocation models</p></td>
+        <td><p>Plot a set of LDATS LDA models</p></td>
       </tr><tr>
+        
+        <td>
+          <p><code><a href="plot.LDA_VEM.html">plot(<i>&lt;LDA_VEM&gt;</i>)</a></code> <code><a href="plot.LDA_VEM.html">LDA_plot_top_panel()</a></code> <code><a href="plot.LDA_VEM.html">LDA_plot_bottom_panel()</a></code> </p>
+        </td>
+        <td><p>Plot the results of an LDATS LDA model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="set_LDA_plot_colors.html">set_LDA_plot_colors()</a></code> </p>
+        </td>
+        <td><p>Prepare the colors to be used in the LDA plots</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-time-series" class="hasAnchor"><a href="#section-time-series" class="anchor"></a>Time Series</h2>
+          <p class="section-desc"><p>Functions to execute and evaluate the overall TS model with changepoints and regression components</p></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
           <p><code><a href="TS.html">TS()</a></code> <code><a href="TS.html">check_TS_inputs()</a></code> </p>
@@ -188,9 +245,27 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="TS_controls_list.html">TS_controls_list()</a></code> </p>
+          <p><code><a href="package_TS.html">package_TS()</a></code> </p>
         </td>
-        <td><p>Create the controls list for the Time Series model</p></td>
+        <td><p>Summarize the Time Series model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="logLik.TS_fit.html">logLik(<i>&lt;TS_fit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Determine the log likelihood of a Time Series model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="print.TS_fit.html">print(<i>&lt;TS_fit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Print a Time Series model fit</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plot.TS_fit.html">plot(<i>&lt;TS_fit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Plot a LDATS TS models</p></td>
       </tr><tr>
         
         <td>
@@ -200,15 +275,24 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="TS_on_LDA.html">TS_on_LDA()</a></code> <code><a href="TS_on_LDA.html">check_TS_on_LDA_inputs()</a></code> </p>
+          <p><code><a href="trace_plot.html">trace_plot()</a></code> </p>
         </td>
-        <td><p>Conduct a set of Time Series analyses on a set of LDA models</p></td>
+        <td><p>Produce the trace plot panel for the TS diagnostic plot of a 
+  parameter</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="TS_summary_plot.html">TS_summary_plot()</a></code> </p>
+          <p><code><a href="ecdf_plot.html">ecdf_plot()</a></code> </p>
         </td>
-        <td><p>Create the summary plot for a TS fit to an LDA model</p></td>
+        <td><p>Produce the posterior distribution ECDF panel for the TS 
+  diagnostic plot of a parameter</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="posterior_plot.html">posterior_plot()</a></code> </p>
+        </td>
+        <td><p>Produce the posterior distribution histogram panel for the TS 
+  diagnostic plot of a parameter</p></td>
       </tr><tr>
         
         <td>
@@ -219,10 +303,320 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="check_LDA_models.html">check_LDA_models()</a></code> </p>
+          <p><code><a href="set_TS_summary_plot_cols.html">set_TS_summary_plot_cols()</a></code> </p>
         </td>
-        <td><p>Check that LDA model input is proper</p></td>
+        <td><p>Create the list of colors for the TS summary plot</p></td>
       </tr><tr>
+        
+        <td>
+          <p><code><a href="TS_summary_plot.html">TS_summary_plot()</a></code> </p>
+        </td>
+        <td><p>Create the summary plot for a TS fit to an LDA model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pred_gamma_TS_plot.html">pred_gamma_TS_plot()</a></code> </p>
+        </td>
+        <td><p>Create the plot of fitted topic proportions over time</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="rho_lines.html">rho_lines()</a></code> </p>
+        </td>
+        <td><p>Add change point location lines to the time series plot</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="rho_hist.html">rho_hist()</a></code> </p>
+        </td>
+        <td><p>Create the change point histograms plot</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="set_rho_hist_colors.html">set_rho_hist_colors()</a></code> </p>
+        </td>
+        <td><p>Prepare the colors to be used in the change point histogram</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="set_gamma_colors.html">set_gamma_colors()</a></code> </p>
+        </td>
+        <td><p>Prepare the colors to be used in the gamma time series</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="summarize_etas.html">summarize_etas()</a></code> <code><a href="summarize_etas.html">measure_eta_vcov()</a></code> </p>
+        </td>
+        <td><p>Summarize the regressor (eta) distributions</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="summarize_rhos.html">summarize_rhos()</a></code> <code><a href="summarize_rhos.html">measure_rho_vcov()</a></code> </p>
+        </td>
+        <td><p>Summarize the rho distributions</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="est_regressors.html">est_regressors()</a></code> </p>
+        </td>
+        <td><p>Estimate the distribution of regressors, unconditional on the
+  change point locations</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="est_changepoints.html">est_changepoints()</a></code> </p>
+        </td>
+        <td><p>Use ptMCMC to estimate the distribution of change point locations</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="prep_pbar.html">prep_pbar()</a></code> <code><a href="prep_pbar.html">update_pbar()</a></code> </p>
+        </td>
+        <td><p>Initialize and tick through the progress bar</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-multinomial-time-series-modeling" class="hasAnchor"><a href="#section-multinomial-time-series-modeling" class="anchor"></a>Multinomial Time Series modeling</h2>
+          <p class="section-desc"><p>Functions to fit the multinomial time series models making up an overall TS model</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="multinom_TS.html">multinom_TS()</a></code> <code><a href="multinom_TS.html">check_multinom_TS_inputs()</a></code> </p>
+        </td>
+        <td><p>Fit a multinomial change point Time Series model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="logLik.multinom_TS_fit.html">logLik(<i>&lt;multinom_TS_fit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Log likelihood of a multinomial TS model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="multinom_TS_chunk.html">multinom_TS_chunk()</a></code> </p>
+        </td>
+        <td><p>Fit a multinomial Time Series model chunk</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="prep_chunks.html">prep_chunks()</a></code> </p>
+        </td>
+        <td><p>Prepare the time chunk table for a multinomial change point 
+  Time Series model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="package_chunk_fits.html">package_chunk_fits()</a></code> </p>
+        </td>
+        <td><p>Package the output of the chunk-level multinomial models into a
+  multinom_TS_fit list</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="verify_changepoint_locations.html">verify_changepoint_locations()</a></code> </p>
+        </td>
+        <td><p>Verify the change points of a multinomial time series model</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-parallel-tempering-markov-chain-monte-carlo" class="hasAnchor"><a href="#section-parallel-tempering-markov-chain-monte-carlo" class="anchor"></a>Parallel tempering Markov Chain Monte Carlo</h2>
+          <p class="section-desc"><p>Functions to execute ptMCMC optimization</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="prep_ptMCMC_inputs.html">prep_ptMCMC_inputs()</a></code> </p>
+        </td>
+        <td><p>Prepare the inputs for the ptMCMC algorithm estimation of 
+  change points</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="prep_ids.html">prep_ids()</a></code> <code><a href="prep_ids.html">update_ids()</a></code> </p>
+        </td>
+        <td><p>Initialize and update the chain ids throughout the ptMCMC algorithm</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="prep_proposal_dist.html">prep_proposal_dist()</a></code> </p>
+        </td>
+        <td><p>Pre-calculate the change point proposal distribution for the ptMCMC 
+  algorithm</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="prep_saves.html">prep_saves()</a></code> <code><a href="prep_saves.html">update_saves()</a></code> <code><a href="prep_saves.html">process_saves()</a></code> </p>
+        </td>
+        <td><p>Prepare and update the data structures to save the ptMCMC output</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="prep_cpts.html">prep_cpts()</a></code> <code><a href="prep_cpts.html">update_cpts()</a></code> </p>
+        </td>
+        <td><p>Initialize and update the change point matrix used in the ptMCMC
+  algorithm</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="prep_temp_sequence.html">prep_temp_sequence()</a></code> </p>
+        </td>
+        <td><p>Prepare the ptMCMC temperature sequence</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="diagnose_ptMCMC.html">diagnose_ptMCMC()</a></code> </p>
+        </td>
+        <td><p>Calculate ptMCMC summary diagnostics</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="count_trips.html">count_trips()</a></code> </p>
+        </td>
+        <td><p>Count trips of the ptMCMC particles</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="swap_chains.html">swap_chains()</a></code> </p>
+        </td>
+        <td><p>Conduct a set of among-chain swaps for the ptMCMC algorithm</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="step_chains.html">step_chains()</a></code> <code><a href="step_chains.html">propose_step()</a></code> <code><a href="step_chains.html">eval_step()</a></code> <code><a href="step_chains.html">take_step()</a></code> </p>
+        </td>
+        <td><p>Conduct a within-chain step of the ptMCMC algorithm</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="proposed_step_mods.html">proposed_step_mods()</a></code> </p>
+        </td>
+        <td><p>Fit the chunk-level models to a time series, given a set of 
+  proposed change points within the ptMCMC algorithm</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-time-series-on-lda-output" class="hasAnchor"><a href="#section-time-series-on-lda-output" class="anchor"></a>Time Series on LDA output</h2>
+          <p class="section-desc"><p>Functions to facilitate connection running multiple TS models on LDA output</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="TS_on_LDA.html">TS_on_LDA()</a></code> <code><a href="TS_on_LDA.html">check_TS_on_LDA_inputs()</a></code> </p>
+        </td>
+        <td><p>Conduct a set of Time Series analyses on a set of LDA models</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="package_TS_on_LDA.html">package_TS_on_LDA()</a></code> </p>
+        </td>
+        <td><p>Package the output of TS_on_LDA</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="print.TS_on_LDA.html">print(<i>&lt;TS_on_LDA&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Print a set of Time Series models fit to LDAs</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="expand_TS.html">expand_TS()</a></code> </p>
+        </td>
+        <td><p>Expand the TS models across the factorial combination of
+  LDA models, formulas, and number of change points</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="prep_TS_data.html">prep_TS_data()</a></code> </p>
+        </td>
+        <td><p>Prepare the model-specific data to be used in the TS analysis
+  of LDA output</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="select_TS.html">select_TS()</a></code> </p>
+        </td>
+        <td><p>Select the best Time Series model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="print_model_run_message.html">print_model_run_message()</a></code> </p>
+        </td>
+        <td><p>Print the message to the console about which combination of the 
+  Time Series and LDA models is being run</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-simulation" class="hasAnchor"><a href="#section-simulation" class="anchor"></a>Simulation</h2>
+          <p class="section-desc"><p>Functions for simulating input data</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="sim_LDA_data.html">sim_LDA_data()</a></code> </p>
+        </td>
+        <td><p>Simulate LDA data from an LDA structure given parameters</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sim_TS_data.html">sim_TS_data()</a></code> </p>
+        </td>
+        <td><p>Simulate TS data from a TS model structure given parameters</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sim_LDA_TS_data.html">sim_LDA_TS_data()</a></code> </p>
+        </td>
+        <td><p>Simulate LDA_TS data from LDA and TS model structures and parameters</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-control-options" class="hasAnchor"><a href="#section-control-options" class="anchor"></a>Control options</h2>
+          <p class="section-desc"><p>Functions to set function options defined through control lists</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="LDA_TS_control.html">LDA_TS_control()</a></code> </p>
+        </td>
+        <td><p>Create the controls list for the LDATS model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="LDA_set_control.html">LDA_set_control()</a></code> </p>
+        </td>
+        <td><p>Create control list for set of LDA models</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="TS_control.html">TS_control()</a></code> </p>
+        </td>
+        <td><p>Create the controls list for the Time Series model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="prep_LDA_control.html">prep_LDA_control()</a></code> </p>
+        </td>
+        <td><p>Set the control inputs to include the seed</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-input-checking" class="hasAnchor"><a href="#section-input-checking" class="anchor"></a>Input checking</h2>
+          <p class="section-desc"><p>Functions to tidy code by condensing input object verification</p></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
           <p><code><a href="check_changepoints.html">check_changepoints()</a></code> </p>
@@ -262,6 +656,12 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="check_LDA_models.html">check_LDA_models()</a></code> </p>
+        </td>
+        <td><p>Check that LDA model input is proper</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="check_nchangepoints.html">check_nchangepoints()</a></code> </p>
         </td>
         <td><p>Check that nchangepoints vector is proper</p></td>
@@ -289,18 +689,20 @@
           <p><code><a href="check_weights.html">check_weights()</a></code> </p>
         </td>
         <td><p>Check that weights vector is proper</p></td>
-      </tr><tr>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-utilities" class="hasAnchor"><a href="#section-utilities" class="anchor"></a>Utilities</h2>
+          <p class="section-desc"><p>A variety of helpful little functions</p></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
-          <p><code><a href="count_trips.html">count_trips()</a></code> </p>
+          <p><code><a href="AICc.html">AICc()</a></code> </p>
         </td>
-        <td><p>Count trips of the ptMCMC particles</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="diagnose_ptMCMC.html">diagnose_ptMCMC()</a></code> </p>
-        </td>
-        <td><p>Calculate ptMCMC summary diagnostics</p></td>
+        <td><p>Calculate AICc</p></td>
       </tr><tr>
         
         <td>
@@ -310,48 +712,21 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="ecdf_plot.html">ecdf_plot()</a></code> </p>
+          <p><code><a href="iftrue.html">iftrue()</a></code> </p>
         </td>
-        <td><p>Produce the posterior distribution ECDF panel for the TS 
-  diagnostic plot of a parameter</p></td>
+        <td><p>Replace if TRUE</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="est_changepoints.html">est_changepoints()</a></code> </p>
+          <p><code><a href="logsumexp.html">logsumexp()</a></code> </p>
         </td>
-        <td><p>Use ptMCMC to estimate the distribution of change point locations</p></td>
+        <td><p>Caclulate the log-sum-exponential (LSE) of a vector</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="est_regressors.html">est_regressors()</a></code> </p>
+          <p><code><a href="modalvalue.html">modalvalue()</a></code> </p>
         </td>
-        <td><p>Estimate the distribution of regressors, unconditional on the
-  change point locations</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="expand_TS.html">expand_TS()</a></code> </p>
-        </td>
-        <td><p>Expand the TS models across the factorial combination of
-  LDA models, formulas, and number of change points</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="jornada.html">jornada</a></code> </p>
-        </td>
-        <td><p>Jornada rodent data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="logLik.LDA_VEM.html">logLik(<i>&lt;LDA_VEM&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Calculate the log likelihood of a VEM LDA model fit</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="logLik.multinom_TS_fit.html">logLik(<i>&lt;multinom_TS_fit&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Log likelihood of a multinomial TS model</p></td>
+        <td><p>Determine the mode of a distribution</p></td>
       </tr><tr>
         
         <td>
@@ -367,186 +742,9 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="modalvalue.html">modalvalue()</a></code> </p>
-        </td>
-        <td><p>Determine the mode of a distribution</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="multinom_TS.html">multinom_TS()</a></code> <code><a href="multinom_TS.html">check_multinom_TS_inputs()</a></code> </p>
-        </td>
-        <td><p>Fit a multinomial change point Time Series model</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="multinom_TS_chunk.html">multinom_TS_chunk()</a></code> </p>
-        </td>
-        <td><p>Fit a multinomial Time Series model chunk</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="normalize.html">normalize()</a></code> </p>
         </td>
         <td><p>Normalize a vector</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="package_LDA_TS.html">package_LDA_TS()</a></code> </p>
-        </td>
-        <td><p>Package the output of LDA_TS</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="package_LDA_set.html">package_LDA_set()</a></code> </p>
-        </td>
-        <td><p>Package the output from LDA_set</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="package_TS_on_LDA.html">package_TS_on_LDA()</a></code> </p>
-        </td>
-        <td><p>Package the output of TS_on_LDA</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="package_chunk_fits.html">package_chunk_fits()</a></code> </p>
-        </td>
-        <td><p>Package the output of the chunk-level multinomial models into a
-  multinom_TS_fit list</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot.LDA_TS.html">plot(<i>&lt;LDA_TS&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Plot the key results from a full LDATS analysis</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot.LDA_VEM.html">plot(<i>&lt;LDA_VEM&gt;</i>)</a></code> <code><a href="plot.LDA_VEM.html">LDA_plot_top_panel()</a></code> <code><a href="plot.LDA_VEM.html">LDA_plot_bottom_panel()</a></code> </p>
-        </td>
-        <td><p>Plot the results of an LDATS LDA model</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot.LDA_set.html">plot(<i>&lt;LDA_set&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Plot a set of LDATS LDA models</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot.TS_fit.html">plot(<i>&lt;TS_fit&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Plot a LDATS TS models</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="posterior_plot.html">posterior_plot()</a></code> </p>
-        </td>
-        <td><p>Produce the posterior distribution histogram panel for the TS 
-  diagnostic plot of a parameter</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pred_gamma_TS_plot.html">pred_gamma_TS_plot()</a></code> </p>
-        </td>
-        <td><p>Create the plot of fitted topic proportions over time</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="prep_LDA_control.html">prep_LDA_control()</a></code> </p>
-        </td>
-        <td><p>Set the control inputs to include the seed</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="prep_TS_data.html">prep_TS_data()</a></code> </p>
-        </td>
-        <td><p>Prepare the model-specific data to be used in the TS analysis
-  of LDA output</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="prep_chunks.html">prep_chunks()</a></code> </p>
-        </td>
-        <td><p>Prepare the time chunk table for a multinomial change point 
-  Time Series model</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="prep_cpts.html">prep_cpts()</a></code> <code><a href="prep_cpts.html">update_cpts()</a></code> </p>
-        </td>
-        <td><p>Initialize and update the change point matrix used in the ptMCMC
-  algorithm</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="prep_ids.html">prep_ids()</a></code> <code><a href="prep_ids.html">update_ids()</a></code> </p>
-        </td>
-        <td><p>Initialize and update the chain ids throughout the ptMCMC algorithm</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="prep_pbar.html">prep_pbar()</a></code> <code><a href="prep_pbar.html">update_pbar()</a></code> </p>
-        </td>
-        <td><p>Initialize and tick through the progress bar</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="prep_proposal_dist.html">prep_proposal_dist()</a></code> </p>
-        </td>
-        <td><p>Pre-claculate the change point proposal distribution for the ptMCMC 
-  algorithm</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="prep_ptMCMC_inputs.html">prep_ptMCMC_inputs()</a></code> </p>
-        </td>
-        <td><p>Prepare the inputs for the ptMCMC algorithm estimation of 
-  change points</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="prep_saves.html">prep_saves()</a></code> <code><a href="prep_saves.html">update_saves()</a></code> <code><a href="prep_saves.html">process_saves()</a></code> </p>
-        </td>
-        <td><p>Prepare and update the data structures to save the ptMCMC output</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="prep_temp_sequence.html">prep_temp_sequence()</a></code> </p>
-        </td>
-        <td><p>Prepare the ptMCMC temperature sequence</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="print.LDA_TS.html">print(<i>&lt;LDA_TS&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Print the selected LDA and TS models of LDA_TS object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="print.TS_fit.html">print(<i>&lt;TS_fit&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Print a Time Series model fit</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="print.TS_on_LDA.html">print(<i>&lt;TS_on_LDA&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Print a set of Time Series models fit to LDAs</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="print_model_run_message.html">print_model_run_message()</a></code> </p>
-        </td>
-        <td><p>Print the message to the console about which combination of the 
-  Time Series and LDA models is being run</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="proposed_step_mods.html">proposed_step_mods()</a></code> </p>
-        </td>
-        <td><p>Fit the chunk-level models to a time series, given a set of 
-  proposed change points within the ptMCMC algorithm</p></td>
       </tr><tr>
         
         <td>
@@ -556,15 +754,23 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="rho_hist.html">rho_hist()</a></code> </p>
+          <p><code><a href="softmax.html">softmax()</a></code> </p>
         </td>
-        <td><p>Create the change point histograms plot</p></td>
-      </tr><tr>
+        <td><p>Caclulate the softmax of a vector or matrix of values</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-data-and-package" class="hasAnchor"><a href="#section-data-and-package" class="anchor"></a>Data and Package</h2>
+          <p class="section-desc"><p>Datasets provided and the package</p></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
-          <p><code><a href="rho_lines.html">rho_lines()</a></code> </p>
+          <p><code><a href="jornada.html">jornada</a></code> </p>
         </td>
-        <td><p>Add change point location lines to the time series plot</p></td>
+        <td><p>Jornada rodent data</p></td>
       </tr><tr>
         
         <td>
@@ -574,88 +780,10 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="select_LDA.html">select_LDA()</a></code> </p>
+          <p><code><a href="LDATS.html">LDATS</a></code> </p>
         </td>
-        <td><p>Select the best LDA model(s) for use in time series</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="select_TS.html">select_TS()</a></code> </p>
-        </td>
-        <td><p>Select the best Time Series model</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="set_LDA_TS_plot_cols.html">set_LDA_TS_plot_cols()</a></code> </p>
-        </td>
-        <td><p>Create the list of colors for the LDATS summary plot</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="set_LDA_plot_colors.html">set_LDA_plot_colors()</a></code> </p>
-        </td>
-        <td><p>Prepare the colors to be used in the LDA plots</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="set_TS_summary_plot_cols.html">set_TS_summary_plot_cols()</a></code> </p>
-        </td>
-        <td><p>Create the list of colors for the TS summary plot</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="set_gamma_colors.html">set_gamma_colors()</a></code> </p>
-        </td>
-        <td><p>Prepare the colors to be used in the gamma time series</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="set_rho_hist_colors.html">set_rho_hist_colors()</a></code> </p>
-        </td>
-        <td><p>Prepare the colors to be used in the change point histogram</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="step_chains.html">step_chains()</a></code> <code><a href="step_chains.html">propose_step()</a></code> <code><a href="step_chains.html">eval_step()</a></code> <code><a href="step_chains.html">take_step()</a></code> </p>
-        </td>
-        <td><p>Conduct a within-chain step of the ptMCMC algorithm</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="summarize_TS.html">summarize_TS()</a></code> </p>
-        </td>
-        <td><p>Summarize the Time Series model</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="summarize_etas.html">summarize_etas()</a></code> <code><a href="summarize_etas.html">measure_eta_vcov()</a></code> </p>
-        </td>
-        <td><p>Summarize the regressor (eta) distributions</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="summarize_rhos.html">summarize_rhos()</a></code> <code><a href="summarize_rhos.html">measure_rho_vcov()</a></code> </p>
-        </td>
-        <td><p>Summarize the rho distributions</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="swap_chains.html">swap_chains()</a></code> </p>
-        </td>
-        <td><p>Conduct a set of among-chain swaps for the ptMCMC algorithm</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="trace_plot.html">trace_plot()</a></code> </p>
-        </td>
-        <td><p>Produce the trace plot panel for the TS diagnostic plot of a 
-  parameter</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="verify_changepoint_locations.html">verify_changepoint_locations()</a></code> </p>
-        </td>
-        <td><p>Verify the change points of a multinomial time series model</p></td>
+        <td><p>Package to conduct two-stage analyses combining Latent Dirichlet 
+  Allocation with Bayesian Time Series models</p></td>
       </tr>
     </tbody>
     </table>
@@ -664,7 +792,17 @@
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+      <li><a href="#section-joint-lda-and-time-series">Joint LDA and Time Series</a></li>
+      <li><a href="#section-latent-dirichlet-allocation">Latent Dirichlet Allocation</a></li>
+      <li><a href="#section-time-series">Time Series</a></li>
+      <li><a href="#section-multinomial-time-series-modeling">Multinomial Time Series modeling</a></li>
+      <li><a href="#section-parallel-tempering-markov-chain-monte-carlo">Parallel tempering Markov Chain Monte Carlo</a></li>
+      <li><a href="#section-time-series-on-lda-output">Time Series on LDA output</a></li>
+      <li><a href="#section-simulation">Simulation</a></li>
+      <li><a href="#section-control-options">Control options</a></li>
+      <li><a href="#section-input-checking">Input checking</a></li>
+      <li><a href="#section-utilities">Utilities</a></li>
+      <li><a href="#section-data-and-package">Data and Package</a></li>
     </ul>
   </div>
 </div>

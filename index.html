@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -44,12 +44,9 @@
      
   </a>
 </li>
-<li>
-  <a href="reference/index.html">Reference</a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Vignettes
      
     <span class="caret"></span>
   </a>
@@ -66,10 +63,19 @@
   </ul>
 </li>
 <li>
-  <a href="news/index.html">Changelog</a>
+  <a href="reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="news/index.html">News</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://twitter.com/weecology">
+    <span class="fa fa-twitter"></span>
+     
+  </a>
+</li>
 <li>
   <a href="https://github.com/weecology/LDATS">
     <span class="fa fa-github fa-lg"></span>
@@ -97,10 +103,10 @@
 <p>The <code>LDATS</code> package provides functionality for analyzing time series of high-dimensional data using a two-stage approach comprised of Latent Dirichlet Allocation (LDA) and Bayesian time series (TS) analyses.</p>
 <p>For a full description of the math underlying the <code>LDATS</code> package, see the <a href="https://github.com/weecology/LDATS/blob/master/manuscript/simonis_et_al.pdf"><em>draft</em> technical manuscript</a>.</p>
 </div>
-<div id="status-stable-version-available-in-development" class="section level2">
+<div id="status-in-development-stable-version-available-soon" class="section level2">
 <h2 class="hasAnchor">
-<a href="#status-stable-version-available-in-development" class="anchor"></a>Status: Stable Version Available, In Development</h2>
-<p>The package is currently in active development by the <a href="https://www.weecology.org">Weecology Team</a>, although a stable version (0.1.0) has been submitted to CRAN. The API is well defined at this point and should not change substantially.</p>
+<a href="#status-in-development-stable-version-available-soon" class="anchor"></a>Status: In Development, Stable Version Available Soon</h2>
+<p>The package is currently in active development by the <a href="https://www.weecology.org">Weecology Team</a>, although a stable version will soon be submitted to CRAN. The API is well defined at this point and should not change substantially.</p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -114,15 +120,9 @@
 <p>Here is an example of a full LDA-TS analysis using the <a href="https://github.com/weecology/PortalData">Portal rodent data</a>:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(LDATS)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(rodents)</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">dtt &lt;-<span class="st"> </span>rodents<span class="op">$</span>document_term_table</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">dct &lt;-<span class="st"> </span>rodents<span class="op">$</span>document_covariate_table</a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">weights &lt;-<span class="st"> </span><span class="kw"><a href="reference/document_weights.html">document_weights</a></span>(dtt)</a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">TS_controls &lt;-<span class="st"> </span><span class="kw"><a href="reference/TS_controls_list.html">TS_controls_list</a></span>(<span class="dt">timename =</span> <span class="st">"newmoon"</span>)</a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">controls &lt;-<span class="st"> </span><span class="kw"><a href="reference/LDA_TS_controls_list.html">LDA_TS_controls_list</a></span>(<span class="dt">TS_control =</span> TS_controls)</a>
-<a class="sourceLine" id="cb2-8" data-line-number="8">r_LDATS &lt;-<span class="st"> </span><span class="kw"><a href="reference/LDA_TS.html">LDA_TS</a></span>(dtt, dct, <span class="dt">topics =</span> <span class="dv">2</span><span class="op">:</span><span class="dv">5</span>, <span class="dt">nseeds =</span> <span class="dv">2</span>, </a>
-<a class="sourceLine" id="cb2-9" data-line-number="9">                  <span class="dt">formulas =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="op">~</span><span class="dv">1</span>, <span class="op">~</span>newmoon), <span class="dt">nchangepoints =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">2</span>,</a>
-<a class="sourceLine" id="cb2-10" data-line-number="10">                  <span class="dt">weights =</span> weights, <span class="dt">control =</span> controls)</a></code></pre></div>
-<p>Which conducts two replicates (<code>nseeds</code>) for each of two to five topics in an LDA model using the document term table, selects the best (AIC) of those, then conducts six time series models on it (each of an intercept only and newmoon-based regression under 0, 1, and 2 changepoints), then selects the best (AIC) of the time series, and packages all the models together. This uses the document term table to weight the samples by their sizes (number of words) and instructs the function to use the column named <code>"newmoon"</code> in the document covariates table as the time variable.</p>
+<a class="sourceLine" id="cb2-3" data-line-number="3">r_LDATS &lt;-<span class="st"> </span><span class="kw"><a href="reference/LDA_TS.html">LDA_TS</a></span>(rodents, <span class="dt">topics =</span> <span class="dv">2</span><span class="op">:</span><span class="dv">5</span>, <span class="dt">nseeds =</span> <span class="dv">2</span>, <span class="dt">formulas =</span> <span class="op">~</span><span class="dv">1</span>,  </a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">                  <span class="dt">nchangepoints =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">1</span>, <span class="dt">timename =</span> <span class="st">"newmoon"</span>)</a></code></pre></div>
+<p>Which conducts two replicates (<code>nseeds</code>) for each of two to five topics in an LDA model using the document term table, selects the best (AIC) of those, then conducts two time series models on it (an intercept-only model under 0 and 1 changepoints), then selects the best (AIC) of the time series, and packages all the models together. This uses the document term table to weight the samples by their sizes (number of words) and instructs the function to use the column named <code>"newmoon"</code> in the document covariates table as the time variable.</p>
 <p>The resulting object is of class <code>LDA_TS</code>, which has a few basic routines available:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(r_LDATS)</a></code></pre></div>
 <p>prints the selected LDA and TS models and</p>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Run a set of Latent Dirichlet Allocation models — LDA_set • LDATS</title>
+<title>Simulate TS data from a TS model structure given parameters — sim_TS_data • LDATS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,20 +30,13 @@
 
 
 
-<meta property="og:title" content="Run a set of Latent Dirichlet Allocation models — LDA_set" />
+<meta property="og:title" content="Simulate TS data from a TS model structure given parameters — sim_TS_data" />
 
-<meta property="og:description" content="For a given dataset consisting of counts of words across 
-  multiple documents in a corpus, conduct multiple Latent Dirichlet 
-  Allocation (LDA) models (using the Variational Expectation 
-  Maximization (VEM) algorithm; Blei et al. 2003) to account for [1]  
-  uncertainty in the number of latent topics and [2] the impact of initial
-  values in the estimation procedure.
-LDA_set is a list wrapper of LDA
-  in the topicmodels package (Grun and Hornik 2011).
-check_LDA_set_inputs checks that all of the inputs 
-  are proper for LDA_set (that the table of observations is 
-  conformable to a matrix of integers, the number of topics is an integer, 
-  the number of seeds is an integer and the controls list is proper)." />
+<meta property="og:description" content="For a given set of covariates X; parameters Eta,
+  rho, and err; and document-specific time stamps tD,
+  simulate a document-by-topic matrix. Additional structuring variables 
+  (numbers of topics (k), documents (M), segments (S), and 
+  covariates per segment (C)) are inferred from input objects." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -137,84 +130,77 @@ check_LDA_set_inputs checks that all of the inputs
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Run a set of Latent Dirichlet Allocation models</h1>
-    <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/LDA.R'><code>R/LDA.R</code></a></small>
-    <div class="hidden name"><code>LDA_set.Rd</code></div>
+    <h1>Simulate TS data from a TS model structure given parameters</h1>
+    <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/simulate.R'><code>R/simulate.R</code></a></small>
+    <div class="hidden name"><code>sim_TS_data.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>For a given dataset consisting of counts of words across 
-  multiple documents in a corpus, conduct multiple Latent Dirichlet 
-  Allocation (LDA) models (using the Variational Expectation 
-  Maximization (VEM) algorithm; Blei <em>et al.</em> 2003) to account for [1]  
-  uncertainty in the number of latent topics and [2] the impact of initial
-  values in the estimation procedure.</p>
-<p><code>LDA_set</code> is a list wrapper of <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code>
-  in the <code>topicmodels</code> package (Grun and Hornik 2011).</p>
-<p><code>check_LDA_set_inputs</code> checks that all of the inputs 
-  are proper for <code>LDA_set</code> (that the table of observations is 
-  conformable to a matrix of integers, the number of topics is an integer, 
-  the number of seeds is an integer and the controls list is proper).</p>
+    <p>For a given set of covariates <code>X</code>; parameters <code>Eta</code>,
+  <code>rho</code>, and <code>err</code>; and document-specific time stamps <code>tD</code>,
+  simulate a document-by-topic matrix. Additional structuring variables 
+  (numbers of topics (k), documents (M), segments (S), and 
+  covariates per segment (C)) are inferred from input objects.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>LDA_set</span>(<span class='no'>document_term_table</span>, <span class='kw'>topics</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>nseeds</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>())
-
-<span class='fu'>check_LDA_set_inputs</span>(<span class='no'>document_term_table</span>, <span class='no'>topics</span>, <span class='no'>nseeds</span>, <span class='no'>control</span>)</pre>
+    <pre class="usage"><span class='fu'>sim_TS_data</span>(<span class='no'>X</span>, <span class='no'>Eta</span>, <span class='no'>rho</span>, <span class='no'>tD</span>, <span class='kw'>err</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>document_term_table</th>
-      <td><p>Table of observation count data (rows: 
-documents, columns: terms. May be a class <code>matrix</code> or 
-<code>data.frame</code> but must be conformable to a matrix of integers,
-as verified by <code><a href='check_document_term_table.html'>check_document_term_table</a></code>.</p></td>
+      <th>X</th>
+      <td><p><code>matrix</code> of covariates, dimension M (number of documents) x 
+SC (number of segments x number of covariates, including the intercept).</p></td>
     </tr>
     <tr>
-      <th>topics</th>
-      <td><p>Vector of the number of topics to evaluate for each model.
-Must be conformable to <code>integer</code> values.</p></td>
+      <th>Eta</th>
+      <td><p><code>matrix</code> of regression parameters across the segments,
+dimension: SC (number of segments x number of covariates, including the
+intercept) x k (number of topics).</p></td>
     </tr>
     <tr>
-      <th>nseeds</th>
-      <td><p>Number of seeds (replicate starts) to use for each 
-value of <code>topics</code>. Must be conformable to <code>integer</code> value.</p></td>
+      <th>rho</th>
+      <td><p>Vector of integer-conformable time locations of changepoints or 
+<code>NULL</code> if no changepoints. Used to determine the number of 
+segements. Must exist within the bounds of the times of the documents,
+<code>tD</code>.</p></td>
     </tr>
     <tr>
-      <th>control</th>
-      <td><p>A <code>list</code> of parameters to control the running and 
-selecting of LDA models. Values not input assume default values set 
-by <code><a href='LDA_set_control.html'>LDA_set_control</a></code>. Values for running the LDAs replace 
-defaults in (<code>LDAcontol</code>, see <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code> (but if
- <code>seed</code> is given, it will be overwritten; use <code>iseed</code> instead).</p></td>
+      <th>tD</th>
+      <td><p>Vector of integer-conformable times of the documents. Must be
+of length M (as determined by <code>X</code>).</p></td>
+    </tr>
+    <tr>
+      <th>err</th>
+      <td><p>Additive error on the link-scale. Must be a non-negative 
+<code>numeric</code> value. Default value of <code>0</code> indicates no error.</p></td>
+    </tr>
+    <tr>
+      <th>seed</th>
+      <td><p>Input to <code><a href='https://www.rdocumentation.org/packages/base/topics/Random'>set.seed</a></code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>List (class: <code>LDA_set</code>) of LDA models (class: <code>LDA_VEM</code>).</p>
-    
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
-
-    <p>Blei, D. M., A. Y. Ng, and M. I. Jordan. 2003. Latent Dirichlet
-  Allocation. <em>Journal of Machine Learning Research</em> 
-  <strong>3</strong>:993-1022.
-  <a href='http://jmlr.csail.mit.edu/papers/v3/blei03a.html'>link</a>.</p>
-<p>Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
-  Models. <em>Journal of Statistical Software</em> <strong>40</strong>:13.
-  <a href='https://www.jstatsoft.org/article/view/v040i13'>link</a>.</p>
+    <p>A document-by-topic <code>matrix</code> of probabilities (dim: M x k).</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>rodents</span>)
-  <span class='no'>lda_data</span> <span class='kw'>&lt;-</span> <span class='no'>rodents</span>$<span class='no'>document_term_table</span>
-  <span class='no'>r_LDA</span> <span class='kw'>&lt;-</span> <span class='fu'>LDA_set</span>(<span class='no'>lda_data</span>, <span class='kw'>topics</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>nseeds</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='co'># }</span><div class='input'>
+    <pre class="examples"><div class='input'>  <span class='no'>tD</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>4</span>, <span class='fl'>6</span>)
+  <span class='no'>rho</span> <span class='kw'>&lt;-</span> <span class='fl'>3</span>
+  <span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>0</span>,<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>0</span>,<span class='fl'>0</span>,<span class='fl'>0</span>,<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='fl'>3</span>,<span class='fl'>0</span>,<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='fl'>4</span>),
+         <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/length'>length</a></span>(<span class='no'>tD</span>), <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>byrow</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='no'>Eta</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.5</span>, <span class='fl'>1.2</span>, <span class='fl'>0.3</span>, <span class='fl'>1.1</span>, <span class='fl'>0.9</span>, <span class='fl'>0.1</span>, <span class='fl'>0.5</span>, <span class='fl'>0.5</span>),
+          <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/nrow'>ncol</a></span>(<span class='no'>X</span>), <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>byrow</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='fu'>sim_TS_data</span>(<span class='no'>X</span>, <span class='no'>Eta</span>, <span class='no'>rho</span>, <span class='no'>tD</span>, <span class='kw'>err</span> <span class='kw'>=</span> <span class='fl'>1</span>)</div><div class='output co'>#&gt;           [,1]      [,2]
+#&gt; [1,] 0.3278793 0.6721207
+#&gt; [2,] 0.2024225 0.7975775
+#&gt; [3,] 0.6916233 0.3083767
+#&gt; [4,] 0.5004886 0.4995114</div><div class='input'>  
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -223,8 +209,6 @@ defaults in (<code>LDAcontol</code>, see <code><a href='https://www.rdocumentati
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#references">References</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>
