@@ -227,7 +227,7 @@ swap_chains <- function(chainsin, inputs, ids){
 #'
 #'   Hastings, W. K. 1970. Monte Carlo sampling methods using Markov Chains
 #'   and their applications. \emph{Biometrika} \strong{57}:97-109.
-#'   \href{https://www.jstor.org/stable/2334940}{link}.
+#'   \href{https://doi.org/10.2307/2334940}{link}.
 #'  
 #'   Metropolis, N., A. W. Rosenbluth, M. N. Rosenbluth, A. H. Teller, and E.
 #'   Teller. 1953. Equations of state calculations by fast computing machines.
