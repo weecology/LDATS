@@ -338,9 +338,10 @@
 <a class="sourceLine" id="cb6-12" data-line-number="12">  <span class="cf">for</span> (file <span class="cf">in</span> files_to_download)</a>
 <a class="sourceLine" id="cb6-13" data-line-number="13">  {</a>
 <a class="sourceLine" id="cb6-14" data-line-number="14">    <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/download.file">download.file</a></span>(<span class="dt">url =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(github_path, file),</a>
-<a class="sourceLine" id="cb6-15" data-line-number="15">                  <span class="dt">destfile =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/file.path">file.path</a></span>(vignette_files, file))</a>
-<a class="sourceLine" id="cb6-16" data-line-number="16">  }</a>
-<a class="sourceLine" id="cb6-17" data-line-number="17">}</a></code></pre></div>
+<a class="sourceLine" id="cb6-15" data-line-number="15">                  <span class="dt">destfile =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/file.path">file.path</a></span>(vignette_files, file), </a>
+<a class="sourceLine" id="cb6-16" data-line-number="16">                  <span class="dt">mode =</span> <span class="st">"wb"</span>)</a>
+<a class="sourceLine" id="cb6-17" data-line-number="17">  }</a>
+<a class="sourceLine" id="cb6-18" data-line-number="18">}</a></code></pre></div>
 </div>
 </div>
 <div id="data-comparison" class="section level1">
@@ -516,7 +517,7 @@
 <a class="sourceLine" id="cb16-44" data-line-number="44"></a>
 <a class="sourceLine" id="cb16-45" data-line-number="45"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/readRDS">saveRDS</a></span>(ldamodel, <span class="dt">file =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/file.path">file.path</a></span>(vignette_files, <span class="st">"paper_ldamodel.RDS"</span>))</a></code></pre></div>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/knitr/topics/include_graphics">include_graphics</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/file.path">file.path</a></span>(vignette_files, <span class="st">"lda_distances.png"</span>))</a></code></pre></div>
-<p><img src="../../../../../../tmp/RtmpnS5Fmo/lda_distances.png"><!-- --></p>
+<p><img src="../../../../../../tmp/RtmpcWyvZ9/lda_distances.png"><!-- --></p>
 <div id="plots" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plots" class="anchor"></a>Plots</h2>

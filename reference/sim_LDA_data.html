@@ -189,16 +189,16 @@ probabilities, use <code>alpha</code>.</p></td>
   <span class='no'>alpha</span> <span class='kw'>&lt;-</span> <span class='fl'>1.2</span>
   <span class='no'>Beta</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.1</span>, <span class='fl'>0.1</span>, <span class='fl'>0.8</span>, <span class='fl'>0.2</span>, <span class='fl'>0.6</span>, <span class='fl'>0.2</span>), <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='kw'>byrow</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
   <span class='fu'>sim_LDA_data</span>(<span class='no'>N</span>, <span class='no'>Beta</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='no'>alpha</span>)</div><div class='output co'>#&gt;      [,1] [,2] [,3]
-#&gt; [1,]    1    7    2
-#&gt; [2,]    2    6   14
-#&gt; [3,]    1    2   12
-#&gt; [4,]    3    7   21</div><div class='input'>  <span class='no'>Theta</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.2</span>, <span class='fl'>0.8</span>, <span class='fl'>0.8</span>, <span class='fl'>0.2</span>, <span class='fl'>0.5</span>, <span class='fl'>0.5</span>, <span class='fl'>0.9</span>, <span class='fl'>0.1</span>), <span class='fl'>4</span>, <span class='fl'>2</span>,
+#&gt; [1,]    1    8    1
+#&gt; [2,]    1    8   13
+#&gt; [3,]    1    7    7
+#&gt; [4,]    6    3   22</div><div class='input'>  <span class='no'>Theta</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.2</span>, <span class='fl'>0.8</span>, <span class='fl'>0.8</span>, <span class='fl'>0.2</span>, <span class='fl'>0.5</span>, <span class='fl'>0.5</span>, <span class='fl'>0.9</span>, <span class='fl'>0.1</span>), <span class='fl'>4</span>, <span class='fl'>2</span>,
                <span class='kw'>byrow</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
   <span class='fu'>sim_LDA_data</span>(<span class='no'>N</span>, <span class='no'>Beta</span>, <span class='kw'>Theta</span> <span class='kw'>=</span> <span class='no'>Theta</span>)</div><div class='output co'>#&gt;      [,1] [,2] [,3]
-#&gt; [1,]    1    4    5
-#&gt; [2,]    2    6   14
-#&gt; [3,]    1    6    8
-#&gt; [4,]    5    2   24</div><div class='input'>
+#&gt; [1,]    2    5    3
+#&gt; [2,]    3    3   16
+#&gt; [3,]    1    8    6
+#&gt; [4,]    0    7   24</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
