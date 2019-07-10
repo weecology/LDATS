@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{Class \code{TS_on_LDA} object to be printed.}
 
-\item{...}{Not used, simply included to maintain method compatability.}
+\item{...}{Not used, simply included to maintain method compatibility.}
 }
 \description{
 Convenience function to print only the names of a 

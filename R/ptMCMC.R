@@ -208,7 +208,7 @@ swap_chains <- function(chainsin, inputs, ids){
 #'   geometric distribution), the proposed step is then evaluated and either
 #'   accepted or not (following the Metropolis-Hastings rule; Metropolis,
 #'   \emph{et al.} 1953, Hasting 1960, Gupta \emph{et al.} 2018), and then
-#'   acordingly taken or not (the configurations are updated). 
+#'   accordingly taken or not (the configurations are updated). 
 #'
 #' @param i \code{integer} iteration index.
 #'
@@ -403,7 +403,7 @@ update_ids <- function(ids, swaps){
 #'   change points to include in the model. 0 is a valid input (corresponding
 #'   to no change points, so a singular time series model), and the current 
 #'   implementation can reasonably include up to 6 change points. The 
-#'   number of change points is used to dictate the segementation of the data  
+#'   number of change points is used to dictate the segmentation of the data  
 #'   for each continuous model and each LDA model.
 #'
 #' @param timename \code{character} element indicating the time variable
@@ -467,7 +467,7 @@ prep_ptMCMC_inputs <- function(data, formula, nchangepoints, timename,
 #'   change points to include in the model. 0 is a valid input (corresponding
 #'   to no change points, so a singular time series model), and the current 
 #'   implementation can reasonably include up to 6 change points. The 
-#'   number of change points is used to dictate the segementation of the data  
+#'   number of change points is used to dictate the segmentation of the data  
 #'   for each continuous model and each LDA model.
 #'
 #' @param control A \code{list} of parameters to control the fitting of the
@@ -520,7 +520,7 @@ prep_proposal_dist <- function(nchangepoints, control = list()){
 #'   change points to include in the model. 0 is a valid input (corresponding
 #'   to no change points, so a singular time series model), and the current 
 #'   implementation can reasonably include up to 6 change points. The 
-#'   number of change points is used to dictate the segementation of the data  
+#'   number of change points is used to dictate the segmentation of the data  
 #'   for each continuous model and each LDA model.
 #'
 #' @param control A \code{list} of parameters to control the fitting of the
@@ -621,7 +621,7 @@ process_saves <- function(saves, control = list()){
 #'   change points to include in the model. 0 is a valid input (corresponding
 #'   to no change points, so a singular time series model), and the current 
 #'   implementation can reasonably include up to 6 change points. The 
-#'   number of change points is used to dictate the segementation of the data  
+#'   number of change points is used to dictate the segmentation of the data  
 #'   for each continuous model and each LDA model.
 #'
 #' @param timename \code{character} element indicating the time variable

@@ -61,7 +61,7 @@ This function uses the marginal posterior distributions of
 \details{
 The general approach follows that of Western and Kleykamp
   (2004), although we note some important differences. Our regression
-  models are fit indpendently for each chunk (segment of time), and 
+  models are fit independently for each chunk (segment of time), and 
   therefore the variance-covariance matrix for the full model 
   has \code{0} entries for covariances between regressors in different
   chunks of the time series. Further, because the regression model here

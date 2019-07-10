@@ -9,7 +9,7 @@
 \arguments{
 \item{object}{A \code{multinom_TS_fit}-class object.}
 
-\item{...}{Not used, simply included to maintain method compatability.}
+\item{...}{Not used, simply included to maintain method compatibility.}
 }
 \value{
 Log likelihood of the model, as class \code{logLik}, with 

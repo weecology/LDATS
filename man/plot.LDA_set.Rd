@@ -11,10 +11,6 @@
 
 \item{...}{Additional arguments to be passed to subfunctions.}
 }
-\value{
-Nothin. Model-by-model plots are generated in the active graphics
-  device.
-}
 \description{
 Generalization of the \code{\link[graphics]{plot}} function to 
   work on a list of LDA topic models (class \code{LDA_set}).

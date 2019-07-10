@@ -12,7 +12,7 @@ prep_proposal_dist(nchangepoints, control = list())
 change points to include in the model. 0 is a valid input (corresponding
 to no change points, so a singular time series model), and the current 
 implementation can reasonably include up to 6 change points. The 
-number of change points is used to dictate the segementation of the data  
+number of change points is used to dictate the segmentation of the data  
 for each continuous model and each LDA model.}
 
 \item{control}{A \code{list} of parameters to control the fitting of the

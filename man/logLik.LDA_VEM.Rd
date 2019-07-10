@@ -9,7 +9,7 @@
 \arguments{
 \item{object}{A \code{LDA_VEM}-class object.}
 
-\item{...}{Not used, simply included to maintain method compatability.}
+\item{...}{Not used, simply included to maintain method compatibility.}
 }
 \value{
 Log likelihood of the model \code{logLik}, also with \code{df}
@@ -26,7 +26,7 @@ The number of degrees of freedom is 1 (for alpha) plus the number
   the number of entries in the document-term matrix.
 }
 \references{
-Buntine, W. 2002. Variational extentions to EM and multinomial PCA. 
+Buntine, W. 2002. Variational extensions to EM and multinomial PCA. 
   \emph{European Conference on Machine Learning, Lecture Notes in Computer 
   Science} \strong{2430}:23-34. \href{https://bit.ly/327sltH}{link}.
 

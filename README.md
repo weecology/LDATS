@@ -66,7 +66,7 @@ produces a 4-panel figure of them a la Figure 1 from
 
 ## More Information 
 
-Based on inital work using [LDA to analyze time-series data at Portal by Erica
+Based on initial work using [LDA to analyze time-series data at Portal by Erica
 M. Christensen, David J. Harris, and S. K. Morgan 
 Ernest](https://github.com/emchristensen/Extreme-events-LDA), which has been
 [published in *Ecology*](https://doi.org/10.1002/ecy.2373)
@@ -95,7 +95,7 @@ and [DGE-1842473](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1842473)).
 **D. J. Harris** was involved in developing and applying the first version of the LDATS model, specifically suggesting the LDA and change point approaches, coding the first version of the change point model, and writing and editing the first description of the model ([Christensen *et al.* 2018](https://doi.org/10.1002/ecy.2373)). 
 **R. Diaz** contributed code to the LDATS package, wrote vignettes, provided insight into model development, and conducted extensive end-user code application testing. 
 **H. Ye** contributed code to the LDATS package, insight into data structures and LDA algorithms, and significant feedback on vignettes. 
-**E. P. White** helped design, troubleshoot, and supervise initial methods development; provided big-picture feedback on development of the R package; contributed end-user application testing; and gave substantital editing feedback on the technical document. 
+**E. P. White** helped design, troubleshoot, and supervise initial methods development; provided big-picture feedback on development of the R package; contributed end-user application testing; and gave substantial editing feedback on the technical document. 
 **S. K. Morgan Ernest** provided managerial oversight and feedback on the project in both the initial and second stages of LDATS development, tested applications of the code to data sets, and
 assisted with writing and editing of the first description of the model and its application ([Christensen *et al.* 2018](https://doi.org/10.1002/ecy.2373)) as well as the technical model document.
 

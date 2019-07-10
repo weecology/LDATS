@@ -105,7 +105,7 @@ sim_LDA_data <- function(N, Beta, alpha = NULL, Theta = NULL, seed = NULL){
 #' 
 #' @param rho Vector of integer-conformable time locations of changepoints or 
 #'   \code{NULL} if no changepoints. Used to determine the number of 
-#'   segements. Must exist within the bounds of the times of the documents,
+#'   segments. Must exist within the bounds of the times of the documents,
 #'   \code{tD}.
 #'
 #' @param tD Vector of integer-conformable times of the documents. Must be
@@ -192,7 +192,7 @@ sim_TS_data <- function(X, Eta, rho, tD, err = 0, seed = NULL){
 #' 
 #' @param rho Vector of integer-conformable time locations of changepoints or 
 #'   \code{NULL} if no changepoints. Used to determine the number of 
-#'   segements. Must exist within the bounds of the times of the documents,
+#'   segments. Must exist within the bounds of the times of the documents,
 #'   \code{tD}.
 #'
 #' @param tD Vector of integer-conformable times of the documents. Must be

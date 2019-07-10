@@ -30,7 +30,7 @@
 #'   change points to include in the model. 0 is a valid input (corresponding
 #'   to no change points, so a singular time series model), and the current 
 #'   implementation can reasonably include up to 6 change points. The 
-#'   number of change points is used to dictate the segementation of the 
+#'   number of change points is used to dictate the segmentation of the 
 #'   time series into chunks fit with separate models dictated by 
 #'   \code{formula}.
 #'
@@ -312,7 +312,7 @@ package_TS <- function(data, formula, timename, weights, control, rho_dist,
 #'
 #' @param x Class \code{TS_fit} object to be printed.
 #'
-#' @param ... Not used, simply included to maintain method compatability.
+#' @param ... Not used, simply included to maintain method compatibility.
 #'
 #' @export
 #'
@@ -467,7 +467,7 @@ measure_rho_vcov <- function(rhos){
 #'
 #' @details The general approach follows that of Western and Kleykamp
 #'   (2004), although we note some important differences. Our regression
-#'   models are fit indpendently for each chunk (segment of time), and 
+#'   models are fit independently for each chunk (segment of time), and 
 #'   therefore the variance-covariance matrix for the full model 
 #'   has \code{0} entries for covariances between regressors in different
 #'   chunks of the time series. Further, because the regression model here
@@ -625,7 +625,7 @@ est_regressors <- function(rho_dist, data, formula, timename, weights,
 #'   change points to include in the model. 0 is a valid input (corresponding
 #'   to no change points, so a singular time series model), and the current 
 #'   implementation can reasonably include up to 6 change points. The 
-#'   number of change points is used to dictate the segementation of the 
+#'   number of change points is used to dictate the segmentation of the 
 #'   time series into chunks fit with separate models dictated by 
 #'   \code{formula}.
 #'
@@ -752,7 +752,7 @@ update_pbar <- function(pbar, control = list()){
 #' 
 #' @description Check that \code{formula} is actually a 
 #'   \code{\link[stats]{formula}} and that the
-#'   response and predictor variabless are all included in \code{data}.
+#'   response and predictor variables are all included in \code{data}.
 #'   
 #' @param formula \code{formula} to evaluate.
 #'
@@ -870,7 +870,7 @@ TS_control <- function(memoise = TRUE, response = "gamma", lambda = 0,
 #'
 #' @param object Class \code{TS_fit} object to be evaluated.
 #'
-#' @param ... Not used, simply included to maintain method compatability.
+#' @param ... Not used, simply included to maintain method compatibility.
 #'
 #' @return Log likelihood of the model \code{logLik}, also with \code{df}
 #'   (degrees of freedom) and \code{nobs} (number of observations) values.

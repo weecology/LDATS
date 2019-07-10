@@ -33,7 +33,7 @@
 #'   corresponding to no change points (\emph{i.e.}, a singular time series
 #'   model), and the current implementation can reasonably include up to 6 
 #'   change points. Each element in the vector is the number of change points 
-#'   used to segement the data for each formula (entry in \code{formulas}) 
+#'   used to segment the data for each formula (entry in \code{formulas}) 
 #'   component of the TS model, for each selected LDA model.
 #'
 #' @param timename \code{character} element indicating the time variable
@@ -118,7 +118,7 @@ TS_on_LDA <- function(LDA_models, document_covariate_table, formulas = ~ 1,
 #'
 #' @param mods The \code{data.table} created by \code{\link{expand_TS}} that 
 #'   contains each of the models (defined by the LDA model to use and the and
-#'   formula number of changepoints for the TS model). Indexded here by 
+#'   formula number of changepoints for the TS model). Indexed here by 
 #'   \code{i}.
 #'
 #' @param i \code{integer} index referencing the row in \code{mods} to use.
@@ -235,7 +235,7 @@ package_TS_on_LDA <- function(TSmods, LDA_models, models){
 #'
 #' @param x Class \code{TS_on_LDA} object to be printed.
 #'
-#' @param ... Not used, simply included to maintain method compatability.
+#' @param ... Not used, simply included to maintain method compatibility.
 #'
 #' @export
 #'
@@ -302,7 +302,7 @@ print_model_run_message <- function(models, i, LDA_models, control){
 #'   corresponding to no change points (\emph{i.e.}, a singular time series
 #'   model), and the current implementation can reasonably include up to 6 
 #'   change points. Each element in the vector is the number of change points 
-#'   used to segement the data for each formula (entry in \code{formulas}) 
+#'   used to segment the data for each formula (entry in \code{formulas}) 
 #'   component of the TS model, for each selected LDA model.
 #'
 #' @return Expanded \code{data.frame} table of the three values (columns) for

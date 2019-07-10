@@ -9,7 +9,7 @@
 \arguments{
 \item{object}{Class \code{TS_fit} object to be evaluated.}
 
-\item{...}{Not used, simply included to maintain method compatability.}
+\item{...}{Not used, simply included to maintain method compatibility.}
 }
 \value{
 Log likelihood of the model \code{logLik}, also with \code{df}

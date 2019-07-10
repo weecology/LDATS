@@ -78,13 +78,13 @@ LDA_set <- function(document_term_table, topics = 2, nseeds = 1,
 #'
 #' @param object A \code{LDA_VEM}-class object.
 #'
-#' @param ... Not used, simply included to maintain method compatability.
+#' @param ... Not used, simply included to maintain method compatibility.
 #'
 #' @return Log likelihood of the model \code{logLik}, also with \code{df}
 #'   (degrees of freedom) and \code{nobs} (number of observations) values.
 #'
 #' @references 
-#'   Buntine, W. 2002. Variational extentions to EM and multinomial PCA. 
+#'   Buntine, W. 2002. Variational extensions to EM and multinomial PCA. 
 #'   \emph{European Conference on Machine Learning, Lecture Notes in Computer 
 #'   Science} \strong{2430}:23-34. \href{https://bit.ly/327sltH}{link}.
 #'

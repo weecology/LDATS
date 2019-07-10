@@ -16,7 +16,7 @@ intercept) x k (number of topics).}
 
 \item{rho}{Vector of integer-conformable time locations of changepoints or 
 \code{NULL} if no changepoints. Used to determine the number of 
-segements. Must exist within the bounds of the times of the documents,
+segments. Must exist within the bounds of the times of the documents,
 \code{tD}.}
 
 \item{tD}{Vector of integer-conformable times of the documents. Must be

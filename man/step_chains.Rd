@@ -59,7 +59,7 @@ For each iteration of the ptMCMC algorithm, all of the chains
   geometric distribution), the proposed step is then evaluated and either
   accepted or not (following the Metropolis-Hastings rule; Metropolis,
   \emph{et al.} 1953, Hasting 1960, Gupta \emph{et al.} 2018), and then
-  acordingly taken or not (the configurations are updated).
+  accordingly taken or not (the configurations are updated).
 }
 \references{
 Gupta, S., L. Hainsworth, J. S. Hogg, R. E. C. Lee, and J. R. Faeder. 
