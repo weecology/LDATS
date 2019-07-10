@@ -50,12 +50,10 @@ Suggests:
     pkgdown,
     rmarkdown,
     testthat, 
-    vdiffr (>= 0.3.0.9000), 
+    vdiffr, 
     clue, 
     RCurl, 
     tidyr
 VignetteBuilder:
     knitr
 RoxygenNote: 6.1.1
-Remotes:  
-    r-lib/vdiffr
