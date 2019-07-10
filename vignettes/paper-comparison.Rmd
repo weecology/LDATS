@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-This document prodives a side-by-side comparison of LDATS (v0.1.0) results with analysis from [Christensen et al. 2018](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2373).
+This document prodives a side-by-side comparison of LDATS (v0.2.0) results with analysis from [Christensen et al. 2018](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2373).
 
 ## Summary
 
@@ -133,7 +133,7 @@ if (!file.exists(test_file))
 
 ## Download Model Outputs
 
-We also have pre-generated model outputs that we download from the [extreme-events-LDATS-replication repo](https://github.com/weecology/portal-extreme-events-LDATS-replication):
+We also have pre-generated model outputs that we download from the [LDATS-replications repo](https://github.com/weecology/LDATS-replications):
 
 LDA models:
 
@@ -168,7 +168,7 @@ test_file <- file.path(vignette_files, "ldats_ldamodel.RDS")
 if (!file.exists(test_file))
 {
   # from the Extreme-events-LDA repo
-  github_path <- "https://raw.githubusercontent.com/weecology/portal-extreme-events-LDATS-replication/master/model_outputs/"
+  github_path <- "https://raw.githubusercontent.com/weecology/LDATS-replications/master/model_outputs/"
   files_to_download <- c("ldats_ldamodel.RDS", "paper_ldamodel.RDS", 
                          "ldats_ldats.RDS", "ldats_paper.RDS", 
                          "paper_ldats.RDS", "paper_paper.RDS", 
