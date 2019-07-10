@@ -1,6 +1,6 @@
 ---
 title: "Comparison to Christensen et al. 2018"
-author: "Renata Diaz"
+author: "Renata Diaz and Hao Ye"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{paper-comparison}
@@ -16,10 +16,13 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+```{r, include=FALSE}
+vers <- packageVersion("LDATS")
+```
 
 # Introduction
 
-This document prodives a side-by-side comparison of LDATS (v0.2.1) results with analysis from [Christensen et al. 2018](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2373).
+This document provides a side-by-side comparison of **`LDATS`** (version `r vers`) results with analysis from [Christensen et al. 2018](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2373).
 
 ## Summary
 
@@ -94,7 +97,7 @@ Data:
   - table of census dates (downloaded from the PortalData repository)
   
 * `Portal_rodent_trapping.csv`
-  - table of trapping effort (downlaoded from the PortalData repository)
+  - table of trapping effort (downloaded from the PortalData repository)
 
 Figure scripts:
 
@@ -386,7 +389,7 @@ How the LDATS LDA model assigns species to topics:
 plot(ldats_ldamodel, cols = NULL, option = "D")
 ```
 
-The paper method finds 4 topics and LDATS finds 6. This is because of an update to the model selection procedure. The paper conservatively overestimates the number of parameters (by counting all of the variational parameteres) and therefore overpenalizes the AIC for models with more topics. Comparatively, the LDATS method now uses the number of parameters remaining after the variational approximation, as returned by the LDA object. For this vignette, we will compare the results from using both LDA models.
+The paper method finds 4 topics and LDATS finds 6. This is because of an update to the model selection procedure. The paper conservatively overestimates the number of parameters (by counting all of the variational parameters) and therefore overpenalizes the AIC for models with more topics. Comparatively, the LDATS method now uses the number of parameters remaining after the variational approximation, as returned by the LDA object. For this vignette, we will compare the results from using both LDA models.
 
 # Changepoint models
 

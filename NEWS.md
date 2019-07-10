@@ -2,6 +2,15 @@
 
 Version numbers follow [Semantic Versioning](https://semver.org/).
 
+# [LDATS 0.2.2](https://github.com/weecology/ldats/releases/tag/v0.2.2)
+*2019-07-10*
+
+## Edits for submission to CRAN
+* Including appropriate files in the Rbuildignore
+
+## Minor patching of vignette code
+* Handling the downloads so they work robustly locally
+
 # [LDATS 0.2.1](https://github.com/weecology/ldats/releases/tag/v0.2.1)
 *2019-07-09*
 
@@ -110,4 +119,4 @@ Version numbers follow [Semantic Versioning](https://semver.org/).
 # [LDATS 0.0.1](https://github.com/weecology/LDATS/commit/326506b9d7fb3e0223948d0245381963f83a2b37) 
 *2017-11-16*
 
-* Beginning initial development of package from [originalcode]((https://github.com/emchristensen/Extreme-events-LDA)) used in [Christensen *et al.* (2018)](https://doi.org/10.1002/ecy.2373).
+* Beginning initial development of package from [original code](https://github.com/emchristensen/Extreme-events-LDA) used in [Christensen *et al.* (2018)](https://doi.org/10.1002/ecy.2373).

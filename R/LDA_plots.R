@@ -7,9 +7,6 @@
 #' 
 #' @param ... Additional arguments to be passed to subfunctions.
 #' 
-#' @return Nothin. Model-by-model plots are generated in the active graphics
-#'   device.
-#' 
 #' @examples 
 #' \dontrun{
 #'   data(rodents)

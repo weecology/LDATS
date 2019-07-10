@@ -23,7 +23,7 @@ produced by \code{\link[topicmodels]{LDA}}).}
 
 \item{mods}{The \code{data.table} created by \code{\link{expand_TS}} that 
 contains each of the models (defined by the LDA model to use and the and
-formula number of changepoints for the TS model). Indexded here by 
+formula number of changepoints for the TS model). Indexed here by 
 \code{i}.}
 
 \item{i}{\code{integer} index referencing the row in \code{mods} to use.}

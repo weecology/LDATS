@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilities.R
 \name{logsumexp}
 \alias{logsumexp}
-\title{Caclulate the log-sum-exponential (LSE) of a vector}
+\title{Calculate the log-sum-exponential (LSE) of a vector}
 \usage{
 logsumexp(x)
 }

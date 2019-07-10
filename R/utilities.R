@@ -1,4 +1,4 @@
-#' @title Caclulate the log-sum-exponential (LSE) of a vector
+#' @title Calculate the log-sum-exponential (LSE) of a vector
 #'
 #' @description Calculate the exponent of a vector (offset by the max), sum
 #'   the elements, calculate the log, remove the offset. 
@@ -17,7 +17,7 @@ logsumexp <- function(x){
   y + log(sum(exp(x - y)))
 }
 
-#' @title Caclulate the softmax of a vector or matrix of values
+#' @title Calculate the softmax of a vector or matrix of values
 #'
 #' @description Calculate the softmax (normalized exponential) of a vector
 #'  of values or a set of vectors stacked rowwise. 
@@ -150,7 +150,7 @@ qprint <- function(msg, wrapper, quiet){
 #' @title Create a properly symmetric variance covariance matrix
 #'
 #' @description A wrapper on \code{\link[stats]{vcov}} to produce a symmetric
-#'   matrix. If the defauly matrix returned by \code{\link[stats]{vcov}} is
+#'   matrix. If the default matrix returned by \code{\link[stats]{vcov}} is
 #'   symmetric it is returned simply. If it is not, in fact, symmetric
 #'   (as occurs occasionally with \code{\link[nnet]{multinom}} applied to 
 #'   proportions), the matrix is made symmetric by averaging the lower and
@@ -213,7 +213,7 @@ normalize <- function(x){
 #'
 #' @param fun Function name to (potentially) be memoised.
 #'
-#' @param memoise_tf \code{logical} value indicatiing if \code{fun} should be 
+#' @param memoise_tf \code{logical} value indicating if \code{fun} should be 
 #'   memoised.
 #'
 #' @return \code{fun}, memoised if desired.

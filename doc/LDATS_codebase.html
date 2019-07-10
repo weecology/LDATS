@@ -18,7 +18,7 @@
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
+<style type="text/css" data-origin="pandoc">
 a.sourceLine { display: inline-block; min-height: 1.25em; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
 .sourceCode { overflow: visible; }
@@ -72,7 +72,29 @@ code span.do { color: #ba2121; font-style: italic; } /* Documentation */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
 </style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 
@@ -260,6 +282,9 @@ code > span.al { color: #ff0000; font-weight: bold; }
 code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
+
+
+
 </head>
 
 <body>
@@ -268,13 +293,13 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 
 <h1 class="title toc-ignore">Latent Dirichlet Allocation Time Series (LDATS)</h1>
-<h4 class="author"><em>Juniper L. Simonis</em></h4>
+<h4 class="author">Juniper L. Simonis</h4>
 
 
 
 <div id="overview" class="section level2">
 <h2>Overview</h2>
-<p>This vignette outlines the code base for the <strong>LDATS</strong> package. It was constructed using <strong>LDATS</strong> version 0.2.0 on 2019-07-09.</p>
+<p>This vignette outlines the code base for the <strong>LDATS</strong> package. It was constructed using <strong>LDATS</strong> version 0.2.2 on 2019-07-10.</p>
 </div>
 <div id="installation" class="section level2">
 <h2>Installation</h2>

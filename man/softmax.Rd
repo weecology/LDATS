@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilities.R
 \name{softmax}
 \alias{softmax}
-\title{Caclulate the softmax of a vector or matrix of values}
+\title{Calculate the softmax of a vector or matrix of values}
 \usage{
 softmax(x)
 }

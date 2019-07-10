@@ -49,7 +49,7 @@
 #'   corresponding to no change points (\emph{i.e.}, a singular time series
 #'   model), and the current implementation can reasonably include up to 6 
 #'   change points. Each element in the vector is the number of change points 
-#'   used to segement the data for each formula (entry in \code{formulas}) 
+#'   used to segment the data for each formula (entry in \code{formulas}) 
 #'   component of the TS model, for each selected LDA model.
 #' 
 #' @param timename \code{character} element indicating the time variable
@@ -204,7 +204,7 @@ check_LDA_TS_inputs <- function(data = NULL,
 #'
 #' @param x Class \code{LDA_TS} object to be printed.
 #'
-#' @param ... Not used, simply included to maintain method compatability.
+#' @param ... Not used, simply included to maintain method compatibility.
 #'
 #' @export
 #'

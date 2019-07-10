@@ -38,7 +38,7 @@ of change points to include in the time series models. 0 is a valid input
 corresponding to no change points (\emph{i.e.}, a singular time series
 model), and the current implementation can reasonably include up to 6 
 change points. Each element in the vector is the number of change points 
-used to segement the data for each formula (entry in \code{formulas}) 
+used to segment the data for each formula (entry in \code{formulas}) 
 component of the TS model, for each selected LDA model.}
 
 \item{timename}{\code{character} element indicating the time variable

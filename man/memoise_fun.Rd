@@ -9,7 +9,7 @@ memoise_fun(fun, memoise_tf)
 \arguments{
 \item{fun}{Function name to (potentially) be memoised.}
 
-\item{memoise_tf}{\code{logical} value indicatiing if \code{fun} should be 
+\item{memoise_tf}{\code{logical} value indicating if \code{fun} should be 
 memoised.}
 }
 \value{

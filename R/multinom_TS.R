@@ -140,7 +140,7 @@ check_changepoints <- function(changepoints = NULL){
 #'
 #' @param object A \code{multinom_TS_fit}-class object.
 #'
-#' @param ... Not used, simply included to maintain method compatability.
+#' @param ... Not used, simply included to maintain method compatibility.
 #'
 #' @return Log likelihood of the model, as class \code{logLik}, with 
 #'   attributes \code{df} (degrees of freedom) and \code{nobs} (the number of

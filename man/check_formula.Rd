@@ -21,5 +21,5 @@ for a standard TS analysis on LDA output.}
 \description{
 Check that \code{formula} is actually a 
   \code{\link[stats]{formula}} and that the
-  response and predictor variabless are all included in \code{data}.
+  response and predictor variables are all included in \code{data}.
 }

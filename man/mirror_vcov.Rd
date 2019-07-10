@@ -15,7 +15,7 @@ Properly symmetric variance covariance matrix.
 }
 \description{
 A wrapper on \code{\link[stats]{vcov}} to produce a symmetric
-  matrix. If the defauly matrix returned by \code{\link[stats]{vcov}} is
+  matrix. If the default matrix returned by \code{\link[stats]{vcov}} is
   symmetric it is returned simply. If it is not, in fact, symmetric
   (as occurs occasionally with \code{\link[nnet]{multinom}} applied to 
   proportions), the matrix is made symmetric by averaging the lower and

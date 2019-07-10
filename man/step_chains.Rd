@@ -59,7 +59,7 @@ For each iteration of the ptMCMC algorithm, all of the chains
   geometric distribution), the proposed step is then evaluated and either
   accepted or not (following the Metropolis-Hastings rule; Metropolis,
   \emph{et al.} 1953, Hasting 1960, Gupta \emph{et al.} 2018), and then
-  acordingly taken or not (the configurations are updated).
+  accordingly taken or not (the configurations are updated).
 }
 \references{
 Gupta, S., L. Hainsworth, J. S. Hogg, R. E. C. Lee, and J. R. Faeder. 
@@ -69,7 +69,7 @@ Gupta, S., L. Hainsworth, J. S. Hogg, R. E. C. Lee, and J. R. Faeder.
 
   Hastings, W. K. 1970. Monte Carlo sampling methods using Markov Chains
   and their applications. \emph{Biometrika} \strong{57}:97-109.
-  \href{https://www.jstor.org/stable/2334940}{link}.
+  \href{https://doi.org/10.2307/2334940}{link}.
  
   Metropolis, N., A. W. Rosenbluth, M. N. Rosenbluth, A. H. Teller, and E.
   Teller. 1953. Equations of state calculations by fast computing machines.

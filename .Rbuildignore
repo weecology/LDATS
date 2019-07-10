@@ -1,5 +1,6 @@
 ^Meta$
 ^doc$
+^docs$
 ^LDATS_model.pdf$
 ^.travis.yml$
 ^.*\.Rproj$
@@ -7,3 +8,6 @@
 ^CONTRIBUTING\.md$
 ^CODE_OF_CONDUCT\.md$
 ^_pkgdown\.yml$
+^LICENSE\.md$
+^cran-comments\.md$
+^\.zenodo\.json$
