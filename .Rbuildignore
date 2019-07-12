@@ -11,3 +11,4 @@
 ^LICENSE\.md$
 ^cran-comments\.md$
 ^\.zenodo\.json$
+^CRAN-RELEASE$
