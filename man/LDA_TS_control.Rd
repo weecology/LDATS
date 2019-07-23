@@ -78,3 +78,7 @@ replication purposes.}
 Create and define a list of control options used to run the
   LDATS model, as implemented by \code{\link{LDA_TS}}.
 }
+\examples{
+  LDA_TS_control()
+
+}

@@ -70,7 +70,6 @@ Fit a set of multinomial regression models (via
   \code{multinom_TS} are of proper classes for an analysis.
 }
 \examples{
-\dontrun{
   data(rodents)
   dtt <- rodents$document_term_table
   lda <- LDA_set(dtt, 4, 1, list(quiet = TRUE))
@@ -79,7 +78,6 @@ Fit a set of multinomial regression models (via
   weights <- document_weights(dtt)
   mts <- multinom_TS(dct, formula = gamma ~ 1, changepoints = c(20,50),
                      timename = "newmoon", weights = weights) 
-}
 
 }
 \references{

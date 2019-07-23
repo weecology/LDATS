@@ -269,16 +269,13 @@ print.TS_on_LDA <- function(x, ...){
 #'
 print_model_run_message <- function(models, i, LDA_models, control){
   control <- do.call("TS_control", control)
-  if (control$quiet){
-    return()
-  }
   equation <- deparse(models$formula[[i]])
   chngpt_msg <- paste0("with ", models$nchangepoints[i], " changepoints ")
   reg_msg <- paste0("and equation ", equation)
   ts_msg <- paste0(chngpt_msg, reg_msg)
   lda_msg <- names(LDA_models)[models$LDA[i]]
   msg<- paste0("Running TS model ", ts_msg, " on LDA model ", lda_msg, "\n")
-  cat(msg)
+  messageq(msg, control$quiet)
 }
 
 #' @title Expand the TS models across the factorial combination of

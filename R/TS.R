@@ -704,9 +704,6 @@ prep_pbar <- function(control = list(), bar_type = "rho",
                       nr = NULL){
   check_control(control)
   control <- do.call("TS_control", control)
-  if (control$quiet){
-    return()
-  }
   if (!(bar_type %in% c("eta", "rho"))){
     stop("bar_type must be eta or rho")
   }
@@ -717,13 +714,14 @@ prep_pbar <- function(control = list(), bar_type = "rho",
   }
   form <- "  [:bar] :percent eta: :eta"
   if (bar_type == "rho"){
-    cat("  Estimating changepoint distribution \n") 
+    msg <- "  Estimating changepoint distribution"
     out <- progress_bar$new(form, control$nit, width = 60)
   }
   if (bar_type == "eta"){
-    cat("  Estimating regressor distribution \n") 
+    msg <- "  Estimating regressor distribution"
     out <- progress_bar$new(form, nr, width = 60)
   }
+  messageq(msg, control$quiet)
   out
 }
 

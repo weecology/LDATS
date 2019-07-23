@@ -2,6 +2,18 @@
 
 Version numbers follow [Semantic Versioning](https://semver.org/).
 
+# [LDATS 0.2.3](https://github.com/weecology/ldats/releases/tag/v0.2.3)
+*Active development*
+
+## Edits for resubmission to CRAN
+* Output given by `print`/`cat` has been replaced with `message` messages.
+* Added examples in documentation (and replacement of `duntrun{}` with `donttest{}`
+* Editing of description file for specs
+* Reduction of test runtimes
+
+## Changed functions
+* `messageq` replaces `qprint`
+
 # [LDATS 0.2.2](https://github.com/weecology/ldats/releases/tag/v0.2.2)
 *2019-07-10*
 

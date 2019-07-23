@@ -56,12 +56,12 @@ test_that("check document_weights", {
   expect_error(document_weights("ok"))
 })
 
-test_that("check qprint", {
-  expect_error(qprint())
-  expect_error(qprint("ok"))
-  expect_error(qprint("ok", ""))
-  expect_output(qprint("ok", "", quiet = FALSE))
-  expect_silent(qprint("ok", "", quiet = TRUE))
+test_that("check messageq", {
+  expect_message(messageq())
+  expect_message(messageq("ok"))
+  expect_error(messageq("ok", ""))
+  expect_message(messageq("ok", quiet = FALSE))
+  expect_silent(messageq("ok", quiet = TRUE))
 })
 
 test_that("check mirror_vcov", {

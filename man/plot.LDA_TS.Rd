@@ -47,14 +47,10 @@ Generalization of the \code{\link[graphics]{plot}} function to
   \code{\link{LDA_TS}}).
 }
 \examples{
-\dontrun{
+\donttest{
   data(rodents)
-  document_term_table <- rodents$document_term_table
-  document_covariate_table <- rodents$document_covariate_table
-
-  mod <- LDA_TS(document_term_table, document_covariate_table,
-                topics = 2, nseeds = 1, formulas = ~ 1, nchangepoints = 1,
-                weights = document_weights(document_term_table))
+  mod <- LDA_TS(data = rodents, topics = 2, nseeds = 1, formulas = ~1,
+                nchangepoints = 1, timename = "newmoon")
   plot(mod, binwidth = 5, xlab = "New moon")
 }
 

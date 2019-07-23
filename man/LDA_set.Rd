@@ -48,11 +48,9 @@ For a given dataset consisting of counts of words across
   the number of seeds is an integer and the controls list is proper).
 }
 \examples{
-\dontrun{
   data(rodents)
   lda_data <- rodents$document_term_table
   r_LDA <- LDA_set(lda_data, topics = 2, nseeds = 2)                         
-}
 
 }
 \references{

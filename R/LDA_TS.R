@@ -100,7 +100,7 @@
 #'   \href{https://doi.org/10.1093/pan/mph023}{link}.
 #'
 #' @examples 
-#' \dontrun{
+#' \donttest{
 #'   data(rodents)
 #'   mod <- LDA_TS(data = rodents, topics = 2, nseeds = 1, formulas = ~1,
 #'                 nchangepoints = 1, timename = "newmoon")
@@ -118,10 +118,10 @@ LDA_TS <- function(data, topics = 2, nseeds = 1, formulas = ~ 1,
   dtt <- data$document_term_table
   dct <- data$document_covariate_table
   weights <- iftrue(weights, document_weights(dtt))
-  qprint("Latent Dirichlet Allocation", "----", control$quiet)
+  messageq("----Latent Dirichlet Allocation----", control$quiet)
   LDAs <- LDA_set(dtt, topics, nseeds, control$LDA_set_control)
   sel_LDA <- select_LDA(LDAs, control$LDA_set_control)
-  qprint("Time Series Models", "----", control$quiet)
+  messageq("----Time Series Models----", control$quiet)
   TSs <- TS_on_LDA(sel_LDA, dct, formulas, nchangepoints, timename, weights, 
                    control$TS_control)
   sel_TSs <- select_TS(TSs, control$TS_control)
@@ -141,7 +141,7 @@ LDA_TS <- function(data, topics = 2, nseeds = 1, formulas = ~ 1,
 conform_LDA_TS_data <- function(data, quiet = FALSE){
   if(inherits(data, "data.frame") | inherits(data, "matrix")){
     msg <- "covariate table not provided, assuming equi-spaced data"
-    qprint(msg, NULL, quiet)
+    messageq(msg, quiet)
     nobs <- nrow(data)
     covariate <- data.frame(time = 1:nobs)
     data <- list(document_term_table = data, 
@@ -154,7 +154,7 @@ conform_LDA_TS_data <- function(data, quiet = FALSE){
     }
     if (length(which_covariate) == 0){
       msg <- "covariate table not provided, assuming equi-spaced data"
-      qprint(msg, NULL, quiet)
+      messageq(msg, quiet)
       nobs <- nrow(data[[which_term]])
       covariate <- data.frame(time = 1:nobs)
       data$document_covariate_table <- covariate    
@@ -326,6 +326,9 @@ package_LDA_TS <- function(LDAs, sel_LDA, TSs, sel_TSs){
 #'   replication purposes.
 #'
 #' @return \code{list}, with named elements corresponding to the arguments.
+#'
+#' @examples
+#'   LDA_TS_control()
 #'
 #' @export
 #'

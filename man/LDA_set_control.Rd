@@ -30,3 +30,7 @@ This function provides a simple creation and definition of
   to work with the existing control capacity of 
   \code{\link[topicmodels]{LDA}}.
 }
+\examples{
+  LDA_set_control()
+
+}

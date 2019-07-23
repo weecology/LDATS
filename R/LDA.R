@@ -40,11 +40,9 @@
 #'   \href{https://www.jstatsoft.org/article/view/v040i13}{link}.
 #'
 #' @examples 
-#' \dontrun{
 #'   data(rodents)
 #'   lda_data <- rodents$document_term_table
 #'   r_LDA <- LDA_set(lda_data, topics = 2, nseeds = 2)                         
-#' }
 #' 
 #' @export
 #'
@@ -97,6 +95,13 @@ LDA_set <- function(document_term_table, topics = 2, nseeds = 1,
 #'   Processing Systems} \strong{23}:856-864.
 #'   \href{https://bit.ly/2LEr5sb}{link}.
 #'
+#' @examples 
+#'   data(rodents)
+#'   lda_data <- rodents$document_term_table
+#'   r_LDA <- LDA_set(lda_data, topics = 2, nseeds = 2)   
+#'   logLik(r_LDA[[1]])
+#'   logLik(r_LDA[[2]])
+#'
 #' @export
 #'
 logLik.LDA_VEM <- function(object, ...){
@@ -133,12 +138,15 @@ check_LDA_set_inputs <- function(document_term_table, topics, nseeds,
 #' @param seed \code{integer} used to set the seed of the specific model. 
 #'
 #' @param control Named list of control parameters to be used in 
-#'   \code{\link[topicmodels]{LDA}} Note that is \code{control} has an 
+#'   \code{\link[topicmodels]{LDA}} Note that if \code{control} has an 
 #'   element named \code{seed} it will be overwritten by the \code{seed} 
 #'   argument of \code{prep_LDA_control}.
 #'
 #' @return List (class: \code{list}) of controls to be used in the LDA. 
-#' 
+#'
+#' @examples
+#'   prep_LDA_control(seed = 1) 
+#'
 #' @export
 #'
 prep_LDA_control <- function(seed, control = list()){
@@ -170,12 +178,10 @@ prep_LDA_control <- function(seed, control = list()){
 #'   class \code{LDA_set}.
 #'
 #' @examples
-#' \dontrun{
 #'   data(rodents)
 #'   lda_data <- rodents$document_term_table
 #'   r_LDA <- LDA_set(lda_data, topics = 2, nseeds = 2)  
 #'   select_LDA(r_LDA)                       
-#' }
 #'
 #' @export
 #'
@@ -238,6 +244,9 @@ package_LDA_set <- function(mods, mod_topics, mod_seeds){
 #' @param control Class \code{LDA_controls} list of control parameters to be
 #'   used in \code{LDA} (note that "seed" will be overwritten).
 #'
+#' @examples
+#'   LDA_msg(mod_topics = 4, mod_seeds = 2)
+#'
 #' @export
 #'
 LDA_msg <- function(mod_topics, mod_seeds, control = list()){
@@ -246,7 +255,7 @@ LDA_msg <- function(mod_topics, mod_seeds, control = list()){
   check_seeds(mod_seeds)
   topic_msg <- paste0("Running LDA with ", mod_topics, " topics ")
   seed_msg <- paste0("(seed ", mod_seeds, ")")
-  qprint(paste0(topic_msg, seed_msg), "", control$quiet)
+  messageq(paste0(topic_msg, seed_msg), control$quiet)
 }
 
 #' @title Create control list for set of LDA models
@@ -270,6 +279,9 @@ LDA_msg <- function(mod_topics, mod_seeds, control = list()){
 #'   \code{\link[topicmodels]{LDA}} as a \code{control} input.
 #'
 #' @return Class \code{LDA_controls} list for controlling the LDA model fit.
+#'
+#' @examples
+#'   LDA_set_control()
 #'
 #' @export
 #'

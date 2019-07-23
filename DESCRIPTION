@@ -1,6 +1,6 @@
 Package: LDATS
 Title: Latent Dirichlet Allocation Coupled with Time Series Analyses
-Version: 0.2.2
+Version: 0.2.3
 Authors@R: c(
     person(c("Juniper", "L."), "Simonis",
       email = "juniper.simonis@weecology.org", role = c("aut", "cre"),
@@ -16,10 +16,18 @@ Authors@R: c(
 	  person(c("Ethan", "P."), "White", role = c("aut"),
       comment = c(ORCID = "0000-0001-6728-7745")),
     person(c("S.K.", "Morgan"), "Ernest", role = c("aut"),
-      comment = c(ORCID = "0000-0002-6026-8530")))
-Description: Combines Latent Dirichlet Allocation and Bayesian Multinomial
-    Time Series methods in a two-stage analysis to quantify dynamics in
-	high-dimensional temporal data.
+      comment = c(ORCID = "0000-0002-6026-8530")),
+    person(c("Weecology"), role = "cph"))
+Description: Combines Latent Dirichlet Allocation (LDA) and Bayesian multinomial
+    time series methods in a two-stage analysis to quantify dynamics in
+	high-dimensional temporal data. LDA decomposes multivariate data into 
+    lower-dimension latent groupings, whose relative proportions are modeled
+    using generalized Bayesian time series models that include abrupt 
+    changepoints and smooth dynamics. The methods are described in Blei
+    et al. (2003)<doi:10.1162/jmlr.2003.3.4-5.993>, Western and Kleykamp
+   (2004)<doi:10.1093/pan/mph023>, Venables and Ripley 
+   (2002, ISBN-13:978-0387954578), and Christensen et al. 
+   (2018)<doi:10.1002/ecy.2373>.
 URL: https://weecology.github.io/LDATS, https://github.com/weecology/LDATS
 BugReports: https://github.com/weecology/LDATS/issues
 Depends: R (>= 3.2.3)

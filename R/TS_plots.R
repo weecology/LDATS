@@ -80,6 +80,8 @@ TS_diagnostics_plot <- function(x, interactive = TRUE){
 #'
 eta_diagnostics_plots <- function(x, interactive){
   on.exit(devAskNewPage(FALSE))
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   etas <- x$etas
   if (is.null(etas)){
     return()
@@ -111,6 +113,8 @@ eta_diagnostics_plots <- function(x, interactive){
 #'
 rho_diagnostics_plots <- function(x, interactive){
   on.exit(devAskNewPage(FALSE))
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   rhos <- x$rhos
   if (is.null(rhos)){
     return()
@@ -300,49 +304,32 @@ set_TS_summary_plot_cols <- function(rho_cols = NULL, rho_option = "D",
 TS_summary_plot <- function(x, cols = set_TS_summary_plot_cols(), bin_width,
                             xlab = NULL, border = NA, selection = "median", 
                             LDATS = FALSE){
-
-  if(LDATS){
-    par(fig = c(0, 1, 0.25, 0.5), new = TRUE)
-  } else{
-    par(mfrow = c(2, 1))
-  } 
   rc <- cols$rho
   rho_cols <- set_rho_hist_colors(x$rhos, rc$cols, rc$option, rc$alpha)
-  rho_hist(x, rho_cols, bin_width, xlab = xlab, border = border)
-
-  if(LDATS){
-    par(fig = c(0, 1, 0, 0.25), new = TRUE)
-  }
+  rho_hist(x, rho_cols, bin_width, xlab, border, LDATS)
   gc <- cols$gamma
   gamma_cols <- set_gamma_colors(x, gc$cols, gc$option, gc$alpha)
-  pred_gamma_TS_plot(x, selection, gamma_cols, xlab)
+  pred_gamma_TS_plot(x, selection, gamma_cols, xlab, LDATS)
 
 }
 
-#' @title Create the plot of fitted topic proportions over time
+#' @rdname TS_summary_plot
 #'
-#' @description Produces a time series of the fitted topic proportions 
-#'   over time, based on a selected set of change point locations.
-#'
-#' @param x Object of class \code{TS_fit} produced by \code{\link{TS}}.
-#'
-#' @param cols \code{list} of elements used to define the colors for the two
-#'   panels, as generated simply using \code{\link{set_TS_summary_plot_cols}}. 
-#'   Has two elements \code{rho} and \code{gamma}, each corresponding to the
-#'   related panel, and each containing default values for entries named
-#'   \code{cols}, \code{option}, and \code{alpha}. See
-#'   \code{\link{set_gamma_colors}} and \code{\link{set_rho_hist_colors}} for
-#'   details on usage.
-#'
-#' @param selection Indicator of the change points to use. Currently only
-#'   defined for "median" and "mode".
-#'
-#' @param xlab Label for the x-axis (time).
+#' @description  \code{pred_gamma_TS_plot}: produce a time series of the 
+#'   fitted topic proportions over time, based on a selected set of change 
+#'   point locations.
 #'
 #' @export
 #'
-pred_gamma_TS_plot <- function(x, selection = "median", cols, xlab = NULL){
-
+pred_gamma_TS_plot <- function(x, selection = "median", cols, xlab = NULL,
+                               LDATS = FALSE){
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
+  if(LDATS){
+    par(fig = c(0, 1, 0, 0.25), new = TRUE)
+  } else{
+    par(fig = c(0, 1, 0, 0.5), new = TRUE)
+  }  
   rhos <- x$rhos
   nrhos <- ncol(rhos)
   if (!is.null(nrhos)){
@@ -414,28 +401,22 @@ rho_lines <- function(spec_rhos) {
   }
 }
 
-#' @title Create the change point histograms plot
+#' @rdname TS_summary_plot
 #'
-#' @description Produces a plot of the change point distributions as 
-#'   histograms over time.
-#'
-#' @param x Object of class \code{TS_fit} produced by \code{\link{TS}}.
-#'
-#' @param cols Colors to be used to plot the histograms of change points.
-#'   Any valid color values (\emph{e.g.}, see \code{\link[grDevices]{colors}},
-#'   \code{\link[grDevices]{rgb}}) can be input as with a standard plot. 
-#'
-#' @param bin_width Width of the bins used in the histograms, in units of the
-#'   x-axis (the time variable used to fit the model).
-#'
-#' @param xlab Label for the x-axis (time).
-#'
-#' @param border Border for the histogram, default is \code{NA}.
+#' @description \code{rho_hist}: make a plot of the change point 
+#'   distributions as histograms over time.
 #'
 #' @export
 #'
-rho_hist <- function(x, cols, bin_width = 1, xlab = NULL, border = NA){
-
+rho_hist <- function(x, cols, bin_width = 1, xlab = NULL, border = NA,
+                     LDATS = FALSE){
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
+  if(LDATS){
+    par(fig = c(0, 1, 0.25, 0.5), new = TRUE)
+  } else{
+    par(fig = c(0, 1, 0.5, 1))
+  } 
   rhos <- x$rhos
   nrhos <- ncol(rhos)
   niter <- nrow(rhos)

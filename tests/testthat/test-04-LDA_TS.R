@@ -41,11 +41,11 @@ test_that("Check LDA_TS_controls_list", {
 test_that("Check conform_LDA_TS_data", {
   expect_is(conform_LDA_TS_data(rodents), "list")
   expect_is(conform_LDA_TS_data(rodents[[1]]), "list")
-  expect_output(conform_LDA_TS_data(rodents[[1]]))
+  expect_message(conform_LDA_TS_data(rodents[[1]]))
   expect_error(conform_LDA_TS_data(list(term1 = 1, term2 = 2)))
 
   expect_is(conform_LDA_TS_data(list(term = rodents[[1]])), "list")
-  expect_output(conform_LDA_TS_data(list(term = rodents[[1]])))
+  expect_message(conform_LDA_TS_data(list(term = rodents[[1]])))
 
   expect_error(conform_LDA_TS_data(list(term = rodents[[1]], covariate1 = 1,
                                         covariate2 = 2)))

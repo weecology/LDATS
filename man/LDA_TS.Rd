@@ -107,7 +107,7 @@ Conduct a complete LDATS analysis (Christensen
   \code{LDA_TS} are of proper classes for a full analysis.
 }
 \examples{
-\dontrun{
+\donttest{
   data(rodents)
   mod <- LDA_TS(data = rodents, topics = 2, nseeds = 1, formulas = ~1,
                 nchangepoints = 1, timename = "newmoon")

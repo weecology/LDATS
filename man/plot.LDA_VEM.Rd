@@ -56,7 +56,7 @@ Create an LDATS LDA summary plot, with a top panel showing
   bottom panel showing the topic proportions over time/documents.
 }
 \examples{
-\dontrun{
+\donttest{
   data(rodents)
   lda_data <- rodents$document_term_table
   r_LDA <- LDA_set(lda_data, topics = 4, nseeds = 10) 

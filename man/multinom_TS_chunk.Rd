@@ -48,7 +48,6 @@ Fit a multinomial regression model (via
   \code{[chunk$start, chunk$end]} within a time series.
 }
 \examples{
-\dontrun{
   data(rodents)
   dtt <- rodents$document_term_table
   lda <- LDA_set(dtt, 4, 1, list(quiet = TRUE))
@@ -58,7 +57,6 @@ Fit a multinomial regression model (via
   chunk <- c(start = 0, end = 100)
   mtsc <- multinom_TS_chunk(dct, formula = gamma ~ 1, chunk = chunk,
                      timename = "newmoon", weights = weights) 
-}
 
 }
 \references{

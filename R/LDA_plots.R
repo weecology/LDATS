@@ -8,7 +8,7 @@
 #' @param ... Additional arguments to be passed to subfunctions.
 #' 
 #' @examples 
-#' \dontrun{
+#' \donttest{
 #'   data(rodents)
 #'   lda_data <- rodents$document_term_table
 #'   r_LDA <- LDA_set(lda_data, topics = 2, nseeds = 2) 
@@ -21,7 +21,7 @@ plot.LDA_set <- function(x, ...){
   if (length(x) > 1){
     devAskNewPage(TRUE)
   }
-  lapply(x, plot, ...)
+  y <- lapply(x, plot, ...)
 }
 
 #' @title Plot the results of an LDATS LDA model
@@ -60,7 +60,7 @@ plot.LDA_set <- function(x, ...){
 #' @param ... Not used, retained for alignment with base function.
 #' 
 #' @examples 
-#' \dontrun{
+#' \donttest{
 #'   data(rodents)
 #'   lda_data <- rodents$document_term_table
 #'   r_LDA <- LDA_set(lda_data, topics = 4, nseeds = 10) 
@@ -85,7 +85,8 @@ plot.LDA_VEM <- function(x, ..., xtime = NULL, xname = NULL, cols = NULL,
 #' @export 
 #'
 LDA_plot_top_panel <- function(x, cols, option, alpha, LDATS = FALSE){
-
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   cols <- set_LDA_plot_colors(x, cols, option, alpha)
   gamma <- x@gamma
   beta <- exp(x@beta)
@@ -156,7 +157,8 @@ LDA_plot_top_panel <- function(x, cols, option, alpha, LDATS = FALSE){
 #'
 LDA_plot_bottom_panel <- function(x, xtime, xname, cols, option, alpha, 
                                   LDATS = FALSE){
-
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   cols <- set_LDA_plot_colors(x, cols, option, alpha)
   gamma <- x@gamma
   ntopics <- ncol(gamma)
@@ -207,6 +209,14 @@ LDA_plot_bottom_panel <- function(x, xtime, xname, cols, option, alpha,
 #'   \code{\link[grDevices]{rgb}}.
 #'
 #' @return Vector of \code{character} hex codes indicating colors to use.
+#'
+#' @examples
+#' \donttest{
+#'   data(rodents)
+#'   lda_data <- rodents$document_term_table
+#'   r_LDA <- LDA_set(lda_data, topics = 4, nseeds = 10) 
+#'   set_LDA_plot_colors(r_LDA[[1]])
+#' }
 #'
 #' @export 
 #'

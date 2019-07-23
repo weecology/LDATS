@@ -57,7 +57,6 @@
 #'   Statistics with S}. Fourth Edition. Springer, New York, NY, USA.
 #'
 #' @examples 
-#' \dontrun{
 #'   data(rodents)
 #'   dtt <- rodents$document_term_table
 #'   lda <- LDA_set(dtt, 4, 1, list(quiet = TRUE))
@@ -66,7 +65,6 @@
 #'   weights <- document_weights(dtt)
 #'   mts <- multinom_TS(dct, formula = gamma ~ 1, changepoints = c(20,50),
 #'                      timename = "newmoon", weights = weights) 
-#' }
 #'
 #' @export 
 #'
@@ -145,6 +143,17 @@ check_changepoints <- function(changepoints = NULL){
 #' @return Log likelihood of the model, as class \code{logLik}, with 
 #'   attributes \code{df} (degrees of freedom) and \code{nobs} (the number of
 #'   weighted observations, accounting for size differences among documents). 
+#'
+#' @examples 
+#'   data(rodents)
+#'   dtt <- rodents$document_term_table
+#'   lda <- LDA_set(dtt, 4, 1, list(quiet = TRUE))
+#'   dct <- rodents$document_covariate_table
+#'   dct$gamma <- lda[[1]]@gamma
+#'   weights <- document_weights(dtt)
+#'   mts <- multinom_TS(dct, formula = gamma ~ 1, changepoints = c(20,50),
+#'                      timename = "newmoon", weights = weights)
+#'   logLik(mts)
 #'
 #' @export
 #'
@@ -313,7 +322,6 @@ verify_changepoint_locations <- function(data, changepoints = NULL,
 #'   Fourth edition. Springer. 
 #'
 #' @examples 
-#' \dontrun{
 #'   data(rodents)
 #'   dtt <- rodents$document_term_table
 #'   lda <- LDA_set(dtt, 4, 1, list(quiet = TRUE))
@@ -323,7 +331,6 @@ verify_changepoint_locations <- function(data, changepoints = NULL,
 #'   chunk <- c(start = 0, end = 100)
 #'   mtsc <- multinom_TS_chunk(dct, formula = gamma ~ 1, chunk = chunk,
 #'                      timename = "newmoon", weights = weights) 
-#' }
 #'
 #' @export 
 #'

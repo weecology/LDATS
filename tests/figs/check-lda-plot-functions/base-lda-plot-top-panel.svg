@@ -134,4 +134,9 @@
 <rect x='650.67' y='14.40' width='10.00' height='16.00' style='stroke-width: 0.75; fill: #00204D; fill-opacity: 0.80;' clip-path='url(#cpNjQ4LjAwfDcyMC4wMHwxNzIuODB8MC4wMA==)' />
 <g clip-path='url(#cpNjQ4LjAwfDcyMC4wMHwxNzIuODB8MC4wMA==)'><text x='667.33' y='96.72' style='font-size: 9.00px; font-family: Liberation Sans;' textLength='28.50px' lengthAdjust='spacingAndGlyphs'>Topic 2</text></g>
 <rect x='650.67' y='86.40' width='10.00' height='16.00' style='stroke-width: 0.75; fill: #E7D159; fill-opacity: 0.80;' clip-path='url(#cpNjQ4LjAwfDcyMC4wMHwxNzIuODB8MC4wMA==)' />
+<defs>
+  <clipPath id='cpNTkuMDR8Njg5Ljc2fDUwMi41Nnw1OS4wNA=='>
+    <rect x='59.04' y='59.04' width='630.72' height='443.52' />
+  </clipPath>
+</defs>
 </svg>

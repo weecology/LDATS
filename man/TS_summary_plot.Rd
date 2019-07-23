@@ -2,10 +2,18 @@
 % Please edit documentation in R/TS_plots.R
 \name{TS_summary_plot}
 \alias{TS_summary_plot}
+\alias{pred_gamma_TS_plot}
+\alias{rho_hist}
 \title{Create the summary plot for a TS fit to an LDA model}
 \usage{
 TS_summary_plot(x, cols = set_TS_summary_plot_cols(), bin_width,
   xlab = NULL, border = NA, selection = "median", LDATS = FALSE)
+
+pred_gamma_TS_plot(x, selection = "median", cols, xlab = NULL,
+  LDATS = FALSE)
+
+rho_hist(x, cols, bin_width = 1, xlab = NULL, border = NA,
+  LDATS = FALSE)
 }
 \arguments{
 \item{x}{Object of class \code{TS_fit} produced by \code{\link{TS}}.}
@@ -36,4 +44,11 @@ Produces a two-panel figure of [1] the change point
   distributions as histograms over time and [2] the time series of the 
   fitted topic proportions over time, based on a selected set of 
   change point locations.
+
+\code{pred_gamma_TS_plot}: produce a time series of the 
+  fitted topic proportions over time, based on a selected set of change 
+  point locations.
+
+\code{rho_hist}: make a plot of the change point 
+  distributions as histograms over time.
 }

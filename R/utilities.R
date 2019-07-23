@@ -125,25 +125,25 @@ document_weights <- function(document_term_table){
   round(sample_sizes/mean(sample_sizes), 3)  
 }
 
-#' @title Print with quieting
+#' @title Optionally generate a message based on a logical input
 #'
-#' @description Print a message (via \code{\link{cat}}) wrapped as in 
-#'   \code{<wrapper><msg><wrapper>}, if desired.
+#' @description Given the input to \code{quiet}, generate the message(s) 
+#'   in \code{msg} or not.
 #'
-#' @param msg Message to be printed. \code{character}-class element.
+#' @param msg \code{character} vector of the message(s) to generate or 
+#'   \code{NULL}. If more than one element is contained in \code{msg}, they
+#'   are concatenated with a newline between.
 #'
-#' @param wrapper Wrapper \code{character} to use.
-#'
-#' @param quiet \code{logical} indicator of whether the message should be 
-#'   printed.
+#' @param quiet \code{logical} indicator controlling if the message is
+#'   generated.
 #'
 #' @export
 #'
-qprint <- function(msg, wrapper, quiet){
-  if (quiet){
-    return()
+messageq <- function(msg = NULL, quiet = FALSE){
+  if (!quiet){
+    msg2 <- paste(msg, collapse = "\n")
+    message(msg2)
   }
-  cat(paste0(wrapper, msg, wrapper, "\n"))
 }
 
 

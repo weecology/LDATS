@@ -16,7 +16,7 @@ Generalization of the \code{\link[graphics]{plot}} function to
   work on a list of LDA topic models (class \code{LDA_set}).
 }
 \examples{
-\dontrun{
+\donttest{
   data(rodents)
   lda_data <- rodents$document_term_table
   r_LDA <- LDA_set(lda_data, topics = 2, nseeds = 2) 

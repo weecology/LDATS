@@ -38,14 +38,10 @@
 #'   and \code{\link{set_rho_hist_colors}}).
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'   data(rodents)
-#'   document_term_table <- rodents$document_term_table
-#'   document_covariate_table <- rodents$document_covariate_table
-#'
-#'   mod <- LDA_TS(document_term_table, document_covariate_table,
-#'                 topics = 2, nseeds = 1, formulas = ~ 1, nchangepoints = 1,
-#'                 weights = document_weights(document_term_table))
+#'   mod <- LDA_TS(data = rodents, topics = 2, nseeds = 1, formulas = ~1,
+#'                 nchangepoints = 1, timename = "newmoon")
 #'   plot(mod, binwidth = 5, xlab = "New moon")
 #' }
 #'
@@ -55,6 +51,8 @@ plot.LDA_TS <- function(x, ...,
                         cols = set_LDA_TS_plot_cols(),
                         bin_width = 1, xlab = NULL, border = NA,
                         selection = "median"){
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   tname <- x$"Selected TS model"$timename
   tvar <- x$"Selected TS model"$data[ , tname]
   if(!is.null(xlab)){
@@ -122,6 +120,9 @@ plot.LDA_TS <- function(x, ...,
 #'   named \code{cols}, \code{option}, and \code{alpha} (see
 #'   \code{\link{set_TS_summary_plot_cols}}, \code{\link{set_gamma_colors}},
 #'   and \code{\link{set_rho_hist_colors}}).
+#'
+#' @examples
+#'   set_LDA_TS_plot_cols()
 #'
 #' @export
 #'
