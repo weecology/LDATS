@@ -3,7 +3,7 @@
 Version numbers follow [Semantic Versioning](https://semver.org/).
 
 # [LDATS 0.2.3](https://github.com/weecology/ldats/releases/tag/v0.2.3)
-*Active development*
+*2019-07-24*
 
 ## Edits for resubmission to CRAN
 * Output given by `print`/`cat` has been replaced with `message` messages.

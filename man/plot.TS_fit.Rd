@@ -2,7 +2,7 @@
 % Please edit documentation in R/TS_plots.R
 \name{plot.TS_fit}
 \alias{plot.TS_fit}
-\title{Plot a LDATS TS models}
+\title{Plot an LDATS TS model}
 \usage{
 \method{plot}{TS_fit}(x, ..., plot_type = "summary",
   interactive = FALSE, cols = set_TS_summary_plot_cols(),
@@ -30,7 +30,7 @@ and each containing default values for entries named \code{cols},
 \code{\link{set_rho_hist_colors}} for details on usage.}
 
 \item{bin_width}{Width of the bins used in the histograms of the summary 
-timeseries plot, in units of the x-axis (the time variable used to fit 
+time series plot, in units of the x-axis (the time variable used to fit 
 the model).}
 
 \item{xname}{Label for the x-axis in the summary time series plot. Defaults
@@ -40,7 +40,7 @@ no label printed, set \code{xname = ""}.}
 
 \item{border}{Border for the histogram, default is \code{NA}.}
 
-\item{selection}{Indicator of the change points to use in the timeseries
+\item{selection}{Indicator of the change points to use in the time series
 summary plot. Currently only defined for \code{"median"} and 
 \code{"mode"}.}
 

@@ -1,4 +1,4 @@
-#' @title Plot a LDATS TS models
+#' @title Plot an LDATS TS model
 #'
 #' @description Generalization of the \code{\link[graphics]{plot}} function to 
 #'   work on fitted TS model objects (class \code{TS_fit}) returned from 
@@ -13,7 +13,7 @@
 #' @param plot_type "diagnostic" or "summary".
 #'
 #' @param bin_width Width of the bins used in the histograms of the summary 
-#'   timeseries plot, in units of the x-axis (the time variable used to fit 
+#'   time series plot, in units of the x-axis (the time variable used to fit 
 #'   the model).
 #'
 #' @param xname Label for the x-axis in the summary time series plot. Defaults
@@ -23,7 +23,7 @@
 #'
 #' @param border Border for the histogram, default is \code{NA}.
 #'
-#' @param selection Indicator of the change points to use in the timeseries
+#' @param selection Indicator of the change points to use in the time series
 #'   summary plot. Currently only defined for \code{"median"} and 
 #'   \code{"mode"}.
 #'
@@ -633,7 +633,7 @@ set_rho_hist_colors <- function(x = NULL, cols = NULL, option = "D",
 #' @title Prepare the colors to be used in the gamma time series
 #'
 #' @description Based on the inputs, create the set of colors to be used in
-#'   the timeseries of the fitted gamma (topic proportion) values.
+#'   the time series of the fitted gamma (topic proportion) values.
 #' 
 #' @param x Object of class \code{TS_fit}, fit by \code{\link{TS}}.
 #'

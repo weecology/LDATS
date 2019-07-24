@@ -19,7 +19,7 @@ panels of the summary plot, as generated simply using
 \code{\link{set_LDA_TS_plot_cols}}. \code{cols} has two elements:
 \code{LDA} and \code{TS}, each corresponding the set of plots for
 its stage in the full model. \code{LDA} contains entries \code{cols}
-and \code{options} (see \code{\link{set_LDA_plot_colors}}). \code{TS}
+and \code{option} (see \code{\link{set_LDA_plot_colors}}). \code{TS}
 contains two entries, \code{rho} and \code{gamma}, each corresponding
 to the related panel, and each containing default values for entries
 named \code{cols}, \code{option}, and \code{alpha} (see
@@ -27,7 +27,7 @@ named \code{cols}, \code{option}, and \code{alpha} (see
 and \code{\link{set_rho_hist_colors}}).}
 
 \item{bin_width}{Width of the bins used in the histograms of the summary
-timeseries plot, in units of the time variable used to fit the model
+time series plot, in units of the time variable used to fit the model
 (the x-axis).}
 
 \item{xname}{Label for the x-axis in the summary time series plot. Defaults
@@ -37,7 +37,7 @@ no label printed, set \code{xname = ""}.}
 
 \item{border}{Border for the histogram, default is \code{NA}.}
 
-\item{selection}{Indicator of the change points to use in the timeseries
+\item{selection}{Indicator of the change points to use in the time series
 summary plot. Currently only defined for \code{"median"} and
 \code{"mode"}.}
 }

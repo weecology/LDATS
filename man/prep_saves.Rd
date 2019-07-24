@@ -42,7 +42,7 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 \code{prep_saves} creates the data structure used to save the 
   output from each iteration of the ptMCMC algorithm, which is added via
   \code{update_saves}. Once the ptMCMC is complete, the saved data objects
-  are then processed (burnin iterations are dropped and the remaining
+  are then processed (burn-in iterations are dropped and the remaining
   iterations are thinned) via \code{process_saves}.
   \cr \cr
   This set of functions was designed to work within \code{\link{TS}} and 

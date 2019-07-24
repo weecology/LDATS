@@ -26,7 +26,7 @@ Vector of \code{character} hex codes indicating colors to use.
 }
 \description{
 Based on the inputs, create the set of colors to be used in
-  the timeseries of the fitted gamma (topic proportion) values.
+  the time series of the fitted gamma (topic proportion) values.
 }
 \examples{
 \donttest{
