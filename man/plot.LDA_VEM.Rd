@@ -9,10 +9,11 @@
 \method{plot}{LDA_VEM}(x, ..., xtime = NULL, xname = NULL,
   cols = NULL, option = "C", alpha = 0.8, LDATS = FALSE)
 
-LDA_plot_top_panel(x, cols, option, alpha, LDATS = FALSE)
+LDA_plot_top_panel(x, cols = NULL, option = "C", alpha = 0.8,
+  together = FALSE, LDATS = FALSE)
 
-LDA_plot_bottom_panel(x, xtime, xname, cols, option, alpha,
-  LDATS = FALSE)
+LDA_plot_bottom_panel(x, xtime = NULL, xname = NULL, cols = NULL,
+  option = "C", alpha = 0.8, together = FALSE, LDATS = FALSE)
 }
 \arguments{
 \item{x}{Object of class \code{LDA_VEM}.}
@@ -40,28 +41,35 @@ options are available: "magma" (or "A"), "inferno" (or "B"), "plasma"
 colors used. Supported only on some devices, see 
 \code{\link[grDevices]{rgb}}.}
 
-\item{LDATS}{\code{logical} indicating if the plot is part of a larger 
+\item{LDATS}{\code{logical} indicating if the LDA plot is part of a larger 
 LDATS plot output.}
+
+\item{together}{\code{logical} indicating if the subplots are part of a 
+larger LDA plot output.}
+}
+\value{
+\code{NULL}.
 }
 \description{
 Create an LDATS LDA summary plot, with a top panel showing
   the topic proportions for each word and a bottom panel showing the topic
   proportions of each document/over time. The plot function is defined for
   class \code{LDA_VEM} specifically (see \code{\link[topicmodels]{LDA}}).
-
-\code{LDA_plot_top_panel}: create an LDATS LDA summary plot 
-  top panel showing the topic proportions word-by-word.
-
-\code{LDA_plot_bottom_panel}: create an LDATS LDA summary plot
+  \cr \cr
+  \code{LDA_plot_top_panel} creates an LDATS LDA summary plot 
+  top panel showing the topic proportions word-by-word. \cr \cr
+  \code{LDA_plot_bottom_panel} creates an LDATS LDA summary plot
   bottom panel showing the topic proportions over time/documents.
 }
 \examples{
-\dontrun{
+\donttest{
   data(rodents)
   lda_data <- rodents$document_term_table
   r_LDA <- LDA_set(lda_data, topics = 4, nseeds = 10) 
-  best_lda <- select_LDA(r_LDA)
+  best_lda <- select_LDA(r_LDA)[[1]]
   plot(best_lda, option = "cividis")
+  LDA_plot_top_panel(best_lda, option = "cividis")
+  LDA_plot_bottom_panel(best_lda, option = "cividis")
 }
 
 }

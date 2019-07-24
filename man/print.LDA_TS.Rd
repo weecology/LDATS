@@ -11,7 +11,20 @@
 
 \item{...}{Not used, simply included to maintain method compatibility.}
 }
+\value{
+The selected models in \code{x} as a two-element \code{list} with
+  the TS component only returning the non-hidden components.
+}
 \description{
 Convenience function to print only the selected elements of a 
   \code{LDA_TS}-class object returned by \code{\link{LDA_TS}}
+}
+\examples{
+\donttest{
+  data(rodents)
+  mod <- LDA_TS(data = rodents, topics = 2, nseeds = 1, formulas = ~1,
+                nchangepoints = 1, timename = "newmoon")
+  print(mod)
+}
+
 }

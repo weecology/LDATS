@@ -10,14 +10,18 @@ prep_LDA_control(seed, control = list())
 \item{seed}{\code{integer} used to set the seed of the specific model.}
 
 \item{control}{Named list of control parameters to be used in 
-\code{\link[topicmodels]{LDA}} Note that is \code{control} has an 
+\code{\link[topicmodels]{LDA}} Note that if \code{control} has an 
 element named \code{seed} it will be overwritten by the \code{seed} 
 argument of \code{prep_LDA_control}.}
 }
 \value{
-List (class: \code{list}) of controls to be used in the LDA.
+\code{list} of controls to be used in the LDA.
 }
 \description{
 Update the control list for the LDA model with the specific
   seed as indicated. And remove controls not used within the LDA itself.
+}
+\examples{
+  prep_LDA_control(seed = 1) 
+
 }

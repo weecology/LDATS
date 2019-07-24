@@ -56,12 +56,12 @@ test_that("check document_weights", {
   expect_error(document_weights("ok"))
 })
 
-test_that("check qprint", {
-  expect_error(qprint())
-  expect_error(qprint("ok"))
-  expect_error(qprint("ok", ""))
-  expect_output(qprint("ok", "", quiet = FALSE))
-  expect_silent(qprint("ok", "", quiet = TRUE))
+test_that("check messageq", {
+  expect_message(messageq())
+  expect_message(messageq("ok"))
+  expect_error(messageq("ok", ""))
+  expect_message(messageq("ok", quiet = FALSE))
+  expect_silent(messageq("ok", quiet = TRUE))
 })
 
 test_that("check mirror_vcov", {
@@ -89,7 +89,7 @@ test_that("check mirror_vcov", {
   timename <- "newmoon"
   LDAs <- LDA_set(document_term_table, topics, nseeds, list())
   LDA_models <- select_LDA(LDAs, list())
-  control <- list(nit = 1e2, seed = 1)
+  control <- list(nit = 50, seed = 1)
   mods <- expand_TS(LDA_models, formulas, nchangepoints)
   formula <- mods$formula[[1]]
   nchangepoints <- mods$nchangepoints[1]

@@ -25,6 +25,13 @@ The number of degrees of freedom is 1 (for alpha) plus the number
   of entries in the document-topic matrix. The number of observations is 
   the number of entries in the document-term matrix.
 }
+\examples{
+  data(rodents)
+  lda_data <- rodents$document_term_table
+  r_LDA <- LDA_set(lda_data, topics = 2)   
+  logLik(r_LDA[[1]])
+
+}
 \references{
 Buntine, W. 2002. Variational extensions to EM and multinomial PCA. 
   \emph{European Conference on Machine Learning, Lecture Notes in Computer 

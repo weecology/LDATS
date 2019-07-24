@@ -8,7 +8,11 @@
 #'   \code{\link{select_LDA}}, running a complete set of Bayesian Time Series
 #'   (TS) models (Western and Kleykamp 2004) via \code{\link{TS_on_LDA}} on
 #'   the chosen LDA model(s), and selecting the best TS model via 
-#'   \code{\link{select_TS}}.
+#'   \code{\link{select_TS}}. \cr \cr
+#'   \code{conform_LDA_TS_data} converts the \code{data} input to
+#'   match internal and sub-function specifications. \cr \cr
+#'   \code{check_LDA_TS_inputs} checks that the inputs to 
+#'   \code{LDA_TS} are of proper classes for a full analysis.
 #' 
 #' @param data Either a document term table or a list including at least
 #'   a document term table (with the word "term" in the name of the element)
@@ -70,14 +74,21 @@
 #' @param control A \code{list} of parameters to control the running and 
 #'   selecting of LDA and TS models. Values not input assume default values 
 #'   set by \code{\link{LDA_TS_control}}. 
+#' 
+#' @param quiet \code{logical} indicator for \code{conform_LDA_TS_data} to 
+#'   indicate if messages should be printed.
 #'
 #' @return 
-#'   \code{LDA_TS} returns a class \code{LDA_TS} list object including all 
+#'   \code{LDA_TS}: a class \code{LDA_TS} list object including all 
 #'   fitted LDA and TS models and selected models specifically as elements 
 #'   \code{"LDA models"} (from \code{\link{LDA_set}}),
 #'   \code{"Selected LDA model"} (from \code{\link{select_LDA}}), 
 #'   \code{"TS models"} (from \code{\link{TS_on_LDA}}), and
-#'   \code{"Selected TS model"} (from \code{\link{select_TS}}).
+#'   \code{"Selected TS model"} (from \code{\link{select_TS}}). \cr \cr
+#'   \code{conform_LDA_TS_data}: a data \code{list} that is ready for analyses 
+#'   using the stage-specific functions. \cr \cr
+#'   \code{check_LDA_TS_inputs}: an error message is thrown if any input is 
+#'   improper, otherwise \code{NULL}.
 #' 
 #' @references 
 #'   Blei, D. M., A. Y. Ng, and M. I. Jordan. 2003. Latent Dirichlet
@@ -100,11 +111,13 @@
 #'   \href{https://doi.org/10.1093/pan/mph023}{link}.
 #'
 #' @examples 
-#' \dontrun{
 #'   data(rodents)
+#' \donttest{
 #'   mod <- LDA_TS(data = rodents, topics = 2, nseeds = 1, formulas = ~1,
 #'                 nchangepoints = 1, timename = "newmoon")
 #' }
+#'   conform_LDA_TS_data(rodents)
+#'   check_LDA_TS_inputs(rodents, timename = "newmoon")
 #'
 #' @export
 #'
@@ -118,10 +131,10 @@ LDA_TS <- function(data, topics = 2, nseeds = 1, formulas = ~ 1,
   dtt <- data$document_term_table
   dct <- data$document_covariate_table
   weights <- iftrue(weights, document_weights(dtt))
-  qprint("Latent Dirichlet Allocation", "----", control$quiet)
+  messageq("----Latent Dirichlet Allocation----", control$quiet)
   LDAs <- LDA_set(dtt, topics, nseeds, control$LDA_set_control)
   sel_LDA <- select_LDA(LDAs, control$LDA_set_control)
-  qprint("Time Series Models", "----", control$quiet)
+  messageq("----Time Series Models----", control$quiet)
   TSs <- TS_on_LDA(sel_LDA, dct, formulas, nchangepoints, timename, weights, 
                    control$TS_control)
   sel_TSs <- select_TS(TSs, control$TS_control)
@@ -130,18 +143,12 @@ LDA_TS <- function(data, topics = 2, nseeds = 1, formulas = ~ 1,
 
 #' @rdname LDA_TS
 #'
-#' @description \code{conform_LDA_TS_data} converts the \code{data} input to
-#'   match internal and sub-function specifications.
-#' 
-#' @param quiet Logical indicator for \code{conform_LDA_TS_data} to indicate
-#'   if messages should be printed.
-#'
 #' @export
 #'
 conform_LDA_TS_data <- function(data, quiet = FALSE){
   if(inherits(data, "data.frame") | inherits(data, "matrix")){
     msg <- "covariate table not provided, assuming equi-spaced data"
-    qprint(msg, NULL, quiet)
+    messageq(msg, quiet)
     nobs <- nrow(data)
     covariate <- data.frame(time = 1:nobs)
     data <- list(document_term_table = data, 
@@ -154,7 +161,7 @@ conform_LDA_TS_data <- function(data, quiet = FALSE){
     }
     if (length(which_covariate) == 0){
       msg <- "covariate table not provided, assuming equi-spaced data"
-      qprint(msg, NULL, quiet)
+      messageq(msg, quiet)
       nobs <- nrow(data[[which_term]])
       covariate <- data.frame(time = 1:nobs)
       data$document_covariate_table <- covariate    
@@ -170,9 +177,6 @@ conform_LDA_TS_data <- function(data, quiet = FALSE){
 }
 
 #' @rdname LDA_TS
-#'
-#' @description \code{check_LDA_TS_inputs} checks that the inputs to 
-#'   \code{LDA_TS} are of proper classes for a full analysis.
 #' 
 #' @export
 #'
@@ -206,11 +210,23 @@ check_LDA_TS_inputs <- function(data = NULL,
 #'
 #' @param ... Not used, simply included to maintain method compatibility.
 #'
+#' @return The selected models in \code{x} as a two-element \code{list} with
+#'   the TS component only returning the non-hidden components.
+#'
+#' @examples 
+#' \donttest{
+#'   data(rodents)
+#'   mod <- LDA_TS(data = rodents, topics = 2, nseeds = 1, formulas = ~1,
+#'                 nchangepoints = 1, timename = "newmoon")
+#'   print(mod)
+#' }
+#'
 #' @export
 #'
 print.LDA_TS <- function(x, ...){
   print(x[["Selected LDA model"]])
   print(x[["Selected TS model"]])
+  list(LDA = x[["Selected LDA model"]], TS = x[["Selected TS model"]])
 }
 
 #' @title Package the output of LDA_TS
@@ -239,6 +255,22 @@ print.LDA_TS <- function(x, ...){
 #'   selected models specifically, ready to be returned from 
 #'   \code{\link{LDA_TS}}.
 #'
+#' @examples 
+#' \donttest{
+#'   data(rodents)
+#'   data <- rodents
+#'   control <- LDA_TS_control()              
+#'   dtt <- data$document_term_table
+#'   dct <- data$document_covariate_table
+#'   weights <- document_weights(dtt)
+#'   LDAs <- LDA_set(dtt, 2, 1, control$LDA_set_control)
+#'   sel_LDA <- select_LDA(LDAs, control$LDA_set_control)
+#'   TSs <- TS_on_LDA(sel_LDA, dct, ~1, 1, "newmoon", weights,  
+#'                    control$TS_control)
+#'   sel_TSs <- select_TS(TSs, control$TS_control)
+#'   package_LDA_TS(LDAs, sel_LDA, TSs, sel_TSs)
+#' }
+#'  
 #' @export
 #'
 package_LDA_TS <- function(LDAs, sel_LDA, TSs, sel_TSs){
@@ -325,7 +357,11 @@ package_LDA_TS <- function(LDAs, sel_LDA, TSs, sel_TSs){
 #' @param seed Input to \code{set.seed} in the time series model for 
 #'   replication purposes.
 #'
-#' @return \code{list}, with named elements corresponding to the arguments.
+#' @return \code{list} of control \code{lists}, with named elements 
+#'   \code{LDAcontrol}, \code{TScontrol}, and \code{quiet}.
+#'
+#' @examples
+#'   LDA_TS_control()
 #'
 #' @export
 #'

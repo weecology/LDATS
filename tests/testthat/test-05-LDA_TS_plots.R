@@ -13,8 +13,7 @@ mod <- LDA_TS(rodents,
 
 test_that("check plot for LDA_TS", {
   if (tenv == "cran"){
-    expect_silent(plot(mod, control = list(nit = 100, seed = 1),
-                           interactive = FALSE))
+    expect_silent(plot(mod, interactive = FALSE))
   } else{
     plot(mod, interactive = FALSE)
     LDA_TS_set_plot <- recordPlot()

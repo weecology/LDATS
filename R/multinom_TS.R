@@ -3,7 +3,9 @@
 #' @description Fit a set of multinomial regression models (via
 #'   \code{\link[nnet]{multinom}}, Venables and Ripley 2002) to a time series
 #'   of data divided into multiple segments (a.k.a. chunks) based on given 
-#'   locations for a set of change points. 
+#'   locations for a set of change points. \cr \cr
+#'   \code{check_multinom_TS_inputs} checks that the inputs to 
+#'   \code{multinom_TS} are of proper classes for an analysis.
 #'
 #' @param data \code{data.frame} including [1] the time variable (indicated 
 #'   in \code{timename}), [2] the predictor variables (required by
@@ -46,27 +48,29 @@
 #'   Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
 #'   \code{\link{TS_control}}.
 #'
-#' @return Object of class \code{multinom_TS_fit}, which is a list of [1]
+#' @return \code{multinom_TS}: Object of class \code{multinom_TS_fit}, 
+#'   which is a list of [1]
 #'   chunk-level model fits (\code{"chunk models"}), [2] the total log 
 #'   likelihood combined across all chunks (\code{"logLik"}), and [3] a 
 #'   \code{data.frame} of chunk beginning and ending times (\code{"logLik"}
-#'   with columns \code{"start"} and \code{"end"}).
+#'   with columns \code{"start"} and \code{"end"}). \cr \cr
+#'   \code{check_multinom_TS_inputs}: an error message is thrown if any 
+#'   input is improper, otherwise \code{NULL}.
 #'
 #' @references
 #'   Venables, W. N. and B. D. Ripley. 2002. \emph{Modern and Applied
 #'   Statistics with S}. Fourth Edition. Springer, New York, NY, USA.
 #'
 #' @examples 
-#' \dontrun{
 #'   data(rodents)
 #'   dtt <- rodents$document_term_table
-#'   lda <- LDA_set(dtt, 4, 1, list(quiet = TRUE))
+#'   lda <- LDA_set(dtt, 2, 1, list(quiet = TRUE))
 #'   dct <- rodents$document_covariate_table
 #'   dct$gamma <- lda[[1]]@gamma
 #'   weights <- document_weights(dtt)
+#'   check_multinom_TS_inputs(dct, timename = "newmoon")
 #'   mts <- multinom_TS(dct, formula = gamma ~ 1, changepoints = c(20,50),
 #'                      timename = "newmoon", weights = weights) 
-#' }
 #'
 #' @export 
 #'
@@ -97,12 +101,10 @@ multinom_TS <- function(data, formula, changepoints = NULL,
 
 #' @rdname multinom_TS
 #'
-#' @description \code{check_multinom_TS_inputs} checks that the inputs to 
-#'   \code{multinom_TS} are of proper classes for an analysis.
-#' 
 #' @export
 #'
-check_multinom_TS_inputs <- function(data, formula, changepoints = NULL, 
+check_multinom_TS_inputs <- function(data, formula = gamma~1, 
+                                     changepoints = NULL, 
                                      timename = "time", weights = NULL, 
                                      control = list()){
   check_changepoints(changepoints)
@@ -119,6 +121,12 @@ check_multinom_TS_inputs <- function(data, formula, changepoints = NULL,
 #'   
 #' @param changepoints Change point locations to evaluate.
 #' 
+#' @return An error message is thrown if \code{changepoints} are not proper,
+#'   else \code{NULL}.
+#'
+#' @examples
+#'   check_changepoints(100)
+#'
 #' @export
 #'
 check_changepoints <- function(changepoints = NULL){
@@ -145,6 +153,17 @@ check_changepoints <- function(changepoints = NULL){
 #' @return Log likelihood of the model, as class \code{logLik}, with 
 #'   attributes \code{df} (degrees of freedom) and \code{nobs} (the number of
 #'   weighted observations, accounting for size differences among documents). 
+#'
+#' @examples 
+#'   data(rodents)
+#'   dtt <- rodents$document_term_table
+#'   lda <- LDA_set(dtt, 2, 1, list(quiet = TRUE))
+#'   dct <- rodents$document_covariate_table
+#'   dct$gamma <- lda[[1]]@gamma
+#'   weights <- document_weights(dtt)
+#'   mts <- multinom_TS(dct, formula = gamma ~ 1, changepoints = c(20,50),
+#'                      timename = "newmoon", weights = weights)
+#'   logLik(mts)
 #'
 #' @export
 #'
@@ -184,7 +203,28 @@ logLik.multinom_TS_fit <- function(object, ...){
 #'   chunk-level model fits, [2] the total log likelihood combined across 
 #'   all chunks, and [3] the chunk time data table.
 #'
+#' @examples 
+#'   data(rodents)
+#'   dtt <- rodents$document_term_table
+#'   lda <- LDA_set(dtt, 2, 1, list(quiet = TRUE))
+#'   dct <- rodents$document_covariate_table
+#'   dct$gamma <- lda[[1]]@gamma
+#'   weights <- document_weights(dtt)
+#'   formula <- gamma ~ 1
+#'   changepoints <- c(20,50)
+#'   timename <- "newmoon"
+#'   TS_chunk_memo <- memoise_fun(multinom_TS_chunk, TRUE)
+#'   chunks <- prep_chunks(dct, changepoints, timename)
+#'   nchunks <- nrow(chunks)
+#'   fits <- vector("list", length = nchunks)
+#'   for (i in 1:nchunks){
+#'     fits[[i]] <- TS_chunk_memo(dct, formula, chunks[i, ], timename, 
+#'                                weights, TS_control())
+#'   }
+#'   package_chunk_fits(chunks, fits) 
+#'
 #' @export 
+#' 
 #'
 package_chunk_fits <- function(chunks, fits){
   nchunks <- nrow(chunks)
@@ -218,8 +258,16 @@ package_chunk_fits <- function(chunks, fits){
 #'   is a \code{Date}, the input is converted to an integer, resulting in the
 #'   timestep being 1 day, which is often not desired behavior.
 #'
-#' @return Data frame of \code{start} and \code{end} times for each chunk 
-#'   (row).
+#' @return \code{data.frame} of \code{start} and \code{end} times (columns)
+#'   for each chunk (rows).
+#'
+#' @examples
+#'   data(rodents)
+#'   dtt <- rodents$document_term_table
+#'   lda <- LDA_set(dtt, 2, 1, list(quiet = TRUE))
+#'   dct <- rodents$document_covariate_table
+#'   dct$gamma <- lda[[1]]@gamma
+#'   chunks <- prep_chunks(dct, changepoints = 100, timename = "newmoon")   
 #'
 #' @export 
 #'
@@ -249,6 +297,15 @@ prep_chunks <- function(data, changepoints = NULL,
 #'
 #' @return Logical indicator of the check passing \code{TRUE} or failing
 #'   \code{FALSE}.
+#'
+#' @examples
+#'   data(rodents)
+#'   dtt <- rodents$document_term_table
+#'   lda <- LDA_set(dtt, 2, 1, list(quiet = TRUE))
+#'   dct <- rodents$document_covariate_table
+#'   dct$gamma <- lda[[1]]@gamma
+#'   verify_changepoint_locations(dct, changepoints = 100, 
+#'                                timename = "newmoon")   
 #'
 #' @export 
 #'
@@ -313,17 +370,15 @@ verify_changepoint_locations <- function(data, changepoints = NULL,
 #'   Fourth edition. Springer. 
 #'
 #' @examples 
-#' \dontrun{
 #'   data(rodents)
 #'   dtt <- rodents$document_term_table
-#'   lda <- LDA_set(dtt, 4, 1, list(quiet = TRUE))
+#'   lda <- LDA_set(dtt, 2, 1, list(quiet = TRUE))
 #'   dct <- rodents$document_covariate_table
 #'   dct$gamma <- lda[[1]]@gamma
 #'   weights <- document_weights(dtt)
 #'   chunk <- c(start = 0, end = 100)
 #'   mtsc <- multinom_TS_chunk(dct, formula = gamma ~ 1, chunk = chunk,
 #'                      timename = "newmoon", weights = weights) 
-#' }
 #'
 #' @export 
 #'

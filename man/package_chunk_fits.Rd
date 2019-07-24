@@ -27,3 +27,24 @@ Takes the list of fitted chunk-level models returned from
   on the chunk time windows, combining the log likelihood values across the 
   chunks, and setting the class of the output object.
 }
+\examples{
+  data(rodents)
+  dtt <- rodents$document_term_table
+  lda <- LDA_set(dtt, 2, 1, list(quiet = TRUE))
+  dct <- rodents$document_covariate_table
+  dct$gamma <- lda[[1]]@gamma
+  weights <- document_weights(dtt)
+  formula <- gamma ~ 1
+  changepoints <- c(20,50)
+  timename <- "newmoon"
+  TS_chunk_memo <- memoise_fun(multinom_TS_chunk, TRUE)
+  chunks <- prep_chunks(dct, changepoints, timename)
+  nchunks <- nrow(chunks)
+  fits <- vector("list", length = nchunks)
+  for (i in 1:nchunks){
+    fits[[i]] <- TS_chunk_memo(dct, formula, chunks[i, ], timename, 
+                               weights, TS_control())
+  }
+  package_chunk_fits(chunks, fits) 
+
+}

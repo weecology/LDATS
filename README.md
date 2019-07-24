@@ -18,8 +18,8 @@ For a full description of the math underlying the **`LDATS`** package, see the
 ## Status: In Development, Stable Version Available Soon
 
 The package is currently in active development by the 
-[Weecology Team](https://www.weecology.org), although a stable version
-will soon be submitted to CRAN. The API is well defined at this point and should 
+[Weecology Team](https://www.weecology.org), and a stable version
+in under review at CRAN. The API is well defined at this point and should 
 not change substantially.
 
 ## Installation

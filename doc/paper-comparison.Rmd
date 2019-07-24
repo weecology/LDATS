@@ -274,7 +274,7 @@ ldats_rodents_adjusted <- as.data.frame.matrix(rodents[[1]])
 ldats_rodents_adjusted[periods, ] <- round(ldats_rodents_adjusted[periods, ] / nplots_controls$x[periods] * 8)
 ```
 
-Now we can compare the adjusted ldats dataset with both the original ldats dataset and the dataset from the paper:
+Now we can compare the adjusted LDATS dataset with both the original ldats dataset and the dataset from the paper:
 
 ```{r dataset comparisons}
 compare_raw <- rodents[[1]] == ldats_rodents_adjusted

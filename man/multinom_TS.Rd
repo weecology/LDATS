@@ -8,8 +8,9 @@
 multinom_TS(data, formula, changepoints = NULL, timename = "time",
   weights = NULL, control = list())
 
-check_multinom_TS_inputs(data, formula, changepoints = NULL,
-  timename = "time", weights = NULL, control = list())
+check_multinom_TS_inputs(data, formula = gamma ~ 1,
+  changepoints = NULL, timename = "time", weights = NULL,
+  control = list())
 }
 \arguments{
 \item{data}{\code{data.frame} including [1] the time variable (indicated 
@@ -54,32 +55,33 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 \code{\link{TS_control}}.}
 }
 \value{
-Object of class \code{multinom_TS_fit}, which is a list of [1]
+\code{multinom_TS}: Object of class \code{multinom_TS_fit}, 
+  which is a list of [1]
   chunk-level model fits (\code{"chunk models"}), [2] the total log 
   likelihood combined across all chunks (\code{"logLik"}), and [3] a 
   \code{data.frame} of chunk beginning and ending times (\code{"logLik"}
-  with columns \code{"start"} and \code{"end"}).
+  with columns \code{"start"} and \code{"end"}). \cr \cr
+  \code{check_multinom_TS_inputs}: an error message is thrown if any 
+  input is improper, otherwise \code{NULL}.
 }
 \description{
 Fit a set of multinomial regression models (via
   \code{\link[nnet]{multinom}}, Venables and Ripley 2002) to a time series
   of data divided into multiple segments (a.k.a. chunks) based on given 
-  locations for a set of change points.
-
-\code{check_multinom_TS_inputs} checks that the inputs to 
+  locations for a set of change points. \cr \cr
+  \code{check_multinom_TS_inputs} checks that the inputs to 
   \code{multinom_TS} are of proper classes for an analysis.
 }
 \examples{
-\dontrun{
   data(rodents)
   dtt <- rodents$document_term_table
-  lda <- LDA_set(dtt, 4, 1, list(quiet = TRUE))
+  lda <- LDA_set(dtt, 2, 1, list(quiet = TRUE))
   dct <- rodents$document_covariate_table
   dct$gamma <- lda[[1]]@gamma
   weights <- document_weights(dtt)
+  check_multinom_TS_inputs(dct, timename = "newmoon")
   mts <- multinom_TS(dct, formula = gamma ~ 1, changepoints = c(20,50),
                      timename = "newmoon", weights = weights) 
-}
 
 }
 \references{

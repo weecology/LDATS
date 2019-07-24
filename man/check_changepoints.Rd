@@ -9,7 +9,15 @@ check_changepoints(changepoints = NULL)
 \arguments{
 \item{changepoints}{Change point locations to evaluate.}
 }
+\value{
+An error message is thrown if \code{changepoints} are not proper,
+  else \code{NULL}.
+}
 \description{
 Check that the change point locations are \code{numeric}
   and conformable to \code{interger} values.
+}
+\examples{
+  check_changepoints(100)
+
 }

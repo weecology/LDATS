@@ -26,10 +26,10 @@ head(rodents$document_covariate_table, 10)
 #                           control = list(quiet = TRUE))
 #  
 
-## ----lda set not quiet---------------------------------------------------
-lda_model_set2 <- LDA_set(document_term_table = rodents$document_term_table,
-                         topics = c(2:3),
-                         nseeds = 2)
+## ----lda set not quiet, eval =F------------------------------------------
+#  lda_model_set2 <- LDA_set(document_term_table = rodents$document_term_table,
+#                           topics = c(2:3),
+#                           nseeds = 2)
 
 ## ----load lda model set, include = F-------------------------------------
 load(here::here('vignettes', 'rodents-example-files', 'lda_model_set.Rds'))

@@ -33,3 +33,29 @@ The vector of chain ids.
   and would work within any general ptMCMC as long as \code{control},
   \code{ids}, and \code{swaps} are formatted properly.
 }
+\examples{
+  prep_ids()
+\donttest{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+  data <- document_covariate_table
+  data$gamma <- LDA_models@gamma
+  weights <- document_weights(document_term_table)
+  data <- data[order(data[,"newmoon"]), ]
+  saves <- prep_saves(1, TS_control())
+  inputs <- prep_ptMCMC_inputs(data, gamma ~ 1, 1, "newmoon", weights,
+                               TS_control())
+  cpts <- prep_cpts(data, gamma ~ 1, 1, "newmoon", weights, TS_control())
+  ids <- prep_ids(TS_control())
+  for(i in 1:TS_control()$nit){
+    steps <- step_chains(i, cpts, inputs)
+    swaps <- swap_chains(steps, inputs, ids)
+    saves <- update_saves(i, saves, steps, swaps)
+    cpts <- update_cpts(cpts, swaps)
+    ids <- update_ids(ids, swaps)
+  }
+}
+
+}

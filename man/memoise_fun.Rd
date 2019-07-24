@@ -4,7 +4,7 @@
 \alias{memoise_fun}
 \title{Logical control on whether or not to memoise}
 \usage{
-memoise_fun(fun, memoise_tf)
+memoise_fun(fun, memoise_tf = TRUE)
 }
 \arguments{
 \item{fun}{Function name to (potentially) be memoised.}
@@ -19,4 +19,8 @@ memoised.}
 This function provides a simple, logical toggle control on
   whether the function \code{fun} should be memoised via
   \code{\link[memoise]{memoise}} or not.
+}
+\examples{
+  sum_memo <- memoise_fun(sum)
+
 }

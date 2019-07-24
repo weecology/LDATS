@@ -27,11 +27,16 @@ regressors).}
 \item{pbar}{The progress bar object returned from \code{prep_pbar}.}
 }
 \value{
-\code{prep_pbar}: the initialized progress bar object.
-
-\code{update_pbar}: the ticked-forward \code{pbar}.
+\code{prep_pbar}: the initialized progress bar object. \cr \cr
+  \code{update_pbar}: the ticked-forward \code{pbar}.
 }
 \description{
 \code{prep_pbar} creates and \code{update_pbar} steps
   through the progress bars (if desired) in \code{\link{TS}}
+}
+\examples{
+  pb <- prep_pbar(control = list(nit = 2)); pb
+  pb <- update_pbar(pb); pb
+  pb <- update_pbar(pb); pb
+
 }

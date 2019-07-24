@@ -68,3 +68,7 @@ This function provides a simple creation and definition of a
   list used to control the time series model fit occurring within 
   \code{\link{TS}}.
 }
+\examples{
+  TS_control()
+
+}

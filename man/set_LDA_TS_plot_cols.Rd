@@ -63,3 +63,7 @@ A default list generator function that produces the options
   \code{\link{set_TS_summary_plot_cols}}, \code{\link{set_gamma_colors}},
   and \code{\link{set_rho_hist_colors}} for specific details on usage.
 }
+\examples{
+  set_LDA_TS_plot_cols()
+
+}

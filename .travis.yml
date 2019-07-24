@@ -18,20 +18,19 @@ before_install:
 r_packages:
   - covr
 
-r:
-  - release
-  - devel
- 
-after_success:
-  - R CMD INSTALL .
-  - Rscript -e 'pkgdown::build_site()'
-  - Rscript -e 'library(covr); codecov()'
-
-deploy:
-  provider: pages
-  skip-cleanup: true
-  github-token: $GITHUB_PAT
-  keep-history: true
-  local-dir: docs
-  on:
-    branch: master
+matrix:
+  include:
+  - r: devel
+  - r: release
+    after_success:
+    - R CMD INSTALL .
+    - Rscript -e 'pkgdown::build_site(examples = FALSE)'
+    - Rscript -e 'library(covr); codecov()'
+    deploy:
+      provider: pages
+      skip-cleanup: true
+      github-token: $GITHUB_PAT
+      keep-history: true
+      local-dir: docs
+      on:
+        branch: master

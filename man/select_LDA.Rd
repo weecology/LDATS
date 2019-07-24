@@ -27,11 +27,9 @@ Select the best model(s) of interest from an
   functions default to choosing the model with the lowest AIC value.
 }
 \examples{
-\dontrun{
   data(rodents)
   lda_data <- rodents$document_term_table
   r_LDA <- LDA_set(lda_data, topics = 2, nseeds = 2)  
   select_LDA(r_LDA)                       
-}
 
 }

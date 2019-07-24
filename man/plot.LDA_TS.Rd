@@ -5,7 +5,7 @@
 \title{Plot the key results from a full LDATS analysis}
 \usage{
 \method{plot}{LDA_TS}(x, ..., cols = set_LDA_TS_plot_cols(),
-  bin_width = 1, xlab = NULL, border = NA, selection = "median")
+  bin_width = 1, xname = NULL, border = NA, selection = "median")
 }
 \arguments{
 \item{x}{A \code{LDA_TS} object of a full LDATS model fit by
@@ -19,7 +19,7 @@ panels of the summary plot, as generated simply using
 \code{\link{set_LDA_TS_plot_cols}}. \code{cols} has two elements:
 \code{LDA} and \code{TS}, each corresponding the set of plots for
 its stage in the full model. \code{LDA} contains entries \code{cols}
-and \code{options} (see \code{\link{set_LDA_plot_colors}}). \code{TS}
+and \code{option} (see \code{\link{set_LDA_plot_colors}}). \code{TS}
 contains two entries, \code{rho} and \code{gamma}, each corresponding
 to the related panel, and each containing default values for entries
 named \code{cols}, \code{option}, and \code{alpha} (see
@@ -27,19 +27,22 @@ named \code{cols}, \code{option}, and \code{alpha} (see
 and \code{\link{set_rho_hist_colors}}).}
 
 \item{bin_width}{Width of the bins used in the histograms of the summary
-timeseries plot, in units of the time variable used to fit the model
+time series plot, in units of the time variable used to fit the model
 (the x-axis).}
 
-\item{xlab}{Label for the x-axis in the summary time series plot. Defaults
+\item{xname}{Label for the x-axis in the summary time series plot. Defaults
 to \code{NULL}, which results in usage of the \code{timename} element
 of the control list (held in\code{control$TS_control$timename}). To have
-no label printed, set \code{xlab = ""}.}
+no label printed, set \code{xname = ""}.}
 
 \item{border}{Border for the histogram, default is \code{NA}.}
 
-\item{selection}{Indicator of the change points to use in the timeseries
+\item{selection}{Indicator of the change points to use in the time series
 summary plot. Currently only defined for \code{"median"} and
 \code{"mode"}.}
+}
+\value{
+\code{NULL}.
 }
 \description{
 Generalization of the \code{\link[graphics]{plot}} function to
@@ -47,14 +50,10 @@ Generalization of the \code{\link[graphics]{plot}} function to
   \code{\link{LDA_TS}}).
 }
 \examples{
-\dontrun{
+\donttest{
   data(rodents)
-  document_term_table <- rodents$document_term_table
-  document_covariate_table <- rodents$document_covariate_table
-
-  mod <- LDA_TS(document_term_table, document_covariate_table,
-                topics = 2, nseeds = 1, formulas = ~ 1, nchangepoints = 1,
-                weights = document_weights(document_term_table))
+  mod <- LDA_TS(data = rodents, topics = 2, nseeds = 1, formulas = ~1,
+                nchangepoints = 1, timename = "newmoon")
   plot(mod, binwidth = 5, xlab = "New moon")
 }
 

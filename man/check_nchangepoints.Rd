@@ -9,7 +9,16 @@ check_nchangepoints(nchangepoints)
 \arguments{
 \item{nchangepoints}{Vector of the number of changepoints to evaluate.}
 }
+\value{
+An error message is thrown if \code{nchangepoints} is not proper,
+  else \code{NULL}.
+}
 \description{
 Check that the vector of numbers of changepoints is 
   conformable to integers greater than 1.
+}
+\examples{
+  check_nchangepoints(0)
+  check_nchangepoints(2)
+
 }

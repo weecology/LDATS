@@ -17,3 +17,9 @@ AICc(object)
 Calculate the small sample size correction of
   \code{\link{AIC}} for the input object.
 }
+\examples{
+  dat <- data.frame(y = rnorm(50), x = rnorm(50))
+  mod <- lm(dat)
+  AICc(mod)
+
+}

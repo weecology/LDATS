@@ -46,7 +46,7 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 \code{\link{TS_control}}.}
 }
 \value{
-Matrix of draws (rows) from the marginal posteriors of the 
+\code{matrix} of draws (rows) from the marginal posteriors of the 
   coefficients across the segments (columns).
 }
 \description{
@@ -70,6 +70,26 @@ The general approach follows that of Western and Kleykamp
   (as there is in the normal model used by Western and Kleykamp 2004), 
   and so the posterior distribution used here is a multivariate normal,
   as opposed to a multivariate t, as used by Western and Kleykamp (2004).
+}
+\examples{
+\donttest{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+  data <- document_covariate_table
+  data$gamma <- LDA_models@gamma
+  weights <- document_weights(document_term_table)
+  formula <- gamma ~ 1
+  nchangepoints <- 1
+  control <- TS_control()
+  data <- data[order(data[,"newmoon"]), ]
+  rho_dist <- est_changepoints(data, formula, nchangepoints, "newmoon", 
+                               weights, control)
+  eta_dist <- est_regressors(rho_dist, data, formula, "newmoon", weights, 
+                             control)
+}
+
 }
 \references{
 Bishop, C. M. 2006. \emph{Pattern Recognition and Machine Learning}. 

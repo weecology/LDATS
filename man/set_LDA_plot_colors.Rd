@@ -25,9 +25,19 @@ colors used. Supported only on some devices, see
 \code{\link[grDevices]{rgb}}.}
 }
 \value{
-Vector of \code{character} hex codes indicating colors to use.
+\code{vector} of \code{character} hex codes indicating colors to 
+  use.
 }
 \description{
 Based on the inputs, create the set of colors to be used in
   the LDA plots made by \code{\link{plot.LDA_TS}}.
+}
+\examples{
+\donttest{
+  data(rodents)
+  lda_data <- rodents$document_term_table
+  r_LDA <- LDA_set(lda_data, topics = 4, nseeds = 10) 
+  set_LDA_plot_colors(r_LDA[[1]])
+}
+
 }

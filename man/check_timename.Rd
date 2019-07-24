@@ -12,10 +12,19 @@ for the time column.}
 
 \item{timename}{Column name for the time variable to evaluate.}
 }
+\value{
+An error message is thrown if \code{timename} is 
+  not proper, else \code{NULL}.
+}
 \description{
 Check that the vector of time values is included in the 
   document covariate table and that it is either a integer-conformable or
   a \code{date}. If it is a \code{date}, the input is converted to an 
   integer, resulting in the timestep being 1 day, which is often not 
   desired behavior.
+}
+\examples{
+  data(rodents)
+  check_timename(rodents$document_covariate_table, "newmoon")
+
 }

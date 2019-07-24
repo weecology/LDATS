@@ -4,11 +4,11 @@
 \alias{set_rho_hist_colors}
 \title{Prepare the colors to be used in the change point histogram}
 \usage{
-set_rho_hist_colors(x, cols = NULL, option = "D", alpha = 1)
+set_rho_hist_colors(x = NULL, cols = NULL, option = "D", alpha = 1)
 }
 \arguments{
-\item{x}{Matrix of change point locations (element \code{rhos}) from an 
-object of class \code{TS_fit}, fit by \code{\link{TS}}.}
+\item{x}{\code{matrix} of change point locations (element \code{rhos}) 
+from an object of class \code{TS_fit}, fit by \code{\link{TS}}.}
 
 \item{cols}{Colors to be used to plot the histograms of change points.
 Any valid color values (\emph{e.g.}, see \code{\link[grDevices]{colors}},
@@ -31,4 +31,18 @@ Vector of \code{character} hex codes indicating colors to use.
 \description{
 Based on the inputs, create the set of colors to be used in
   the change point histogram.
+}
+\examples{
+\donttest{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+  data <- document_covariate_table
+  data$gamma <- LDA_models@gamma
+  weights <- document_weights(document_term_table)
+  TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, "newmoon", weights)
+  set_rho_hist_colors(TSmod$rhos)
+}
+
 }

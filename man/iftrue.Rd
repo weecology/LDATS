@@ -18,3 +18,10 @@ iftrue(x = TRUE, alt = NULL)
 If the focal input is \code{TRUE}, replace it with 
   alternative.
 }
+\examples{
+ iftrue()
+ iftrue(TRUE, 1)
+ iftrue(2, 1)
+ iftrue(FALSE, 1)
+
+}

@@ -62,7 +62,7 @@ test_that("check package_LDA_set", {
 })
 
 test_that("check LDA_msg", {
-  expect_output(LDA_msg(2, 1, list()))
+  expect_message(LDA_msg(2, 1, list()))
   expect_error(LDA_msg(2, 0.5, list()))
 })
 

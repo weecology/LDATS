@@ -5,7 +5,7 @@
 \title{Prepare the model-specific data to be used in the TS analysis
   of LDA output}
 \usage{
-prep_TS_data(document_covariate_table, LDA_models, mods, i)
+prep_TS_data(document_covariate_table, LDA_models, mods, i = 1)
 }
 \arguments{
 \item{document_covariate_table}{Document covariate table (rows: documents,
@@ -38,4 +38,18 @@ Class \code{data.frame} object including [1] the time variable
 Append the estimated topic proportions from a fitted LDA model 
   to the document covariate table to create the data structure needed for 
   \code{\link{TS}}.
+}
+\examples{
+\donttest{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDAs <- LDA_set(document_term_table, topics = 2:3, nseeds = 2)
+  LDA_models <- select_LDA(LDAs)
+  weights <- document_weights(document_term_table)
+  formulas <- c(~ 1, ~ newmoon)
+  mods <- expand_TS(LDA_models, formulas = ~1, nchangepoints = 0)
+  data1 <- prep_TS_data(document_covariate_table, LDA_models, mods)
+}
+
 }

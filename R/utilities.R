@@ -7,6 +7,9 @@
 #' 
 #' @return The LSE. 
 #'
+#' @examples
+#'   logsumexp(1:10)
+#'
 #' @export
 #'
 logsumexp <- function(x){
@@ -25,6 +28,11 @@ logsumexp <- function(x){
 #' @param x \code{numeric} vector or matrix
 #' 
 #' @return The softmax of \code{x}. 
+#'
+#' @examples
+#'   dat <- matrix(runif(100, -1, 1), 25, 4)
+#'   softmax(dat)
+#'   softmax(dat[,1])
 #'
 #' @export
 #'
@@ -55,6 +63,11 @@ softmax <- function(x){
 #'
 #' @return \code{numeric} value of AICc.
 #' 
+#' @examples
+#'   dat <- data.frame(y = rnorm(50), x = rnorm(50))
+#'   mod <- lm(dat)
+#'   AICc(mod)
+#'
 #' @export 
 #'
 AICc <- function(object){
@@ -76,6 +89,12 @@ AICc <- function(object){
 #'
 #' @return \code{x} if not \code{TRUE}, \code{alt} otherwise.
 #' 
+#' @examples
+#'  iftrue()
+#'  iftrue(TRUE, 1)
+#'  iftrue(2, 1)
+#'  iftrue(FALSE, 1)
+#'
 #' @export 
 #'
 iftrue <- function(x = TRUE, alt = NULL){
@@ -95,6 +114,10 @@ iftrue <- function(x = TRUE, alt = NULL){
 #'
 #' @return Numeric value of the mode.
 #' 
+#' @examples
+#'  d1 <- c(1, 1, 1, 2, 2, 3)
+#'  modalvalue(d1)
+#'
 #' @export 
 #'
 modalvalue <- function(x){
@@ -117,6 +140,10 @@ modalvalue <- function(x){
 #' @return Vector of weights, one for each document, with the average sample
 #'   receiving a weight of 1.0.
 #'
+#' @examples
+#'  data(rodents)
+#'  document_weights(rodents$document_term_table)
+#'
 #' @export
 #'
 document_weights <- function(document_term_table){
@@ -125,25 +152,29 @@ document_weights <- function(document_term_table){
   round(sample_sizes/mean(sample_sizes), 3)  
 }
 
-#' @title Print with quieting
+#' @title Optionally generate a message based on a logical input
 #'
-#' @description Print a message (via \code{\link{cat}}) wrapped as in 
-#'   \code{<wrapper><msg><wrapper>}, if desired.
+#' @description Given the input to \code{quiet}, generate the message(s) 
+#'   in \code{msg} or not.
 #'
-#' @param msg Message to be printed. \code{character}-class element.
+#' @param msg \code{character} vector of the message(s) to generate or 
+#'   \code{NULL}. If more than one element is contained in \code{msg}, they
+#'   are concatenated with a newline between.
 #'
-#' @param wrapper Wrapper \code{character} to use.
+#' @param quiet \code{logical} indicator controlling if the message is
+#'   generated.
 #'
-#' @param quiet \code{logical} indicator of whether the message should be 
-#'   printed.
+#' @examples
+#'   messageq("hello")
+#'   messageq("hello", TRUE)
 #'
 #' @export
 #'
-qprint <- function(msg, wrapper, quiet){
-  if (quiet){
-    return()
+messageq <- function(msg = NULL, quiet = FALSE){
+  if (!quiet){
+    msg2 <- paste(msg, collapse = "\n")
+    message(msg2)
   }
-  cat(paste0(wrapper, msg, wrapper, "\n"))
 }
 
 
@@ -160,7 +191,12 @@ qprint <- function(msg, wrapper, quiet){
 #' @param x Model object that has a defined method for 
 #'   \code{\link[stats]{vcov}}.
 #'
-#' @return Properly symmetric variance covariance matrix.
+#' @return Properly symmetric variance covariance \code{matrix}.
+#'
+#' @examples
+#'   dat <- data.frame(y = rnorm(50), x = rnorm(50))
+#'   mod <- lm(dat)
+#'   mirror_vcov(mod)
 #'
 #' @export
 #'
@@ -195,6 +231,9 @@ mirror_vcov <- function(x){
 #'
 #' @return Normalized \code{x}.
 #' 
+#' @examples
+#'  normalize(1:10)
+#'
 #' @export 
 #'
 normalize <- function(x){
@@ -218,9 +257,12 @@ normalize <- function(x){
 #'
 #' @return \code{fun}, memoised if desired.
 #'
+#' @examples
+#'   sum_memo <- memoise_fun(sum)
+#'
 #' @export
 #'
-memoise_fun <- function(fun, memoise_tf){
+memoise_fun <- function(fun, memoise_tf = TRUE){
   if (!("function" %in% class(fun))){
     stop("fun is not a function")
   }
@@ -242,12 +284,19 @@ memoise_fun <- function(fun, memoise_tf){
 #' 
 #' @param eclass Expected class of the list to be evaluated.
 #'
+#' @return an error message is thrown if the input is improper, otherwise 
+#'   \code{NULL}.
+#'
+#' @examples
+#'  check_control(list())
+#'
 #' @export
 #'
 check_control <- function(control, eclass = "list"){
   if (!(eclass %in% class(control))){
     stop(paste0("control is not a ", eclass))
   }
+  return()
 }
 
 
@@ -261,6 +310,13 @@ check_control <- function(control, eclass = "list"){
 #'   \code{data.frame} but must be conformable to a matrix of integers,
 #'   as verified by \code{\link{check_document_term_table}}. 
 #' 
+#' @return an error message is thrown if the input is improper, otherwise 
+#'   \code{NULL}.
+#'
+#' @examples
+#'  data(rodents)
+#'  check_document_term_table(rodents$document_term_table)
+#'
 #' @export
 #'
 check_document_term_table <- function(document_term_table){
@@ -270,6 +326,7 @@ check_document_term_table <- function(document_term_table){
     msg <- paste0(dtt, " is not conformable to a matrix of integers")
     stop(msg)
   }
+  return()
 }
 
 #' @title Check that topics vector is proper
@@ -280,6 +337,12 @@ check_document_term_table <- function(document_term_table){
 #' @param topics Vector of the number of topics to evaluate for each model.
 #'   Must be conformable to \code{integer} values.
 #'
+#' @return an error message is thrown if the input is improper, otherwise 
+#'   \code{NULL}.
+#'
+#' @examples
+#'  check_topics(2)
+#'
 #' @export
 #'
 check_topics <- function(topics){
@@ -289,6 +352,7 @@ check_topics <- function(topics){
   if (any(topics < 2)){
     stop("minimum number of topics currently allowed is 2")
   }
+  return()
 }
 
 #' @title Check that nseeds value or seeds vector is proper
@@ -300,12 +364,20 @@ check_topics <- function(topics){
 #'   each value of \code{topics} in the LDAs. Must be conformable to a  
 #'   positive \code{integer} value.
 #' 
+#' @return an error message is thrown if the input is improper, otherwise 
+#'   \code{NULL}.
+#'
+#' @examples
+#'  check_seeds(1)
+#'  check_seeds(2)
+#'
 #' @export
 #'
 check_seeds <- function(nseeds){
   if (!is.numeric(nseeds) || any(nseeds %% 1 != 0)){
     stop("nseeds vector must be integers")
   }
+  return()
 }
 
 # provides a functionality that can be used in testing for non-symmetric

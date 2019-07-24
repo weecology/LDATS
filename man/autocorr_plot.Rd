@@ -11,8 +11,15 @@ autocorr_plot(x)
 \item{x}{Vector of parameter values drawn from the posterior distribution,
 indexed to the iteration by the order of the vector.}
 }
+\value{
+\code{NULL}.
+}
 \description{
 Produce a vanilla ACF plot using \code{\link[stats]{acf}} for
   the parameter of interest (rho or eta) as part of 
   \code{\link{TS_diagnostics_plot}}.
+}
+\examples{
+ autocorr_plot(rnorm(100, 0, 1))
+
 }

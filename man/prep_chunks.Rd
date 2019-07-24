@@ -22,8 +22,8 @@ is a \code{Date}, the input is converted to an integer, resulting in the
 timestep being 1 day, which is often not desired behavior.}
 }
 \value{
-Data frame of \code{start} and \code{end} times for each chunk 
-  (row).
+\code{data.frame} of \code{start} and \code{end} times (columns)
+  for each chunk (rows).
 }
 \description{
 Creates the table containing the start and end times for each
@@ -31,4 +31,13 @@ Creates the table containing the start and end times for each
   the time series) and the range of the time series. If there are no 
   change points (i.e. \code{changepoints} is \code{NULL}, there is still a
   single chunk defined by the start and end of the time series.
+}
+\examples{
+  data(rodents)
+  dtt <- rodents$document_term_table
+  lda <- LDA_set(dtt, 2, 1, list(quiet = TRUE))
+  dct <- rodents$document_covariate_table
+  dct$gamma <- lda[[1]]@gamma
+  chunks <- prep_chunks(dct, changepoints = 100, timename = "newmoon")   
+
 }

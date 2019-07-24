@@ -27,6 +27,22 @@ Count the full trips (from one extreme temperature chain to
   and would work with any output from a ptMCMC as long as \code{ids}
   is formatted properly.
 }
+\examples{
+\donttest{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+  data <- document_covariate_table
+  data$gamma <- LDA_models@gamma
+  weights <- document_weights(document_term_table)
+  data <- data[order(data[,"newmoon"]), ]
+  rho_dist <- est_changepoints(data, gamma ~ 1, 1, "newmoon", weights,
+                               TS_control())
+  count_trips(rho_dist$ids)
+}
+
+}
 \references{
 Katzgraber, H. G., S. Trebst, D. A. Huse. And M. Troyer. 2006. 
   Feedback-optimized parallel tempering Monte Carlo. \emph{Journal of 

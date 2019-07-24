@@ -10,7 +10,15 @@ check_topics(topics)
 \item{topics}{Vector of the number of topics to evaluate for each model.
 Must be conformable to \code{integer} values.}
 }
+\value{
+an error message is thrown if the input is improper, otherwise 
+  \code{NULL}.
+}
 \description{
 Check that the vector of numbers of topics is conformable to
   integers greater than 1.
+}
+\examples{
+ check_topics(2)
+
 }

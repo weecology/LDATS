@@ -12,7 +12,7 @@ nchangepoints <- 1
 weights <- document_weights(document_term_table)
 LDAs <- LDA_set(document_term_table, topics, nseeds)
 LDA_models <- select_LDA(LDAs)
-control <- list(nit = 1e3, seed = 1)
+control <- list(nit = 20, seed = 1)
 timename <- "newmoon"
 mods <- expand_TS(LDA_models, formulas, nchangepoints)
 formula <- mods$formula[[1]]
@@ -161,10 +161,10 @@ test_that("check TS_diagnostics_plot", {
 test_that("check TS_summary_plot", {
   if (tenv == "cran"){
     expect_silent(TS_summary_plot(TSmod, cols = set_TS_summary_plot_cols(),
-                        bin_width = 1, xlab = NULL, selection = "median"))
+                        bin_width = 1, xname = NULL, selection = "median"))
   } else{
     TS_summary_plot(TSmod, cols = set_TS_summary_plot_cols(),
-                          bin_width = 1, xlab = NULL, selection = "median")
+                          bin_width = 1, xname = NULL, selection = "median")
     TS_summ_plot <- recordPlot()
     vdiffr::expect_doppelganger("Base TS summary plot", TS_summ_plot)  
   }

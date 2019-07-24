@@ -24,7 +24,25 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 \code{\link{TS_control}}. Of particular importance here is 
 the \code{logical}-class element named \code{quiet}.}
 }
+\value{
+\code{NULL}.
+}
 \description{
 If desired, print a message at the beginning of every model
   combination stating the TS model and the LDA model being evaluated.
+}
+\examples{
+\donttest{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDAs <- LDA_set(document_term_table, topics = 2:3, nseeds = 2)
+  LDA_models <- select_LDA(LDAs)
+  weights <- document_weights(document_term_table)
+  formulas <- c(~ 1, ~ newmoon)
+  nchangepoints <- 0:1
+  mods <- expand_TS(LDA_models, formulas, nchangepoints)
+  print_model_run_message(mods, 1, LDA_models, TS_control())
+}
+
 }

@@ -5,7 +5,7 @@
 \title{Check that formulas vector is proper and append the response 
   variable}
 \usage{
-check_formulas(formulas, document_covariate_table, control)
+check_formulas(formulas, document_covariate_table, control = list())
 }
 \arguments{
 \item{formulas}{Vector of the formulas to evaluate.}
@@ -18,8 +18,17 @@ Time Series model including the parallel tempering Markov Chain
 Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
 \code{\link{TS_control}}.}
 }
+\value{
+An error message is thrown if \code{formulas} is 
+  not proper, else \code{NULL}.
+}
 \description{
 Check that the vector of formulas is actually formatted
   as a vector of \code{\link[stats]{formula}} objects and that the 
   predictor variables are all included in the document covariate table.
+}
+\examples{
+  data(rodents)
+  check_formulas(~ 1, rodents$document_covariate_table)
+
 }

@@ -18,8 +18,22 @@ for a standard TS analysis on LDA output.}
 
 \item{formula}{\code{formula} to evaluate.}
 }
+\value{
+An error message is thrown if \code{formula} is not proper,
+  else \code{NULL}.
+}
 \description{
 Check that \code{formula} is actually a 
   \code{\link[stats]{formula}} and that the
   response and predictor variables are all included in \code{data}.
+}
+\examples{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+  data <- document_covariate_table
+  data$gamma <- LDA_models@gamma
+  check_formula(data, gamma ~ 1)
+
 }

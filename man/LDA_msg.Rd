@@ -19,3 +19,7 @@ used in \code{LDA} (note that "seed" will be overwritten).}
 \description{
 Produce and print the message for a given LDA model.
 }
+\examples{
+  LDA_msg(mod_topics = 4, mod_seeds = 2)
+
+}

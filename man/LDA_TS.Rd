@@ -79,16 +79,20 @@ vector.}
 selecting of LDA and TS models. Values not input assume default values 
 set by \code{\link{LDA_TS_control}}.}
 
-\item{quiet}{Logical indicator for \code{conform_LDA_TS_data} to indicate
-if messages should be printed.}
+\item{quiet}{\code{logical} indicator for \code{conform_LDA_TS_data} to 
+indicate if messages should be printed.}
 }
 \value{
-\code{LDA_TS} returns a class \code{LDA_TS} list object including all 
+\code{LDA_TS}: a class \code{LDA_TS} list object including all 
   fitted LDA and TS models and selected models specifically as elements 
   \code{"LDA models"} (from \code{\link{LDA_set}}),
   \code{"Selected LDA model"} (from \code{\link{select_LDA}}), 
   \code{"TS models"} (from \code{\link{TS_on_LDA}}), and
-  \code{"Selected TS model"} (from \code{\link{select_TS}}).
+  \code{"Selected TS model"} (from \code{\link{select_TS}}). \cr \cr
+  \code{conform_LDA_TS_data}: a data \code{list} that is ready for analyses 
+  using the stage-specific functions. \cr \cr
+  \code{check_LDA_TS_inputs}: an error message is thrown if any input is 
+  improper, otherwise \code{NULL}.
 }
 \description{
 Conduct a complete LDATS analysis (Christensen 
@@ -98,20 +102,20 @@ Conduct a complete LDATS analysis (Christensen
   \code{\link{select_LDA}}, running a complete set of Bayesian Time Series
   (TS) models (Western and Kleykamp 2004) via \code{\link{TS_on_LDA}} on
   the chosen LDA model(s), and selecting the best TS model via 
-  \code{\link{select_TS}}.
-
-\code{conform_LDA_TS_data} converts the \code{data} input to
-  match internal and sub-function specifications.
-
-\code{check_LDA_TS_inputs} checks that the inputs to 
+  \code{\link{select_TS}}. \cr \cr
+  \code{conform_LDA_TS_data} converts the \code{data} input to
+  match internal and sub-function specifications. \cr \cr
+  \code{check_LDA_TS_inputs} checks that the inputs to 
   \code{LDA_TS} are of proper classes for a full analysis.
 }
 \examples{
-\dontrun{
   data(rodents)
+\donttest{
   mod <- LDA_TS(data = rodents, topics = 2, nseeds = 1, formulas = ~1,
                 nchangepoints = 1, timename = "newmoon")
 }
+  conform_LDA_TS_data(rodents)
+  check_LDA_TS_inputs(rodents, timename = "newmoon")
 
 }
 \references{

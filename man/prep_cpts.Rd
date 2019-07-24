@@ -60,8 +60,9 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 \item{swaps}{Chain configuration after among-temperature swaps.}
 }
 \value{
-List of [1] matrix of change points (rows) for each temperature 
-  (columns) and [2] vector of log-likelihood values for each of the chains.
+\code{list} of [1] \code{matrix} of change points (rows) for 
+  each temperature (columns) and [2] \code{vector} of log-likelihood 
+  values for each of the chains.
 }
 \description{
 Each of the chains is initialized by \code{prep_cpts} using a 
@@ -69,4 +70,29 @@ Each of the chains is initialized by \code{prep_cpts} using a
   fit (by likelihood) draw is put in the focal chain with each subsequently 
   worse fit placed into the subsequently hotter chain. \code{update_cpts}
   updates the change points after every iteration in the ptMCMC algorithm.
+}
+\examples{
+\donttest{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+  data <- document_covariate_table
+  data$gamma <- LDA_models@gamma
+  weights <- document_weights(document_term_table)
+  data <- data[order(data[,"newmoon"]), ]
+  saves <- prep_saves(1, TS_control())
+  inputs <- prep_ptMCMC_inputs(data, gamma ~ 1, 1, "newmoon", weights,
+                               TS_control())
+  cpts <- prep_cpts(data, gamma ~ 1, 1, "newmoon", weights, TS_control())
+  ids <- prep_ids(TS_control())
+  for(i in 1:TS_control()$nit){
+    steps <- step_chains(i, cpts, inputs)
+    swaps <- swap_chains(steps, inputs, ids)
+    saves <- update_saves(i, saves, steps, swaps)
+    cpts <- update_cpts(cpts, swaps)
+    ids <- update_ids(ids, swaps)
+  }
+}
+
 }

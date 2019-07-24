@@ -27,3 +27,25 @@ Set the class and name the elements of the results list
   returned from applying \code{\link{TS}} to the combination of TS models
   requested for the LDA model(s) input.
 }
+\examples{
+\donttest{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDAs <- LDA_set(document_term_table, topics = 2:3, nseeds = 2)
+  LDA_models <- select_LDA(LDAs)
+  weights <- document_weights(document_term_table)
+  mods <- expand_TS(LDA_models, c(~ 1, ~ newmoon), 0:1)
+  nmods <- nrow(mods)
+  TSmods <- vector("list", nmods)
+  for(i in 1:nmods){
+    formula_i <- mods$formula[[i]]
+    nchangepoints_i <- mods$nchangepoints[i]
+    data_i <- prep_TS_data(document_covariate_table, LDA_models, mods, i)
+    TSmods[[i]] <- TS(data_i, formula_i, nchangepoints_i, "newmoon", 
+                      weights, TS_control())
+  }
+  package_TS_on_LDA(TSmods, LDA_models, mods)
+}
+
+}

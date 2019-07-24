@@ -13,9 +13,16 @@ indexed to the iteration by the order of the vector.}
 
 \item{xlab}{\code{character} value used to label the x axis.}
 }
+\value{
+\code{NULL}.
+}
 \description{
 Produce a vanilla histogram plot using \code{hist} for the 
   parameter of interest (rho or eta) as part of 
   \code{\link{TS_diagnostics_plot}}. A vertical line is added to show the 
   median of the posterior.
+}
+\examples{
+ posterior_plot(rnorm(100, 0, 1))
+
 }

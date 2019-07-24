@@ -1,4 +1,3 @@
-
 #' @title Calculate ptMCMC summary diagnostics
 #'
 #' @description Summarize the step and swap acceptance rates as well as trip
@@ -38,6 +37,21 @@
 #'   Feedback-optimized parallel tempering Monte Carlo. \emph{Journal of 
 #'   Statistical Mechanics: Theory and Experiment} \strong{3}:P03018
 #'   \href{https://bit.ly/2LICGXh}{link}.
+#'
+#' @examples 
+#' \donttest{
+#'   data(rodents)
+#'   document_term_table <- rodents$document_term_table
+#'   document_covariate_table <- rodents$document_covariate_table
+#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+#'   data <- document_covariate_table
+#'   data$gamma <- LDA_models@gamma
+#'   weights <- document_weights(document_term_table)
+#'   data <- data[order(data[,"newmoon"]), ]
+#'   rho_dist <- est_changepoints(data, gamma ~ 1, 1, "newmoon", 
+#'                                weights, TS_control())
+#'   diagnose_ptMCMC(rho_dist)
+#' }
 #' 
 #' @export 
 #'
@@ -76,6 +90,21 @@ diagnose_ptMCMC <- function(ptMCMCout){
 #'   Feedback-optimized parallel tempering Monte Carlo. \emph{Journal of 
 #'   Statistical Mechanics: Theory and Experiment} \strong{3}:P03018
 #'   \href{https://bit.ly/2LICGXh}{link}.
+#'
+#' @examples 
+#' \donttest{
+#'   data(rodents)
+#'   document_term_table <- rodents$document_term_table
+#'   document_covariate_table <- rodents$document_covariate_table
+#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+#'   data <- document_covariate_table
+#'   data$gamma <- LDA_models@gamma
+#'   weights <- document_weights(document_term_table)
+#'   data <- data[order(data[,"newmoon"]), ]
+#'   rho_dist <- est_changepoints(data, gamma ~ 1, 1, "newmoon", weights,
+#'                                TS_control())
+#'   count_trips(rho_dist$ids)
+#' }
 #'
 #' @export 
 #'
@@ -132,8 +161,8 @@ count_trips <- function(ids){
 #'
 #' @param ids The vector of integer chain ids.
 #'
-#' @return List of updated change points, log-likelihoods, and chain ids, as 
-#'   well as a vector of acceptance indicators for each swap.
+#' @return \code{list} of updated change points, log-likelihoods, and chain
+#'   ids, as well as a vector of acceptance indicators for each swap.
 #'
 #' @references
 #'   Earl, D. J. and M. W. Deem. 2005. Parallel tempering: theory, 
@@ -155,6 +184,30 @@ count_trips <- function(ids){
 #'   Teller. 1953. Equations of state calculations by fast computing machines.
 #'   \emph{Journal of Chemical Physics} \strong{21}: 1087-1092.
 #'   \href{https://bayes.wustl.edu/Manual/EquationOfState.pdf}{link}.
+#'
+#' @examples 
+#' \donttest{
+#'   data(rodents)
+#'   document_term_table <- rodents$document_term_table
+#'   document_covariate_table <- rodents$document_covariate_table
+#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+#'   data <- document_covariate_table
+#'   data$gamma <- LDA_models@gamma
+#'   weights <- document_weights(document_term_table)
+#'   data <- data[order(data[,"newmoon"]), ]
+#'   saves <- prep_saves(1, TS_control())
+#'   inputs <- prep_ptMCMC_inputs(data, gamma ~ 1, 1, "newmoon", weights, 
+#'                                TS_control())
+#'   cpts <- prep_cpts(data, gamma ~ 1, 1, "newmoon", weights, TS_control())
+#'   ids <- prep_ids(TS_control())
+#'   for(i in 1:TS_control()$nit){
+#'     steps <- step_chains(i, cpts, inputs)
+#'     swaps <- swap_chains(steps, inputs, ids)
+#'     saves <- update_saves(i, saves, steps, swaps)
+#'     cpts <- update_cpts(cpts, swaps)
+#'     ids <- update_ids(ids, swaps)
+#'   }
+#' }
 #'
 #' @export
 #'
@@ -212,12 +265,25 @@ swap_chains <- function(chainsin, inputs, ids){
 #'
 #' @param i \code{integer} iteration index.
 #'
-#' @param cpts Matrix of change point locations across chains.
+#' @param cpts \code{matrix} of change point locations across chains.
 #'
-#' @param inputs Class \code{ptMCMC_inputs} list, containing the static inputs
-#'   for use within the ptMCMC algorithm.
+#' @param inputs Class \code{ptMCMC_inputs} \code{list}, containing the 
+#'   static inputs for use within the ptMCMC algorithm.
 #'
-#' @return \code{step_chains}: the initialized progress bar object.
+#' @param prop_step Proposed step output from \code{propose_step}.
+#'
+#' @param accept_step \code{logical} indicator of acceptance of each chain's
+#'   proposed step.
+#'
+#' @return 
+#'   \code{step_chains}: \code{list} of change points, log-likelihoods, 
+#'   and logical indicators of acceptance for each chain. \cr \cr
+#'   \code{propose_step}: \code{list} of change points and 
+#'   log-likelihood values for the proposal. \cr \cr
+#'   \code{eval_step}: \code{logical} vector indicating if each 
+#'   chain's proposal was accepted. \cr \cr
+#'   \code{take_step}: \code{list} of change points, log-likelihoods, 
+#'   and logical indicators of acceptance for each chain.
 #'
 #' @references
 #'   Gupta, S., L. Hainsworth, J. S. Hogg, R. E. C. Lee, and J. R. Faeder. 
@@ -234,6 +300,36 @@ swap_chains <- function(chainsin, inputs, ids){
 #'   \emph{Journal of Chemical Physics} \strong{21}: 1087-1092.
 #'   \href{https://bayes.wustl.edu/Manual/EquationOfState.pdf}{link}.
 #'
+#' @examples 
+#' \donttest{
+#'   data(rodents)
+#'   document_term_table <- rodents$document_term_table
+#'   document_covariate_table <- rodents$document_covariate_table
+#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+#'   data <- document_covariate_table
+#'   data$gamma <- LDA_models@gamma
+#'   weights <- document_weights(document_term_table)
+#'   data <- data[order(data[,"newmoon"]), ]
+#'   saves <- prep_saves(1, TS_control())
+#'   inputs <- prep_ptMCMC_inputs(data, gamma ~ 1, 1, "newmoon", weights, 
+#'                                TS_control())
+#'   cpts <- prep_cpts(data, gamma ~ 1, 1, "newmoon", weights, TS_control())
+#'   ids <- prep_ids(TS_control())
+#'   for(i in 1:TS_control()$nit){
+#'     steps <- step_chains(i, cpts, inputs)
+#'     swaps <- swap_chains(steps, inputs, ids)
+#'     saves <- update_saves(i, saves, steps, swaps)
+#'     cpts <- update_cpts(cpts, swaps)
+#'     ids <- update_ids(ids, swaps)
+#'   }
+#'   # within step_chains()
+#'   cpts <- prep_cpts(data, gamma ~ 1, 1, "newmoon", weights, TS_control())
+#'   i <- 1
+#'   prop_step <- propose_step(i, cpts, inputs)
+#'   accept_step <- eval_step(i, cpts, prop_step, inputs)
+#'   take_step(cpts, prop_step, accept_step)
+#' }
+#'
 #' @export
 #'
 step_chains <- function(i, cpts, inputs){
@@ -243,9 +339,6 @@ step_chains <- function(i, cpts, inputs){
 }
 
 #' @rdname step_chains
-#'
-#' @return \code{propose_step}: List of change points and log-likelihood 
-#'   values for the proposal.
 #'
 #' @export
 #'
@@ -268,11 +361,6 @@ propose_step <- function(i, cpts, inputs){
 
 #' @rdname step_chains
 #'
-#' @param prop_step Proposed step output from \code{propose_step}.
-#'
-#' @return \code{propose_step}: \code{logical} vector indicating if each 
-#'   chain's proposal was accepted.
-#'
 #' @export
 #'
 eval_step <- function(i, cpts, prop_step, inputs){
@@ -283,12 +371,6 @@ eval_step <- function(i, cpts, prop_step, inputs){
 }
 
 #' @rdname step_chains
-#'
-#' @param accept_step \code{logical} indicator of acceptance of each chain's
-#'   proposed step.
-#'
-#' @return \code{take_step}: list of change points, log-likelihoods, and
-#'   logical indicators of acceptance for each chain.
 #'
 #' @export
 #'
@@ -316,6 +398,34 @@ take_step <- function(cpts, prop_step, accept_step){
 #'
 #' @return List of models associated with the proposed step, with an element
 #'   for each chain.
+#'
+#' @examples 
+#' \donttest{
+#'   data(rodents)
+#'   document_term_table <- rodents$document_term_table
+#'   document_covariate_table <- rodents$document_covariate_table
+#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+#'   data <- document_covariate_table
+#'   data$gamma <- LDA_models@gamma
+#'   weights <- document_weights(document_term_table)
+#'   data <- data[order(data[,"newmoon"]), ]
+#'   saves <- prep_saves(1, TS_control())
+#'   inputs <- prep_ptMCMC_inputs(data, gamma ~ 1, 1, "newmoon", weights,
+#'                                TS_control())
+#'   cpts <- prep_cpts(data, gamma ~ 1, 1, "newmoon", weights, TS_control())
+#'   i <- 1
+#'   pdist <- inputs$pdist
+#'   ntemps <- length(inputs$temps)
+#'   selection <- cbind(pdist$which_steps[i, ], 1:ntemps)
+#'   prop_changepts <- cpts$changepts
+#'   curr_changepts_s <- cpts$changepts[selection]
+#'   prop_changepts_s <- curr_changepts_s + pdist$steps[i, ]
+#'   if(all(is.na(prop_changepts_s))){
+#'     prop_changepts_s <- NULL
+#'   }
+#'   prop_changepts[selection] <- prop_changepts_s
+#'   mods <- proposed_step_mods(prop_changepts, inputs)
+#' }
 #'
 #' @export
 #'
@@ -354,7 +464,36 @@ proposed_step_mods <- function(prop_changepts, inputs){
 #'   Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
 #'   \code{\link{TS_control}}.
 #'
+#' @param ids The existing vector of chain ids.
+#'
+#' @param swaps Chain configuration after among-temperature swaps.
+#'
 #' @return The vector of chain ids.
+#'
+#' @examples
+#'   prep_ids()
+#' \donttest{
+#'   data(rodents)
+#'   document_term_table <- rodents$document_term_table
+#'   document_covariate_table <- rodents$document_covariate_table
+#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+#'   data <- document_covariate_table
+#'   data$gamma <- LDA_models@gamma
+#'   weights <- document_weights(document_term_table)
+#'   data <- data[order(data[,"newmoon"]), ]
+#'   saves <- prep_saves(1, TS_control())
+#'   inputs <- prep_ptMCMC_inputs(data, gamma ~ 1, 1, "newmoon", weights,
+#'                                TS_control())
+#'   cpts <- prep_cpts(data, gamma ~ 1, 1, "newmoon", weights, TS_control())
+#'   ids <- prep_ids(TS_control())
+#'   for(i in 1:TS_control()$nit){
+#'     steps <- step_chains(i, cpts, inputs)
+#'     swaps <- swap_chains(steps, inputs, ids)
+#'     saves <- update_saves(i, saves, steps, swaps)
+#'     cpts <- update_cpts(cpts, swaps)
+#'     ids <- update_ids(ids, swaps)
+#'   }
+#' }
 #'
 #' @export
 #'
@@ -367,10 +506,6 @@ prep_ids <- function(control = list()){
 }
 
 #' @rdname prep_ids
-#'
-#' @param ids The existing vector of chain ids.
-#'
-#' @param swaps Chain configuration after among-temperature swaps.
 #'
 #' @export
 #'
@@ -427,9 +562,23 @@ update_ids <- function(ids, swaps){
 #'   Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
 #'   \code{\link{TS_control}}.
 #'
-#' @return Class \code{ptMCMC_inputs} list, containing the static inputs for
-#'   use within the ptMCMC algorithm for estimating change points. 
+#' @return Class \code{ptMCMC_inputs} \code{list}, containing the static 
+#'   inputs for use within the ptMCMC algorithm for estimating change points. 
 #'
+#' @examples 
+#' \donttest{
+#'   data(rodents)
+#'   document_term_table <- rodents$document_term_table
+#'   document_covariate_table <- rodents$document_covariate_table
+#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+#'   data <- document_covariate_table
+#'   data$gamma <- LDA_models@gamma
+#'   weights <- document_weights(document_term_table)
+#'   data <- data[order(data[,"newmoon"]), ]
+#'   saves <- prep_saves(1, TS_control())
+#'   inputs <- prep_ptMCMC_inputs(data, gamma ~ 1, 1, "newmoon", weights, 
+#'                                TS_control())
+#' }
 #' @export
 #'
 prep_ptMCMC_inputs <- function(data, formula, nchangepoints, timename, 
@@ -477,9 +626,13 @@ prep_ptMCMC_inputs <- function(data, formula, nchangepoints, timename,
 #'   \code{magnitude}, which controls the magnitude of the step size (is the 
 #'   average of the geometric distribution). 
 #'
-#' @return List of two matrices: [1] the size of the proposed step for each
-#'   iteration of each chain and [2] the identity of the change point location 
-#'   to be shifted by the step for each iteration of each chain.
+#' @return \code{list} of two \code{matrix} elements: [1] the size of the 
+#'   proposed step for each iteration of each chain and [2] the identity of 
+#'   the change point location to be shifted by the step for each iteration of
+#'   each chain.
+#'
+#' @examples
+#'   prep_proposal_dist(nchangepoints = 2)
 #'
 #' @export
 #'
@@ -508,7 +661,7 @@ prep_proposal_dist <- function(nchangepoints, control = list()){
 #' @description \code{prep_saves} creates the data structure used to save the 
 #'   output from each iteration of the ptMCMC algorithm, which is added via
 #'   \code{update_saves}. Once the ptMCMC is complete, the saved data objects
-#'   are then processed (burnin iterations are dropped and the remaining
+#'   are then processed (burn-in iterations are dropped and the remaining
 #'   iterations are thinned) via \code{process_saves}.
 #'   \cr \cr
 #'   This set of functions was designed to work within \code{\link{TS}} and 
@@ -528,9 +681,42 @@ prep_proposal_dist <- function(nchangepoints, control = list()){
 #'   Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
 #'   \code{\link{TS_control}}.
 #'
-#' @return List of saved ptMCMC objects: change points (\code{$cpts}), 
+#' @param i \code{integer} iteration index. 
+#'
+#' @param saves The existing list of saved data objects.
+#'
+#' @param steps Chain configuration after within-temperature steps.
+#'
+#' @param swaps Chain configuration after among-temperature swaps.
+#'
+#' @return \code{list} of ptMCMC objects: change points (\code{$cpts}), 
 #'   log-likelihoods (\code{$lls}), chain ids (\code{$ids}), step acceptances
 #'   (\code{$step_accepts}), and swap acceptances (\code{$swap_accepts}).
+#'
+#' @examples 
+#' \donttest{
+#'   data(rodents)
+#'   document_term_table <- rodents$document_term_table
+#'   document_covariate_table <- rodents$document_covariate_table
+#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+#'   data <- document_covariate_table
+#'   data$gamma <- LDA_models@gamma
+#'   weights <- document_weights(document_term_table)
+#'   data <- data[order(data[,"newmoon"]), ]
+#'   saves <- prep_saves(1, TS_control())
+#'   inputs <- prep_ptMCMC_inputs(data, gamma ~ 1, 1, "newmoon", weights, 
+#'                                TS_control())
+#'   cpts <- prep_cpts(data, gamma ~ 1, 1, "newmoon", weights, TS_control())
+#'   ids <- prep_ids(TS_control())
+#'   for(i in 1:TS_control()$nit){
+#'     steps <- step_chains(i, cpts, inputs)
+#'     swaps <- swap_chains(steps, inputs, ids)
+#'     saves <- update_saves(i, saves, steps, swaps)
+#'     cpts <- update_cpts(cpts, swaps)
+#'     ids <- update_ids(ids, swaps)
+#'   }
+#'   process_saves(saves, TS_control())
+#' }
 #'
 #' @export
 #'
@@ -550,14 +736,6 @@ prep_saves <- function(nchangepoints, control = list()){
 }
 
 #' @rdname prep_saves
-#'
-#' @param i \code{integer} iteration index. 
-#'
-#' @param saves The existing list of saved data objects.
-#'
-#' @param steps Chain configuration after within-temperature steps.
-#'
-#' @param swaps Chain configuration after among-temperature swaps.
 #'
 #' @export
 #'
@@ -645,8 +823,37 @@ process_saves <- function(saves, control = list()){
 #'   Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
 #'   \code{\link{TS_control}}.
 #'
-#' @return List of [1] matrix of change points (rows) for each temperature 
-#'   (columns) and [2] vector of log-likelihood values for each of the chains.
+#' @param cpts The existing matrix of change points.
+#'
+#' @param swaps Chain configuration after among-temperature swaps.
+#'
+#' @return \code{list} of [1] \code{matrix} of change points (rows) for 
+#'   each temperature (columns) and [2] \code{vector} of log-likelihood 
+#'   values for each of the chains.
+#'
+#' @examples 
+#' \donttest{
+#'   data(rodents)
+#'   document_term_table <- rodents$document_term_table
+#'   document_covariate_table <- rodents$document_covariate_table
+#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+#'   data <- document_covariate_table
+#'   data$gamma <- LDA_models@gamma
+#'   weights <- document_weights(document_term_table)
+#'   data <- data[order(data[,"newmoon"]), ]
+#'   saves <- prep_saves(1, TS_control())
+#'   inputs <- prep_ptMCMC_inputs(data, gamma ~ 1, 1, "newmoon", weights,
+#'                                TS_control())
+#'   cpts <- prep_cpts(data, gamma ~ 1, 1, "newmoon", weights, TS_control())
+#'   ids <- prep_ids(TS_control())
+#'   for(i in 1:TS_control()$nit){
+#'     steps <- step_chains(i, cpts, inputs)
+#'     swaps <- swap_chains(steps, inputs, ids)
+#'     saves <- update_saves(i, saves, steps, swaps)
+#'     cpts <- update_cpts(cpts, swaps)
+#'     ids <- update_ids(ids, swaps)
+#'   }
+#' }
 #'
 #' @export
 #'
@@ -685,10 +892,6 @@ prep_cpts <- function(data, formula, nchangepoints, timename, weights,
 
 #' @rdname prep_cpts
 #'
-#' @param cpts The existing matrix of change points.
-#'
-#' @param swaps Chain configuration after among-temperature swaps.
-#'
 #' @export
 #'
 update_cpts <- function(cpts, swaps){
@@ -711,7 +914,10 @@ update_cpts <- function(cpts, swaps){
 #'   Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
 #'   \code{\link{TS_control}}.
 #'
-#' @return Vector of temperatures.
+#' @return \code{vector} of temperatures.
+#'
+#' @examples
+#'   prep_temp_sequence()
 #'
 #' @export
 #'

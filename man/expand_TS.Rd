@@ -36,3 +36,17 @@ Expanded \code{data.frame} table of the three values (columns) for
 Expand the completely crossed combination of model inputs: 
   LDA model results, formulas, and number of change points.
 }
+\examples{
+\donttest{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDAs <- LDA_set(document_term_table, topics = 2:3, nseeds = 2)
+  LDA_models <- select_LDA(LDAs)
+  weights <- document_weights(document_term_table)
+  formulas <- c(~ 1, ~ newmoon)
+  nchangepoints <- 0:1
+  expand_TS(LDA_models, formulas, nchangepoints)
+}
+
+}

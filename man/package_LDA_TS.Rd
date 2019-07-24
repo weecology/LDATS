@@ -33,3 +33,20 @@ Combine the objects returned by \code{\link{LDA_set}},
   set the class of the list as \code{LDA_TS}, for the return from
   \code{\link{LDA_TS}}.
 }
+\examples{
+\donttest{
+  data(rodents)
+  data <- rodents
+  control <- LDA_TS_control()              
+  dtt <- data$document_term_table
+  dct <- data$document_covariate_table
+  weights <- document_weights(dtt)
+  LDAs <- LDA_set(dtt, 2, 1, control$LDA_set_control)
+  sel_LDA <- select_LDA(LDAs, control$LDA_set_control)
+  TSs <- TS_on_LDA(sel_LDA, dct, ~1, 1, "newmoon", weights,  
+                   control$TS_control)
+  sel_TSs <- select_TS(TSs, control$TS_control)
+  package_LDA_TS(LDAs, sel_LDA, TSs, sel_TSs)
+}
+ 
+}

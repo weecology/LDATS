@@ -62,8 +62,11 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 \code{\link{TS_control}}.}
 }
 \value{
-Class \code{TS_on_LDA} list of results from \code{\link{TS}} 
-  applied for each model on each LDA model input.
+\code{TS_on_LDA}: \code{TS_on_LDA}-class \code{list} of results 
+  from \code{\link{TS}} applied for each model on each LDA model input.
+  \cr \cr
+  \code{check_TS_inputs}: An error message is thrown if any input
+  is not proper, else \code{NULL}.
 }
 \description{
 This is a wrapper function that expands the main Time Series
@@ -73,13 +76,12 @@ This is a wrapper function that expands the main Time Series
   number of discrete changepoints. This function allows direct passage of
   the control parameters for the parallel tempering MCMC through to the 
   main Time Series function, \code{\link{TS}}, via the 
-  \code{ptMCMC_controls} argument.
-
-\code{check_TS_on_LDA_inputs} checks that the inputs to 
+  \code{ptMCMC_controls} argument. \cr \cr
+  \code{check_TS_on_LDA_inputs} checks that the inputs to 
   \code{TS_on_LDA} are of proper classes for a full analysis.
 }
 \examples{
-\dontrun{
+\donttest{
   data(rodents)
   document_term_table <- rodents$document_term_table
   document_covariate_table <- rodents$document_covariate_table

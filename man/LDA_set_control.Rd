@@ -22,11 +22,15 @@ pass on.}
 \code{\link[topicmodels]{LDA}} as a \code{control} input.}
 }
 \value{
-Class \code{LDA_controls} list for controlling the LDA model fit.
+\code{list} for controlling the LDA model fit.
 }
 \description{
 This function provides a simple creation and definition of 
   the list used to control the set of LDA models. It is set up to be easy
   to work with the existing control capacity of 
   \code{\link[topicmodels]{LDA}}.
+}
+\examples{
+  LDA_set_control()
+
 }
