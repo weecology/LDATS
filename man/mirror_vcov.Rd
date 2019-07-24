@@ -11,7 +11,7 @@ mirror_vcov(x)
 \code{\link[stats]{vcov}}.}
 }
 \value{
-Properly symmetric variance covariance matrix.
+Properly symmetric variance covariance \code{matrix}.
 }
 \description{
 A wrapper on \code{\link[stats]{vcov}} to produce a symmetric
@@ -21,4 +21,10 @@ A wrapper on \code{\link[stats]{vcov}} to produce a symmetric
   proportions), the matrix is made symmetric by averaging the lower and
   upper triangles. If the relative difference between the upper and lower 
   triangles for any entry is more than 0.1% a warning is thrown.
+}
+\examples{
+  dat <- data.frame(y = rnorm(50), x = rnorm(50))
+  mod <- lm(dat)
+  mirror_vcov(mod)
+
 }

@@ -14,10 +14,10 @@
 #'   timeseries plot, in units of the time variable used to fit the model
 #'   (the x-axis).
 #'
-#' @param xlab Label for the x-axis in the summary time series plot. Defaults
+#' @param xname Label for the x-axis in the summary time series plot. Defaults
 #'   to \code{NULL}, which results in usage of the \code{timename} element
 #'   of the control list (held in\code{control$TS_control$timename}). To have
-#'   no label printed, set \code{xlab = ""}.
+#'   no label printed, set \code{xname = ""}.
 #'
 #' @param border Border for the histogram, default is \code{NA}.
 #'
@@ -36,6 +36,8 @@
 #'   named \code{cols}, \code{option}, and \code{alpha} (see
 #'   \code{\link{set_TS_summary_plot_cols}}, \code{\link{set_gamma_colors}},
 #'   and \code{\link{set_rho_hist_colors}}).
+#' 
+#' @return \code{NULL}.
 #'
 #' @examples
 #' \donttest{
@@ -49,19 +51,16 @@
 #'
 plot.LDA_TS <- function(x, ..., 
                         cols = set_LDA_TS_plot_cols(),
-                        bin_width = 1, xlab = NULL, border = NA,
+                        bin_width = 1, xname = NULL, border = NA,
                         selection = "median"){
   oldpar <- par(no.readonly = TRUE)
   on.exit(par(oldpar))
   tname <- x$"Selected TS model"$timename
   tvar <- x$"Selected TS model"$data[ , tname]
-  if(!is.null(xlab)){
-    tname <- xlab
-  }
-  plot.LDA_set(x$"Selected LDA model", xtime = tvar, xname = tname,
+  plot.LDA_set(x$"Selected LDA model", xtime = tvar, xname = NULL,
                cols = cols$LDA$cols, option = cols$LDA$option, LDATS = TRUE)
   plot.TS_fit(x$"Selected TS model", plot_type = "summary", cols = cols$TS,
-              bin_width = bin_width, xlab = xlab, border = border,
+              bin_width = bin_width, xname = xname, border = border,
               selection = selection, LDATS = TRUE)
 }
 

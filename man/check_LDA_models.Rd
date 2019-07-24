@@ -9,9 +9,22 @@ check_LDA_models(LDA_models)
 \arguments{
 \item{LDA_models}{List of LDA models or singular LDA model to evaluate.}
 }
+\value{
+An error message is thrown if \code{LDA_models} is not proper,
+  else \code{NULL}.
+}
 \description{
 Check that the \code{LDA_models} input is either a set of 
   LDA models (class \code{LDA_set}, produced by
   \code{\link{LDA_set}}) or a singular LDA model (class \code{LDA},
   produced by \code{\link[topicmodels]{LDA}}).
+}
+\examples{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDAs <- LDA_set(document_term_table, topics = 2, nseeds = 2)
+  LDA_models <- select_LDA(LDAs)
+  check_LDA_models(LDA_models)
+
 }

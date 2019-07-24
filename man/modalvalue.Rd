@@ -17,3 +17,8 @@ Find the most common entry in a vector. Ties are not allowed,
   the first value encountered within the modal set if there are ties is
   deemed the mode.
 }
+\examples{
+ d1 <- c(1, 1, 1, 2, 2, 3)
+ modalvalue(d1)
+
+}

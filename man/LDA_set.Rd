@@ -29,7 +29,11 @@ defaults in (\code{LDAcontol}, see \code{\link[topicmodels]{LDA}} (but if
  \code{seed} is given, it will be overwritten; use \code{iseed} instead).}
 }
 \value{
-List (class: \code{LDA_set}) of LDA models (class: \code{LDA_VEM}).
+\cr \cr 
+  \code{LDA_set}: \code{list} (class: \code{LDA_set}) of LDA models 
+  (class: \code{LDA_VEM}).
+  \code{check_LDA_set_inputs}: an error message is thrown if any input is 
+  improper, otherwise \code{NULL}.
 }
 \description{
 For a given dataset consisting of counts of words across 
@@ -37,12 +41,10 @@ For a given dataset consisting of counts of words across
   Allocation (LDA) models (using the Variational Expectation 
   Maximization (VEM) algorithm; Blei \emph{et al.} 2003) to account for [1]  
   uncertainty in the number of latent topics and [2] the impact of initial
-  values in the estimation procedure. 
-
-\code{LDA_set} is a list wrapper of \code{\link[topicmodels]{LDA}}
-  in the \code{topicmodels} package (Grun and Hornik 2011).
-
-\code{check_LDA_set_inputs} checks that all of the inputs 
+  values in the estimation procedure. \cr \cr
+  \code{LDA_set} is a list wrapper of \code{\link[topicmodels]{LDA}}
+  in the \code{topicmodels} package (Grun and Hornik 2011). \cr \cr
+  \code{check_LDA_set_inputs} checks that all of the inputs 
   are proper for \code{LDA_set} (that the table of observations is 
   conformable to a matrix of integers, the number of topics is an integer, 
   the number of seeds is an integer and the controls list is proper).

@@ -48,8 +48,8 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 \code{\link{TS_control}}.}
 }
 \value{
-Class \code{ptMCMC_inputs} list, containing the static inputs for
-  use within the ptMCMC algorithm for estimating change points.
+Class \code{ptMCMC_inputs} \code{list}, containing the static 
+  inputs for use within the ptMCMC algorithm for estimating change points.
 }
 \description{
 Package the static inputs (controls and data structures) used
@@ -59,4 +59,19 @@ Package the static inputs (controls and data structures) used
   specifically \code{\link{est_changepoints}}. It is still hardcoded to do
   so, but has the capacity to be generalized to work with any estimation
   via ptMCMC with additional coding work.
+}
+\examples{
+\donttest{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+  data <- document_covariate_table
+  data$gamma <- LDA_models@gamma
+  weights <- document_weights(document_term_table)
+  data <- data[order(data[,"newmoon"]), ]
+  saves <- prep_saves(1, TS_control())
+  inputs <- prep_ptMCMC_inputs(data, gamma ~ 1, 1, "newmoon", weights, 
+                               TS_control())
+}
 }

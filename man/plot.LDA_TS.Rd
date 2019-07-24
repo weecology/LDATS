@@ -5,7 +5,7 @@
 \title{Plot the key results from a full LDATS analysis}
 \usage{
 \method{plot}{LDA_TS}(x, ..., cols = set_LDA_TS_plot_cols(),
-  bin_width = 1, xlab = NULL, border = NA, selection = "median")
+  bin_width = 1, xname = NULL, border = NA, selection = "median")
 }
 \arguments{
 \item{x}{A \code{LDA_TS} object of a full LDATS model fit by
@@ -30,16 +30,19 @@ and \code{\link{set_rho_hist_colors}}).}
 timeseries plot, in units of the time variable used to fit the model
 (the x-axis).}
 
-\item{xlab}{Label for the x-axis in the summary time series plot. Defaults
+\item{xname}{Label for the x-axis in the summary time series plot. Defaults
 to \code{NULL}, which results in usage of the \code{timename} element
 of the control list (held in\code{control$TS_control$timename}). To have
-no label printed, set \code{xlab = ""}.}
+no label printed, set \code{xname = ""}.}
 
 \item{border}{Border for the histogram, default is \code{NA}.}
 
 \item{selection}{Indicator of the change points to use in the timeseries
 summary plot. Currently only defined for \code{"median"} and
 \code{"mode"}.}
+}
+\value{
+\code{NULL}.
 }
 \description{
 Generalization of the \code{\link[graphics]{plot}} function to

@@ -20,3 +20,8 @@ Vector of weights, one for each document, with the average sample
 Simple calculation of document weights based on the average
   number of words in a document within the corpus (mean value = 1).
 }
+\examples{
+ data(rodents)
+ document_weights(rodents$document_term_table)
+
+}

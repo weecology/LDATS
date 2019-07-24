@@ -89,7 +89,7 @@ test_that("check mirror_vcov", {
   timename <- "newmoon"
   LDAs <- LDA_set(document_term_table, topics, nseeds, list())
   LDA_models <- select_LDA(LDAs, list())
-  control <- list(nit = 1e2, seed = 1)
+  control <- list(nit = 50, seed = 1)
   mods <- expand_TS(LDA_models, formulas, nchangepoints)
   formula <- mods$formula[[1]]
   nchangepoints <- mods$nchangepoints[1]

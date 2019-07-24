@@ -15,7 +15,7 @@ element named \code{seed} it will be overwritten by the \code{seed}
 argument of \code{prep_LDA_control}.}
 }
 \value{
-List (class: \code{list}) of controls to be used in the LDA.
+\code{list} of controls to be used in the LDA.
 }
 \description{
 Update the control list for the LDA model with the specific

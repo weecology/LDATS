@@ -14,3 +14,18 @@ x axis where the specific change points being used are located.}
 Adds vertical lines to the plot of the time series of fitted
   proportions associated with the change points of interest.
 }
+\examples{
+\donttest{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+  data <- document_covariate_table
+  data$gamma <- LDA_models@gamma
+  weights <- document_weights(document_term_table)
+  TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, "newmoon", weights)
+  pred_gamma_TS_plot(TSmod)
+  rho_lines(200)
+}
+
+}

@@ -25,7 +25,8 @@ colors used. Supported only on some devices, see
 \code{\link[grDevices]{rgb}}.}
 }
 \value{
-Vector of \code{character} hex codes indicating colors to use.
+\code{vector} of \code{character} hex codes indicating colors to 
+  use.
 }
 \description{
 Based on the inputs, create the set of colors to be used in

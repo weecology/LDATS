@@ -6,7 +6,7 @@
 \usage{
 \method{plot}{TS_fit}(x, ..., plot_type = "summary",
   interactive = FALSE, cols = set_TS_summary_plot_cols(),
-  bin_width = 1, xlab = NULL, border = NA, selection = "median",
+  bin_width = 1, xname = NULL, border = NA, selection = "median",
   LDATS = FALSE)
 }
 \arguments{
@@ -33,7 +33,10 @@ and each containing default values for entries named \code{cols},
 timeseries plot, in units of the x-axis (the time variable used to fit 
 the model).}
 
-\item{xlab}{Label for the x-axis in the summary time series plot.}
+\item{xname}{Label for the x-axis in the summary time series plot. Defaults
+to \code{NULL}, which results in usage of the \code{timename} element
+of the control list (held in\code{control$TS_control$timename}). To have
+no label printed, set \code{xname = ""}.}
 
 \item{border}{Border for the histogram, default is \code{NA}.}
 
@@ -44,8 +47,25 @@ summary plot. Currently only defined for \code{"median"} and
 \item{LDATS}{\code{logical} indicating if the plot is part of a larger 
 LDATS plot output.}
 }
+\value{
+\code{NULL}.
+}
 \description{
 Generalization of the \code{\link[graphics]{plot}} function to 
   work on fitted TS model objects (class \code{TS_fit}) returned from 
   \code{\link{TS}}.
+}
+\examples{
+\donttest{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+  data <- document_covariate_table
+  data$gamma <- LDA_models@gamma
+  weights <- document_weights(document_term_table)
+  TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, "newmoon", weights)
+  plot(TSmod)
+}
+
 }

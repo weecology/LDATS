@@ -22,7 +22,7 @@ pass on.}
 \code{\link[topicmodels]{LDA}} as a \code{control} input.}
 }
 \value{
-Class \code{LDA_controls} list for controlling the LDA model fit.
+\code{list} for controlling the LDA model fit.
 }
 \description{
 This function provides a simple creation and definition of 

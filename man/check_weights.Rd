@@ -7,9 +7,23 @@
 check_weights(weights)
 }
 \arguments{
-\item{weights}{Vector of the document weights to evaluate.}
+\item{weights}{Vector of the document weights to evaluate, or \code{TRUE}
+for triggering internal weighting by document sizes.}
+}
+\value{
+An error message is thrown if \code{weights} is not proper,
+  else \code{NULL}.
 }
 \description{
 Check that the vector of document weights is numeric and 
   positive and inform the user if the average weight isn't 1.
+}
+\examples{
+  check_weights(1)
+  wts <- runif(100, 0.1, 100)
+  check_weights(wts)
+  wts2 <- wts / mean(wts)
+  check_weights(wts2)
+  check_weights(TRUE)
+
 }

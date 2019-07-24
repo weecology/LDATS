@@ -5,10 +5,11 @@
 \alias{check_TS_inputs}
 \title{Conduct a single multinomial Bayesian Time Series analysis}
 \usage{
-TS(data, formula, nchangepoints, timename = "time", weights = NULL,
-  control = list())
+TS(data, formula = gamma ~ 1, nchangepoints = 0, timename = "time",
+  weights = NULL, control = list())
 
-check_TS_inputs(data, formula, nchangepoints, timename, weights, control)
+check_TS_inputs(data, formula = gamma ~ 1, nchangepoints = 0,
+  timename = "time", weights = NULL, control = list())
 }
 \arguments{
 \item{data}{\code{data.frame} including [1] the time variable (indicated 
@@ -55,7 +56,8 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 \code{\link{TS_control}}.}
 }
 \value{
-\code{TS_fit}-class list containing the following elements, many of
+\code{TS}: \code{TS_fit}-class list containing the following
+  elements, many of
   which are hidden for \code{print}ing, but are accessible:
   \describe{
     \item{data}{\code{data} input to the function.}
@@ -91,7 +93,9 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
                    including the change point locations and regressors.}
     \item{deviance}{Penalized negative log-likelihood, based on 
                     \code{logLik} and \code{nparams}.}
-  }
+  } \cr \cr
+  \code{check_TS_inputs}: An error message is thrown if any input
+  is not proper, else \code{NULL}.
 }
 \description{
 This is the main interface function for the LDATS application
@@ -103,13 +107,11 @@ This is the main interface function for the LDATS application
   The models are fit using parallel tempering Markov Chain Monte Carlo
   (ptMCMC) methods (Earl and Deem 2005) to locate change points and 
   neural networks (Ripley 1996, Venables and Ripley 2002, Bishop 2006) to
-  estimate regressors.
-
-\code{check_TS_inputs} checks that the inputs to 
+  estimate regressors. \cr \cr
+  \code{check_TS_inputs} checks that the inputs to 
   \code{TS} are of proper classes for a full analysis.
 }
 \examples{
-\dontrun{
   data(rodents)
   document_term_table <- rodents$document_term_table
   document_covariate_table <- rodents$document_covariate_table
@@ -117,8 +119,10 @@ This is the main interface function for the LDATS application
   data <- document_covariate_table
   data$gamma <- LDA_models@gamma
   weights <- document_weights(document_term_table)
+\donttest{
   TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, "newmoon", weights)
 }
+  check_TS_inputs(data, timename = "newmoon")
 
 }
 \references{

@@ -72,7 +72,8 @@ replication purposes.}
 \code{\link[topicmodels]{LDA}} as a \code{control} input.}
 }
 \value{
-\code{list}, with named elements corresponding to the arguments.
+\code{list} of control \code{lists}, with named elements 
+  \code{LDAcontrol}, \code{TScontrol}, and \code{quiet}.
 }
 \description{
 Create and define a list of control options used to run the

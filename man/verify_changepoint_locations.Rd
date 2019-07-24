@@ -28,3 +28,13 @@ Logical indicator of the check passing \code{TRUE} or failing
 Verify that a time series can be broken into a set 
   of chunks based on input change points.
 }
+\examples{
+  data(rodents)
+  dtt <- rodents$document_term_table
+  lda <- LDA_set(dtt, 4, 1, list(quiet = TRUE))
+  dct <- rodents$document_covariate_table
+  dct$gamma <- lda[[1]]@gamma
+  verify_changepoint_locations(dct, changepoints = 100, 
+                               timename = "newmoon")   
+
+}

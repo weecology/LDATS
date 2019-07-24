@@ -92,3 +92,25 @@ Calculate relevant summaries for the run of a Time Series
   model within \code{\link{TS}} and package the output as a
   \code{TS_fit}-class object.
 }
+\examples{
+\donttest{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+  data <- document_covariate_table
+  data$gamma <- LDA_models@gamma
+  weights <- document_weights(document_term_table)
+  formula <- gamma ~ 1
+  nchangepoints <- 1
+  control <- TS_control()
+  data <- data[order(data[,"newmoon"]), ]
+  rho_dist <- est_changepoints(data, formula, nchangepoints, "newmoon", 
+                               weights, control)
+  eta_dist <- est_regressors(rho_dist, data, formula, "newmoon", weights, 
+                             control)
+  package_TS(data, formula, "newmoon", weights, control, rho_dist, 
+             eta_dist)
+}
+
+}

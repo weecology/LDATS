@@ -13,8 +13,15 @@ indexed to the iteration by the order of the vector.}
 
 \item{ylab}{\code{character} value used to label the y axis.}
 }
+\value{
+\code{NULL}.
+}
 \description{
 Produce a trace plot for the parameter of interest (rho or 
   eta) as part of \code{\link{TS_diagnostics_plot}}. A horizontal line 
   is added to show the median of the posterior.
+}
+\examples{
+ trace_plot(rnorm(100, 0, 1))
+
 }

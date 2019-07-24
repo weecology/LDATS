@@ -11,7 +11,16 @@ check_seeds(nseeds)
 each value of \code{topics} in the LDAs. Must be conformable to a  
 positive \code{integer} value.}
 }
+\value{
+an error message is thrown if the input is improper, otherwise 
+  \code{NULL}.
+}
 \description{
 Check that the vector of numbers of seeds is conformable to
   integers greater than 0.
+}
+\examples{
+ check_seeds(1)
+ check_seeds(2)
+
 }

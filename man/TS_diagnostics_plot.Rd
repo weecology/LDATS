@@ -19,15 +19,30 @@ have its diagnostics plotted.}
 \item{interactive}{\code{logical} input, should be code{TRUE} unless
 testing.}
 }
+\value{
+\code{NULL}.
+}
 \description{
 Plot 4-panel figures (showing trace plots, posterior ECDF, 
   posterior density, and iteration autocorrelation) for each of the 
   parameters (change point locations and regressors) fitted within a 
-  multinomial time series model (fit by \code{\link{TS}}).
-
-\code{eta_diagnostics_plots} creates the diagnostic plots
-  for the regressors (etas) of a time series model.
-
-\code{rho_diagnostics_plots} creates the diagnostic plots
+  multinomial time series model (fit by \code{\link{TS}}). \cr \cr
+  \code{eta_diagnostics_plots} creates the diagnostic plots
+  for the regressors (etas) of a time series model. \cr \cr
+  \code{rho_diagnostics_plots} creates the diagnostic plots
   for the change point locations (rho) of a time series model.
+}
+\examples{
+\donttest{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+  data <- document_covariate_table
+  data$gamma <- LDA_models@gamma
+  weights <- document_weights(document_term_table)
+  TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, "newmoon", weights)
+  TS_diagnostics_plot(TSmod)
+}
+
 }

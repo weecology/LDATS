@@ -7,6 +7,8 @@
 #' 
 #' @param ... Additional arguments to be passed to subfunctions.
 #' 
+#' @return \code{NULL}.
+#'
 #' @examples 
 #' \donttest{
 #'   data(rodents)
@@ -22,6 +24,7 @@ plot.LDA_set <- function(x, ...){
     devAskNewPage(TRUE)
   }
   y <- lapply(x, plot, ...)
+  y <- NULL
 }
 
 #' @title Plot the results of an LDATS LDA model
@@ -30,6 +33,11 @@ plot.LDA_set <- function(x, ...){
 #'   the topic proportions for each word and a bottom panel showing the topic
 #'   proportions of each document/over time. The plot function is defined for
 #'   class \code{LDA_VEM} specifically (see \code{\link[topicmodels]{LDA}}).
+#'   \cr \cr
+#'   \code{LDA_plot_top_panel} creates an LDATS LDA summary plot 
+#'   top panel showing the topic proportions word-by-word. \cr \cr
+#'   \code{LDA_plot_bottom_panel} creates an LDATS LDA summary plot
+#'   bottom panel showing the topic proportions over time/documents. 
 #' 
 #' @param x Object of class \code{LDA_VEM}.
 #'
@@ -54,37 +62,41 @@ plot.LDA_set <- function(x, ...){
 #'   colors used. Supported only on some devices, see 
 #'   \code{\link[grDevices]{rgb}}.
 #'
-#' @param LDATS \code{logical} indicating if the plot is part of a larger 
+#' @param together \code{logical} indicating if the subplots are part of a 
+#'   larger LDA plot output. 
+#'
+#' @param LDATS \code{logical} indicating if the LDA plot is part of a larger 
 #'   LDATS plot output. 
 #'
 #' @param ... Not used, retained for alignment with base function.
+#' 
+#' @return \code{NULL}.
 #' 
 #' @examples 
 #' \donttest{
 #'   data(rodents)
 #'   lda_data <- rodents$document_term_table
 #'   r_LDA <- LDA_set(lda_data, topics = 4, nseeds = 10) 
-#'   best_lda <- select_LDA(r_LDA)
+#'   best_lda <- select_LDA(r_LDA)[[1]]
 #'   plot(best_lda, option = "cividis")
+#'   LDA_plot_top_panel(best_lda, option = "cividis")
+#'   LDA_plot_bottom_panel(best_lda, option = "cividis")
 #' }
 #'
 #' @export 
 #'
 plot.LDA_VEM <- function(x, ..., xtime = NULL, xname = NULL, cols = NULL, 
                      option = "C", alpha = 0.8, LDATS = FALSE){
-
-  LDA_plot_top_panel(x, cols, option, alpha, LDATS)
-  LDA_plot_bottom_panel(x, xtime, xname, cols, option, alpha, LDATS)
+  LDA_plot_top_panel(x, cols, option, alpha, TRUE, LDATS)
+  LDA_plot_bottom_panel(x, xtime, xname, cols, option, alpha, TRUE, LDATS)
 }
 
 #' @rdname plot.LDA_VEM 
-#'
-#' @description \code{LDA_plot_top_panel}: create an LDATS LDA summary plot 
-#'   top panel showing the topic proportions word-by-word. 
 #' 
 #' @export 
 #'
-LDA_plot_top_panel <- function(x, cols, option, alpha, LDATS = FALSE){
+LDA_plot_top_panel <- function(x, cols = NULL, option = "C", alpha = 0.8, 
+                               together = FALSE, LDATS = FALSE){
   oldpar <- par(no.readonly = TRUE)
   on.exit(par(oldpar))
   cols <- set_LDA_plot_colors(x, cols, option, alpha)
@@ -115,8 +127,10 @@ LDA_plot_top_panel <- function(x, cols, option, alpha, LDATS = FALSE){
 
   if (LDATS){
     par(fig = c(0, 0.9, 0.85, 1))
-  } else{
+  } else if(together){
     par(fig = c(0, 0.9, 0.7, 1))
+  } else{
+    par(fig = c(0, 0.9, 0, 1))
   }
   par(mar = c(1, 3.5, 1, 0))
   max_y <- max(rect_mat[,4]) * 1.05
@@ -133,8 +147,10 @@ LDA_plot_top_panel <- function(x, cols, option, alpha, LDATS = FALSE){
 
   if (LDATS){
     par(fig = c(0.9, 1, 0.85, 1)) 
-  } else{ 
+  } else if (together){ 
     par(fig = c(0.9, 1, 0.7, 1)) 
+  } else{
+    par(fig = c(0.9, 1, 0, 1))
   }
   par(mar = c(0, 0, 0, 0), new = TRUE)
   plot(1, 1, type = "n", bty = "n", xlab = "", ylab = "", 
@@ -149,14 +165,12 @@ LDA_plot_top_panel <- function(x, cols, option, alpha, LDATS = FALSE){
 }
 
 #' @rdname plot.LDA_VEM
-#'
-#' @description \code{LDA_plot_bottom_panel}: create an LDATS LDA summary plot
-#'   bottom panel showing the topic proportions over time/documents. 
 #' 
 #' @export 
 #'
-LDA_plot_bottom_panel <- function(x, xtime, xname, cols, option, alpha, 
-                                  LDATS = FALSE){
+LDA_plot_bottom_panel <- function(x, xtime = NULL, xname = NULL, cols = NULL,
+                                  option = "C", alpha = 0.8, 
+                                  together = FALSE, LDATS = FALSE){
   oldpar <- par(no.readonly = TRUE)
   on.exit(par(oldpar))
   cols <- set_LDA_plot_colors(x, cols, option, alpha)
@@ -166,16 +180,18 @@ LDA_plot_bottom_panel <- function(x, xtime, xname, cols, option, alpha,
   if (is.null(xtime)){
     xtime <- seq(1, nrow(gamma), 1)
   }
-  if (is.null(xname)){
+  if (is.null(xname) & !LDATS){
     xname <- "Document"
   }
 
   if (LDATS){
-    par(fig = c(0, 1, 0.5, 0.85))
+    par(fig = c(0, 1, 0.53, 0.85), new = TRUE)
+  } else if (together){
+    par(fig = c(0, 1, 0, 0.7), new = TRUE)
   } else{
-    par(fig = c(0, 1, 0, 0.7))
+    par(fig = c(0, 1, 0, 1))
   }
-  par(new = TRUE, mar = c(3.25, 5, 1, 1))
+  par(mar = c(3.25, 5, 1, 1))
   plot(xtime, gamma[ , 1], type = "n", bty = "L", xlab = "", ylab = "", 
        las = 1, ylim = c(0, 1))
   mtext(side = 1, xname, line = 2.2, cex = 1.25)
@@ -183,7 +199,6 @@ LDA_plot_bottom_panel <- function(x, xtime, xname, cols, option, alpha,
   for (i in 1:ntopics){
     points(xtime, gamma[ , i], col = cols[i], type = "l", lwd = 2)
   }
-
 }
 
 #' @title Prepare the colors to be used in the LDA plots
@@ -208,7 +223,8 @@ LDA_plot_bottom_panel <- function(x, xtime, xname, cols, option, alpha,
 #'   colors used. Supported only on some devices, see 
 #'   \code{\link[grDevices]{rgb}}.
 #'
-#' @return Vector of \code{character} hex codes indicating colors to use.
+#' @return \code{vector} of \code{character} hex codes indicating colors to 
+#'   use.
 #'
 #' @examples
 #' \donttest{

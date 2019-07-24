@@ -13,7 +13,7 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 \code{\link{TS_control}}.}
 }
 \value{
-Vector of temperatures.
+\code{vector} of temperatures.
 }
 \description{
 Create the series of temperatures used in the ptMCMC 
@@ -24,4 +24,8 @@ Create the series of temperatures used in the ptMCMC
   and would work with any ptMCMC model as long as \code{control}
   includes the relevant control parameters (and provided that the 
   \code{\link{check_control}} function and its use here are generalized).
+}
+\examples{
+  prep_temp_sequence()
+
 }

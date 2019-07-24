@@ -11,8 +11,25 @@
 
 \item{...}{Not used, simply included to maintain method compatibility.}
 }
+\value{
+The non-hidden parts of \code{x} as a \code{list}.
+}
 \description{
 Convenience function to print only the most important 
   components of a \code{TS_fit}-class object fit by 
   \code{\link{TS}}.
+}
+\examples{
+\donttest{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+  data <- document_covariate_table
+  data$gamma <- LDA_models@gamma
+  weights <- document_weights(document_term_table)
+  TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, "newmoon", weights)
+  print(TSmod)
+}
+
 }

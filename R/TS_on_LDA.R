@@ -7,7 +7,9 @@
 #'   number of discrete changepoints. This function allows direct passage of
 #'   the control parameters for the parallel tempering MCMC through to the 
 #'   main Time Series function, \code{\link{TS}}, via the 
-#'   \code{ptMCMC_controls} argument.
+#'   \code{ptMCMC_controls} argument. \cr \cr
+#'   \code{check_TS_on_LDA_inputs} checks that the inputs to 
+#'   \code{TS_on_LDA} are of proper classes for a full analysis.
 #'
 #' @param LDA_models List of LDA models (class \code{LDA_set}, produced by
 #'   \code{\link{LDA_set}}) or a singular LDA model (class \code{LDA},
@@ -56,11 +58,14 @@
 #'   Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
 #'   \code{\link{TS_control}}.
 #'
-#' @return Class \code{TS_on_LDA} list of results from \code{\link{TS}} 
-#'   applied for each model on each LDA model input.
+#' @return \code{TS_on_LDA}: \code{TS_on_LDA}-class \code{list} of results 
+#'   from \code{\link{TS}} applied for each model on each LDA model input.
+#'   \cr \cr
+#'   \code{check_TS_inputs}: An error message is thrown if any input
+#'   is not proper, else \code{NULL}.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'   data(rodents)
 #'   document_term_table <- rodents$document_term_table
 #'   document_covariate_table <- rodents$document_covariate_table
@@ -128,9 +133,22 @@ TS_on_LDA <- function(LDA_models, document_covariate_table, formulas = ~ 1,
 #'   \code{formula}) and [3], the multinomial response variable (indicated
 #'   in \code{formula}), ready for input into \code{TS}.
 #'
+#' @examples
+#' \donttest{
+#'   data(rodents)
+#'   document_term_table <- rodents$document_term_table
+#'   document_covariate_table <- rodents$document_covariate_table
+#'   LDAs <- LDA_set(document_term_table, topics = 2:3, nseeds = 2)
+#'   LDA_models <- select_LDA(LDAs)
+#'   weights <- document_weights(document_term_table)
+#'   formulas <- c(~ 1, ~ newmoon)
+#'   mods <- expand_TS(LDA_models, formulas = ~1, nchangepoints = 0)
+#'   data1 <- prep_TS_data(document_covariate_table, LDA_models, mods)
+#' }
+#'
 #' @export
 #'
-prep_TS_data <- function(document_covariate_table, LDA_models, mods, i){
+prep_TS_data <- function(document_covariate_table, LDA_models, mods, i = 1){
   check_document_covariate_table(document_covariate_table, LDA_models)
   check_LDA_models(LDA_models)
   if(is(LDA_models, "LDA")){
@@ -163,6 +181,20 @@ prep_TS_data <- function(document_covariate_table, LDA_models, mods, i){
 #' @return A reduced version of \code{TS_models} that only includes the 
 #'   selected TS model. The returned object is a single TS model object of
 #'   class \code{TS_fit}.
+#'
+#' @examples
+#' \donttest{
+#'   data(rodents)
+#'   document_term_table <- rodents$document_term_table
+#'   document_covariate_table <- rodents$document_covariate_table
+#'   LDAs <- LDA_set(document_term_table, topics = 2:3, nseeds = 2)
+#'   LDA_models <- select_LDA(LDAs)
+#'   weights <- document_weights(document_term_table)
+#'   formulas <- c(~ 1, ~ newmoon)
+#'   mods <- TS_on_LDA(LDA_models, document_covariate_table, formulas,
+#'                     nchangepoints = 0:1, timename = "newmoon", weights)
+#'   select_TS(mods)
+#' }
 #'
 #' @export
 #'
@@ -237,6 +269,8 @@ package_TS_on_LDA <- function(TSmods, LDA_models, models){
 #'
 #' @param ... Not used, simply included to maintain method compatibility.
 #'
+#' @return \code{character} \code{vector} of the names of \code{x}'s models.
+#'
 #' @export
 #'
 print.TS_on_LDA <- function(x, ...){
@@ -265,6 +299,8 @@ print.TS_on_LDA <- function(x, ...){
 #'   \code{\link{TS_control}}. Of particular importance here is 
 #'   the \code{logical}-class element named \code{quiet}.
 #'
+#' @return \code{NULL}.
+#'
 #' @export
 #'
 print_model_run_message <- function(models, i, LDA_models, control){
@@ -274,7 +310,7 @@ print_model_run_message <- function(models, i, LDA_models, control){
   reg_msg <- paste0("and equation ", equation)
   ts_msg <- paste0(chngpt_msg, reg_msg)
   lda_msg <- names(LDA_models)[models$LDA[i]]
-  msg<- paste0("Running TS model ", ts_msg, " on LDA model ", lda_msg, "\n")
+  msg <- paste0("Running TS model ", ts_msg, " on LDA model ", lda_msg, "\n")
   messageq(msg, control$quiet)
 }
 
@@ -307,6 +343,19 @@ print_model_run_message <- function(models, i, LDA_models, control){
 #'   as a numeric element reference to the \code{LDA_models} object), [2] the 
 #'   regressor formula, and [3] the number of changepoints.
 #' 
+#' @examples
+#' \donttest{
+#'   data(rodents)
+#'   document_term_table <- rodents$document_term_table
+#'   document_covariate_table <- rodents$document_covariate_table
+#'   LDAs <- LDA_set(document_term_table, topics = 2:3, nseeds = 2)
+#'   LDA_models <- select_LDA(LDAs)
+#'   weights <- document_weights(document_term_table)
+#'   formulas <- c(~ 1, ~ newmoon)
+#'   nchangepoints <- 0:1
+#'   expand_TS(LDA_models, formulas, nchangepoints)
+#' }
+#'
 #' @export
 #'
 expand_TS <- function(LDA_models, formulas, nchangepoints){
@@ -347,6 +396,13 @@ expand_TS <- function(LDA_models, formulas, nchangepoints){
 #'   
 #' @param nchangepoints Vector of the number of changepoints to evaluate.
 #' 
+#' @return An error message is thrown if \code{nchangepoints} is not proper,
+#'   else \code{NULL}.
+#' 
+#' @examples
+#'   check_nchangepoints(0)
+#'   check_nchangepoints(2)
+#'
 #' @export
 #'
 check_nchangepoints <- function(nchangepoints){
@@ -356,6 +412,7 @@ check_nchangepoints <- function(nchangepoints){
   if (any(nchangepoints < 0)){
     stop("nchangepoints must be non-negative")
   }
+  return()
 }
 
 #' @title Check that weights vector is proper
@@ -363,7 +420,19 @@ check_nchangepoints <- function(nchangepoints){
 #' @description Check that the vector of document weights is numeric and 
 #'   positive and inform the user if the average weight isn't 1. 
 #'   
-#' @param weights Vector of the document weights to evaluate.
+#' @param weights Vector of the document weights to evaluate, or \code{TRUE}
+#'   for triggering internal weighting by document sizes.
+#' 
+#' @return An error message is thrown if \code{weights} is not proper,
+#'   else \code{NULL}.
+#' 
+#' @examples
+#'   check_weights(1)
+#'   wts <- runif(100, 0.1, 100)
+#'   check_weights(wts)
+#'   wts2 <- wts / mean(wts)
+#'   check_weights(wts2)
+#'   check_weights(TRUE)
 #' 
 #' @export
 #'
@@ -386,6 +455,7 @@ check_weights <- function(weights){
       warning("weights should have a mean of 1, fit may be unstable")
     }
   }
+  return()
 }
 
 #' @title Check that LDA model input is proper
@@ -397,6 +467,17 @@ check_weights <- function(weights){
 #'   
 #' @param LDA_models List of LDA models or singular LDA model to evaluate.
 #' 
+#' @return An error message is thrown if \code{LDA_models} is not proper,
+#'   else \code{NULL}.
+#'
+#' @examples
+#'   data(rodents)
+#'   document_term_table <- rodents$document_term_table
+#'   document_covariate_table <- rodents$document_covariate_table
+#'   LDAs <- LDA_set(document_term_table, topics = 2, nseeds = 2)
+#'   LDA_models <- select_LDA(LDAs)
+#'   check_LDA_models(LDA_models)
+#'
 #' @export
 #'
 check_LDA_models <- function(LDA_models){
@@ -405,6 +486,7 @@ check_LDA_models <- function(LDA_models){
       stop("LDA_models is not an LDA object or LDA_set object")
     }
   }
+  return()
 }
 
 #' @title Check that the document covariate table is proper
@@ -421,6 +503,13 @@ check_LDA_models <- function(LDA_models){
 #' 
 #' @param document_term_table Optional input for checking when
 #'   \code{LDA_models} is \code{NULL}
+#' 
+#' @return An error message is thrown if \code{document_covariate_table} is 
+#'   not proper, else \code{NULL}.
+#'
+#' @examples
+#'   data(rodents)
+#'   check_document_covariate_table(rodents$document_covariate_table)
 #'
 #' @export
 #'
@@ -449,6 +538,7 @@ check_document_covariate_table <- function(document_covariate_table,
         documents observed")
     }
   }
+  return()
 }
 
 #' @title Check that the time vector is proper
@@ -464,6 +554,13 @@ check_document_covariate_table <- function(document_covariate_table,
 #'
 #' @param timename Column name for the time variable to evaluate.
 #' 
+#' @return An error message is thrown if \code{timename} is 
+#'   not proper, else \code{NULL}.
+#'
+#' @examples
+#'   data(rodents)
+#'   check_timename(rodents$document_covariate_table, "newmoon")
+#'
 #' @export
 #'
 check_timename <- function(document_covariate_table, timename){
@@ -482,6 +579,7 @@ check_timename <- function(document_covariate_table, timename){
       (!is.numeric(time_covariate) || !all(time_covariate %% 1 == 0))){
     stop("covariate indicated by timename is not an integer or a date")
   }
+  return()
 }
 
 #' @title Check that formulas vector is proper and append the response 
@@ -501,9 +599,17 @@ check_timename <- function(document_covariate_table, timename){
 #'   Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
 #'   \code{\link{TS_control}}.
 #' 
+#' @return An error message is thrown if \code{formulas} is 
+#'   not proper, else \code{NULL}.
+#' 
+#' @examples
+#'   data(rodents)
+#'   check_formulas(~ 1, rodents$document_covariate_table)
+#'
 #' @export
 #'
-check_formulas <- function(formulas, document_covariate_table, control){
+check_formulas <- function(formulas, document_covariate_table, 
+                           control = list()){
   check_document_covariate_table(document_covariate_table)
   check_control(control)
   control <- do.call("TS_control", control)
@@ -528,13 +634,10 @@ check_formulas <- function(formulas, document_covariate_table, control){
     mis <- paste(misses, collapse = ", ")
     stop(paste0("formulas include predictors not present in data: ", mis))
   }
-
+  return()
 }
 
 #' @rdname TS_on_LDA
-#'
-#' @description \code{check_TS_on_LDA_inputs} checks that the inputs to 
-#'   \code{TS_on_LDA} are of proper classes for a full analysis.
 #'
 #' @export
 #'

@@ -57,3 +57,21 @@ List of saved data objects from the ptMCMC estimation of
 This function executes ptMCMC-based estimation of the 
   change point location distributions for multinomial Time Series analyses.
 }
+\examples{
+\donttest{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+  data <- document_covariate_table
+  data$gamma <- LDA_models@gamma
+  weights <- document_weights(document_term_table)
+  formula <- gamma ~ 1
+  nchangepoints <- 1
+  control <- TS_control()
+  data <- data[order(data[,"newmoon"]), ]
+  rho_dist <- est_changepoints(data, formula, nchangepoints, "newmoon", 
+                               weights, control)
+}
+
+}

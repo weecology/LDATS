@@ -24,3 +24,32 @@ This function wraps around \code{TS_memo}
   simpler interface within the ptMCMC algorithm and is implemented within
   \code{\link{propose_step}}.
 }
+\examples{
+\donttest{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+  data <- document_covariate_table
+  data$gamma <- LDA_models@gamma
+  weights <- document_weights(document_term_table)
+  data <- data[order(data[,"newmoon"]), ]
+  saves <- prep_saves(1, TS_control())
+  inputs <- prep_ptMCMC_inputs(data, gamma ~ 1, 1, "newmoon", weights,
+                               TS_control())
+  cpts <- prep_cpts(data, gamma ~ 1, 1, "newmoon", weights, TS_control())
+  i <- 1
+  pdist <- inputs$pdist
+  ntemps <- length(inputs$temps)
+  selection <- cbind(pdist$which_steps[i, ], 1:ntemps)
+  prop_changepts <- cpts$changepts
+  curr_changepts_s <- cpts$changepts[selection]
+  prop_changepts_s <- curr_changepts_s + pdist$steps[i, ]
+  if(all(is.na(prop_changepts_s))){
+    prop_changepts_s <- NULL
+  }
+  prop_changepts[selection] <- prop_changepts_s
+  mods <- proposed_step_mods(prop_changepts, inputs)
+}
+
+}

@@ -19,3 +19,17 @@ Log likelihood of the model \code{logLik}, also with \code{df}
 Convenience function to extract and format the log likelihood
   of a \code{TS_fit}-class object fit by \code{\link{multinom_TS}}.
 }
+\examples{
+\donttest{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+  data <- document_covariate_table
+  data$gamma <- LDA_models@gamma
+  weights <- document_weights(document_term_table)
+  TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, "newmoon", weights)
+  logLik(TSmod)
+}
+
+}

@@ -24,6 +24,9 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 \code{\link{TS_control}}. Of particular importance here is 
 the \code{logical}-class element named \code{quiet}.}
 }
+\value{
+\code{NULL}.
+}
 \description{
 If desired, print a message at the beginning of every model
   combination stating the TS model and the LDA model being evaluated.

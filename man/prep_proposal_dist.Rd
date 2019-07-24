@@ -23,9 +23,10 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 average of the geometric distribution).}
 }
 \value{
-List of two matrices: [1] the size of the proposed step for each
-  iteration of each chain and [2] the identity of the change point location 
-  to be shifted by the step for each iteration of each chain.
+\code{list} of two \code{matrix} elements: [1] the size of the 
+  proposed step for each iteration of each chain and [2] the identity of 
+  the change point location to be shifted by the step for each iteration of
+  each chain.
 }
 \description{
 Calculate the proposal distribution in advance of actually
@@ -35,4 +36,8 @@ Calculate the proposal distribution in advance of actually
   the chain, [2] a binomial distribution selecting the direction of the 
   step of the change point (earlier or later in the time series), and 
   [3] a geometric distribution selecting the magnitude of the step.
+}
+\examples{
+  prep_proposal_dist(nchangepoints = 2)
+
 }

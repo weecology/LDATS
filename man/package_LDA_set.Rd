@@ -16,9 +16,32 @@ number of topics in each model.}
 seed used for each model.}
 }
 \value{
-List (class: \code{LDA_set}) of LDA models (class: \code{LDA_VEM}).
+\code{lis} (class: \code{LDA_set}) of LDA models (class: 
+  \code{LDA_VEM}).
 }
 \description{
 Name the elements (LDA models) and set the class 
   (\code{LDA_set}) of the models returned by \code{\link{LDA_set}}.
+}
+\examples{
+\dontrun{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  topics <- 2
+  nseeds <- 2
+  control <- LDA_set_control()
+  mod_topics <- rep(topics, each = length(seq(2, nseeds * 2, 2)))
+  iseed <- control$iseed
+  mod_seeds <- rep(seq(iseed, iseed + (nseeds - 1)* 2, 2), length(topics))
+  nmods <- length(mod_topics)
+  mods <- vector("list", length = nmods)
+  for (i in 1:nmods){
+    LDA_msg(mod_topics[i], mod_seeds[i], control)
+    control_i <- prep_LDA_control(seed = mod_seeds[i], control = control)
+    mods[[i]] <- LDA(document_term_table, k = mod_topics[i], 
+                     control = control_i)
+  }
+  package_LDA_set(mods, mod_topics, mod_seeds)
+}
+
 }

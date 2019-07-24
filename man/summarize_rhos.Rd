@@ -23,9 +23,8 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 \code{summarize_rhos}: table of summary statistics for change point
   locations including mean, median, mode, posterior interval, standard
   deviation, MCMC error, autocorrelation, and effective sample size for 
-  each change point location.
-
-\code{measure_rho_vcov}: variance-covariance matrix for change 
+  each change point location. \cr \cr
+  \code{measure_rho_vcov}: variance-covariance matrix for change 
   point locations.
 }
 \description{
@@ -34,4 +33,10 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
   \cr \cr
   \code{measure_rho_vcov} generates the variance-covariance matrix for the 
   change point locations.
+}
+\examples{
+ rhos <- matrix(sample(80:100, 100, TRUE), 50, 2)
+ summarize_rhos(rhos)
+ measure_rho_vcov(rhos)
+
 }

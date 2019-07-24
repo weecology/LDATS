@@ -5,10 +5,13 @@
 #'   Allocation (LDA) models (using the Variational Expectation 
 #'   Maximization (VEM) algorithm; Blei \emph{et al.} 2003) to account for [1]  
 #'   uncertainty in the number of latent topics and [2] the impact of initial
-#'   values in the estimation procedure. 
-#'
-#' \code{LDA_set} is a list wrapper of \code{\link[topicmodels]{LDA}}
-#'   in the \code{topicmodels} package (Grun and Hornik 2011).
+#'   values in the estimation procedure. \cr \cr
+#'   \code{LDA_set} is a list wrapper of \code{\link[topicmodels]{LDA}}
+#'   in the \code{topicmodels} package (Grun and Hornik 2011). \cr \cr
+#'   \code{check_LDA_set_inputs} checks that all of the inputs 
+#'   are proper for \code{LDA_set} (that the table of observations is 
+#'   conformable to a matrix of integers, the number of topics is an integer, 
+#'   the number of seeds is an integer and the controls list is proper).
 #'   
 #' @param document_term_table Table of observation count data (rows: 
 #'   documents, columns: terms. May be a class \code{matrix} or 
@@ -27,7 +30,11 @@
 #'   defaults in (\code{LDAcontol}, see \code{\link[topicmodels]{LDA}} (but if
 #'    \code{seed} is given, it will be overwritten; use \code{iseed} instead).
 #' 
-#' @return List (class: \code{LDA_set}) of LDA models (class: \code{LDA_VEM}).
+#' @return \cr \cr 
+#'   \code{LDA_set}: \code{list} (class: \code{LDA_set}) of LDA models 
+#'   (class: \code{LDA_VEM}).
+#'   \code{check_LDA_set_inputs}: an error message is thrown if any input is 
+#'   improper, otherwise \code{NULL}.
 #' 
 #' @references 
 #'   Blei, D. M., A. Y. Ng, and M. I. Jordan. 2003. Latent Dirichlet
@@ -114,11 +121,6 @@ logLik.LDA_VEM <- function(object, ...){
 }
 
 #' @rdname LDA_set
-#' 
-#' @description \code{check_LDA_set_inputs} checks that all of the inputs 
-#'   are proper for \code{LDA_set} (that the table of observations is 
-#'   conformable to a matrix of integers, the number of topics is an integer, 
-#'   the number of seeds is an integer and the controls list is proper).
 #'   
 #' @export
 #'
@@ -142,7 +144,7 @@ check_LDA_set_inputs <- function(document_term_table, topics, nseeds,
 #'   element named \code{seed} it will be overwritten by the \code{seed} 
 #'   argument of \code{prep_LDA_control}.
 #'
-#' @return List (class: \code{list}) of controls to be used in the LDA. 
+#' @return \code{list} of controls to be used in the LDA. 
 #'
 #' @examples
 #'   prep_LDA_control(seed = 1) 
@@ -214,8 +216,30 @@ select_LDA <- function(LDA_models = NULL, control = list()){
 #' @param mod_seeds Vector of \code{integer} values corresponding to the 
 #'   seed used for each model.
 #'
-#' @return List (class: \code{LDA_set}) of LDA models (class: \code{LDA_VEM}).
+#' @return \code{lis} (class: \code{LDA_set}) of LDA models (class: 
+#'   \code{LDA_VEM}).
 #'
+#' @examples 
+#' \dontrun{
+#'   data(rodents)
+#'   document_term_table <- rodents$document_term_table
+#'   topics <- 2
+#'   nseeds <- 2
+#'   control <- LDA_set_control()
+#'   mod_topics <- rep(topics, each = length(seq(2, nseeds * 2, 2)))
+#'   iseed <- control$iseed
+#'   mod_seeds <- rep(seq(iseed, iseed + (nseeds - 1)* 2, 2), length(topics))
+#'   nmods <- length(mod_topics)
+#'   mods <- vector("list", length = nmods)
+#'   for (i in 1:nmods){
+#'     LDA_msg(mod_topics[i], mod_seeds[i], control)
+#'     control_i <- prep_LDA_control(seed = mod_seeds[i], control = control)
+#'     mods[[i]] <- LDA(document_term_table, k = mod_topics[i], 
+#'                      control = control_i)
+#'   }
+#'   package_LDA_set(mods, mod_topics, mod_seeds)
+#' }
+#' 
 #' @export
 #'
 package_LDA_set <- function(mods, mod_topics, mod_seeds){
@@ -278,7 +302,7 @@ LDA_msg <- function(mod_topics, mod_seeds, control = list()){
 #' @param ... Additional arguments to be passed to 
 #'   \code{\link[topicmodels]{LDA}} as a \code{control} input.
 #'
-#' @return Class \code{LDA_controls} list for controlling the LDA model fit.
+#' @return \code{list} for controlling the LDA model fit.
 #'
 #' @examples
 #'   LDA_set_control()

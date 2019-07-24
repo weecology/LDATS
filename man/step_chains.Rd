@@ -18,10 +18,10 @@ take_step(cpts, prop_step, accept_step)
 \arguments{
 \item{i}{\code{integer} iteration index.}
 
-\item{cpts}{Matrix of change point locations across chains.}
+\item{cpts}{\code{matrix} of change point locations across chains.}
 
-\item{inputs}{Class \code{ptMCMC_inputs} list, containing the static inputs
-for use within the ptMCMC algorithm.}
+\item{inputs}{Class \code{ptMCMC_inputs} \code{list}, containing the 
+static inputs for use within the ptMCMC algorithm.}
 
 \item{prop_step}{Proposed step output from \code{propose_step}.}
 
@@ -29,16 +29,14 @@ for use within the ptMCMC algorithm.}
 proposed step.}
 }
 \value{
-\code{step_chains}: the initialized progress bar object.
-
-\code{propose_step}: List of change points and log-likelihood 
-  values for the proposal.
-
-\code{propose_step}: \code{logical} vector indicating if each 
-  chain's proposal was accepted.
-
-\code{take_step}: list of change points, log-likelihoods, and
-  logical indicators of acceptance for each chain.
+\code{step_chains}: \code{list} of change points, log-likelihoods, 
+  and logical indicators of acceptance for each chain. \cr \cr
+  \code{propose_step}: \code{list} of change points and 
+  log-likelihood values for the proposal. \cr \cr
+  \code{eval_step}: \code{logical} vector indicating if each 
+  chain's proposal was accepted. \cr \cr
+  \code{take_step}: \code{list} of change points, log-likelihoods, 
+  and logical indicators of acceptance for each chain.
 }
 \description{
 This set of functions steps the chains forward one iteration 
@@ -60,6 +58,37 @@ For each iteration of the ptMCMC algorithm, all of the chains
   accepted or not (following the Metropolis-Hastings rule; Metropolis,
   \emph{et al.} 1953, Hasting 1960, Gupta \emph{et al.} 2018), and then
   accordingly taken or not (the configurations are updated).
+}
+\examples{
+\donttest{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+  data <- document_covariate_table
+  data$gamma <- LDA_models@gamma
+  weights <- document_weights(document_term_table)
+  data <- data[order(data[,"newmoon"]), ]
+  saves <- prep_saves(1, TS_control())
+  inputs <- prep_ptMCMC_inputs(data, gamma ~ 1, 1, "newmoon", weights, 
+                               TS_control())
+  cpts <- prep_cpts(data, gamma ~ 1, 1, "newmoon", weights, TS_control())
+  ids <- prep_ids(TS_control())
+  for(i in 1:TS_control()$nit){
+    steps <- step_chains(i, cpts, inputs)
+    swaps <- swap_chains(steps, inputs, ids)
+    saves <- update_saves(i, saves, steps, swaps)
+    cpts <- update_cpts(cpts, swaps)
+    ids <- update_ids(ids, swaps)
+  }
+  # within step_chains()
+  cpts <- prep_cpts(data, gamma ~ 1, 1, "newmoon", weights, TS_control())
+  i <- 1
+  prop_step <- propose_step(i, cpts, inputs)
+  accept_step <- eval_step(i, cpts, prop_step, inputs)
+  take_step(cpts, prop_step, accept_step)
+}
+
 }
 \references{
 Gupta, S., L. Hainsworth, J. S. Hogg, R. E. C. Lee, and J. R. Faeder. 

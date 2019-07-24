@@ -18,3 +18,8 @@ generated.}
 Given the input to \code{quiet}, generate the message(s) 
   in \code{msg} or not.
 }
+\examples{
+  messageq("hello")
+  messageq("hello", TRUE)
+
+}

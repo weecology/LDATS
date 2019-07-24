@@ -7,7 +7,7 @@ Version numbers follow [Semantic Versioning](https://semver.org/).
 
 ## Edits for resubmission to CRAN
 * Output given by `print`/`cat` has been replaced with `message` messages.
-* Added examples in documentation (and replacement of `duntrun{}` with `donttest{}`
+* Added examples in documentation (and replacement of `duntrun{}` with `donttest{}`)
 * Editing of description file for specs
 * Reduction of test runtimes
 

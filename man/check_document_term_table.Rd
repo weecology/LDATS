@@ -12,7 +12,16 @@ documents, columns: terms. May be a class \code{matrix} or
 \code{data.frame} but must be conformable to a matrix of integers,
 as verified by \code{\link{check_document_term_table}}.}
 }
+\value{
+an error message is thrown if the input is improper, otherwise 
+  \code{NULL}.
+}
 \description{
 Check that the table of observations is conformable to
   a matrix of integers.
+}
+\examples{
+ data(rodents)
+ check_document_term_table(rodents$document_term_table)
+
 }

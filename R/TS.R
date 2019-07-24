@@ -9,7 +9,9 @@
 #'   The models are fit using parallel tempering Markov Chain Monte Carlo
 #'   (ptMCMC) methods (Earl and Deem 2005) to locate change points and 
 #'   neural networks (Ripley 1996, Venables and Ripley 2002, Bishop 2006) to
-#'   estimate regressors.
+#'   estimate regressors. \cr \cr
+#'   \code{check_TS_inputs} checks that the inputs to 
+#'   \code{TS} are of proper classes for a full analysis.
 #'
 #' @param data \code{data.frame} including [1] the time variable (indicated 
 #'   in \code{timename}), [2] the predictor variables (required by
@@ -54,7 +56,8 @@
 #'   Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
 #'   \code{\link{TS_control}}.
 #'
-#' @return \code{TS_fit}-class list containing the following elements, many of
+#' @return \code{TS}: \code{TS_fit}-class list containing the following
+#'   elements, many of
 #'   which are hidden for \code{print}ing, but are accessible:
 #'   \describe{
 #'     \item{data}{\code{data} input to the function.}
@@ -90,7 +93,9 @@
 #'                    including the change point locations and regressors.}
 #'     \item{deviance}{Penalized negative log-likelihood, based on 
 #'                     \code{logLik} and \code{nparams}.}
-#'   }
+#'   } \cr \cr
+#'   \code{check_TS_inputs}: An error message is thrown if any input
+#'   is not proper, else \code{NULL}.
 #'
 #' @references
 #'   Bishop, C. M. 2006. \emph{Pattern Recognition and Machine Learning}. 
@@ -126,7 +131,6 @@
 #'   \href{https://doi.org/10.1093/pan/mph023}{link}.
 #'
 #' @examples 
-#' \dontrun{
 #'   data(rodents)
 #'   document_term_table <- rodents$document_term_table
 #'   document_covariate_table <- rodents$document_covariate_table
@@ -134,13 +138,15 @@
 #'   data <- document_covariate_table
 #'   data$gamma <- LDA_models@gamma
 #'   weights <- document_weights(document_term_table)
+#' \donttest{
 #'   TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, "newmoon", weights)
 #' }
+#'   check_TS_inputs(data, timename = "newmoon")
 #'
 #' @export
 #'
-TS <- function(data, formula, nchangepoints, timename = "time",  
-               weights = NULL, control = list()){
+TS <- function(data, formula = gamma ~ 1, nchangepoints = 0, 
+               timename = "time", weights = NULL, control = list()){
   check_TS_inputs(data, formula, nchangepoints, timename, weights, control)
   control <- do.call("TS_control", control)
   set.seed(control$seed)
@@ -153,19 +159,18 @@ TS <- function(data, formula, nchangepoints, timename = "time",
 }
 
 #' @rdname TS
-#'
-#' @description \code{check_TS_inputs} checks that the inputs to 
-#'   \code{TS} are of proper classes for a full analysis.
 #' 
 #' @export
 #'
-check_TS_inputs <- function(data, formula, nchangepoints, timename, weights, 
-                            control){
+check_TS_inputs <- function(data, formula = gamma ~ 1, nchangepoints = 0, 
+                            timename = "time", weights = NULL, 
+                            control = list()){
   check_formula(data, formula)  
   check_nchangepoints(nchangepoints)
   check_weights(weights)
   check_timename(data, timename)
   check_control(control)
+  return() 
 }
 
 #' @title Summarize the Time Series model 
@@ -253,6 +258,27 @@ check_TS_inputs <- function(data, formula, nchangepoints, timename, weights,
 #'                     \code{logLik} and \code{nparams}.}
 #'   }
 #'
+#' @examples 
+#' \donttest{
+#'   data(rodents)
+#'   document_term_table <- rodents$document_term_table
+#'   document_covariate_table <- rodents$document_covariate_table
+#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+#'   data <- document_covariate_table
+#'   data$gamma <- LDA_models@gamma
+#'   weights <- document_weights(document_term_table)
+#'   formula <- gamma ~ 1
+#'   nchangepoints <- 1
+#'   control <- TS_control()
+#'   data <- data[order(data[,"newmoon"]), ]
+#'   rho_dist <- est_changepoints(data, formula, nchangepoints, "newmoon", 
+#'                                weights, control)
+#'   eta_dist <- est_regressors(rho_dist, data, formula, "newmoon", weights, 
+#'                              control)
+#'   package_TS(data, formula, "newmoon", weights, control, rho_dist, 
+#'              eta_dist)
+#' }
+#'
 #' @export
 #'
 package_TS <- function(data, formula, timename, weights, control, rho_dist, 
@@ -314,6 +340,21 @@ package_TS <- function(data, formula, timename, weights, control, rho_dist,
 #'
 #' @param ... Not used, simply included to maintain method compatibility.
 #'
+#' @return The non-hidden parts of \code{x} as a \code{list}.
+#'
+#' @examples 
+#' \donttest{
+#'   data(rodents)
+#'   document_term_table <- rodents$document_term_table
+#'   document_covariate_table <- rodents$document_covariate_table
+#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+#'   data <- document_covariate_table
+#'   data$gamma <- LDA_models@gamma
+#'   weights <- document_weights(document_term_table)
+#'   TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, "newmoon", weights)
+#'   print(TSmod)
+#' }
+#'
 #' @export
 #'
 print.TS_fit <- function(x, ...){
@@ -341,7 +382,14 @@ print.TS_fit <- function(x, ...){
 #' @return \code{summarize_etas}: table of summary statistics for chunk-level
 #'   regressors including mean, median, mode, posterior interval, standard
 #'   deviation, MCMC error, autocorrelation, and effective sample size for 
-#'   each regressor.
+#'   each regressor. \cr \cr
+#'   \code{measure_eta_vcov}: variance-covariance matrix for chunk-level
+#'   regressors.
+#'
+#' @examples
+#'  etas <- matrix(rnorm(100), 50, 2)
+#'  summarize_etas(etas)
+#'  measure_eta_vcov(etas)
 #' 
 #' @export 
 #'
@@ -370,9 +418,6 @@ summarize_etas <- function(etas, control = list()){
 }
 
 #' @rdname summarize_etas 
-#'
-#' @return \code{measure_eta_vcov}: variance-covariance matrix for chunk-level
-#'   regressors.
 #'
 #' @export
 #'
@@ -406,7 +451,14 @@ measure_eta_vcov <- function(etas){
 #' @return \code{summarize_rhos}: table of summary statistics for change point
 #'   locations including mean, median, mode, posterior interval, standard
 #'   deviation, MCMC error, autocorrelation, and effective sample size for 
-#'   each change point location.
+#'   each change point location. \cr \cr
+#'   \code{measure_rho_vcov}: variance-covariance matrix for change 
+#'   point locations.
+#'
+#' @examples
+#'  rhos <- matrix(sample(80:100, 100, TRUE), 50, 2)
+#'  summarize_rhos(rhos)
+#'  measure_rho_vcov(rhos)
 #' 
 #' @export 
 #'
@@ -435,9 +487,6 @@ summarize_rhos <- function(rhos, control = list()){
 }
 
 #' @rdname summarize_rhos 
-#'
-#' @return \code{measure_rho_vcov}: variance-covariance matrix for change 
-#'   point locations.
 #'
 #' @export
 #'
@@ -530,6 +579,25 @@ measure_rho_vcov <- function(rhos){
 #'   historical time series analysis. \emph{Political Analysis}
 #'   \strong{12}:354-374.
 #'   \href{https://doi.org/10.1093/pan/mph023}{link}.
+#'
+#' @examples 
+#' \donttest{
+#'   data(rodents)
+#'   document_term_table <- rodents$document_term_table
+#'   document_covariate_table <- rodents$document_covariate_table
+#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+#'   data <- document_covariate_table
+#'   data$gamma <- LDA_models@gamma
+#'   weights <- document_weights(document_term_table)
+#'   formula <- gamma ~ 1
+#'   nchangepoints <- 1
+#'   control <- TS_control()
+#'   data <- data[order(data[,"newmoon"]), ]
+#'   rho_dist <- est_changepoints(data, formula, nchangepoints, "newmoon", 
+#'                                weights, control)
+#'   eta_dist <- est_regressors(rho_dist, data, formula, "newmoon", weights, 
+#'                              control)
+#' }
 #'
 #' @export
 #'
@@ -650,6 +718,23 @@ est_regressors <- function(rho_dist, data, formula, timename, weights,
 #'   change point locations (unless \code{nchangepoints} is 0, then 
 #'   \code{NULL} is returned).
 #'
+#' @examples 
+#' \donttest{
+#'   data(rodents)
+#'   document_term_table <- rodents$document_term_table
+#'   document_covariate_table <- rodents$document_covariate_table
+#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+#'   data <- document_covariate_table
+#'   data$gamma <- LDA_models@gamma
+#'   weights <- document_weights(document_term_table)
+#'   formula <- gamma ~ 1
+#'   nchangepoints <- 1
+#'   control <- TS_control()
+#'   data <- data[order(data[,"newmoon"]), ]
+#'   rho_dist <- est_changepoints(data, formula, nchangepoints, "newmoon", 
+#'                                weights, control)
+#' }
+#'
 #' @export
 #'
 est_changepoints <- function(data, formula, nchangepoints, timename, weights, 
@@ -696,7 +781,15 @@ est_changepoints <- function(data, formula, nchangepoints, timename, weights,
 #' @param nr \code{integer} number of unique realizations, needed when
 #'   \code{bar_type} = "eta".
 #'
-#' @return \code{prep_pbar}: the initialized progress bar object.
+#' @param pbar The progress bar object returned from \code{prep_pbar}.
+#'
+#' @return \code{prep_pbar}: the initialized progress bar object. \cr \cr
+#'   \code{update_pbar}: the ticked-forward \code{pbar}.
+#'
+#' @examples
+#'   pb <- prep_pbar(control = list(nit = 2)); pb
+#'   pb <- update_pbar(pb); pb
+#'   pb <- update_pbar(pb); pb
 #'
 #' @export
 #'
@@ -726,10 +819,6 @@ prep_pbar <- function(control = list(), bar_type = "rho",
 }
 
 #' @rdname prep_pbar
-#'
-#' @param pbar The progress bar object returned from \code{prep_pbar}.
-#'
-#' @return \code{update_pbar}: the ticked-forward \code{pbar}.
 #'
 #' @export
 #'
@@ -763,6 +852,18 @@ update_pbar <- function(pbar, control = list()){
 #'   \code{response} entry in the \code{control} list, such as \code{gamma} 
 #'   for a standard TS analysis on LDA output. 
 #' 
+#' @return An error message is thrown if \code{formula} is not proper,
+#'   else \code{NULL}.
+#' 
+#' @examples 
+#'   data(rodents)
+#'   document_term_table <- rodents$document_term_table
+#'   document_covariate_table <- rodents$document_covariate_table
+#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+#'   data <- document_covariate_table
+#'   data$gamma <- LDA_models@gamma
+#'   check_formula(data, gamma ~ 1)
+#'
 #' @export
 #'
 check_formula <- function(data, formula){
@@ -786,6 +887,7 @@ check_formula <- function(data, formula){
     mis <- paste(misses, collapse = ", ")
     stop(paste0("formula includes predictors not present in data: ", mis))
   }
+  return()
 }
 
 #' @title Create the controls list for the Time Series model
@@ -845,6 +947,9 @@ check_formula <- function(data, formula){
 #'
 #' @return \code{list}, with named elements corresponding to the arguments.
 #'
+#' @examples
+#'   TS_control()
+#'
 #' @export
 #'
 TS_control <- function(memoise = TRUE, response = "gamma", lambda = 0, 
@@ -872,6 +977,19 @@ TS_control <- function(memoise = TRUE, response = "gamma", lambda = 0,
 #'
 #' @return Log likelihood of the model \code{logLik}, also with \code{df}
 #'   (degrees of freedom) and \code{nobs} (number of observations) values.
+#'
+#' @examples 
+#' \donttest{
+#'   data(rodents)
+#'   document_term_table <- rodents$document_term_table
+#'   document_covariate_table <- rodents$document_covariate_table
+#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+#'   data <- document_covariate_table
+#'   data$gamma <- LDA_models@gamma
+#'   weights <- document_weights(document_term_table)
+#'   TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, "newmoon", weights)
+#'   logLik(TSmod)
+#' }
 #'
 #' @export
 #'

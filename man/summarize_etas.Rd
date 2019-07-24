@@ -22,9 +22,8 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 \code{summarize_etas}: table of summary statistics for chunk-level
   regressors including mean, median, mode, posterior interval, standard
   deviation, MCMC error, autocorrelation, and effective sample size for 
-  each regressor.
-
-\code{measure_eta_vcov}: variance-covariance matrix for chunk-level
+  each regressor. \cr \cr
+  \code{measure_eta_vcov}: variance-covariance matrix for chunk-level
   regressors.
 }
 \description{
@@ -33,4 +32,10 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
   \cr \cr
   \code{measure_ets_vcov} generates the variance-covariance matrix for 
   the regressors.
+}
+\examples{
+ etas <- matrix(rnorm(100), 50, 2)
+ summarize_etas(etas)
+ measure_eta_vcov(etas)
+
 }

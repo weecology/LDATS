@@ -6,14 +6,14 @@
 \alias{rho_hist}
 \title{Create the summary plot for a TS fit to an LDA model}
 \usage{
-TS_summary_plot(x, cols = set_TS_summary_plot_cols(), bin_width,
-  xlab = NULL, border = NA, selection = "median", LDATS = FALSE)
+TS_summary_plot(x, cols = set_TS_summary_plot_cols(), bin_width = 1,
+  xname = NULL, border = NA, selection = "median", LDATS = FALSE)
 
-pred_gamma_TS_plot(x, selection = "median", cols, xlab = NULL,
-  LDATS = FALSE)
+pred_gamma_TS_plot(x, selection = "median", cols = set_gamma_colors(x),
+  xname = NULL, together = FALSE, LDATS = FALSE)
 
-rho_hist(x, cols, bin_width = 1, xlab = NULL, border = NA,
-  LDATS = FALSE)
+rho_hist(x, cols = set_rho_hist_colors(x$rhos), bin_width = 1,
+  xname = NULL, border = NA, together = FALSE, LDATS = FALSE)
 }
 \arguments{
 \item{x}{Object of class \code{TS_fit} produced by \code{\link{TS}}.}
@@ -29,7 +29,10 @@ details on usage.}
 \item{bin_width}{Width of the bins used in the histograms, in units of the
 x-axis (the time variable used to fit the model).}
 
-\item{xlab}{Label for the x-axis (time).}
+\item{xname}{Label for the x-axis in the summary time series plot. Defaults
+to \code{NULL}, which results in usage of the \code{timename} element
+of the control list (held in\code{control$TS_control$timename}). To have
+no label printed, set \code{xname = ""}.}
 
 \item{border}{Border for the histogram, default is \code{NA}.}
 
@@ -38,17 +41,37 @@ defined for "median" and "mode".}
 
 \item{LDATS}{\code{logical} indicating if the plot is part of a larger 
 LDATS plot output.}
+
+\item{together}{\code{logical} indicating if the subplots are part of a 
+larger LDA plot output.}
+}
+\value{
+\code{NULL}.
 }
 \description{
 Produces a two-panel figure of [1] the change point 
   distributions as histograms over time and [2] the time series of the 
   fitted topic proportions over time, based on a selected set of 
-  change point locations.
-
-\code{pred_gamma_TS_plot}: produce a time series of the 
+  change point locations. \cr \cr
+  \code{pred_gamma_TS_plot} produces a time series of the 
   fitted topic proportions over time, based on a selected set of change 
-  point locations.
-
-\code{rho_hist}: make a plot of the change point 
+  point locations. \cr \cr
+  \code{rho_hist}: make a plot of the change point 
   distributions as histograms over time.
+}
+\examples{
+\donttest{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
+  data <- document_covariate_table
+  data$gamma <- LDA_models@gamma
+  weights <- document_weights(document_term_table)
+  TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, "newmoon", weights)
+  TS_summary_plot(TSmod)
+  pred_gamma_TS_plot(TSmod)
+  rho_hist(TSmod)
+}
+
 }

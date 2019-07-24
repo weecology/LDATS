@@ -16,3 +16,7 @@ The LSE.
 Calculate the exponent of a vector (offset by the max), sum
   the elements, calculate the log, remove the offset.
 }
+\examples{
+  logsumexp(1:10)
+
+}

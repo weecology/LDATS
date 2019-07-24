@@ -161,10 +161,10 @@ test_that("check TS_diagnostics_plot", {
 test_that("check TS_summary_plot", {
   if (tenv == "cran"){
     expect_silent(TS_summary_plot(TSmod, cols = set_TS_summary_plot_cols(),
-                        bin_width = 1, xlab = NULL, selection = "median"))
+                        bin_width = 1, xname = NULL, selection = "median"))
   } else{
     TS_summary_plot(TSmod, cols = set_TS_summary_plot_cols(),
-                          bin_width = 1, xlab = NULL, selection = "median")
+                          bin_width = 1, xname = NULL, selection = "median")
     TS_summ_plot <- recordPlot()
     vdiffr::expect_doppelganger("Base TS summary plot", TS_summ_plot)  
   }

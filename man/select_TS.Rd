@@ -29,3 +29,18 @@ Select the best model of interest from an
   model. If multiple models are chosen via the selection, only the first
   is returned.
 }
+\examples{
+\donttest{
+  data(rodents)
+  document_term_table <- rodents$document_term_table
+  document_covariate_table <- rodents$document_covariate_table
+  LDAs <- LDA_set(document_term_table, topics = 2:3, nseeds = 2)
+  LDA_models <- select_LDA(LDAs)
+  weights <- document_weights(document_term_table)
+  formulas <- c(~ 1, ~ newmoon)
+  mods <- TS_on_LDA(LDA_models, document_covariate_table, formulas,
+                    nchangepoints = 0:1, timename = "newmoon", weights)
+  select_TS(mods)
+}
+
+}
