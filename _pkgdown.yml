@@ -1,5 +1,6 @@
 url: https://weecology.github.io/ldats
-
+development:
+  mode: auto
 navbar:
   title: "ldats"
   structure:
