@@ -50,7 +50,7 @@ Fit a multinomial regression model (via
 \examples{
   data(rodents)
   dtt <- rodents$document_term_table
-  lda <- LDA_set(dtt, 4, 1, list(quiet = TRUE))
+  lda <- LDA_set(dtt, 2, 1, list(quiet = TRUE))
   dct <- rodents$document_covariate_table
   dct$gamma <- lda[[1]]@gamma
   weights <- document_weights(dtt)

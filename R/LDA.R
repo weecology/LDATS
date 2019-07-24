@@ -105,9 +105,8 @@ LDA_set <- function(document_term_table, topics = 2, nseeds = 1,
 #' @examples 
 #'   data(rodents)
 #'   lda_data <- rodents$document_term_table
-#'   r_LDA <- LDA_set(lda_data, topics = 2, nseeds = 2)   
+#'   r_LDA <- LDA_set(lda_data, topics = 2)   
 #'   logLik(r_LDA[[1]])
-#'   logLik(r_LDA[[2]])
 #'
 #' @export
 #'
@@ -220,7 +219,7 @@ select_LDA <- function(LDA_models = NULL, control = list()){
 #'   \code{LDA_VEM}).
 #'
 #' @examples 
-#' \dontrun{
+#' \donttest{
 #'   data(rodents)
 #'   document_term_table <- rodents$document_term_table
 #'   topics <- 2
@@ -234,7 +233,7 @@ select_LDA <- function(LDA_models = NULL, control = list()){
 #'   for (i in 1:nmods){
 #'     LDA_msg(mod_topics[i], mod_seeds[i], control)
 #'     control_i <- prep_LDA_control(seed = mod_seeds[i], control = control)
-#'     mods[[i]] <- LDA(document_term_table, k = mod_topics[i], 
+#'     mods[[i]] <- topicmodels::LDA(document_term_table, k = mod_topics[i], 
 #'                      control = control_i)
 #'   }
 #'   package_LDA_set(mods, mod_topics, mod_seeds)

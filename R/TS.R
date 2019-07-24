@@ -562,7 +562,7 @@ measure_rho_vcov <- function(rhos){
 #'   Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
 #'   \code{\link{TS_control}}.
 #'
-#' @return Matrix of draws (rows) from the marginal posteriors of the 
+#' @return \code{matrix} of draws (rows) from the marginal posteriors of the 
 #'   coefficients across the segments (columns). 
 #'
 #' @references

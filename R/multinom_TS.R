@@ -64,13 +64,13 @@
 #' @examples 
 #'   data(rodents)
 #'   dtt <- rodents$document_term_table
-#'   lda <- LDA_set(dtt, 4, 1, list(quiet = TRUE))
+#'   lda <- LDA_set(dtt, 2, 1, list(quiet = TRUE))
 #'   dct <- rodents$document_covariate_table
 #'   dct$gamma <- lda[[1]]@gamma
 #'   weights <- document_weights(dtt)
+#'   check_multinom_TS_inputs(dct, timename = "newmoon")
 #'   mts <- multinom_TS(dct, formula = gamma ~ 1, changepoints = c(20,50),
 #'                      timename = "newmoon", weights = weights) 
-#'   check_multinom_TS_inputs(dct, timename = "newmoon")
 #'
 #' @export 
 #'
@@ -124,6 +124,9 @@ check_multinom_TS_inputs <- function(data, formula = gamma~1,
 #' @return An error message is thrown if \code{changepoints} are not proper,
 #'   else \code{NULL}.
 #'
+#' @examples
+#'   check_changepoints(100)
+#'
 #' @export
 #'
 check_changepoints <- function(changepoints = NULL){
@@ -154,7 +157,7 @@ check_changepoints <- function(changepoints = NULL){
 #' @examples 
 #'   data(rodents)
 #'   dtt <- rodents$document_term_table
-#'   lda <- LDA_set(dtt, 4, 1, list(quiet = TRUE))
+#'   lda <- LDA_set(dtt, 2, 1, list(quiet = TRUE))
 #'   dct <- rodents$document_covariate_table
 #'   dct$gamma <- lda[[1]]@gamma
 #'   weights <- document_weights(dtt)
@@ -200,7 +203,28 @@ logLik.multinom_TS_fit <- function(object, ...){
 #'   chunk-level model fits, [2] the total log likelihood combined across 
 #'   all chunks, and [3] the chunk time data table.
 #'
+#' @examples 
+#'   data(rodents)
+#'   dtt <- rodents$document_term_table
+#'   lda <- LDA_set(dtt, 2, 1, list(quiet = TRUE))
+#'   dct <- rodents$document_covariate_table
+#'   dct$gamma <- lda[[1]]@gamma
+#'   weights <- document_weights(dtt)
+#'   formula <- gamma ~ 1
+#'   changepoints <- c(20,50)
+#'   timename <- "newmoon"
+#'   TS_chunk_memo <- memoise_fun(multinom_TS_chunk, TRUE)
+#'   chunks <- prep_chunks(dct, changepoints, timename)
+#'   nchunks <- nrow(chunks)
+#'   fits <- vector("list", length = nchunks)
+#'   for (i in 1:nchunks){
+#'     fits[[i]] <- TS_chunk_memo(dct, formula, chunks[i, ], timename, 
+#'                                weights, TS_control())
+#'   }
+#'   package_chunk_fits(chunks, fits) 
+#'
 #' @export 
+#' 
 #'
 package_chunk_fits <- function(chunks, fits){
   nchunks <- nrow(chunks)
@@ -240,7 +264,7 @@ package_chunk_fits <- function(chunks, fits){
 #' @examples
 #'   data(rodents)
 #'   dtt <- rodents$document_term_table
-#'   lda <- LDA_set(dtt, 4, 1, list(quiet = TRUE))
+#'   lda <- LDA_set(dtt, 2, 1, list(quiet = TRUE))
 #'   dct <- rodents$document_covariate_table
 #'   dct$gamma <- lda[[1]]@gamma
 #'   chunks <- prep_chunks(dct, changepoints = 100, timename = "newmoon")   
@@ -277,7 +301,7 @@ prep_chunks <- function(data, changepoints = NULL,
 #' @examples
 #'   data(rodents)
 #'   dtt <- rodents$document_term_table
-#'   lda <- LDA_set(dtt, 4, 1, list(quiet = TRUE))
+#'   lda <- LDA_set(dtt, 2, 1, list(quiet = TRUE))
 #'   dct <- rodents$document_covariate_table
 #'   dct$gamma <- lda[[1]]@gamma
 #'   verify_changepoint_locations(dct, changepoints = 100, 
@@ -348,7 +372,7 @@ verify_changepoint_locations <- function(data, changepoints = NULL,
 #' @examples 
 #'   data(rodents)
 #'   dtt <- rodents$document_term_table
-#'   lda <- LDA_set(dtt, 4, 1, list(quiet = TRUE))
+#'   lda <- LDA_set(dtt, 2, 1, list(quiet = TRUE))
 #'   dct <- rodents$document_covariate_table
 #'   dct$gamma <- lda[[1]]@gamma
 #'   weights <- document_weights(dtt)

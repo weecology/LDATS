@@ -24,7 +24,7 @@ Name the elements (LDA models) and set the class
   (\code{LDA_set}) of the models returned by \code{\link{LDA_set}}.
 }
 \examples{
-\dontrun{
+\donttest{
   data(rodents)
   document_term_table <- rodents$document_term_table
   topics <- 2
@@ -38,7 +38,7 @@ Name the elements (LDA models) and set the class
   for (i in 1:nmods){
     LDA_msg(mod_topics[i], mod_seeds[i], control)
     control_i <- prep_LDA_control(seed = mod_seeds[i], control = control)
-    mods[[i]] <- LDA(document_term_table, k = mod_topics[i], 
+    mods[[i]] <- topicmodels::LDA(document_term_table, k = mod_topics[i], 
                      control = control_i)
   }
   package_LDA_set(mods, mod_topics, mod_seeds)

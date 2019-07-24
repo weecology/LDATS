@@ -23,7 +23,7 @@ Check that the \code{LDA_models} input is either a set of
   data(rodents)
   document_term_table <- rodents$document_term_table
   document_covariate_table <- rodents$document_covariate_table
-  LDAs <- LDA_set(document_term_table, topics = 2, nseeds = 2)
+  LDAs <- LDA_set(document_term_table, topics = 2, nseeds = 1)
   LDA_models <- select_LDA(LDAs)
   check_LDA_models(LDA_models)
 

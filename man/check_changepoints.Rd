@@ -17,3 +17,7 @@ An error message is thrown if \code{changepoints} are not proper,
 Check that the change point locations are \code{numeric}
   and conformable to \code{interger} values.
 }
+\examples{
+  check_changepoints(100)
+
+}

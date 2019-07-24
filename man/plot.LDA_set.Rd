@@ -25,4 +25,5 @@ Generalization of the \code{\link[graphics]{plot}} function to
   r_LDA <- LDA_set(lda_data, topics = 2, nseeds = 2) 
   plot(r_LDA)
 }
+
 }

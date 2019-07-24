@@ -213,6 +213,14 @@ check_LDA_TS_inputs <- function(data = NULL,
 #' @return The selected models in \code{x} as a two-element \code{list} with
 #'   the TS component only returning the non-hidden components.
 #'
+#' @examples 
+#' \donttest{
+#'   data(rodents)
+#'   mod <- LDA_TS(data = rodents, topics = 2, nseeds = 1, formulas = ~1,
+#'                 nchangepoints = 1, timename = "newmoon")
+#'   print(mod)
+#' }
+#'
 #' @export
 #'
 print.LDA_TS <- function(x, ...){

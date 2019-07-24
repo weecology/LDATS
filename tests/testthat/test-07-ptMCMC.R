@@ -17,7 +17,7 @@ weights <- document_weights(document_term_table)
 timename <- "newmoon"
 LDAs <- LDA_set(document_term_table, topics, nseeds)
 LDA_models <- select_LDA(LDAs)
-control <- list(nit = 100, seed = 1)
+control <- list(nit = 20, seed = 1)
 mods <- expand_TS(LDA_models, formulas, nchangepoints)
 formula <- mods$formula[[1]]
 nchangepoints <- mods$nchangepoints[1]
@@ -41,10 +41,10 @@ ids <- prep_ids(control)
 test_that("check prep_proposal_dist", {
   pd <- prep_proposal_dist(nchangepoints, control)
   expect_equal(length(pd), 2)
-  expect_equal(dim(pd[[1]]), c(100, 6))
+  expect_equal(dim(pd[[1]]), c(20, 6))
   pd2 <- prep_proposal_dist(0, control)
   expect_equal(length(pd2), 2)
-  expect_equal(dim(pd2[[1]]), c(100, 6))
+  expect_equal(dim(pd2[[1]]), c(20, 6))
   expect_error(prep_proposal_dist("ok", control))
   expect_error(prep_proposal_dist(nchangepoints, "ok"))
 })
@@ -85,7 +85,7 @@ test_that("check update_ids", {
   steps <- step_chains(1, cpts, inputs)
   swaps <- swap_chains(steps, inputs, ids)
   ids <- update_ids(ids, swaps)
-  expect_equal(ids, c(1, 2, 3, 4, 6, 5))
+  expect_equal(ids, c(1, 2, 4, 3, 5, 6))
 })
 
 
@@ -106,20 +106,20 @@ test_that("check proposed_step_mods", {
   expect_is(mods[[1]], "multinom_TS_fit")
   expect_is(mods[[1]][[1]], "list")
   expect_is(mods[[1]][[1]][[1]], "multinom")
-  expect_equal(round(mods[[1]][[1]][[1]]$deviance, 1), 218.5)
+  expect_equal(round(mods[[1]][[1]][[1]]$deviance, 1), 43.9)
 })
 
 test_that("check propose_step", {
   prop_step <- propose_step(1, cpts, inputs)
   expect_equal(length(prop_step), 2)
   expect_equal(names(prop_step), c("changepts", "lls"))
-  expect_equal(prop_step[[1]][1,1], 301)
+  expect_equal(prop_step[[1]][1,1], 198)
 })
 test_that("check eval_step", {
   set.seed(1)
   prop_step <- propose_step(1, cpts, inputs)
   accept_step <- eval_step(1, cpts, prop_step, inputs)
-  expect_equal(accept_step, c(F, T, T, T, T, T))
+  expect_equal(accept_step, c(T, F, T, T, T, T))
 })
 test_that("check take_step", {
   prop_step <- propose_step(1, cpts, inputs)
@@ -143,7 +143,7 @@ test_that("check swap_chains", {
   swaps <- swap_chains(steps, inputs, ids)
   expect_equal(length(swaps), 4)
   expect_equal(names(swaps), c("changepts", "lls", "ids", "accept_swap"))
-  expect_equal(swaps[[3]][3], 6)
+  expect_equal(swaps[[3]][3], 4)
 })
 
 test_that("check count_trips", {
@@ -170,7 +170,7 @@ test_that("check prep_saves", {
   svs <- prep_saves(nchangepoints, control)
   expect_is(svs, "list")
   expect_equal(length(svs), 5)
-  expect_equal(dim(svs[[1]]), c(1, 6, 100))
+  expect_equal(dim(svs[[1]]), c(1, 6, 20))
   expect_error(prep_saves("ok", control))
   expect_error(prep_saves(nchangepoints, "ok"))
 })
@@ -186,8 +186,8 @@ test_that("check update_saves", {
   saves <- update_saves(1, saves, steps, swaps)
   expect_is(saves, "list")
   expect_equal(length(saves), 5)
-  expect_equal(dim(saves[[1]]), c(1, 6, 100))
-  expect_equal(saves[[1]][1, 1, 1], 275)
+  expect_equal(dim(saves[[1]]), c(1, 6, 20))
+  expect_equal(saves[[1]][1, 1, 1], 309)
 })
 
 test_that("check process_saves", {
@@ -207,15 +207,15 @@ test_that("check process_saves", {
   out <- process_saves(saves, control)
   expect_is(out, "list")
   expect_equal(length(out), 5)
-  expect_equal(dim(out[[1]]), c(1, 6, 100))
-  expect_equal(out[[1]][1, 1, 1], 275)
-  expect_equal(out[[1]][1, 1, 100], 271)
-  out2 <- process_saves(saves, list(burnin = 10, nit = 1e2))
+  expect_equal(dim(out[[1]]), c(1, 6, 20))
+  expect_equal(out[[1]][1, 1, 1], 309)
+  expect_equal(out[[1]][1, 1, 20], 270)
+  out2 <- process_saves(saves, list(burnin = 10, nit = 20))
   expect_is(out2, "list")
   expect_equal(length(out2), 5)
-  expect_equal(dim(out2[[1]]), c(1, 6, 90))
-  expect_equal(out2[[1]][1, 1, 1], 275)
-  expect_equal(out2[[1]][1, 1, 90], 272)
+  expect_equal(dim(out2[[1]]), c(1, 6, 10))
+  expect_equal(out2[[1]][1, 1, 1], 309)
+  expect_equal(out2[[1]][1, 1, 3], 301)
 })
 
 test_that("check prep_cpts", {
@@ -249,7 +249,7 @@ test_that("check update_cpts", {
   cpts <- update_cpts(cpts, swaps)
   expect_is(cpts, "list")
   expect_equal(length(cpts), 2)
-  expect_equal(cpts[[1]][1,1], 275)  
+  expect_equal(cpts[[1]][1,1], 309)  
 })
 
 test_that("check prep_temp_sequence", {

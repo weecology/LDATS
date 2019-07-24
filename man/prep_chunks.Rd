@@ -35,7 +35,7 @@ Creates the table containing the start and end times for each
 \examples{
   data(rodents)
   dtt <- rodents$document_term_table
-  lda <- LDA_set(dtt, 4, 1, list(quiet = TRUE))
+  lda <- LDA_set(dtt, 2, 1, list(quiet = TRUE))
   dct <- rodents$document_covariate_table
   dct$gamma <- lda[[1]]@gamma
   chunks <- prep_chunks(dct, changepoints = 100, timename = "newmoon")   

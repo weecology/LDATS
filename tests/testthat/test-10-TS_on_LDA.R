@@ -12,7 +12,9 @@ weights <- document_weights(document_term_table)
 timename <- "newmoon"
 LDAs <- LDA_set(document_term_table, topics, nseeds)
 LDA_models <- select_LDA(LDAs)
-
+  mods <- TS_on_LDA(LDA_models, document_covariate_table, formulas, 
+                  nchangepoints = 0:1, timename, weights, 
+                  control = list(nit = 20))
 
 test_that("check prep_TS_data", {
   mods <- expand_TS(LDA_models, formulas=c(~1, ~sin_year, ~newmoon), 
@@ -37,9 +39,7 @@ test_that("check prep_TS_data", {
 })
 
 test_that("check select_TS", {
-  mods <- TS_on_LDA(LDA_models, document_covariate_table, formulas, 
-                  nchangepoints = 0:1, timename, weights, 
-                  control = list(nit = 50))
+
   sel_mod <- select_TS(mods, list())
 
   expect_equal(length(mods), 2)
@@ -64,7 +64,7 @@ test_that("check package_TS_on_LDA", {
     nchangepoints_i <- mods$nchangepoints[i]
     data_i <- prep_TS_data(document_covariate_table, LDA_models, mods, i)
     TSmods[[i]] <- TS(data_i, formula_i, nchangepoints_i,timename, weights, 
-                      control = list(nit = 50))
+                      control = list(nit = 20))
   }
   expect_is(package_TS_on_LDA(TSmods, LDA_models, mods), "TS_on_LDA")
   expect_is(package_TS_on_LDA(TSmods, LDA_models[[1]], mods), "TS_on_LDA")
@@ -75,9 +75,6 @@ test_that("check package_TS_on_LDA", {
 
 
 test_that("check TS_on_LDA", {
-  mods <- TS_on_LDA(LDA_models, document_covariate_table, formulas, 
-                  nchangepoints = 0:1, timename, weights, 
-                  control = list(nit = 50))
   expect_is(mods, "TS_on_LDA")
   expect_equal(length(mods), 2)
   expect_is(mods[[1]], "TS_fit")
@@ -102,10 +99,7 @@ test_that("check TS_on_LDA", {
 
 
 test_that("check printing for TS_on_LDA", {
-  m1 <- TS_on_LDA(LDA_models, document_covariate_table, formulas, 
-                  nchangepoints, timename,weights, 
-                  control = list(nit = 50))
-  expect_output(print(m1))
+  expect_output(print(mods))
 })
 
 test_that("check print_model_run_message", {

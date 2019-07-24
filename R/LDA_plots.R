@@ -16,6 +16,7 @@
 #'   r_LDA <- LDA_set(lda_data, topics = 2, nseeds = 2) 
 #'   plot(r_LDA)
 #' }
+#'
 #' @export 
 #'
 plot.LDA_set <- function(x, ...){

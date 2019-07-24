@@ -12,7 +12,7 @@ nchangepoints <- 1
 weights <- document_weights(document_term_table)
 LDAs <- LDA_set(document_term_table, topics, nseeds)
 LDA_models <- select_LDA(LDAs)
-control <- list(nit = 1e2, seed = 1)
+control <- list(nit = 20, seed = 1)
 timename <- "newmoon"
 mods <- expand_TS(LDA_models, formulas, nchangepoints)
 formula <- mods$formula[[1]]

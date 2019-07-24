@@ -46,7 +46,7 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 \code{\link{TS_control}}.}
 }
 \value{
-Matrix of draws (rows) from the marginal posteriors of the 
+\code{matrix} of draws (rows) from the marginal posteriors of the 
   coefficients across the segments (columns).
 }
 \description{

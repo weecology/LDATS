@@ -28,9 +28,8 @@ The number of degrees of freedom is 1 (for alpha) plus the number
 \examples{
   data(rodents)
   lda_data <- rodents$document_term_table
-  r_LDA <- LDA_set(lda_data, topics = 2, nseeds = 2)   
+  r_LDA <- LDA_set(lda_data, topics = 2)   
   logLik(r_LDA[[1]])
-  logLik(r_LDA[[2]])
 
 }
 \references{

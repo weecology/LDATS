@@ -75,13 +75,13 @@ Fit a set of multinomial regression models (via
 \examples{
   data(rodents)
   dtt <- rodents$document_term_table
-  lda <- LDA_set(dtt, 4, 1, list(quiet = TRUE))
+  lda <- LDA_set(dtt, 2, 1, list(quiet = TRUE))
   dct <- rodents$document_covariate_table
   dct$gamma <- lda[[1]]@gamma
   weights <- document_weights(dtt)
+  check_multinom_TS_inputs(dct, timename = "newmoon")
   mts <- multinom_TS(dct, formula = gamma ~ 1, changepoints = c(20,50),
                      timename = "newmoon", weights = weights) 
-  check_multinom_TS_inputs(dct, timename = "newmoon")
 
 }
 \references{
