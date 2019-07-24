@@ -29,8 +29,7 @@ defaults in (\code{LDAcontol}, see \code{\link[topicmodels]{LDA}} (but if
  \code{seed} is given, it will be overwritten; use \code{iseed} instead).}
 }
 \value{
-\cr \cr 
-  \code{LDA_set}: \code{list} (class: \code{LDA_set}) of LDA models 
+\code{LDA_set}: \code{list} (class: \code{LDA_set}) of LDA models 
   (class: \code{LDA_VEM}).
   \code{check_LDA_set_inputs}: an error message is thrown if any input is 
   improper, otherwise \code{NULL}.

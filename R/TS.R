@@ -93,7 +93,7 @@
 #'                    including the change point locations and regressors.}
 #'     \item{deviance}{Penalized negative log-likelihood, based on 
 #'                     \code{logLik} and \code{nparams}.}
-#'   } \cr \cr
+#'   } 
 #'   \code{check_TS_inputs}: An error message is thrown if any input
 #'   is not proper, else \code{NULL}.
 #'
