@@ -7,7 +7,7 @@ This is a resubmission. In this version I have:
 * Elaborated the Description field in the DESCRIPTION file including references as requested 
 * Added a \value entry with explanation to all functions' .Rd files with 
 * Added small executable examples to all functions' .Rd files 
-* Longer running examples have been enclosed in \donttest{}, and all \dontrun{} wrappings have been replaced with \donttest{} 
+* Longer running examples have been enclosed in \donttest{}, and all \dontrun{} wrappings have been replaced with \donttest{}. \donttest{} examples have also been tested in checks for completeness using --run-donttest
 * Ensured re-setting of user options (set via par()) using on.exit() 
 * All messages to the console are now written using message()/warning() rather than print()/cat() 
 
