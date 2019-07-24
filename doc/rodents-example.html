@@ -297,7 +297,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 
 
-<p>This vignette walks through an example of <strong><code>LDATS</code></strong> at the command line and was constructed using <strong><code>LDATS</code></strong> version 0.2.3 on 2019-07-23.</p>
+<p>This vignette walks through an example of <strong><code>LDATS</code></strong> at the command line and was constructed using <strong><code>LDATS</code></strong> version 0.2.3 on 2019-07-24.</p>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
 <p>To obtain the most recent version of <strong>LDATS</strong>, install and load the most recent version from GitHub:</p>
@@ -309,7 +309,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <h2>Data</h2>
 <p>For this vignette, we will be using rodent data from the control plots of the <a href="https://github.com/weecology/portaldata">Portal Project</a>, which come with the <strong>LDATS</strong> package (<code>data(rodents)</code>).</p>
 <p><code>rodents</code> contains two data tables, a <code>document_term_table</code> and a <code>document_covariate_table</code>.</p>
-<p>The <code>document_term_table</code> is a matrix of species (term) counts by sampling period (document). Importantly, the <code>document_term_table</code> contains raw counts of individual rodent captures, not catch per unit effort. The LDA models operate on proportions and weight the information from each sampling period according to total catch (document size). Similarly, the TS models use the LDA compositional breakdown and weight the information from each period according to the total catch. We therefore give both models un-adjusted data. The values in the <code>document_term_table</code> must be integers.</p>
+<p>The <code>document_term_table</code> is a matrix of species (term) counts by sampling period (document). Importantly, the <code>document_term_table</code> contains raw counts of individual rodent captures, not catch per unit effort. The LDA models operate on proportions and weight the information from each sampling period according to total catch (document size). Similarly, the TS models use the LDA compositional breakdown and weight the information from each period according to the total catch. We therefore give both models unadjusted data. The values in the <code>document_term_table</code> must be integers.</p>
 <p>The <code>document_covariate_table</code> contains the covariates we would like to use for the time series models. In this case, we have a column for <code>newmoon</code>, which is the time step for each of our sampling periods. This column can include nonconsecutive time steps (i.e., <code>2, 4, 5</code>) if sampling periods are skipped or at unequal intervals, but must be integer-conformable or a date. Although if a date, the assumption is that the timestep is 1 day, which is often not desired behavior. If there is no time column, <code>LDATS</code> will assume all time steps are equidistant. We also include columns <code>sin_year</code> and <code>cos_year</code> so we can account for seasonal dynamics.</p>
 <pre class="sourceCode r" id="cb2"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">data</span>(rodents)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">head</span>(rodents<span class="op">$</span>document_term_table, <span class="dv">10</span>)</a>
@@ -348,11 +348,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <p>If we do not pass any controls, by default, <code>quiet = FALSE</code> (here run with only <code>2:3</code> topics and <code>2</code> seeds, to keep output short):</p>
 <pre class="sourceCode r" id="cb4"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">lda_model_set2 &lt;-<span class="st"> </span><span class="kw">LDA_set</span>(<span class="dt">document_term_table =</span> rodents<span class="op">$</span>document_term_table,</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2">                         <span class="dt">topics =</span> <span class="kw">c</span>(<span class="dv">2</span><span class="op">:</span><span class="dv">3</span>),</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3">                         <span class="dt">nseeds =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt; Running LDA with 2 topics (seed 2)</span></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">#&gt; Running LDA with 2 topics (seed 4)</span></a>
-<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt; Running LDA with 3 topics (seed 2)</span></a>
-<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt; Running LDA with 3 topics (seed 4)</span></a></code></pre>
+<a class="sourceLine" id="cb4-3" data-line-number="3">                         <span class="dt">nseeds =</span> <span class="dv">2</span>)</a></code></pre>
 <p><code>LDA_set()</code> returns a list of LDA models. We use <code>select_LDA()</code> to identify the best number of topics and choice of seed from our set of models. By default, we will choose models based on minimum AIC. To use different selection criteria, define the appropriate functions and specify them by passing <code>list(measurer = [measurer function], selector = [max, min, etc])</code> to the <code>control</code> argument.</p>
 <pre class="sourceCode r" id="cb5"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">selected_lda_model &lt;-<span class="st"> </span><span class="kw">select_LDA</span>(lda_model_set)</a></code></pre>
 <p>We can access the results of the model:</p>

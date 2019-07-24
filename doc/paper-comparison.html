@@ -586,7 +586,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <a class="sourceLine" id="cb11-10" data-line-number="10"><span class="co">#   multiply by 8 to estimate captures as if all plots were trapped</span></a>
 <a class="sourceLine" id="cb11-11" data-line-number="11">ldats_rodents_adjusted &lt;-<span class="st"> </span><span class="kw">as.data.frame.matrix</span>(rodents[[<span class="dv">1</span>]])</a>
 <a class="sourceLine" id="cb11-12" data-line-number="12">ldats_rodents_adjusted[periods, ] &lt;-<span class="st"> </span><span class="kw">round</span>(ldats_rodents_adjusted[periods, ] <span class="op">/</span><span class="st"> </span>nplots_controls<span class="op">$</span>x[periods] <span class="op">*</span><span class="st"> </span><span class="dv">8</span>)</a></code></pre>
-<p>Now we can compare the adjusted ldats dataset with both the original ldats dataset and the dataset from the paper:</p>
+<p>Now we can compare the adjusted LDATS dataset with both the original ldats dataset and the dataset from the paper:</p>
 <pre class="sourceCode r" id="cb12"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">compare_raw &lt;-<span class="st"> </span>rodents[[<span class="dv">1</span>]] <span class="op">==</span><span class="st"> </span>ldats_rodents_adjusted</a>
 <a class="sourceLine" id="cb12-2" data-line-number="2"><span class="kw">length</span>(<span class="kw">which</span>(<span class="kw">rowSums</span>(compare_raw) <span class="op">&lt;</span><span class="st"> </span><span class="kw">ncol</span>(compare_raw)))</a>
 <a class="sourceLine" id="cb12-3" data-line-number="3"><span class="co">#&gt; [1] 16</span></a>

@@ -1,9 +1,29 @@
 ## Test environments
-* local Windows 10 home install, R 3.6.1
-* ubuntu 14.04 (on travis-ci), R. 3.6.0 and R-devel (2019-06-26 r76742)
+* local Windows 10 home install, R 3.6.1 64-bit and 32-bit
+* ubuntu 14.04.5 LTS (on travis-ci), R 3.6.1 and R-devel (2019-07-24 r76881)
+* win builder, R 3.6.1 and R-devel (2019-07-05 r76784)
+* R-hub builder, Ubuntu Linux 16.04, R-release
+* R-hub builder, Fedora Linux, R-devel
 
 ## R CMD check results:
-There were no ERRORs or WARNINGs or NOTEs
+There were no ERRORs or WARNINGs 
+There was 1 NOTE:
+
+* checking CRAN incoming feasibility ... NOTE
+Maintainer: 'Juniper L. Simonis <juniper.simonis@weecology.org>'
+
+New submission
+
+Possibly mis-spelled words in DESCRIPTION:
+  Blei (26:68)
+  Kleykamp (27:65)
+  Venables (28:36)
+  al (27:8, 29:55)
+  changepoints (26:5)
+  et (27:5, 29:52)
+
+
+  Those words are spelled correctly.
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package.
