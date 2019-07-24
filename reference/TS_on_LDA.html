@@ -39,8 +39,8 @@
   number of discrete changepoints. This function allows direct passage of
   the control parameters for the parallel tempering MCMC through to the 
   main Time Series function, TS, via the 
-  ptMCMC_controls argument.
-check_TS_on_LDA_inputs checks that the inputs to 
+  ptMCMC_controls argument.  
+  check_TS_on_LDA_inputs checks that the inputs to 
   TS_on_LDA are of proper classes for a full analysis." />
 <meta name="twitter:card" content="summary" />
 
@@ -72,7 +72,7 @@ check_TS_on_LDA_inputs checks that the inputs to
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3</span>
       </span>
     </div>
 
@@ -149,8 +149,8 @@ check_TS_on_LDA_inputs checks that the inputs to
   number of discrete changepoints. This function allows direct passage of
   the control parameters for the parallel tempering MCMC through to the 
   main Time Series function, <code><a href='TS.html'>TS</a></code>, via the 
-  <code>ptMCMC_controls</code> argument.</p>
-<p><code>check_TS_on_LDA_inputs</code> checks that the inputs to 
+  <code>ptMCMC_controls</code> argument. <br /> <br />
+  <code>check_TS_on_LDA_inputs</code> checks that the inputs to 
   <code>TS_on_LDA</code> are of proper classes for a full analysis.</p>
     
     </div>
@@ -231,8 +231,11 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Class <code>TS_on_LDA</code> list of results from <code><a href='TS.html'>TS</a></code> 
-  applied for each model on each LDA model input.</p>
+    <p><code>TS_on_LDA</code>: <code>TS_on_LDA</code>-class <code>list</code> of results 
+  from <code><a href='TS.html'>TS</a></code> applied for each model on each LDA model input.
+  <br /> <br />
+  <code>check_TS_inputs</code>: An error message is thrown if any input
+  is not proper, else <code>NULL</code>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -246,8 +249,9 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
   <span class='no'>formulas</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(~ <span class='fl'>1</span>, ~ <span class='no'>newmoon</span>)
   <span class='no'>mods</span> <span class='kw'>&lt;-</span> <span class='fu'>TS_on_LDA</span>(<span class='no'>LDA_models</span>, <span class='no'>document_covariate_table</span>, <span class='no'>formulas</span>,
                     <span class='kw'>nchangepoints</span> <span class='kw'>=</span> <span class='fl'>0</span>:<span class='fl'>1</span>, <span class='kw'>timename</span> <span class='kw'>=</span> <span class='st'>"newmoon"</span>, <span class='no'>weights</span>)
-<span class='co'># }</span><div class='input'>
-</div></pre>
+<span class='co'># }</span># NOT RUN {
+# }
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot a LDATS TS models — plot.TS_fit • LDATS</title>
+<title>Plot an LDATS TS model — plot.TS_fit • LDATS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,7 +30,7 @@
 
 
 
-<meta property="og:title" content="Plot a LDATS TS models — plot.TS_fit" />
+<meta property="og:title" content="Plot an LDATS TS model — plot.TS_fit" />
 
 <meta property="og:description" content="Generalization of the plot function to 
   work on fitted TS model objects (class TS_fit) returned from 
@@ -65,7 +65,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3</span>
       </span>
     </div>
 
@@ -128,7 +128,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot a LDATS TS models</h1>
+    <h1>Plot an LDATS TS model</h1>
     <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/TS_plots.R'><code>R/TS_plots.R</code></a></small>
     <div class="hidden name"><code>plot.TS_fit.Rd</code></div>
     </div>
@@ -144,7 +144,7 @@
     <pre class="usage"><span class='co'># S3 method for TS_fit</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>plot_type</span> <span class='kw'>=</span> <span class='st'>"summary"</span>,
   <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='fu'><a href='set_TS_summary_plot_cols.html'>set_TS_summary_plot_cols</a></span>(),
-  <span class='kw'>bin_width</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>border</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>selection</span> <span class='kw'>=</span> <span class='st'>"median"</span>,
+  <span class='kw'>bin_width</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>xname</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>border</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>selection</span> <span class='kw'>=</span> <span class='st'>"median"</span>,
   <span class='kw'>LDATS</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -182,12 +182,15 @@ and each containing default values for entries named <code>cols</code>,
     <tr>
       <th>bin_width</th>
       <td><p>Width of the bins used in the histograms of the summary 
-timeseries plot, in units of the x-axis (the time variable used to fit 
+time series plot, in units of the x-axis (the time variable used to fit 
 the model).</p></td>
     </tr>
     <tr>
-      <th>xlab</th>
-      <td><p>Label for the x-axis in the summary time series plot.</p></td>
+      <th>xname</th>
+      <td><p>Label for the x-axis in the summary time series plot. Defaults
+to <code>NULL</code>, which results in usage of the <code>timename</code> element
+of the control list (held in<code>control$TS_control$timename</code>). To have
+no label printed, set <code>xname = ""</code>.</p></td>
     </tr>
     <tr>
       <th>border</th>
@@ -195,7 +198,7 @@ the model).</p></td>
     </tr>
     <tr>
       <th>selection</th>
-      <td><p>Indicator of the change points to use in the timeseries
+      <td><p>Indicator of the change points to use in the time series
 summary plot. Currently only defined for <code>"median"</code> and 
 <code>"mode"</code>.</p></td>
     </tr>
@@ -206,13 +209,35 @@ LDATS plot output.</p></td>
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
+    <p><code>NULL</code>.</p>
+    
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>rodents</span>)
+  <span class='no'>document_term_table</span> <span class='kw'>&lt;-</span> <span class='no'>rodents</span>$<span class='no'>document_term_table</span>
+  <span class='no'>document_covariate_table</span> <span class='kw'>&lt;-</span> <span class='no'>rodents</span>$<span class='no'>document_covariate_table</span>
+  <span class='no'>LDA_models</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='LDA_set.html'>LDA_set</a></span>(<span class='no'>document_term_table</span>, <span class='kw'>topics</span> <span class='kw'>=</span> <span class='fl'>2</span>)<span class='kw'>[[</span><span class='fl'>1</span>]]
+  <span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='no'>document_covariate_table</span>
+  <span class='no'>data</span>$<span class='no'>gamma</span> <span class='kw'>&lt;-</span> <span class='no'>LDA_models</span>@<span class='kw'>gamma</span>
+  <span class='no'>weights</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='document_weights.html'>document_weights</a></span>(<span class='no'>document_term_table</span>)
+  <span class='no'>TSmod</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='TS.html'>TS</a></span>(<span class='no'>data</span>, <span class='no'>gamma</span> ~ <span class='fl'>1</span>, <span class='kw'>nchangepoints</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='st'>"newmoon"</span>, <span class='no'>weights</span>)
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>TSmod</span>)
+<span class='co'># }</span># NOT RUN {
+# }
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#value">Value</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

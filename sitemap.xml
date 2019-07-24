@@ -121,6 +121,9 @@
     <loc>https://weecology.github.io/ldats/reference/memoise_fun.html</loc>
   </url>
   <url>
+    <loc>https://weecology.github.io/ldats/reference/messageq.html</loc>
+  </url>
+  <url>
     <loc>https://weecology.github.io/ldats/reference/mirror_vcov.html</loc>
   </url>
   <url>
@@ -166,9 +169,6 @@
     <loc>https://weecology.github.io/ldats/reference/posterior_plot.html</loc>
   </url>
   <url>
-    <loc>https://weecology.github.io/ldats/reference/pred_gamma_TS_plot.html</loc>
-  </url>
-  <url>
     <loc>https://weecology.github.io/ldats/reference/prep_LDA_control.html</loc>
   </url>
   <url>
@@ -212,12 +212,6 @@
   </url>
   <url>
     <loc>https://weecology.github.io/ldats/reference/proposed_step_mods.html</loc>
-  </url>
-  <url>
-    <loc>https://weecology.github.io/ldats/reference/qprint.html</loc>
-  </url>
-  <url>
-    <loc>https://weecology.github.io/ldats/reference/rho_hist.html</loc>
   </url>
   <url>
     <loc>https://weecology.github.io/ldats/reference/rho_lines.html</loc>

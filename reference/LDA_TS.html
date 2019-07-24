@@ -41,10 +41,10 @@
   select_LDA, running a complete set of Bayesian Time Series
   (TS) models (Western and Kleykamp 2004) via TS_on_LDA on
   the chosen LDA model(s), and selecting the best TS model via 
-  select_TS.
-conform_LDA_TS_data converts the data input to
-  match internal and sub-function specifications.
-check_LDA_TS_inputs checks that the inputs to 
+  select_TS.  
+  conform_LDA_TS_data converts the data input to
+  match internal and sub-function specifications.  
+  check_LDA_TS_inputs checks that the inputs to 
   LDA_TS are of proper classes for a full analysis." />
 <meta name="twitter:card" content="summary" />
 
@@ -76,7 +76,7 @@ check_LDA_TS_inputs checks that the inputs to
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3</span>
       </span>
     </div>
 
@@ -154,10 +154,10 @@ check_LDA_TS_inputs checks that the inputs to
   <code><a href='select_LDA.html'>select_LDA</a></code>, running a complete set of Bayesian Time Series
   (TS) models (Western and Kleykamp 2004) via <code><a href='TS_on_LDA.html'>TS_on_LDA</a></code> on
   the chosen LDA model(s), and selecting the best TS model via 
-  <code><a href='select_TS.html'>select_TS</a></code>.</p>
-<p><code>conform_LDA_TS_data</code> converts the <code>data</code> input to
-  match internal and sub-function specifications.</p>
-<p><code>check_LDA_TS_inputs</code> checks that the inputs to 
+  <code><a href='select_TS.html'>select_TS</a></code>. <br /> <br />
+  <code>conform_LDA_TS_data</code> converts the <code>data</code> input to
+  match internal and sub-function specifications. <br /> <br />
+  <code>check_LDA_TS_inputs</code> checks that the inputs to 
   <code>LDA_TS</code> are of proper classes for a full analysis.</p>
     
     </div>
@@ -254,19 +254,23 @@ set by <code><a href='LDA_TS_control.html'>LDA_TS_control</a></code>.</p></td>
     </tr>
     <tr>
       <th>quiet</th>
-      <td><p>Logical indicator for <code>conform_LDA_TS_data</code> to indicate
-if messages should be printed.</p></td>
+      <td><p><code>logical</code> indicator for <code>conform_LDA_TS_data</code> to 
+indicate if messages should be printed.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>LDA_TS</code> returns a class <code>LDA_TS</code> list object including all 
+    <p><code>LDA_TS</code>: a class <code>LDA_TS</code> list object including all 
   fitted LDA and TS models and selected models specifically as elements 
   <code>"LDA models"</code> (from <code><a href='LDA_set.html'>LDA_set</a></code>),
   <code>"Selected LDA model"</code> (from <code><a href='select_LDA.html'>select_LDA</a></code>), 
   <code>"TS models"</code> (from <code><a href='TS_on_LDA.html'>TS_on_LDA</a></code>), and
-  <code>"Selected TS model"</code> (from <code><a href='select_TS.html'>select_TS</a></code>).</p>
+  <code>"Selected TS model"</code> (from <code><a href='select_TS.html'>select_TS</a></code>). <br /> <br />
+  <code>conform_LDA_TS_data</code>: a data <code>list</code> that is ready for analyses 
+  using the stage-specific functions. <br /> <br />
+  <code>check_LDA_TS_inputs</code>: an error message is thrown if any input is 
+  improper, otherwise <code>NULL</code>.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -290,10 +294,14 @@ if messages should be printed.</p></td>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
   <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>rodents</span>)
+<span class='co'># }</span><span class='co'># NOT RUN {</span>
   <span class='no'>mod</span> <span class='kw'>&lt;-</span> <span class='fu'>LDA_TS</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>rodents</span>, <span class='kw'>topics</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>nseeds</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>formulas</span> <span class='kw'>=</span> ~<span class='fl'>1</span>,
                 <span class='kw'>nchangepoints</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>timename</span> <span class='kw'>=</span> <span class='st'>"newmoon"</span>)
-<span class='co'># }</span><div class='input'>
-</div></pre>
+<span class='co'># }</span><span class='co'># NOT RUN {</span>
+  <span class='fu'>conform_LDA_TS_data</span>(<span class='no'>rodents</span>)
+  <span class='fu'>check_LDA_TS_inputs</span>(<span class='no'>rodents</span>, <span class='kw'>timename</span> <span class='kw'>=</span> <span class='st'>"newmoon"</span>)
+
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

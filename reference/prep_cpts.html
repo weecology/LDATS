@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3</span>
       </span>
     </div>
 
@@ -223,10 +223,36 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>List of [1] matrix of change points (rows) for each temperature 
-  (columns) and [2] vector of log-likelihood values for each of the chains.</p>
+    <p><code>list</code> of [1] <code>matrix</code> of change points (rows) for 
+  each temperature (columns) and [2] <code>vector</code> of log-likelihood 
+  values for each of the chains.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>rodents</span>)
+  <span class='no'>document_term_table</span> <span class='kw'>&lt;-</span> <span class='no'>rodents</span>$<span class='no'>document_term_table</span>
+  <span class='no'>document_covariate_table</span> <span class='kw'>&lt;-</span> <span class='no'>rodents</span>$<span class='no'>document_covariate_table</span>
+  <span class='no'>LDA_models</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='LDA_set.html'>LDA_set</a></span>(<span class='no'>document_term_table</span>, <span class='kw'>topics</span> <span class='kw'>=</span> <span class='fl'>2</span>)<span class='kw'>[[</span><span class='fl'>1</span>]]
+  <span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='no'>document_covariate_table</span>
+  <span class='no'>data</span>$<span class='no'>gamma</span> <span class='kw'>&lt;-</span> <span class='no'>LDA_models</span>@<span class='kw'>gamma</span>
+  <span class='no'>weights</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='document_weights.html'>document_weights</a></span>(<span class='no'>document_term_table</span>)
+  <span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='no'>data</span>[<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/order'>order</a></span>(<span class='no'>data</span>[,<span class='st'>"newmoon"</span>]), ]
+  <span class='no'>saves</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='prep_saves.html'>prep_saves</a></span>(<span class='fl'>1</span>, <span class='fu'><a href='TS_control.html'>TS_control</a></span>())
+  <span class='no'>inputs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='prep_ptMCMC_inputs.html'>prep_ptMCMC_inputs</a></span>(<span class='no'>data</span>, <span class='no'>gamma</span> ~ <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='st'>"newmoon"</span>, <span class='no'>weights</span>,
+                               <span class='fu'><a href='TS_control.html'>TS_control</a></span>())
+  <span class='no'>cpts</span> <span class='kw'>&lt;-</span> <span class='fu'>prep_cpts</span>(<span class='no'>data</span>, <span class='no'>gamma</span> ~ <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='st'>"newmoon"</span>, <span class='no'>weights</span>, <span class='fu'><a href='TS_control.html'>TS_control</a></span>())
+  <span class='no'>ids</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='prep_ids.html'>prep_ids</a></span>(<span class='fu'><a href='TS_control.html'>TS_control</a></span>())
+  <span class='kw'>for</span>(<span class='no'>i</span> <span class='kw'>in</span> <span class='fl'>1</span>:<span class='fu'><a href='TS_control.html'>TS_control</a></span>()$<span class='no'>nit</span>){
+    <span class='no'>steps</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='step_chains.html'>step_chains</a></span>(<span class='no'>i</span>, <span class='no'>cpts</span>, <span class='no'>inputs</span>)
+    <span class='no'>swaps</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='swap_chains.html'>swap_chains</a></span>(<span class='no'>steps</span>, <span class='no'>inputs</span>, <span class='no'>ids</span>)
+    <span class='no'>saves</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='prep_saves.html'>update_saves</a></span>(<span class='no'>i</span>, <span class='no'>saves</span>, <span class='no'>steps</span>, <span class='no'>swaps</span>)
+    <span class='no'>cpts</span> <span class='kw'>&lt;-</span> <span class='fu'>update_cpts</span>(<span class='no'>cpts</span>, <span class='no'>swaps</span>)
+    <span class='no'>ids</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='prep_ids.html'>update_ids</a></span>(<span class='no'>ids</span>, <span class='no'>swaps</span>)
+  }
+<span class='co'># }</span># NOT RUN {
+# }
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -234,7 +260,9 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

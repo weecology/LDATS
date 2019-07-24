@@ -65,7 +65,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3</span>
       </span>
     </div>
 
@@ -171,6 +171,28 @@ and formulas and nchangepoints used in the TS models.</p></td>
   applied for each model on each LDA model input.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>rodents</span>)
+  <span class='no'>document_term_table</span> <span class='kw'>&lt;-</span> <span class='no'>rodents</span>$<span class='no'>document_term_table</span>
+  <span class='no'>document_covariate_table</span> <span class='kw'>&lt;-</span> <span class='no'>rodents</span>$<span class='no'>document_covariate_table</span>
+  <span class='no'>LDAs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='LDA_set.html'>LDA_set</a></span>(<span class='no'>document_term_table</span>, <span class='kw'>topics</span> <span class='kw'>=</span> <span class='fl'>2</span>:<span class='fl'>3</span>, <span class='kw'>nseeds</span> <span class='kw'>=</span> <span class='fl'>2</span>)
+  <span class='no'>LDA_models</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='select_LDA.html'>select_LDA</a></span>(<span class='no'>LDAs</span>)
+  <span class='no'>weights</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='document_weights.html'>document_weights</a></span>(<span class='no'>document_term_table</span>)
+  <span class='no'>mods</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='expand_TS.html'>expand_TS</a></span>(<span class='no'>LDA_models</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(~ <span class='fl'>1</span>, ~ <span class='no'>newmoon</span>), <span class='fl'>0</span>:<span class='fl'>1</span>)
+  <span class='no'>nmods</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/nrow'>nrow</a></span>(<span class='no'>mods</span>)
+  <span class='no'>TSmods</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/vector'>vector</a></span>(<span class='st'>"list"</span>, <span class='no'>nmods</span>)
+  <span class='kw'>for</span>(<span class='no'>i</span> <span class='kw'>in</span> <span class='fl'>1</span>:<span class='no'>nmods</span>){
+    <span class='no'>formula_i</span> <span class='kw'>&lt;-</span> <span class='no'>mods</span>$<span class='no'>formula</span><span class='kw'>[[</span><span class='no'>i</span>]]
+    <span class='no'>nchangepoints_i</span> <span class='kw'>&lt;-</span> <span class='no'>mods</span>$<span class='no'>nchangepoints</span>[<span class='no'>i</span>]
+    <span class='no'>data_i</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='prep_TS_data.html'>prep_TS_data</a></span>(<span class='no'>document_covariate_table</span>, <span class='no'>LDA_models</span>, <span class='no'>mods</span>, <span class='no'>i</span>)
+    <span class='no'>TSmods</span><span class='kw'>[[</span><span class='no'>i</span>]] <span class='kw'>&lt;-</span> <span class='fu'><a href='TS.html'>TS</a></span>(<span class='no'>data_i</span>, <span class='no'>formula_i</span>, <span class='no'>nchangepoints_i</span>, <span class='st'>"newmoon"</span>,
+                      <span class='no'>weights</span>, <span class='fu'><a href='TS_control.html'>TS_control</a></span>())
+  }
+  <span class='fu'>package_TS_on_LDA</span>(<span class='no'>TSmods</span>, <span class='no'>LDA_models</span>, <span class='no'>mods</span>)
+<span class='co'># }</span># NOT RUN {
+# }
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -178,7 +200,9 @@ and formulas and nchangepoints used in the TS models.</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

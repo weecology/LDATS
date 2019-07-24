@@ -64,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3</span>
       </span>
     </div>
 
@@ -155,13 +155,31 @@
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
+    <p>The selected models in <code>x</code> as a two-element <code>list</code> with
+  the TS component only returning the non-hidden components.</p>
+    
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>rodents</span>)
+  <span class='no'>mod</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='LDA_TS.html'>LDA_TS</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>rodents</span>, <span class='kw'>topics</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>nseeds</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>formulas</span> <span class='kw'>=</span> ~<span class='fl'>1</span>,
+                <span class='kw'>nchangepoints</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>timename</span> <span class='kw'>=</span> <span class='st'>"newmoon"</span>)
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>mod</span>)
+<span class='co'># }</span># NOT RUN {
+# }
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#value">Value</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

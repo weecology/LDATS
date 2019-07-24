@@ -67,7 +67,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3</span>
       </span>
     </div>
 
@@ -172,11 +172,18 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
     <p><code>summarize_rhos</code>: table of summary statistics for change point
   locations including mean, median, mode, posterior interval, standard
   deviation, MCMC error, autocorrelation, and effective sample size for 
-  each change point location.</p>
-<p><code>measure_rho_vcov</code>: variance-covariance matrix for change 
+  each change point location. <br /> <br />
+  <code>measure_rho_vcov</code>: variance-covariance matrix for change 
   point locations.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+ <span class='no'>rhos</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sample'>sample</a></span>(<span class='fl'>80</span>:<span class='fl'>100</span>, <span class='fl'>100</span>, <span class='fl'>TRUE</span>), <span class='fl'>50</span>, <span class='fl'>2</span>)
+ <span class='fu'>summarize_rhos</span>(<span class='no'>rhos</span>)
+ <span class='fu'>measure_rho_vcov</span>(<span class='no'>rhos</span>)
+
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -184,7 +191,9 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

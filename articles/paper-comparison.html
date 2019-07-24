@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3</span>
       </span>
     </div>
 
@@ -106,7 +106,7 @@
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>This document provides a side-by-side comparison of <strong><code>LDATS</code></strong> (version 0.2.2) results with analysis from <a href="https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2373">Christensen et al. 2018</a>.</p>
+<p>This document provides a side-by-side comparison of <strong><code>LDATS</code></strong> (version 0.2.3) results with analysis from <a href="https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2373">Christensen et al. 2018</a>.</p>
 <div id="summary" class="section level2">
 <h2 class="hasAnchor">
 <a href="#summary" class="anchor"></a>Summary</h2>
@@ -432,7 +432,7 @@
 <a class="sourceLine" id="cb11-10" data-line-number="10"><span class="co">#   multiply by 8 to estimate captures as if all plots were trapped</span></a>
 <a class="sourceLine" id="cb11-11" data-line-number="11">ldats_rodents_adjusted &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/as.data.frame">as.data.frame.matrix</a></span>(rodents[[<span class="dv">1</span>]])</a>
 <a class="sourceLine" id="cb11-12" data-line-number="12">ldats_rodents_adjusted[periods, ] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Round">round</a></span>(ldats_rodents_adjusted[periods, ] <span class="op">/</span><span class="st"> </span>nplots_controls<span class="op">$</span>x[periods] <span class="op">*</span><span class="st"> </span><span class="dv">8</span>)</a></code></pre></div>
-<p>Now we can compare the adjusted ldats dataset with both the original ldats dataset and the dataset from the paper:</p>
+<p>Now we can compare the adjusted LDATS dataset with both the original ldats dataset and the dataset from the paper:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">compare_raw &lt;-<span class="st"> </span>rodents[[<span class="dv">1</span>]] <span class="op">==</span><span class="st"> </span>ldats_rodents_adjusted</a>
 <a class="sourceLine" id="cb12-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which">which</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">rowSums</a></span>(compare_raw) <span class="op">&lt;</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">ncol</a></span>(compare_raw)))</a>
 <a class="sourceLine" id="cb12-3" data-line-number="3"><span class="co">#&gt; [1] 16</span></a>
@@ -517,7 +517,7 @@
 <a class="sourceLine" id="cb16-44" data-line-number="44"></a>
 <a class="sourceLine" id="cb16-45" data-line-number="45"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/readRDS">saveRDS</a></span>(ldamodel, <span class="dt">file =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/file.path">file.path</a></span>(vignette_files, <span class="st">"paper_ldamodel.RDS"</span>))</a></code></pre></div>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/knitr/topics/include_graphics">include_graphics</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/file.path">file.path</a></span>(vignette_files, <span class="st">"lda_distances.png"</span>))</a></code></pre></div>
-<p><img src="../../../../../../tmp/Rtmp7cDpWK/lda_distances.png"><!-- --></p>
+<p><img src="../../../../../../tmp/Rtmp6s7vfq/lda_distances.png"><!-- --></p>
 <div id="plots" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plots" class="anchor"></a>Plots</h2>

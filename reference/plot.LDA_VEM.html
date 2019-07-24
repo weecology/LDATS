@@ -36,9 +36,10 @@
   the topic proportions for each word and a bottom panel showing the topic
   proportions of each document/over time. The plot function is defined for
   class LDA_VEM specifically (see LDA).
-LDA_plot_top_panel: create an LDATS LDA summary plot 
-  top panel showing the topic proportions word-by-word.
-LDA_plot_bottom_panel: create an LDATS LDA summary plot
+   
+  LDA_plot_top_panel creates an LDATS LDA summary plot 
+  top panel showing the topic proportions word-by-word.  
+  LDA_plot_bottom_panel creates an LDATS LDA summary plot
   bottom panel showing the topic proportions over time/documents." />
 <meta name="twitter:card" content="summary" />
 
@@ -70,7 +71,7 @@ LDA_plot_bottom_panel: create an LDATS LDA summary plot
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3</span>
       </span>
     </div>
 
@@ -143,10 +144,11 @@ LDA_plot_bottom_panel: create an LDATS LDA summary plot
     <p>Create an LDATS LDA summary plot, with a top panel showing
   the topic proportions for each word and a bottom panel showing the topic
   proportions of each document/over time. The plot function is defined for
-  class <code>LDA_VEM</code> specifically (see <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code>).</p>
-<p><code>LDA_plot_top_panel</code>: create an LDATS LDA summary plot 
-  top panel showing the topic proportions word-by-word.</p>
-<p><code>LDA_plot_bottom_panel</code>: create an LDATS LDA summary plot
+  class <code>LDA_VEM</code> specifically (see <code><a href='https://www.rdocumentation.org/packages/topicmodels/topics/lda'>LDA</a></code>).
+  <br /> <br />
+  <code>LDA_plot_top_panel</code> creates an LDATS LDA summary plot 
+  top panel showing the topic proportions word-by-word. <br /> <br />
+  <code>LDA_plot_bottom_panel</code> creates an LDATS LDA summary plot
   bottom panel showing the topic proportions over time/documents.</p>
     
     </div>
@@ -155,10 +157,11 @@ LDA_plot_bottom_panel: create an LDATS LDA summary plot
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>xtime</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>xname</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"C"</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.8</span>, <span class='kw'>LDATS</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-<span class='fu'>LDA_plot_top_panel</span>(<span class='no'>x</span>, <span class='no'>cols</span>, <span class='no'>option</span>, <span class='no'>alpha</span>, <span class='kw'>LDATS</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>LDA_plot_top_panel</span>(<span class='no'>x</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"C"</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.8</span>,
+  <span class='kw'>together</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>LDATS</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-<span class='fu'>LDA_plot_bottom_panel</span>(<span class='no'>x</span>, <span class='no'>xtime</span>, <span class='no'>xname</span>, <span class='no'>cols</span>, <span class='no'>option</span>, <span class='no'>alpha</span>,
-  <span class='kw'>LDATS</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+<span class='fu'>LDA_plot_bottom_panel</span>(<span class='no'>x</span>, <span class='kw'>xtime</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>xname</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"C"</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.8</span>, <span class='kw'>together</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>LDATS</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -204,10 +207,19 @@ colors used. Supported only on some devices, see
     </tr>
     <tr>
       <th>LDATS</th>
-      <td><p><code>logical</code> indicating if the plot is part of a larger 
+      <td><p><code>logical</code> indicating if the LDA plot is part of a larger 
 LDATS plot output.</p></td>
     </tr>
+    <tr>
+      <th>together</th>
+      <td><p><code>logical</code> indicating if the subplots are part of a 
+larger LDA plot output.</p></td>
+    </tr>
     </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p><code>NULL</code>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -215,16 +227,21 @@ LDATS plot output.</p></td>
   <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>rodents</span>)
   <span class='no'>lda_data</span> <span class='kw'>&lt;-</span> <span class='no'>rodents</span>$<span class='no'>document_term_table</span>
   <span class='no'>r_LDA</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='LDA_set.html'>LDA_set</a></span>(<span class='no'>lda_data</span>, <span class='kw'>topics</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>nseeds</span> <span class='kw'>=</span> <span class='fl'>10</span>)
-  <span class='no'>best_lda</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='select_LDA.html'>select_LDA</a></span>(<span class='no'>r_LDA</span>)
+  <span class='no'>best_lda</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='select_LDA.html'>select_LDA</a></span>(<span class='no'>r_LDA</span>)<span class='kw'>[[</span><span class='fl'>1</span>]]
   <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>best_lda</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"cividis"</span>)
-<span class='co'># }</span><div class='input'>
-</div></pre>
+  <span class='fu'>LDA_plot_top_panel</span>(<span class='no'>best_lda</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"cividis"</span>)
+  <span class='fu'>LDA_plot_bottom_panel</span>(<span class='no'>best_lda</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"cividis"</span>)
+<span class='co'># }</span># NOT RUN {
+# }
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-            
+      
+      <li><a href="#value">Value</a></li>
+      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
