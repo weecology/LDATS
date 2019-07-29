@@ -2,6 +2,12 @@
 
 Version numbers follow [Semantic Versioning](https://semver.org/).
 
+# [LDATS 0.2.4](https://github.com/weecology/ldats/releases/tag/v0.2.4)
+*2019-07-28*
+
+## Edits for resubmission to CRAN
+* Added space between braces for auto-linking in the description text.
+
 # [LDATS 0.2.3](https://github.com/weecology/ldats/releases/tag/v0.2.3)
 *2019-07-24*
 

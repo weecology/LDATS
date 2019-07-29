@@ -1,4 +1,9 @@
-## Resubmission
+## Resubmission 2
+This is a resubmission. In this version I have:
+
+* Added spaces between parentheses and angle brackets in the description.
+
+## Resubmission 1
 This is a resubmission. In this version I have:
 
 * Substantially reduced runtime of the full check by reducing iterations in tests
