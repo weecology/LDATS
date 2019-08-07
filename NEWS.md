@@ -2,6 +2,11 @@
 
 Version numbers follow [Semantic Versioning](https://semver.org/).
 
+# LDATS 0.3.0
+*active development*
+
+## Fixing bugs in simulation functions
+
 # [LDATS 0.2.4](https://github.com/weecology/ldats/releases/tag/v0.2.4)
 *2019-07-28*
 
