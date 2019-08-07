@@ -7,11 +7,11 @@
    err = 0
    seed = 1
 
-I think if we set up in2 better it will mean X can be simple and not sparse
-
-ACK
-:(C * S) should have been :(C * s)
-this didnt actually influence anything since how i had it set up
 
 # consider adding a check for Eta and X conformity to the top end of the
 sim functions
+
+devtools::document()
+devtools::test()
+devtools::check()
+devtools::check(run_dont_test=T)
