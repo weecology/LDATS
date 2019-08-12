@@ -156,7 +156,7 @@ sim_TS_data <- function(X, Eta, rho, tD, err = 0, seed = NULL){
   for(s in 1:S){
     in1 <- which(tD >= s_start[s] & tD <= s_end[s])
     in2 <- (C * (s - 1) + 1):(C * s)
-    X_Eta <- as.matrix(X[in1,]) %*% Eta[in2,]
+    X_Eta <- matrix(data = X[in1, ], nrow = length(in1)) %*% Eta[in2,] 
     eps <- rnorm(length(X_Eta), 0, err)
     EGamma[in1,] <- softmax(X_Eta + eps) 
   }
