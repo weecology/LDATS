@@ -59,9 +59,8 @@ LDA_set_user_seeds <- function(document_term_table, topics = 2, seed = 1,
   check_LDA_set_inputs(document_term_table, topics, nseeds = nseeds, control)
   control <- do.call("LDA_set_control", control)
   mod_topics <- rep(topics, each = length(seq(2, length(seed) * 2, 2)))
-  iseed <- control$iseed
-  #mod_seeds <- rep(seq(iseed, iseed + (nseeds - 1)* 2, 2), length(topics))
-  mod_seeds <- seed
+  iseed <- seed
+  mod_seeds <- rep(seq(iseed, iseed + (nseeds - 1)* 2, 2), length(topics))
   nmods <- length(mod_topics)
   mods <- vector("list", length = nmods)
   for (i in 1:nmods){
