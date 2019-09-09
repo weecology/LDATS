@@ -3,17 +3,10 @@ cache: packages
 sudo: required
 warnings_are_errors: false
 
-addons:
-  apt:
-    packages:
-      - libgsl0-dbg
-      - libgsl0-dev
-      - libgsl0ldbl
-    update: true
-
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install texlive-latex-base
+  - sudo apt-get install gsl-bin libgsl0-dev
 
 r_packages:
   - covr
