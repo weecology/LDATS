@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LDATS Rodents Example • LDATS</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="LDATS Rodents Example">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -38,34 +39,13 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Vignettes
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/LDATS_codebase.html">Latent Dirichlet Allocation Time Series (LDATS)</a>
-    </li>
-    <li>
-      <a href="../articles/paper-comparison.html">Comparison to Christensen et al. 2018</a>
-    </li>
-    <li>
-      <a href="../articles/rodents-example.html">LDATS Rodents Example</a>
-    </li>
-  </ul>
-</li>
-<li>
-  <a href="../reference/index.html">Functions</a>
-</li>
-<li>
-  <a href="../news/index.html">News</a>
-</li>
+<li class="dropdown-header">Vignettes</li>
+<li class="dropdown-header">Functions</li>
+<li class="dropdown-header">News</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -76,7 +56,7 @@
 </li>
 <li>
   <a href="https://github.com/weecology/LDATS">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -89,6 +69,7 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
@@ -103,24 +84,24 @@
 
     
     
-<p>This vignette walks through an example of <strong><code>LDATS</code></strong> at the command line and was constructed using <strong><code>LDATS</code></strong> version 0.2.4 on 2019-07-29.</p>
+<p>This vignette walks through an example of <strong><code>LDATS</code></strong> at the command line and was constructed using <strong><code>LDATS</code></strong> version 0.2.4 on 2019-09-09.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>To obtain the most recent version of <strong>LDATS</strong>, install and load the most recent version from GitHub:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"devtools"</span>)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"weecology/LDATS"</span>)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(LDATS)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"devtools"</span>)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">"weecology/LDATS"</span>)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(LDATS)</a></code></pre></div>
 </div>
 <div id="data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#data" class="anchor"></a>Data</h2>
-<p>For this vignette, we will be using rodent data from the control plots of the <a href="https://github.com/weecology/portaldata">Portal Project</a>, which come with the <strong>LDATS</strong> package (<code><a href="https://www.rdocumentation.org/packages/utils/topics/data">data(rodents)</a></code>).</p>
+<p>For this vignette, we will be using rodent data from the control plots of the <a href="https://github.com/weecology/portaldata">Portal Project</a>, which come with the <strong>LDATS</strong> package (<code><a href="https://rdrr.io/r/utils/data.html">data(rodents)</a></code>).</p>
 <p><code>rodents</code> contains two data tables, a <code>document_term_table</code> and a <code>document_covariate_table</code>.</p>
 <p>The <code>document_term_table</code> is a matrix of species (term) counts by sampling period (document). Importantly, the <code>document_term_table</code> contains raw counts of individual rodent captures, not catch per unit effort. The LDA models operate on proportions and weight the information from each sampling period according to total catch (document size). Similarly, the TS models use the LDA compositional breakdown and weight the information from each period according to the total catch. We therefore give both models unadjusted data. The values in the <code>document_term_table</code> must be integers.</p>
 <p>The <code>document_covariate_table</code> contains the covariates we would like to use for the time series models. In this case, we have a column for <code>newmoon</code>, which is the time step for each of our sampling periods. This column can include nonconsecutive time steps (i.e., <code>2, 4, 5</code>) if sampling periods are skipped or at unequal intervals, but must be integer-conformable or a date. Although if a date, the assumption is that the timestep is 1 day, which is often not desired behavior. If there is no time column, <code>LDATS</code> will assume all time steps are equidistant. We also include columns <code>sin_year</code> and <code>cos_year</code> so we can account for seasonal dynamics.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(rodents)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(rodents<span class="op">$</span>document_term_table, <span class="dv">10</span>)</a>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(rodents)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(rodents<span class="op">$</span>document_term_table, <span class="dv">10</span>)</a>
 <a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">#&gt;    BA DM DO DS NA. OL OT PB PE PF PH PI PL PM PP RF RM RO SF SH SO</span></a>
 <a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#&gt; 1   0 13  0  2   2  0  0  0  1  1  0  0  0  0  3  0  0  0  0  0  0</span></a>
 <a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#&gt; 2   0 20  1  3   2  0  0  0  0  4  0  0  0  0  2  0  0  0  0  0  0</span></a>
@@ -132,7 +113,7 @@
 <a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">#&gt; 8   0 15  0  9   2  1  2  0  1  2  0  0  0  0  0  0  0  0  0  0  0</span></a>
 <a class="sourceLine" id="cb2-12" data-line-number="12"><span class="co">#&gt; 9   0 11  1 12   1  1  5  0  2  3  0  0  0  0  0  0  1  0  0  0  0</span></a>
 <a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co">#&gt; 10  0 14  1 15   1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0</span></a>
-<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(rodents<span class="op">$</span>document_covariate_table, <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(rodents<span class="op">$</span>document_covariate_table, <span class="dv">10</span>)</a>
 <a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">#&gt;    newmoon sin_year cos_year</span></a>
 <a class="sourceLine" id="cb2-16" data-line-number="16"><span class="co">#&gt; 1        1  -0.2470  -0.9690</span></a>
 <a class="sourceLine" id="cb2-17" data-line-number="17"><span class="co">#&gt; 2        2  -0.6808  -0.7325</span></a>
@@ -151,12 +132,12 @@
 <p>We use <code><a href="../reference/LDA_set.html">LDA_set()</a></code> to run replicate LDA models (each with its own seed) with varying numbers of topics (<code>2:5</code>) and <code><a href="../reference/select_LDA.html">select_LDA()</a></code> to select the best model.</p>
 <p>We use the <code>control</code> argument to pass controls to the LDA function via a <code>list</code>. In this case, we can set <code>quiet = TRUE</code> to make the model run quietly.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">lda_model_set &lt;-<span class="st"> </span><span class="kw"><a href="../reference/LDA_set.html">LDA_set</a></span>(<span class="dt">document_term_table =</span> rodents<span class="op">$</span>document_term_table,</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">                         <span class="dt">topics =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">2</span><span class="op">:</span><span class="dv">5</span>),</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">                         <span class="dt">topics =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">2</span><span class="op">:</span><span class="dv">5</span>),</a>
 <a class="sourceLine" id="cb3-3" data-line-number="3">                         <span class="dt">nseeds =</span> <span class="dv">10</span>,</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">                         <span class="dt">control =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">quiet =</span> <span class="ot">TRUE</span>))</a></code></pre></div>
+<a class="sourceLine" id="cb3-4" data-line-number="4">                         <span class="dt">control =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">quiet =</span> <span class="ot">TRUE</span>))</a></code></pre></div>
 <p>If we do not pass any controls, by default, <code>quiet = FALSE</code> (here run with only <code>2:3</code> topics and <code>2</code> seeds, to keep output short):</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">lda_model_set2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/LDA_set.html">LDA_set</a></span>(<span class="dt">document_term_table =</span> rodents<span class="op">$</span>document_term_table,</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">                         <span class="dt">topics =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">2</span><span class="op">:</span><span class="dv">3</span>),</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">                         <span class="dt">topics =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">2</span><span class="op">:</span><span class="dv">3</span>),</a>
 <a class="sourceLine" id="cb4-3" data-line-number="3">                         <span class="dt">nseeds =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p><code><a href="../reference/LDA_set.html">LDA_set()</a></code> returns a list of LDA models. We use <code><a href="../reference/select_LDA.html">select_LDA()</a></code> to identify the best number of topics and choice of seed from our set of models. By default, we will choose models based on minimum AIC. To use different selection criteria, define the appropriate functions and specify them by passing <code>list(measurer = [measurer function], selector = [max, min, etc])</code> to the <code>control</code> argument.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">selected_lda_model &lt;-<span class="st"> </span><span class="kw"><a href="../reference/select_LDA.html">select_LDA</a></span>(lda_model_set)</a></code></pre></div>
@@ -168,7 +149,7 @@
 <a class="sourceLine" id="cb6-5" data-line-number="5"></a>
 <a class="sourceLine" id="cb6-6" data-line-number="6"><span class="co"># Topic composition of communities at each time step</span></a>
 <a class="sourceLine" id="cb6-7" data-line-number="7"><span class="co"># Columns are topics; rows are time steps</span></a>
-<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(selected_lda_model[[<span class="dv">1</span>]]<span class="op">@</span>gamma)</a>
+<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(selected_lda_model[[<span class="dv">1</span>]]<span class="op">@</span>gamma)</a>
 <a class="sourceLine" id="cb6-9" data-line-number="9"><span class="co">#&gt;             [,1]        [,2]      [,3]        [,4]        [,5]</span></a>
 <a class="sourceLine" id="cb6-10" data-line-number="10"><span class="co">#&gt; [1,] 0.008303695 0.466475067 0.3431302 0.008585984 0.173505077</span></a>
 <a class="sourceLine" id="cb6-11" data-line-number="11"><span class="co">#&gt; [2,] 0.005769837 0.663030049 0.2480563 0.005808044 0.077335746</span></a>
@@ -177,7 +158,7 @@
 <a class="sourceLine" id="cb6-14" data-line-number="14"><span class="co">#&gt; [5,] 0.005016414 0.005116156 0.9210663 0.063795689 0.005005489</span></a>
 <a class="sourceLine" id="cb6-15" data-line-number="15"><span class="co">#&gt; [6,] 0.004157612 0.105779863 0.8817614 0.004170617 0.004130473</span></a></code></pre></div>
 <p><code>LDATS</code> includes flexible plot functionality for LDAs and time series. The top panel illustrates topic composition by species, and the bottom panel shows the proportion of the community made up of each topic over time. For all the available plot options see <code><a href="../reference/plot.LDA_VEM.html">?plot.LDA_VEM</a></code>.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(selected_lda_model[[<span class="dv">1</span>]])</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(selected_lda_model[[<span class="dv">1</span>]])</a></code></pre></div>
 <p><img src="rodents-example_files/figure-html/plot%20lda-1.png" width="672"></p>
 </div>
 <div id="stage-2-ts-changepoint-models" class="section level2">
@@ -188,10 +169,10 @@
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">changepoint_models &lt;-<span class="st"> </span><span class="kw"><a href="../reference/TS_on_LDA.html">TS_on_LDA</a></span>(<span class="dt">LDA_models =</span> selected_lda_model, </a>
 <a class="sourceLine" id="cb8-2" data-line-number="2">                                <span class="dt">document_covariate_table =</span> rodents<span class="op">$</span>document_covariate_table,</a>
 <a class="sourceLine" id="cb8-3" data-line-number="3">                                <span class="dt">formulas =</span> <span class="op">~</span><span class="st"> </span>sin_year <span class="op">+</span><span class="st"> </span>cos_year,</a>
-<a class="sourceLine" id="cb8-4" data-line-number="4">                                <span class="dt">nchangepoints =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1</span>), </a>
+<a class="sourceLine" id="cb8-4" data-line-number="4">                                <span class="dt">nchangepoints =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1</span>), </a>
 <a class="sourceLine" id="cb8-5" data-line-number="5">                                <span class="dt">timename =</span> <span class="st">"newmoon"</span>,</a>
 <a class="sourceLine" id="cb8-6" data-line-number="6">                                <span class="dt">weights =</span> <span class="kw"><a href="../reference/document_weights.html">document_weights</a></span>(rodents<span class="op">$</span>document_term_table),</a>
-<a class="sourceLine" id="cb8-7" data-line-number="7">                                <span class="dt">control =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">nit =</span> <span class="dv">1000</span>))</a></code></pre></div>
+<a class="sourceLine" id="cb8-7" data-line-number="7">                                <span class="dt">control =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">nit =</span> <span class="dv">1000</span>))</a></code></pre></div>
 <p>We can adjust options (default settings can be seen using <code><a href="../reference/TS_control.html">TS_control()</a></code>) for both TS functions by passing a list to the <code>control</code> argument. For a full list see <code><a href="../reference/TS_control.html">?TS_control</a></code>. Here we illustrate adjusting the number of ptMCMC iterations - the default is 10000, but it is convenient to use fewer iterations for code development.</p>
 <p>Also, it is important to note that by default the TS functions take the name of the time-step column from the <code>document_covariate_table</code> to be <code>"time"</code>. To pass a different column name, use the <code>timename</code> argument in <code><a href="../reference/TS_on_LDA.html">TS_on_LDA()</a></code>.</p>
 <p><code><a href="../reference/select_TS.html">select_TS()</a></code> will identify the best-fit changepoint model of the models from <code><a href="../reference/TS_on_LDA.html">TS_on_LDA()</a></code>. As with <code><a href="../reference/select_LDA.html">select_LDA()</a></code>, we can adjust the <code>measurer</code> and <code>selector</code> functions using the <code>control</code> argument list.</p>
@@ -210,7 +191,7 @@
 <a class="sourceLine" id="cb10-11" data-line-number="11"></a>
 <a class="sourceLine" id="cb10-12" data-line-number="12"><span class="co"># Raw estimates for timesteps for each changepoint</span></a>
 <a class="sourceLine" id="cb10-13" data-line-number="13"><span class="co"># Changepoints are columns</span></a>
-<a class="sourceLine" id="cb10-14" data-line-number="14"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(selected_changepoint_model<span class="op">$</span>rhos)</a>
+<a class="sourceLine" id="cb10-14" data-line-number="14"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(selected_changepoint_model<span class="op">$</span>rhos)</a>
 <a class="sourceLine" id="cb10-15" data-line-number="15"><span class="co">#&gt;      [,1]</span></a>
 <a class="sourceLine" id="cb10-16" data-line-number="16"><span class="co">#&gt; [1,]  220</span></a>
 <a class="sourceLine" id="cb10-17" data-line-number="17"><span class="co">#&gt; [2,]  220</span></a>
@@ -219,7 +200,7 @@
 <a class="sourceLine" id="cb10-20" data-line-number="20"><span class="co">#&gt; [5,]  213</span></a>
 <a class="sourceLine" id="cb10-21" data-line-number="21"><span class="co">#&gt; [6,]  216</span></a></code></pre></div>
 <p>LDATS will plot the results of a changepoint model:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(selected_changepoint_model)</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(selected_changepoint_model)</a></code></pre></div>
 <p><img src="rodents-example_files/figure-html/plot%20cpt-1.png" width="672"></p>
 </div>
 <div id="full-analysis-with-lda_ts" class="section level2">
@@ -233,9 +214,9 @@
 <a class="sourceLine" id="cb12-4" data-line-number="4">                         <span class="dt">formulas =</span> <span class="op">~</span><span class="st"> </span>sin_year <span class="op">+</span><span class="st"> </span>cos_year,</a>
 <a class="sourceLine" id="cb12-5" data-line-number="5">                         <span class="dt">nchangepoints=</span> <span class="dv">0</span><span class="op">:</span><span class="dv">1</span>,</a>
 <a class="sourceLine" id="cb12-6" data-line-number="6">                         <span class="dt">timename =</span> <span class="st">"newmoon"</span>,</a>
-<a class="sourceLine" id="cb12-7" data-line-number="7">                         <span class="dt">control =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">nit =</span> <span class="dv">1000</span>))</a></code></pre></div>
+<a class="sourceLine" id="cb12-7" data-line-number="7">                         <span class="dt">control =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">nit =</span> <span class="dv">1000</span>))</a></code></pre></div>
 <p><code><a href="../reference/LDA_TS.html">LDA_TS()</a></code> returns a list of all the model objects, and we can access their contents as above:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(lda_ts_results)</a>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/names.html">names</a></span>(lda_ts_results)</a>
 <a class="sourceLine" id="cb13-2" data-line-number="2"><span class="co">#&gt; [1] "LDA models"         "Selected LDA model" "TS models"         </span></a>
 <a class="sourceLine" id="cb13-3" data-line-number="3"><span class="co">#&gt; [4] "Selected TS model"</span></a>
 <a class="sourceLine" id="cb13-4" data-line-number="4"></a>
@@ -259,6 +240,7 @@
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
@@ -275,17 +257,20 @@
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by Juniper L. Simonis, Erica M. Christensen, David J. Harris, Renata M. Diaz, Hao Ye, Ethan P. White, S.K. Morgan Ernest.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.0.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

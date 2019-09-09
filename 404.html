@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Select the best LDA model(s) for use in time series — select_LDA • LDATS</title>
+<title>Page not found (404) • LDATS</title>
 
 
 <!-- jquery -->
@@ -29,17 +29,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
-<link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script>
+<link href="https://weecology.github.io/ldats/pkgdown.css" rel="stylesheet">
+<script src="https://weecology.github.io/ldats/pkgdown.js"></script>
 
 
 
 
-<meta property="og:title" content="Select the best LDA model(s) for use in time series — select_LDA" />
-<meta property="og:description" content="Select the best model(s) of interest from an
-  LDA_set object, based on a set of user-provided functions. The
-  functions default to choosing the model with the lowest AIC value." />
-<meta name="twitter:card" content="summary" />
+<meta property="og:title" content="Page not found (404)" />
 
 
 
@@ -58,7 +54,7 @@
   </head>
 
   <body>
-    <div class="container template-reference-topic">
+    <div class="container template-title-body">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -70,7 +66,7 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">LDATS</a>
+        <a class="navbar-link" href="https://weecology.github.io/ldats/index.html">LDATS</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.4</span>
       </span>
     </div>
@@ -78,7 +74,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
+  <a href="index.html">
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
@@ -111,61 +107,17 @@
       </header>
 
 <div class="row">
-  <div class="col-md-9 contents">
+  <div class="contents col-md-9">
     <div class="page-header">
-    <h1>Select the best LDA model(s) for use in time series</h1>
-    <small class="dont-index">Source: <a href='https://github.com/weecology/LDATS/blob/master/R/LDA.R'><code>R/LDA.R</code></a></small>
-    <div class="hidden name"><code>select_LDA.Rd</code></div>
+      <h1>Page not found (404)</h1>
     </div>
 
-    <div class="ref-description">
-    <p>Select the best model(s) of interest from an
-  <code>LDA_set</code> object, based on a set of user-provided functions. The
-  functions default to choosing the model with the lowest AIC value.</p>
-    </div>
-
-    <pre class="usage"><span class='fu'>select_LDA</span>(<span class='kw'>LDA_models</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>())</pre>
-
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>LDA_models</th>
-      <td><p>An object of class <code>LDA_set</code> produced by
-<code><a href='LDA_set.html'>LDA_set</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>control</th>
-      <td><p>A <code>list</code> of parameters to control the running and 
-selecting of LDA models. Values not input assume default values set 
-by <code><a href='LDA_set_control.html'>LDA_set_control</a></code>. Values for running the LDAs replace 
-defaults in (<code>LDAcontol</code>, see <code><a href='https://rdrr.io/pkg/topicmodels/man/lda.html'>LDA</a></code> (but if
- <code>seed</code> is given, it will be overwritten; use <code>iseed</code> instead).</p></td>
-    </tr>
-    </table>
-
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A reduced version of <code>LDA_models</code> that only includes the 
-  selected LDA model(s). The returned object is still an object of
-  class <code>LDA_set</code>.</p>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples">  <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>rodents</span>)
-  <span class='no'>lda_data</span> <span class='kw'>&lt;-</span> <span class='no'>rodents</span>$<span class='no'>document_term_table</span>
-  <span class='no'>r_LDA</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='LDA_set.html'>LDA_set</a></span>(<span class='no'>lda_data</span>, <span class='kw'>topics</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>nseeds</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-  <span class='fu'>select_LDA</span>(<span class='no'>r_LDA</span>)</pre>
-  </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+Content not found. Please use links in the navbar.
 
   </div>
+
 </div>
+
 
 
       <footer>
