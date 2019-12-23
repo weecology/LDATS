@@ -3,9 +3,14 @@
 Version numbers follow [Semantic Versioning](https://semver.org/).
 
 # LDATS 0.3.0
-*active development*
+*On-going development*
 
-## Fixing bugs in simulation functions
+## General editing of simulation functions
+* Don't need to make a sparse matrix to pass in now
+* Tweaking the simulation functions to simplify X
+
+### Patching a bug in `sim_TS`
+* Using only as.matrix() fails if there is only 1 year in a segment and there are multiple covariates. In that case, as.matrix(X[in1, ]) returns a matrix of n_covariates rows x 1 column, instead of a matrix of 1 row and n_covariates columns. This edit should fix that by forcing it into a matrix of the correct number of rows.
 
 # [LDATS 0.2.4](https://github.com/weecology/ldats/releases/tag/v0.2.4)
 *2019-07-28*
