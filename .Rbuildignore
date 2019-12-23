@@ -2,7 +2,7 @@
 ^doc$
 ^docs$
 ^LDATS_model.pdf$
-^notes.R$
+^working.R$
 ^.travis.yml$
 ^.*\.Rproj$
 ^\.Rproj\.user$

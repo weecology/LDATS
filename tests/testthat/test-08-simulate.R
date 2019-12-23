@@ -53,10 +53,8 @@ test_that("check sim_LDA_data", {
 test_that("check sim_TS_data", {
    tD <- c(1, 3, 4, 6)
    rho <- 3
-   X <- matrix(c(1,1,0,0,1,2,0,0,0,0,1,3,0,0,1,4), 
-          nrow = length(tD), ncol = 4, byrow = TRUE)
-   Eta <- matrix(c(0.5, 1.2, 0.3, 1.1, 0.9, 0.1, 0.5, 0.5), 
-           nrow = ncol(X), ncol = 2, byrow = TRUE)
+   X <- cbind(rep(1, 4), 1:4)
+   Eta <- cbind(c(0.5, 0.3, 0.9, 0.5), c(1.2, 1.1, 0.1, 0.5))
    expect_is(sim_TS_data(X, Eta, rho, tD), "matrix")
    expect_equal(dim(sim_TS_data(X, Eta, rho, tD)), c(4,2))
    expect_equal(round(sim_TS_data(X, Eta, rho, tD), 2)[1,1], 0.18)
@@ -71,7 +69,7 @@ test_that("check sim_TS_data", {
    expect_error(sim_TS_data(X, Eta, "ok", tD))
    expect_error(sim_TS_data(X, Eta, 1.1, tD))
    expect_error(sim_TS_data(X, Eta, matrix(1, 2, 1), tD))
-   expect_is(sim_TS_data(X, Eta, NULL, tD), "matrix")
+   expect_is(sim_TS_data(X, Eta[1:2,], NULL, tD), "matrix")
 
    expect_error(sim_TS_data(X, Eta, rho, tD, -1))
    expect_error(sim_TS_data(X, Eta, rho, tD, c(1,2)))
@@ -83,10 +81,8 @@ test_that("check sim_LDA_TS_data", {
   N <- c(10, 22, 15, 31)
   tD <- c(1, 3, 4, 6)
   rho <- 3
-  X <- matrix(c(1,1,0,0,1,2,0,0,0,0,1,3,0,0,1,4), 
-           nrow = length(tD), ncol = 4, byrow = TRUE)
-  Eta <- matrix(c(0.5, 1.2, 0.3, 1.1, 0.9, 0.1, 0.5, 0.5), 
-           nrow = ncol(X), ncol = 2, byrow = TRUE)
+   X <- cbind(rep(1, 4), 1:4)
+   Eta <- cbind(c(0.5, 0.3, 0.9, 0.5), c(1.2, 1.1, 0.1, 0.5))
   Beta <- matrix(c(0.1, 0.1, 0.8, 0.2, 0.6, 0.2), 2, 3, byrow = TRUE)
   err <- 1
   sims <- sim_LDA_TS_data(N, Beta, X, Eta, rho, tD, err, seed = 1)

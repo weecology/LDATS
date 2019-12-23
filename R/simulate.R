@@ -97,7 +97,8 @@ sim_LDA_data <- function(N, Beta, alpha = NULL, Theta = NULL, seed = NULL){
 #'   covariates per segment (C)) are inferred from input objects.
 #'
 #' @param X \code{matrix} of covariates, dimension M (number of documents) x 
-#'   SC (number of segments x number of covariates, including the intercept).
+#'   C (number of covariates, including the intercept) (a.k.a. the design
+#'   matrix).
 #' 
 #' @param Eta \code{matrix} of regression parameters across the segments,
 #'   dimension: SC (number of segments x number of covariates, including the
@@ -121,10 +122,8 @@ sim_LDA_data <- function(N, Beta, alpha = NULL, Theta = NULL, seed = NULL){
 #' @examples
 #'   tD <- c(1, 3, 4, 6)
 #'   rho <- 3
-#'   X <- matrix(c(1,1,0,0,1,2,0,0,0,0,1,3,0,0,1,4), 
-#'          nrow = length(tD), ncol = 4, byrow = TRUE)
-#'   Eta <- matrix(c(0.5, 1.2, 0.3, 1.1, 0.9, 0.1, 0.5, 0.5), 
-#'           nrow = ncol(X), ncol = 2, byrow = TRUE)
+#'   X <- cbind(rep(1, 4), 1:4)
+#'   Eta <- cbind(c(0.5, 0.3, 0.9, 0.5), c(1.2, 1.1, 0.1, 0.5))
 #'   sim_TS_data(X, Eta, rho, tD, err = 1)
 #'   
 #' @export
@@ -156,8 +155,8 @@ sim_TS_data <- function(X, Eta, rho, tD, err = 0, seed = NULL){
   EGamma <- matrix(NA, nrow = nrow(X), ncol = ncol(Eta))
   for(s in 1:S){
     in1 <- which(tD >= s_start[s] & tD <= s_end[s])
-    in2 <- (C * (s - 1) + 1):(C * S)
-    X_Eta <- X[in1,in2] %*% Eta[in2,]
+    in2 <- (C * (s - 1) + 1):(C * s)
+    X_Eta <- matrix(data = X[in1, ], nrow = length(in1)) %*% Eta[in2,] 
     eps <- rnorm(length(X_Eta), 0, err)
     EGamma[in1,] <- softmax(X_Eta + eps) 
   }
@@ -184,7 +183,8 @@ sim_TS_data <- function(X, Eta, rho, tD, err = 0, seed = NULL){
 #'   1 within topics.
 #'
 #' @param X \code{matrix} of covariates, dimension M (number of documents) x 
-#'   SC (number of segments x number of covariates, including the intercept).
+#'   C (number of covariates, including the intercept) (a.k.a the design
+#'   matrix).
 #' 
 #' @param Eta \code{matrix} of regression parameters across the segments,
 #'   dimension: SC (number of segments x number of covariates, including the
@@ -209,10 +209,8 @@ sim_TS_data <- function(X, Eta, rho, tD, err = 0, seed = NULL){
 #'   N <- c(10, 22, 15, 31)
 #'   tD <- c(1, 3, 4, 6)
 #'   rho <- 3
-#'   X <- matrix(c(1,1,0,0,1,2,0,0,0,0,1,3,0,0,1,4), 
-#'            nrow = length(tD), ncol = 4, byrow = TRUE)
-#'   Eta <- matrix(c(0.5, 1.2, 0.3, 1.1, 0.9, 0.1, 0.5, 0.5), 
-#'            nrow = ncol(X), ncol = 2, byrow = TRUE)
+#'   X <- cbind(rep(1, 4), 1:4)
+#'   Eta <- cbind(c(0.5, 0.3, 0.9, 0.5), c(1.2, 1.1, 0.1, 0.5))
 #'   Beta <- matrix(c(0.1, 0.1, 0.8, 0.2, 0.6, 0.2), 2, 3, byrow = TRUE)
 #'   err <- 1
 #'   sim_LDA_TS_data(N, Beta, X, Eta, rho, tD, err)

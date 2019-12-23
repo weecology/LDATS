@@ -4,6 +4,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/weecology/LDATS/master/LICENSE)
 [![Lifecycle:maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![Codecov test coverage](https://img.shields.io/codecov/c/github/weecology/LDATS/master.svg)](https://codecov.io/github/weecology/LDATS/branch/master)
+[![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/LDATS)](https://CRAN.R-project.org/package=LDATS)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3286617.svg)](https://doi.org/10.5281/zenodo.3286617)
 
 ## Overview
@@ -15,16 +16,17 @@ Dirichlet Allocation (LDA) and Bayesian time series (TS) analyses.
 For a full description of the math underlying the **`LDATS`** package, see the
 [technical document](https://github.com/weecology/LDATS/blob/master/LDATS_model.pdf).
 
-## Status: In Development, Stable Version Available Soon
+## Status: Stable Version Available, Continuing Development
 
-The package is currently in active development by the 
-[Weecology Team](https://www.weecology.org), and a stable version
-in under review at CRAN. The API is well defined at this point and should 
-not change substantially.
+A stable version of LDATS is available on [CRAN](https://cran.r-project.org/web/packages/LDATS/index.html), 
+but the package is actively being developed by the [Weecology Team](https://www.weecology.org).
+The API is well defined at this point and should not change substantially.
 
 ## Installation
 
-Install the **`devtools`** package and then use it to install **`LDATS`** from GitHub:
+You can install the stable version of **`LDATS`** from CRAN with:
+
+To obtain the current development version of **`LDATS`** from GitHub, install the **`devtools`** package and then use it to install **`LDATS`**:
 
 ```r
 install.packages("devtools")

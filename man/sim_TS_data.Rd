@@ -8,7 +8,8 @@ sim_TS_data(X, Eta, rho, tD, err = 0, seed = NULL)
 }
 \arguments{
 \item{X}{\code{matrix} of covariates, dimension M (number of documents) x 
-SC (number of segments x number of covariates, including the intercept).}
+C (number of covariates, including the intercept) (a.k.a. the design
+matrix).}
 
 \item{Eta}{\code{matrix} of regression parameters across the segments,
 dimension: SC (number of segments x number of covariates, including the
@@ -40,10 +41,8 @@ For a given set of covariates \code{X}; parameters \code{Eta},
 \examples{
   tD <- c(1, 3, 4, 6)
   rho <- 3
-  X <- matrix(c(1,1,0,0,1,2,0,0,0,0,1,3,0,0,1,4), 
-         nrow = length(tD), ncol = 4, byrow = TRUE)
-  Eta <- matrix(c(0.5, 1.2, 0.3, 1.1, 0.9, 0.1, 0.5, 0.5), 
-          nrow = ncol(X), ncol = 2, byrow = TRUE)
+  X <- cbind(rep(1, 4), 1:4)
+  Eta <- cbind(c(0.5, 0.3, 0.9, 0.5), c(1.2, 1.1, 0.1, 0.5))
   sim_TS_data(X, Eta, rho, tD, err = 1)
   
 }
