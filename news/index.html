@@ -67,7 +67,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.5</span>
       </span>
     </div>
 
@@ -139,6 +139,27 @@
 <a href="#ldats-development-version" class="anchor"></a>LDATS (development version)<small> Unreleased </small>
 </h1>
 <p>Version numbers follow <a href="https://semver.org/">Semantic Versioning</a>.</p>
+</div>
+    <div id="ldats-0-2-5httpsgithub-comweecologyldatsreleasestagv0-2-5" class="section level1">
+<h1 class="page-header">
+<a href="#ldats-0-2-5httpsgithub-comweecologyldatsreleasestagv0-2-5" class="anchor"></a><small> Unreleased </small>LDATS 0.2.5(<a href="https://github.com/weecology/ldats/releases/tag/v0.2.5" class="uri">https://github.com/weecology/ldats/releases/tag/v0.2.5</a>)</h1>
+<p><em>2019-12-22</em></p>
+<div id="general-editing-of-simulation-functions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#general-editing-of-simulation-functions" class="anchor"></a>General editing of simulation functions</h2>
+<ul>
+<li>Don’t need to make a sparse matrix to pass in now</li>
+<li>Tweaking the simulation functions to simplify X</li>
+</ul>
+</div>
+<div id="patching-a-bug-in-sim_ts" class="section level2">
+<h2 class="hasAnchor">
+<a href="#patching-a-bug-in-sim_ts" class="anchor"></a>Patching a bug in <code>sim_TS</code>
+</h2>
+<ul>
+<li>Using only as.matrix() fails if there is only 1 year in a segment and there are multiple covariates. In that case, as.matrix(X[in1, ]) returns a matrix of n_covariates rows x 1 column, instead of a matrix of 1 row and n_covariates columns. This edit should fix that by forcing it into a matrix of the correct number of rows.</li>
+</ul>
+</div>
 </div>
     <div id="ldats-0-2-4" class="section level1">
 <h1 class="page-header">
@@ -428,6 +449,7 @@
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
         <li><a href="#ldats-development-version">development version</a></li>
+        <li><a href="#ldats-0-2-5httpsgithub-comweecologyldatsreleasestagv0-2-5">0.2.5</a></li>
         <li><a href="#ldats-0-2-4">0.2.4</a></li>
         <li><a href="#ldats-0-2-3">0.2.3</a></li>
         <li><a href="#ldats-0-2-2">0.2.2</a></li>
@@ -448,7 +470,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
 
       </footer>
