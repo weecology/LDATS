@@ -11,9 +11,9 @@ navbar:
       text: "Vignettes"
       menu: 
         - text: "Rodents example"
-          href: rodents-example.html
+          href: articles/rodents-example.html
         - text: "Comparison to Christensen et al."
-          href: paper-comparison.html
+          href: articles/paper-comparison.html
         - text: "LDATS codebase"
           href: articles/LDATS_codebase.html
     reference: 
