@@ -31,7 +31,7 @@ navbar:
       
 reference:
   - title: "Joint LDA and Time Series"
-    desc: "Functions for top-level LDATS modeling"
+    desc: "Functions for LDA_TS-level modeling"
     contents:
       - LDA_TS
       - package_LDA_TS
