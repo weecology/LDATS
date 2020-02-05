@@ -87,7 +87,7 @@ multinom_TS <- function(data, formula, changepoints = NULL,
     return(out)
   }
 
-  TS_chunk_memo <- memoise_fun(multinom_TS_chunk, control$memoise)
+  TS_chunk_memo <- memoise_fun(multinom_TS_chunk, control)
 
   chunks <- prep_chunks(data, changepoints, timename)
   nchunks <- nrow(chunks)

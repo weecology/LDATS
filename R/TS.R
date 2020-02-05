@@ -945,6 +945,9 @@ check_formula <- function(data, formula){
 #'
 #' @param seed Input to \code{set.seed} for replication purposes.
 #'
+#' @param model_fun \code{character} name of the model function to be used to
+#'   fit the multivariate response.
+#'
 #' @return \code{list}, with named elements corresponding to the arguments.
 #'
 #' @examples
@@ -956,13 +959,14 @@ TS_control <- function(memoise = TRUE, response = "gamma", lambda = 0,
                        measurer = AIC, selector = min, ntemps = 6, 
                        penultimate_temp = 2^6, ultimate_temp = 1e10, q = 0, 
                        nit = 1e4, magnitude = 12, quiet = FALSE, burnin = 0, 
-                       thin_frac = 1, summary_prob = 0.95, seed = NULL){
+                       thin_frac = 1, summary_prob = 0.95, seed = NULL,
+                       model_fun = "multinom"){
   list(memoise = memoise, response = response, lambda = lambda, 
        measurer = measurer, selector = selector, ntemps = ntemps, 
        penultimate_temp = penultimate_temp, ultimate_temp = ultimate_temp, 
        q = q, nit = nit, magnitude = magnitude, quiet = quiet, 
        burnin = burnin, thin_frac = thin_frac, summary_prob = summary_prob,
-       seed = seed)
+       seed = seed, model_fun = model_fun)
 
 }
 

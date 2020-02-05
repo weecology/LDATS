@@ -14,3 +14,9 @@ mod <- LDA_TS(data = rodents, topics = 2, nseeds = 1, formulas = ~1,
 mmod <- meta_LDA_TS(data = rodents, topics = 2, nseeds = 1, formulas = ~1,
                  nchangepoints = 0, timename = "newmoon")
 
+# blech this destroys our ability to memoise tho
+# i think we needed to cut that tie sooner or later tho tbh
+# yeah we'll need to set up some of the interface at this level to be 
+# much more flexed 
+# create a function that acts like multinom for a basis-based model?
+# or do we drop multinom all together and use alr for that?
