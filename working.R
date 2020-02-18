@@ -1,3 +1,11 @@
+# have a rough set up for the data splitting, now need to actually 
+# connect the pieces under the hood...like measurer? and selector?
+
+
+
+
+
+
 # need to remove restrictions on the selection functions:
 #  if selector is NULL, return the set of models
 #  if >1 model is selected, return all

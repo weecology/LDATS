@@ -158,6 +158,7 @@ prep_LDA_control <- function(seed, control = list()){
   control$seed <- seed
   control$measurer_LDA_TS <- NULL
   control$selector_LDA_TS <- NULL
+  control$rule <- NULL
   control
 }
 
