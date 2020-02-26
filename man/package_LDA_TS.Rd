@@ -4,19 +4,19 @@
 \alias{package_LDA_TS}
 \title{Package the output of LDA_TS}
 \usage{
-package_LDA_TS(LDAs, sel_LDA, TSs, sel_TSs)
+package_LDA_TS(LDAs, TSs)
 }
 \arguments{
 \item{LDAs}{List (class: \code{LDA_set}) of LDA models (class: 
 \code{LDA}), as returned by \code{\link{LDA_set}}.}
 
-\item{sel_LDA}{A reduced version of \code{LDAs} that only includes the 
-LDA model(s) selected by \code{\link{select_LDA}}. Still should be of
-class \code{LDA_set}.}
-
 \item{TSs}{Class \code{TS_on_LDA} list of results from \code{\link{TS}} 
 applied for each model on each LDA model input, as returned by 
 \code{\link{TS_on_LDA}}.}
+
+\item{sel_LDA}{A reduced version of \code{LDAs} that only includes the 
+LDA model(s) selected by \code{\link{select_LDA}}. Still should be of
+class \code{LDA_set}.}
 
 \item{sel_TSs}{A reduced version of \code{TSs} (of class \code{TS_fit})
 that only includes the TS model chosen via \code{\link{select_TS}}.}

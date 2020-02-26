@@ -2,14 +2,14 @@
 % Please edit documentation in R/LDA_TS.R
 \name{LDA_TS_control}
 \alias{LDA_TS_control}
-\title{Create the controls list for the LDATS model}
+\title{Create the controls list for an LDATS model set}
 \usage{
 LDA_TS_control(quiet = FALSE, measurer_LDA = AIC, selector_LDA = min,
   iseed = 2, memoise = TRUE, response = "gamma", lambda = 0,
   measurer_TS = AIC, selector_TS = min, ntemps = 6,
   penultimate_temp = 2^6, ultimate_temp = 1e+10, q = 0,
   nit = 10000, magnitude = 12, burnin = 0, thin_frac = 1,
-  summary_prob = 0.95, seed = NULL, ...)
+  summary_prob = 0.95, seed = NULL, soften = TRUE, ...)
 }
 \arguments{
 \item{quiet}{\code{logical} indicator of whether the model should run 

@@ -19,9 +19,9 @@
 #'   as verified by \code{\link{check_document_term_table}}.   
 #'  
 #' @param topics Vector of the number of topics to evaluate for each model.
-#'   Must be conformable to \code{integer} values.
+#'   Must be conformable to \code{integer} values. REDUCED DIMENSIONALITY
 #'
-#' @param nseeds Number of seeds (replicate starts) to use for each 
+#' @param nreps Number of replicate starts to use for each 
 #'   value of \code{topics}. Must be conformable to \code{integer} value.
 #'
 #' @param control A \code{list} of parameters to control the running and 
@@ -49,26 +49,146 @@
 #' @examples 
 #'   data(rodents)
 #'   lda_data <- rodents$document_term_table
-#'   r_LDA <- LDA_set(lda_data, topics = 2, nseeds = 2)                         
+#'   r_LDA <- LDA(lda_data, topics = 2, nseeds = 2)                         
 #' 
 #' @export
 #'
-LDA_set <- function(document_term_table, topics = 2, nseeds = 1, 
-                    control = list()){
-  check_LDA_set_inputs(document_term_table, topics, nseeds, control)
-  control <- do.call("LDA_set_control", control)
-  mod_topics <- rep(topics, each = length(seq(2, nseeds * 2, 2)))
-  iseed <- control$iseed
-  mod_seeds <- rep(seq(iseed, iseed + (nseeds - 1)* 2, 2), length(topics))
-  nmods <- length(mod_topics)
-  mods <- vector("list", length = nmods)
-  for (i in 1:nmods){
-    LDA_msg(mod_topics[i], mod_seeds[i], control)
-    control_i <- prep_LDA_control(seed = mod_seeds[i], control = control)
-    mods[[i]] <- LDA(document_term_table, k = mod_topics[i], 
-                     control = control_i)
+LDA <- function(data, topics = 2:3, reps_per_topic = 2, control = list()){
+ # check_args()
+  control <- do.call("LDA_control", control)
+
+  messageq("----Linguistic Decomposition Analyses----", control$quiet)
+
+  LDAs <- prep_LDA_models(data = data, topics = topics, 
+                          reps_per_topic = reps_per_topic,
+                          control = control)
+  nLDA <- length(LDA_models)
+
+  for (i in 1:nLDA){
+    LDAs[[i]] <- LDA_call(data = LDAs[[i]]$data, topics = LDAs[[i]]$topics,
+                          rep = LDAs[[i]]$rep, control = control)
   }
-  package_LDA_set(mods, mod_topics, mod_seeds)
+  # eval_LDA
+  # select_LDA
+  package_LDA(selected_LDAs = selected_LDAs, 
+              LDAs = LDAs, LDA_topics = LDA_topics, LDA_seeds = LDA_seeds)
+}
+
+prep_LDA_models <- function(data, topics = 2:3, reps_per_topic = 2,
+                            control = list()){
+  data <- conform_data(data = data, control = control)
+  subsets <- names(data)
+  LDA_topics <- rep(topics, each = length(seq(2, reps_per_topic * 2, 2)))
+  LDA_reps <- rep(seq(1, 1 + (reps_per_topic - 1), 1), length(topics))
+  LDA_subsets <- rep(subsets, each = length(LDA_reps))  
+  LDA_reps <- rep(LDA_reps, length(subsets))
+  LDA_topics <- rep(LDA_topics, length(subsets))
+  nLDA <- length(LDA_topics)
+  LDAs <- vector("list", length = nLDA)
+  for(i in 1:nLDA){
+    LDAs[[i]] <- list(data = data[[LDA_subsets[[i]]]], 
+                      topics = LDA_topics[[i]], rep = LDA_reps[[i]])
+  }
+  names(LDAs) <- paste0("model_", 1:nLDA)
+
+  LDAs
+}
+
+
+select_LDA <- function(LDAs = list(), control = list()){
+  vals <- measure_LDA(LDAs = LDAs, control = control)
+  
+}
+
+#working in here
+#coming along!
+#but remember that we'll need to manage passing data around for test/train
+# and the multiple versions of data
+
+measure_LDA <- function(LDAs = list(), control = list()){
+  fun <- control$measurer_function
+  args <- control$measurer_args
+  nLDAs <- length(LDAs)
+  vals <- rep(NA, nLDAs)
+  for(i in 1:nLDAs){
+    args <- update_list(args, object = LDAs[[i]])
+    vals[i] <- do.call(what = fun, args = args)
+  }
+  vals
+}
+
+LDA_call <- function(data, topics = 2, rep = 1, control = list()){
+  control <- do.call("LDA_control", control)
+  LDA_msg(topics = topics, rep = rep, quiet = control$quiet)
+  fun <- control$LDA_function
+  args <- update_list(control$LDA_args, data = data, topics = topics, 
+                      rep = rep)
+  if(control$soften){
+    tryCatch(do.call(what = fun, args = args), 
+             warning = LDA_call_soft_warning, 
+             error = LDA_call_soft_error)
+  } else{
+    do.call(what = fun, args = args)
+  }
+}
+
+AIC.LDA <- function(object, ..., k = 2){
+  lls <- logLik(object)
+  -2 * as.numeric(lls) + k * attr(lls, "df")
+}
+
+logLik.LDA <- function(object, ...){
+  object$log_likelihood
+}
+
+LDA_call_soft_warning <- function(x){
+  eval(x$call)
+}
+
+LDA_call_soft_error <- function(x = list()){
+  list(params = list(), document_topic_matrix = data.frame(), 
+       log_likelihood = NA, error = x$message)
+}
+
+
+topicmodels_LDA <- function(data, topics = 2, rep = 1, method = "VEM", 
+                            seeded = TRUE, ...){
+  if(topics == 1){
+    identity_LDA(data)
+  } else{
+    fun_control <- list(...)
+    if(seeded){
+      fun_control <- update_list(fun_control, seed = rep * 2)
+    }
+    mod <- topicmodels::LDA(x = data$document_term_table, k = topics, 
+                            method = method, control = fun_control)
+    mod_ll <- sum(mod@loglikelihood)
+    df <- as.integer(mod@control@estimate.alpha) + length(mod@beta)
+    attr(mod_ll, "df") <- df
+    attr(mod_ll, "nobs") <- mod@Dim[1] * mod@Dim[2]
+    class(mod_ll) <- "logLik"
+    out <- list(params = list(alpha = mod@alpha, beta = mod@beta),
+                document_topic_matrix = mod@gamma, 
+                log_likelihood = mod_ll, data = data)
+    class(out) <- c("LDA", "list")
+    out
+  } 
+}
+
+identity_LDA <- function(data, topics = NULL, rep = 1){
+  nterms <- NCOL(data$document_term_table)
+  if(is.null(topics)){
+    nterms <- topics
+  } else if(topics != nterms){
+    stop("number of topics does not equal number of terms")
+  }
+  document_topic_table <- data$document_term_table 
+  document_topic_table <- document_topic_table / rowSums(document_topic_table)
+  colnames(document_topic_table) <- NULL
+  out <- list(params = list(), document_topic_table = document_topic_table, 
+              log_likelihood = NULL, data = data)
+  class(out) <- c("LDA", "list")
+  out
 }
 
 #' @title Calculate the log likelihood of a VEM LDA model fit
@@ -110,57 +230,22 @@ LDA_set <- function(document_term_table, topics = 2, nseeds = 1,
 #'
 #' @export
 #'
-logLik.LDA_VEM <- function(object, ...){
-  val <- sum(object@loglikelihood)
-  df <- as.integer(object@control@estimate.alpha) + length(object@beta)
-  attr(val, "df") <- df
-  attr(val, "nobs") <- object@Dim[1] * object@Dim[2]
-  class(val) <- "logLik"
-  val
-}
 
-#' @rdname LDA_set
+
+#' @rdname LDA
 #'   
 #' @export
 #'
-check_LDA_set_inputs <- function(document_term_table, topics, nseeds, 
+check_LDA_inputs <- function(data, topics, nreps, 
                                  control){
-  check_document_term_table(document_term_table)
-  check_topics(topics)
-  check_seeds(nseeds)
-  check_control(control)
+  check_document_term_table(document_term_table = data$document_term_table)
+  check_topics(topics = topics)
+  check_nreps(nreps = nreps)
+  check_control(control = control)
 }
 
-#' @title Set the control inputs to include the seed
-#' 
-#' @description Update the control list for the LDA model with the specific
-#'   seed as indicated. And remove controls not used within the LDA itself.
-#'   
-#' @param seed \code{integer} used to set the seed of the specific model. 
-#'
-#' @param control Named list of control parameters to be used in 
-#'   \code{\link[topicmodels]{LDA}} Note that if \code{control} has an 
-#'   element named \code{seed} it will be overwritten by the \code{seed} 
-#'   argument of \code{prep_LDA_control}.
-#'
-#' @return \code{list} of controls to be used in the LDA. 
-#'
-#' @examples
-#'   prep_LDA_control(seed = 1) 
-#'
-#' @export
-#'
-prep_LDA_control <- function(seed, control = list()){
-  control$quiet <- NULL
-  control$measurer <- NULL
-  control$selector <- NULL
-  control$iseed <- NULL
-  control$seed <- seed
-  control$measurer_LDA_TS <- NULL
-  control$selector_LDA_TS <- NULL
-  control$rule <- NULL
-  control
-}
+
+
 
 #' @title Select the best LDA model(s) for use in time series
 #'
@@ -261,11 +346,11 @@ package_LDA_set <- function(mods, mod_topics, mod_seeds){
 #'
 #' @description Produce and print the message for a given LDA model.
 #'
-#' @param mod_topics \code{integer} value corresponding to the number of 
+#' @param LDA_topics \code{integer} value corresponding to the number of 
 #'   topics in the model.
 #' 
-#' @param mod_seeds \code{integer} value corresponding to the seed used for 
-#'   the model.
+#' @param LDA_rep \code{integer} value corresponding to the replicate number 
+#'   for the run of the model.
 #'
 #' @param control Class \code{LDA_controls} list of control parameters to be
 #'   used in \code{LDA} (note that "seed" will be overwritten).
@@ -275,21 +360,19 @@ package_LDA_set <- function(mods, mod_topics, mod_seeds){
 #'
 #' @export
 #'
-LDA_msg <- function(mod_topics, mod_seeds, control = list()){
-  control <- do.call("LDA_set_control", control)
-  check_topics(mod_topics)
-  check_seeds(mod_seeds)
-  topic_msg <- paste0("Running LDA with ", mod_topics, " topics ")
-  seed_msg <- paste0("(seed ", mod_seeds, ")")
-  messageq(paste0(topic_msg, seed_msg), control$quiet)
+LDA_msg <- function(topics, rep, quiet = FALSE){
+  check_topics(topics)
+  check_nreps(rep)
+  topic_msg <- paste0("  ", topics, " topics")
+  rep_msg <- paste0(", seed ", rep)
+  messageq(paste0(topic_msg, rep_msg), quiet)
 }
 
 #' @title Create control list for set of LDA models
 #'
 #' @description This function provides a simple creation and definition of 
-#'   the list used to control the set of LDA models. It is set up to be easy
-#'   to work with the existing control capacity of 
-#'   \code{\link[topicmodels]{LDA}}.
+#'   the list used to control the set of LDA models, regardless of how they
+#'   are implemented. 
 #'
 #' @param quiet \code{logical} indicator of whether the model should run 
 #'   quietly.
@@ -299,10 +382,14 @@ LDA_msg <- function(mod_topics, mod_seeds, control = list()){
 #'   and \code{selector} operates on the values to choose the model(s) to 
 #'   pass on. 
 #'
-#' @param iseed \code{integer} initial seed for the model set. 
+#' @param args \code{list} of arguments to \code{LDA_function}. 
 #'
-#' @param ... Additional arguments to be passed to 
-#'   \code{\link[topicmodels]{LDA}} as a \code{control} input.
+#' @param LDA_function \code{function} used for the LDA model. Defaults to
+#'   classical LDA as coded via \code{topicmodels}' 
+#'   \code{\link[topicmodels]{LDA}}.
+#'
+#' @param ... Arguments to be passed to \code{LDA_function} as a 
+#'   \code{control} input.
 #'
 #' @return \code{list} for controlling the LDA model fit.
 #'
@@ -311,8 +398,20 @@ LDA_msg <- function(mod_topics, mod_seeds, control = list()){
 #'
 #' @export
 #'
-LDA_set_control <- function(quiet = FALSE, measurer = AIC, selector = min,
-                            iseed = 2, ...){
-  list(quiet = quiet, measurer = measurer, selector = selector, 
-       iseed = iseed, ...)
+LDA_control <- function(LDA_function = topicmodels_LDA, 
+                        LDA_args = list(method = "VEM", seeded = TRUE),
+                        measurer_function = AIC,
+                        measurer_args = list(),
+                        selector_function = min,
+                        selector_args = list(), 
+                        nsubsets = 1,
+                        subset_rule = NULL,
+                        soften = TRUE, 
+                        quiet = FALSE){
+  list(LDA_function = LDA_function,  LDA_args = LDA_args, 
+       measurer_function = measurer_function, measurer_args = measurer_args, 
+       selector_function = selector_function, selector_args = selector_args,
+       nsubsets = nsubsets, subset_rule = subset_rule,
+       soften = soften, quiet = quiet)
 }
+

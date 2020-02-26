@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{Class \code{LDA_TS} object to be printed.}
 
-\item{...}{Not used, simply included to maintain method compatibility.}
+\item{...}{Passed to lower-level print calls.}
 }
 \value{
 The selected models in \code{x} as a two-element \code{list} with

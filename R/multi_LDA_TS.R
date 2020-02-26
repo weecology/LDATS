@@ -1,6 +1,7 @@
 # runs multiple iterations of an LDA_TS model (or model suite) where each time
 # a subset of the data are held out
 
+
 multi_LDA_TS <- function(data, topics = 2, nseeds = 1, formulas = ~ 1,
                          nchangepoints = 0, niterations = 1, 
                          timename = "time",  

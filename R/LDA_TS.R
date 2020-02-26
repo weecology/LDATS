@@ -1,3 +1,12 @@
+predict.LDA_TS <- function(object, newdata = NULL, control = list(), ...){
+  control <- do.call("LDA_TS_control", control)
+  TS_mod <- object[["Selected TS model"]]
+  TS_predict <- predict.TS(object = TS_mod, 
+                                newdata = newdata$document_covariate_table, 
+                                control = control, ...)
+}
+
+
 #' @title Run a full set of Latent Dirichlet Allocations and Time 
 #'   Series models
 #'
@@ -124,22 +133,26 @@
 LDA_TS <- function(data, topics = 2, nseeds = 1, formulas = ~ 1,
                    nchangepoints = 0, timename = "time", weights = TRUE, 
                    control = list()){
-  check_LDA_TS_inputs(data, topics, nseeds, formulas, nchangepoints,  
-                      timename, weights, control)
+  check_LDA_TS_inputs(data = data, topics = topics, nseeds = nseeds, 
+                      formulas = formulas, nchangepoints = nchangepoints,  
+                      timename = timename, weights = weights, 
+                      control = control)
   control <- do.call("LDA_TS_control", control)
   data <- conform_LDA_TS_data(data, control$quiet)
-  dtt <- data$document_term_table
-  dct <- data$document_covariate_table
-  weights <- iftrue(weights, document_weights(dtt))
-  messageq("----Latent Dirichlet Allocation----", control$quiet)
-  LDAs <- LDA_set(dtt, topics, nseeds, control$LDA_set_control)
-  sel_LDA <- select_LDA(LDAs, control$LDA_set_control)
-  messageq("----Time Series Models----", control$quiet)
-  TSs <- TS_on_LDA(sel_LDA, dct, formulas, nchangepoints, timename, weights, 
-                   control$TS_control)
-  sel_TSs <- select_TS(TSs, control$TS_control)
-  package_LDA_TS(LDAs, sel_LDA, TSs, sel_TSs)
+
+  LDAs <- LDA(data = data, topics = topics, nseeds = nseeds, 
+              control = control$LDA_control)
+  
+  TSs <- TS(LDAs = ldas, data = data, formulas = formulas, 
+            nchangepoints = nchangepoints, timename = timename,
+            weights = weights, control = control$TS_control)
+
+  package_LDA_TS(LDAs = LDAs, TSs = TSs)
+
 }
+
+
+
 
 #' @rdname LDA_TS
 #'
@@ -180,25 +193,28 @@ conform_LDA_TS_data <- function(data, quiet = FALSE){
 #' 
 #' @export
 #'
-check_LDA_TS_inputs <- function(data = NULL,
-                              topics = 2, nseeds = 1, formulas = ~ 1, 
-                              nchangepoints = 0,
-                              timename = "time", 
-                              weights = TRUE, 
-                              control = list()){
+check_LDA_TS_inputs <- function(data = NULL, topics = 2, nseeds = 1, 
+                                formulas = ~ 1, nchangepoints = 0,
+                                timename = "time", weights = TRUE, 
+                                control = list()){
   check_control(control)
   control <- do.call("LDA_TS_control", control)
-  data <- conform_LDA_TS_data(data)
+  data <- conform_LDA_TS_data(data = data, quiet = control$quiet)
   weights <- iftrue(weights, document_weights(data$document_term_table))
-  check_document_covariate_table(data$document_covariate_table, 
-                               document_term_table = data$document_term_table)
-  check_timename(data$document_covariate_table, timename)
-  check_formulas(formulas, data$document_covariate_table, control$TS_control)  
-  check_nchangepoints(nchangepoints)
-  check_weights(weights)
-  check_document_term_table(data$document_term_table)
-  check_topics(topics)
-  check_seeds(nseeds)
+  check_document_covariate_table(document_covariate_table = 
+                                   data$document_covariate_table, 
+                                 document_term_table = 
+                                   data$document_term_table)
+  check_timename(document_covariate_table = data$document_covariate_table, 
+                 timename = timename)
+  check_formulas(formulas = formulas, 
+                 document_covariate_table = data$document_covariate_table, 
+                 control = control$TS_control)  
+  check_nchangepoints(nchangepoints = nchangepoints)
+  check_weights(weights = weights)
+  check_document_term_table(document_term_table = data$document_term_table)
+  check_topics(topics = topics)
+  check_nseeds(nseeds = nseeds)
 }
 
 #' @title Print the selected LDA and TS models of LDA_TS object
@@ -208,7 +224,7 @@ check_LDA_TS_inputs <- function(data = NULL,
 #'
 #' @param x Class \code{LDA_TS} object to be printed.
 #'
-#' @param ... Not used, simply included to maintain method compatibility.
+#' @param ... Passed to lower-level print calls.
 #'
 #' @return The selected models in \code{x} as a two-element \code{list} with
 #'   the TS component only returning the non-hidden components.
@@ -224,8 +240,8 @@ check_LDA_TS_inputs <- function(data = NULL,
 #' @export
 #'
 print.LDA_TS <- function(x, ...){
-  print(x[["Selected LDA model"]])
-  print(x[["Selected TS model"]])
+  print(x[["Selected LDA model"]], ...)
+  print(x[["Selected TS model"]], ...)
   list(LDA = x[["Selected LDA model"]], TS = x[["Selected TS model"]])
 }
 
@@ -273,27 +289,19 @@ print.LDA_TS <- function(x, ...){
 #'  
 #' @export
 #'
-package_LDA_TS <- function(LDAs, sel_LDA, TSs, sel_TSs){
+package_LDA_TS <- function(LDAs, TSs){
   if (!("LDA_set" %in% class(LDAs))){
     stop("LDAs not of class LDA_set")
-  }
-  if (!("LDA_set" %in% class(sel_LDA))){
-    stop("sel_LDA not of class LDA_set")
   }
   if (!("TS_on_LDA" %in% class(TSs))){
     stop("TSs not of class TS_on_LDA")
   }
-  if (!("TS_fit" %in% class(sel_TSs))){
-    stop("sel_TS not of class TS_fit")
-  }
-
-  out <- list("LDA models" = LDAs, "Selected LDA model" = sel_LDA,
-              "TS models" = TSs, "Selected TS model" = sel_TSs)
+  out <- list("LDA models" = LDAs, "TS models" = TSs)
   class(out) <- c("LDA_TS", "list")
   out
 }
 
-#' @title Create the controls list for the LDATS model
+#' @title Create the controls list for an LDATS model set
 #'
 #' @description Create and define a list of control options used to run the
 #'   LDATS model, as implemented by \code{\link{LDA_TS}}.
@@ -372,10 +380,12 @@ LDA_TS_control <- function(quiet = FALSE, measurer_LDA = AIC,
                            penultimate_temp = 2^6, ultimate_temp = 1e10, 
                            q = 0, nit = 1e4, magnitude = 12, burnin = 0, 
                            thin_frac = 1, summary_prob = 0.95, 
-                           seed = NULL, ...){
+                           seed = NULL, soften = TRUE, ...){
 
-  LDAcontrol <- LDA_set_control(quiet = quiet, measurer = measurer_LDA, 
-                                selector = selector_LDA, iseed = iseed, ...)
+  LDAcontrol <- LDA_control(LDA_function = LDA_function,  LDA_args = LDA_args, 
+       measurer_function = measurer_function, measurer_args = measurer_args, 
+       selector_function = selector_function, selector_args = selector_args, 
+       soften = soften, quiet = quiet)
   TScontrol <- TS_control(memoise = memoise, response = response, 
                           lambda = lambda, measurer = measurer_TS, 
                           selector = selector_TS, ntemps = ntemps, 
@@ -383,6 +393,8 @@ LDA_TS_control <- function(quiet = FALSE, measurer_LDA = AIC,
                           ultimate_temp = ultimate_temp, q = q, 
                           nit = nit, magnitude = magnitude, quiet = quiet, 
                           burnin = burnin, thin_frac = thin_frac, 
-                          summary_prob = summary_prob, seed = seed)
-  list(LDA_set_control = LDAcontrol, TS_control = TScontrol, quiet = quiet)
+                          summary_prob = summary_prob, seed = seed, 
+                          soften = soften)
+  list(LDA_control = LDAcontrol, TS_control = TScontrol, 
+       soften = soften, quiet = quiet)
 }

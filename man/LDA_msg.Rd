@@ -4,14 +4,14 @@
 \alias{LDA_msg}
 \title{Create the model-running-message for an LDA}
 \usage{
-LDA_msg(mod_topics, mod_seeds, control = list())
+LDA_msg(topics, rep, quiet = FALSE)
 }
 \arguments{
-\item{mod_topics}{\code{integer} value corresponding to the number of 
+\item{LDA_topics}{\code{integer} value corresponding to the number of 
 topics in the model.}
 
-\item{mod_seeds}{\code{integer} value corresponding to the seed used for 
-the model.}
+\item{LDA_rep}{\code{integer} value corresponding to the replicate number 
+for the run of the model.}
 
 \item{control}{Class \code{LDA_controls} list of control parameters to be
 used in \code{LDA} (note that "seed" will be overwritten).}

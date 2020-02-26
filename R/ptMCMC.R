@@ -1,3 +1,8 @@
+TS_fun <- function(control){
+  fun <- eval(parse(text = paste0(control$model_fun, "_TS")))
+  memoise_fun(fun, control$memoise)
+}
+
 #' @title Calculate ptMCMC summary diagnostics
 #'
 #' @description Summarize the step and swap acceptance rates as well as trip
@@ -434,14 +439,14 @@ proposed_step_mods <- function(prop_changepts, inputs){
   data <- inputs$data
   formula <- inputs$formula
   weights <- inputs$weights
-  TS_memo <- inputs$TS_memo
+  TS_function <- inputs$TS_function
   ntemps <- length(inputs$temps)
   control <- inputs$control
   timename <- inputs$timename
   out <- vector("list", length = ntemps)
   for (i in 1:ntemps){
-    out[[i]] <- TS_memo(data, formula, prop_changepts[ , i], timename, 
-                        weights, control)
+    out[[i]] <- TS_function(data, formula, prop_changepts[ , i], timename, 
+                            weights, control)
   }
   out
 }
@@ -594,7 +599,7 @@ prep_ptMCMC_inputs <- function(data, formula, nchangepoints, timename,
   out <- list(control = control, temps = prep_temp_sequence(control), 
               pdist = prep_proposal_dist(nchangepoints, control),
               formula = formula, weights = weights, data = data, 
-              TS_memo = memoise_fun(multinom_TS, control$memoise),
+              TS_function = TS_fun(control),
               timename = timename)
   class(out) <- c("ptMCMC_inputs", "list")
   out

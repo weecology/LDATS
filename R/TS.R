@@ -1,3 +1,21 @@
+predict.TS_fit <- function(object, newdata = NULL, control = list(), ...){
+  if(is.null(newdata)){
+    newdata <- object$data
+  }
+  control <- do.call("TS_control", control)
+  nit <- object$control$nit
+  rhos <- object$rhos
+  etas <- object$etas
+  nnewdata <- NROW(newdata)
+  formula <- object$formula
+  out <- matrix(NA, nrow = nit, ncol = nnewdata)
+  for(i in 1:nit){
+    
+    out[i , ] <- predicts
+  }
+
+}
+
 #' @title Conduct a single multinomial Bayesian Time Series analysis 
 #'
 #' @description This is the main interface function for the LDATS application
@@ -150,7 +168,7 @@ TS <- function(data, formula = gamma ~ 1, nchangepoints = 0,
   check_TS_inputs(data, formula, nchangepoints, timename, weights, control)
   control <- do.call("TS_control", control)
   set.seed(control$seed)
-  data <- data[order(data[,timename]), ]
+  data <- time_order_data(data, timename = timename)
   rho_dist <- est_changepoints(data, formula, nchangepoints, timename, 
                                weights, control)
   eta_dist <- est_regressors(rho_dist, data, formula, timename, weights, 
@@ -741,10 +759,15 @@ est_changepoints <- function(data, formula, nchangepoints, timename, weights,
                              control = list()){
   check_TS_inputs(data, formula, nchangepoints, timename, weights, control)
   control <- do.call("TS_control", control)
+  data <- time_order_data(data, timename = timename)
   if (nchangepoints == 0){
     return(NULL)
   }
   saves <- prep_saves(nchangepoints, control)
+
+# break this into a "classic" approach or whatever and give it its own
+#  function that is akin to temper
+
   inputs <- prep_ptMCMC_inputs(data, formula, nchangepoints, timename, 
                                weights, control)
   cpts <- prep_cpts(data, formula, nchangepoints, timename, weights, control)
@@ -759,6 +782,9 @@ est_changepoints <- function(data, formula, nchangepoints, timename, weights,
     cpts <- update_cpts(cpts, swaps)
     ids <- update_ids(ids, swaps)
   }
+# the separate function runs to here
+# and then process the output
+
   process_saves(saves, control)
 }
 

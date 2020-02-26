@@ -1,3 +1,89 @@
+time_order_data <- function(x, timename = "time"){
+  time_order <- order(x[ , timename])
+  x[time_order , ]
+}
+
+#' @title Determine the depth of a list
+#'
+#' @description Evaluate an input for the depth of its nesting. 
+#'
+#' @details If \code{xlist = list()}, then technically the input value is a 
+#'  list, but is empty (of length \code{0}), so depth is returned as \code{0}.
+#'
+#' @param xlist Focal input \code{list}.
+#'
+#' @return \code{integer} value of the depth of the list.
+#' 
+#' @examples
+#'  list_depth("a")
+#'  list_depth(list())
+#'  list_depth(list("a"))
+#'  list_depth(list(list("a")))
+#'
+#' @export 
+#'
+list_depth <- function(xlist){
+  xx <- match.call()
+  xxx <- deparse(xx[[2]])
+  if(xxx == "list()"){
+    0L
+  } else if (inherits(xlist, "data.frame")){
+    0L
+  } else if (is.list(xlist)){
+    1L + max(sapply(xlist, list_depth))
+  } else {
+    0L
+  }
+}
+
+
+#' @title Update a list's elements
+#'
+#' @description Update a list with new values for elements
+#'
+#' @param orig_list \code{list} to be updated with \code{...}. 
+#'
+#' @param ... Named elements to update in \code{orig_list}
+#'
+#' @return Updated \code{list}.
+#'
+#' @examples
+#'  orig_list <- list(a = 1, b = 3, c = 4)
+#'  update_list(orig_list)
+#'  update_list(orig_list, a = "a")
+#'  update_list(orig_list, a = 10, b = NULL)
+#'
+#' @export
+#'
+update_list <- function(orig_list = list(), ...){
+  if(!is.list(orig_list)){
+    stop("orig_list must be a list", call. = FALSE)
+  } 
+  update_elems <- list(...)
+  nupdate_elems <- length(update_elems)
+  norig_elems <- length(orig_list)
+  update_list <- vector("list", length = norig_elems)
+  names(update_list) <- names(orig_list)
+  if(norig_elems > 0){
+    for(i in 1:norig_elems){
+      if(!is.null(orig_list[[i]])){
+        update_list[[i]] <- orig_list[[i]]
+      }
+    }
+  }
+  if(nupdate_elems > 0){
+    names_update_elems <- names(update_elems)
+    for(i in 1:nupdate_elems){
+      if(!is.null(update_elems[[i]])){
+        update_list[[names_update_elems[i]]] <- update_elems[[i]]
+      }
+    }
+  }
+  update_list
+}
+
+
+
 #' @title Calculate the log-sum-exponential (LSE) of a vector
 #'
 #' @description Calculate the exponent of a vector (offset by the max), sum
@@ -355,7 +441,7 @@ check_topics <- function(topics){
   return()
 }
 
-#' @title Check that nseeds value or seeds vector is proper
+#' @title Check that nseeds value or vector is proper
 #' 
 #' @description Check that the vector of numbers of seeds is conformable to
 #'   integers greater than 0.
@@ -368,14 +454,14 @@ check_topics <- function(topics){
 #'   \code{NULL}.
 #'
 #' @examples
-#'  check_seeds(1)
-#'  check_seeds(2)
+#'  check_nseeds(1)
+#'  check_nseeds(2)
 #'
 #' @export
 #'
-check_seeds <- function(nseeds){
-  if (!is.numeric(nseeds) || any(nseeds %% 1 != 0)){
-    stop("nseeds vector must be integers")
+check_nreps <- function(nreps){
+  if (!is.numeric(nreps) || any(nreps %% 1 != 0)){
+    stop("nreps must be integer-conformable")
   }
   return()
 }
