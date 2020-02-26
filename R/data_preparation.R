@@ -99,13 +99,89 @@ conform_data <- function(data, control = list()){
                      document_covariate_table = dct[in_test, ])
         data[[i]] <- list(test = test, train = train)
       }
-      names(data) <- paste0("subset_", 1:nsubsets_out)
+      names(data) <- 1:nsubsets_out
     }
     depth <- list_depth(data)
   }
   if(depth == 3){
-    
+
+    nsubsets_in <- length(data)
+    nsubsets_out <- control$nsubsets
+
+    if(nsubsets_in != 1 && nsubsets_in != nsubsets_out){
+      stop("mimatched request for data subsets")
+    }
+
+    for(i in 1:nsubsets_out){
+
+      data_i <- data[[i]]
+      which_train <- grep("train", names(data_i), ignore.case = TRUE)
+      which_test <- grep("test", names(data_i), ignore.case = TRUE)
+      if(length(which_train) != 1){
+        stop("only one, element in a `data` subset can include `train`")
+      }
+      if(length(which_test) != 1){
+        stop("only one, element in a `data` subset can include `test`")
+      }
+      for(j in 1:2){
+        data_ij <- data[[i]][[j]]
+        which_term <- grep("term", names(data_ij), ignore.case = TRUE)
+        which_covariate <- grep("covariate", names(data_ij), 
+                                ignore.case = TRUE)
+        if(length(which_term) != 1){
+          stop("one, and only one, element in `data` can include `term`")
+        }
+        if (length(which_covariate) == 0){
+          stop("covariate table not provided, can't be made from split data")
+        } else if(length(which_covariate) > 1){
+          stop("at most one element in `data` can include `covariate`")
+        }
+      }
+    }
   }
   data
 
 }
+
+
+# data subsetting rules
+
+null_rule <- function(data, iteration = 1){
+  n <- NROW(data)
+  rep("train", n)
+}
+
+# simple leave one outs with no buffer
+
+# assumes 1:1 between iteration and datum location to drop
+
+systematic_loo <- function(data, iteration = 1){
+  leave_p_out(data = data, random = FALSE, locations = iteration)
+}
+
+# randomly selected 
+
+random_loo <- function(data, iteration = 1){
+  leave_p_out(data = data)
+}
+
+# fully flexible leave p out function allowing for buffers
+# if random the test data are selected randomly, otherwise locations are used
+
+leave_p_out <- function(data, p = 1, pre = 0, post = 0, 
+                        random = TRUE, locations = NULL){
+  n <- NROW(data)
+  test_train <- rep("train", n)
+
+  if(random){
+    locations <- sample(1:n, p)
+  }
+
+  for(i in 1:p){
+    hold_out <- (locations[i] - pre):(locations[i] + post)
+    test_train[hold_out] <- "out"
+  }
+  test_train[locations] <- "test"
+  test_train
+}
+
