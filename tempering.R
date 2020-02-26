@@ -2,8 +2,8 @@ a work in progress toy example of tempering
 
 i think the pseudo priors should be inverse temps?
 basically how theyre set now
-messing around, have the basic idead, i think
-
+messing around, have the basic idea, i think
+verify the math for the temps and such tho
 library(mcmc)
 
 set.seed(1)

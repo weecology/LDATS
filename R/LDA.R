@@ -1,3 +1,21 @@
+# LDA is now functionally what LDA_set was before
+# "reps" replaces "nseeds" but otherwise things are the same generally at api
+# the control list is expanded to now include a base LDA modeling function
+# and then arguments for all three functions, it also gets the subset info
+# because it may be needed, and in addition to quiet a boolean "soften"
+# which softens errors during model running
+# prep_LDA_models combines the data (conforming if needed), topics, 
+# reps, and subsets to prep the list of model inputs, that will actually be
+# appended to with the results, which are done at the top with LDA_call.
+# LDA_call prints the message, and then preps the input arguments as used
+# in a do.call on the function given in the control list. there are
+# examples of both a generalized topicmodels LDA function wrapper (works
+# with Gibbs sampling approach too!) and an "identity" 1-topic function.
+# these functions allow for pre- and post-processing around the main model
+# function without having to impact the general LDA_call
+# select_LDA does a general measuring and then selecting, which now allows
+# for arguments to be passed in!
+
 
 LDA <- function(data, topics = 2, reps = 1, control = list()){
   control <- do.call("LDA_control", control)

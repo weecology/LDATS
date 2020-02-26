@@ -1,3 +1,7 @@
+# pulled back to just what's working so far
+# the goal is to have a single LDA_TS function, no need for multi etc
+#
+
 LDA_TS <- function(data, topics = 2, reps = 1, formulas = ~ 1,
                    nchangepoints = 0, timename = "time", weights = TRUE, 
                    control = list()){

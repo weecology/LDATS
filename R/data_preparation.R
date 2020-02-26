@@ -1,14 +1,34 @@
-# still needs to be evolved and adapted with usages!
-
-
-# if the data are a data.frame or matrix, or list of them, or list of lists
-# of them, you're good. output is a list of lists of data.frames
-# this allows there to be iterations of the same data set, etc.
-# or actually one more level of the list because of the data splitting lololz
-# data <- rodents
-# conform_data(data)
-# 
-# conform_data(data)
+# data can come into LDA_TS LDA TS in a variety of forms, and depending on 
+# usages, might take a variety of different forms
+# the purpose of this function is to generalize and extract the code used
+# to shuddle between data formats from functions / replace with a single line
+# it's still a work in progress and needs more extensive usage exploration,
+# as it's going to be a workhorse function. 
+# this function makes use of a utility i brought over from portalcasting
+# called list_depth that recursively works through an object to tell you
+# how nested lists are. its extremely useful when you could have a list or
+# a list of multiple lists and need to easily distinguish
+# the idea is as follows: working up from the most elemental version
+# possible, if it's not a list, but the data are a term table, the covariate
+# table is added with assumed equispersed data like before and the data are
+# now a list
+# then, if it is a list but only a list of depth 1 (a list of two tables)
+# we actually need to wrap it in a list to make it depth 2...think of this
+# as a 1-subset data set. then, for a list of depth two, we need to 
+# potentially expand to a multiple-subset data set, to allow for cross valid
+# methods, for example. so the list of depth 2 is replicated out to 
+# create a longer list that is still depth 2 but is now of length 
+# control$nsubsets. and then the subsetting of the data occurs according to 
+# the control$subset_rule, and each depth-2 list is actually split to
+# a final level of train and test data, making the list depth 3
+# the training and testing data are saved as trimmed versions of the 
+# two tables. currently its not saving the test/train split explicitly,
+# just implicitly via the data encoding that exists. we should probably
+# shore this up a bit more for sure.
+# also this function is big and modularized a good degree already...it could
+# get chunked into subfunctions
+# there are functions for basic leave p out cross validation, including
+# both systematic and random approaches
 conform_data <- function(data, control = list()){
 
   depth <- list_depth(data)
