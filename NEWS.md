@@ -2,6 +2,13 @@
 
 Version numbers follow [Semantic Versioning](https://semver.org/).
 
+# LDATS 0.2.6(https://github.com/weecology/ldats/releases/tag/v0.2.6)
+*2020-03-02* 
+
+## Patching a bug in tests for r-devel
+* `straingsAsFactors` update
+* only involved patching one test
+
 # LDATS 0.2.5(https://github.com/weecology/ldats/releases/tag/v0.2.5)
 *2019-12-22* 
 

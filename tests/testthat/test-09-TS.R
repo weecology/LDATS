@@ -54,7 +54,7 @@ test_that("check summarize_etas", {
   sum_e <- summarize_etas(eta_dist)
   expect_is(sum_e, "data.frame")
   expect_equal(round(sum_e[1, 1], 2), 2.52)
-  expect_equal(summarize_etas(eta_dist[1:3, ])$AC10[1], as.factor("-"))
+  expect_equal(as.character(summarize_etas(eta_dist[1:3, ])$AC10[1]), "-")
   expect_error(summarize_etas("ok"))
   expect_error(summarize_etas(eta_dist, LDA_controls_list()))
 })
