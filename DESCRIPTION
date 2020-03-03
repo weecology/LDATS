@@ -37,11 +37,9 @@ LazyData: true
 Imports:
     coda,
     digest,
-    dplyr,
     extraDistr,
     graphics,
     grDevices,
-    here,
     lubridate,
     magrittr,
     memoise,
@@ -49,17 +47,19 @@ Imports:
     mvtnorm,
     nnet,
     progress,
-    reshape,
     stats,
     topicmodels,
     viridis
 Suggests:
+    dplyr,
+    here,
     knitr,
     pkgdown,
     rmarkdown,
     testthat, 
     vdiffr, 
     clue, 
+    reshape,
     RCurl, 
     tidyr
 VignetteBuilder:
