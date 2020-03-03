@@ -67,7 +67,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">LDATS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.6</span>
       </span>
     </div>
 
@@ -197,11 +197,11 @@ newfunc &lt;- function() ...</code></pre>
 <p>The suggested workflow is:</p>
 <ol>
 <li>Write code, documentation, and tests.</li>
-<li>Run <code><a href="https://rdrr.io/pkg/devtools/man/document.html">devtools::document()</a></code> to generate the documentation files and update the <code>NAMESPACE</code> file.</li>
-<li>Run <code><a href="https://rdrr.io/pkg/devtools/man/install.html">devtools::install()</a></code> to install the new version of the package.</li>
-<li>Run <code><a href="https://rdrr.io/pkg/devtools/man/test.html">devtools::test()</a></code> to run the test scripts on the new version of the package.</li>
+<li>Run <code><a href="https://devtools.r-lib.org//reference/document.html">devtools::document()</a></code> to generate the documentation files and update the <code>NAMESPACE</code> file.</li>
+<li>Run <code><a href="https://devtools.r-lib.org//reference/install.html">devtools::install()</a></code> to install the new version of the package.</li>
+<li>Run <code><a href="https://devtools.r-lib.org//reference/test.html">devtools::test()</a></code> to run the test scripts on the new version of the package.</li>
 </ol>
-<p>If you are also prepping the package as a whole, then you will also want to run <code><a href="https://rdrr.io/pkg/devtools/man/check.html">devtools::check()</a></code> and/or <code>devtools::check_cran()</code> to make sure that the package is complete. Note that you need an up-to-date TeX/LaTeX distribution for running <code><a href="https://rdrr.io/pkg/devtools/man/check.html">devtools::check()</a></code> and/or <code>devtools::check_cran()</code> due to the rendering of the package manual.</p>
+<p>If you are also prepping the package as a whole, then you will also want to run <code><a href="https://devtools.r-lib.org//reference/check.html">devtools::check()</a></code> and/or <code>devtools::check_cran()</code> to make sure that the package is complete. Note that you need an up-to-date TeX/LaTeX distribution for running <code><a href="https://devtools.r-lib.org//reference/check.html">devtools::check()</a></code> and/or <code>devtools::check_cran()</code> due to the rendering of the package manual.</p>
 <p>For more info, see the <a href="https://github.com/hadley/devtools">GitHub repo</a> for the <code>devtools</code> package.</p>
 </div>
 <div id="attribution" class="section level2">
