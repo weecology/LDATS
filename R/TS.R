@@ -1,3 +1,116 @@
+TS <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0, 
+               timename = "time", weights = NULL, control = list()){
+
+  control <- do.call("TS_control", control)
+  messageq("----Time Series Analyses----", control$quiet)
+  TSs <- prep_TS_models(LDAs = LDAs, data = data, formulas = formulas,
+                        nchangepoints = nchangepoints, timename = timename,
+                        weights = weights, control = control)
+  nTS <- length(TSs)
+  for (i in 1:nTS){
+    TSs[[i]] <- TS_call(TS = TSs[[i]], control = control)
+  }
+  selected_TSs <- select_TS(TSs = TSs, control = control)
+  package_TS(selected_TSs = selected_TSs, TSs = TSs, control = control)
+
+
+}
+
+
+compositional_TS <- function(TS, response = "multinomial", fitting = "memo",
+                             ...){
+  data <- TS$data
+
+}
+
+memoizer <- function(){
+
+}
+
+
+prep_TS_models <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0, 
+                           timename = "time", weights = NULL, 
+                           control = list()){
+
+  if (!is(formulas, "list")) {
+    if (is(formulas, "formula")) {
+      formulas <- c(formulas)
+    } else{
+      stop("formulas does not contain formula(s)")
+    }
+  } else if (!all(vapply(formulas, is, TRUE, "formula"))) {
+      stop("formulas does not contain all formula(s)")
+  }
+
+  nLDAs <- length(LDAs[[2]])
+
+  out <- formulas
+  for (i in seq_along(formulas)) {
+    tformula <- paste(as.character(formulas[[i]]), collapse = "")
+    out[[i]] <- as.formula(paste("gamma", tformula))
+  }
+  formulas <- out
+  nmods <- length(LDA_models)
+  mods <- 1:nmods
+  out <- expand.grid(mods, formulas, nchangepoints, stringsAsFactors = FALSE)
+  colnames(out) <- c("LDA", "formula", "nchangepoints") 
+  out
+
+
+
+  TSs
+}
+
+
+
+TS_control <- function(TS_response_function = compositional_TS, 
+                       TS_response_args = list(family = "multinomial"),
+                       TS_fit_function = memoizer,
+                       TS_fit_args = list(),
+                       soften = TRUE, 
+                       quiet = FALSE){
+  list(TS_response_function = TS_response_function, 
+       TS_response_args = TS_response_args, 
+       TS_fit_function = TS_fit_function, TS_fit_args = TS_fit_args, 
+       soften = soften, quiet = quiet)
+}
+
+
+
+
+TS_call <- function(TS = NULL, control = list()){
+  control <- do.call("TS_control", control)  
+  TS_msg(TS = TS, quiet = control$quiet)
+  fun <- control$TS_function
+  args <- update_list(control$TS_args, TS = TS)
+  if(control$soften){
+    tryCatch(do.call(what = fun, args = args), 
+             warning = function(x){eval(x$call)}, 
+             error = function(x = list()){list(error = x$message)})
+  } else{
+    do.call(what = fun, args = args)
+  }
+}
+
+
+TS_msg <- function(TS, quiet = FALSE){
+  messageq("hi how are you?", quiet)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 predict.TS_fit <- function(object, newdata = NULL, control = list(), ...){
   if(is.null(newdata)){
     newdata <- object$data
@@ -16,154 +129,7 @@ predict.TS_fit <- function(object, newdata = NULL, control = list(), ...){
 
 }
 
-#' @title Conduct a single multinomial Bayesian Time Series analysis 
-#'
-#' @description This is the main interface function for the LDATS application
-#'   of Bayesian change point Time Series analyses (Christensen \emph{et al.}
-#'   2018), which extends the model of Western and Kleykamp (2004;
-#'   see also Ruggieri 2013) to multinomial (proportional) response data using
-#'   softmax regression (Ripley 1996, Venables and Ripley 2002, Bishop 2006) 
-#'   using a generalized linear modeling approach (McCullagh and Nelder 1989).
-#'   The models are fit using parallel tempering Markov Chain Monte Carlo
-#'   (ptMCMC) methods (Earl and Deem 2005) to locate change points and 
-#'   neural networks (Ripley 1996, Venables and Ripley 2002, Bishop 2006) to
-#'   estimate regressors. \cr \cr
-#'   \code{check_TS_inputs} checks that the inputs to 
-#'   \code{TS} are of proper classes for a full analysis.
-#'
-#' @param data \code{data.frame} including [1] the time variable (indicated 
-#'   in \code{timename}), [2] the predictor variables (required by
-#'   \code{formula}) and [3], the multinomial response variable (indicated in
-#'   \code{formula}) as verified by \code{\link{check_timename}} and 
-#'   \code{\link{check_formula}}. Note that the response variables should be
-#'   formatted as a \code{data.frame} object named as indicated by the 
-#'   \code{response} entry in the \code{control} list, such as \code{gamma} 
-#'   for a standard TS analysis on LDA output. See \code{Examples}.
-#'
-#' @param formula \code{\link[stats]{formula}} defining the regression between
-#'   relationship the change points. Any 
-#'   predictor variable included must also be a column in 
-#'   \code{data} and any (multinomial) response variable must be a set of
-#'   columns in \code{data}, as verified by \code{\link{check_formula}}.
-#'
-#' @param nchangepoints \code{integer} corresponding to the number of 
-#'   change points to include in the model. 0 is a valid input (corresponding
-#'   to no change points, so a singular time series model), and the current 
-#'   implementation can reasonably include up to 6 change points. The 
-#'   number of change points is used to dictate the segmentation of the 
-#'   time series into chunks fit with separate models dictated by 
-#'   \code{formula}.
-#'
-#' @param timename \code{character} element indicating the time variable
-#'   used in the time series. Defaults to \code{"time"}. The variable must be
-#'   integer-conformable or a \code{Date}. If the variable named
-#'   is a \code{Date}, the input is converted to an integer, resulting in the
-#'   timestep being 1 day, which is often not desired behavior. 
-#'
-#' @param weights Optional class \code{numeric} vector of weights for each 
-#'   document. Defaults to \code{NULL}, translating to an equal weight for
-#'   each document. When using \code{multinom_TS} in a standard LDATS 
-#'   analysis, it is advisable to weight the documents by their total size,
-#'   as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
-#'   proportions, which does not account for size differences among documents.
-#'   For most models, a scaling of the weights (so that the average is 1) is
-#'   most appropriate, and this is accomplished using \code{document_weights}.
-#'
-#' @param control A \code{list} of parameters to control the fitting of the
-#'   Time Series model including the parallel tempering Markov Chain 
-#'   Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
-#'   \code{\link{TS_control}}.
-#'
-#' @return \code{TS}: \code{TS_fit}-class list containing the following
-#'   elements, many of
-#'   which are hidden for \code{print}ing, but are accessible:
-#'   \describe{
-#'     \item{data}{\code{data} input to the function.}
-#'     \item{formula}{\code{\link[stats]{formula}} input to the function.}
-#'     \item{nchangepoints}{\code{nchangepoints} input to the function.}
-#'     \item{weights}{\code{weights} input to the function.}
-#'     \item{control}{\code{control} input to the function.}
-#'     \item{lls}{Iteration-by-iteration 
-#'                \link[=logLik.multinom_TS_fit]{logLik} values for the
-#'                 full time series fit by \code{\link{multinom_TS}}.}
-#'     \item{rhos}{Iteration-by-iteration change point estimates from
-#'                 \code{\link{est_changepoints}}.}
-#'     \item{etas}{Iteration-by-iteration marginal regressor estimates from
-#'                 \code{\link{est_regressors}}, which have been 
-#'                 unconditioned with respect to the change point locations.}
-#'     \item{ptMCMC_diagnostics}{ptMCMC diagnostics, 
-#'                                see \code{\link{diagnose_ptMCMC}}}
-#'     \item{rho_summary}{Summary table describing \code{rhos} (the change
-#'                        point locations), 
-#'                        see \code{\link{summarize_rhos}}.}
-#'     \item{rho_vcov}{Variance-covariance matrix for the estimates of
-#'                      \code{rhos} (the change point locations), see 
-#'                      \code{\link{measure_rho_vcov}}.}
-#'     \item{eta_summary}{Summary table describing \code{ets} (the 
-#'                        regressors), 
-#'                        see \code{\link{summarize_etas}}.}
-#'     \item{eta_vcov}{Variance-covariance matrix for the estimates of
-#'                      \code{etas} (the regressors), see 
-#'                      \code{\link{measure_eta_vcov}}.}
-#'     \item{logLik}{Across-iteration average of log-likelihoods 
-#'                    (\code{lls}).}
-#'     \item{nparams}{Total number of parameters in the full model,
-#'                    including the change point locations and regressors.}
-#'     \item{deviance}{Penalized negative log-likelihood, based on 
-#'                     \code{logLik} and \code{nparams}.}
-#'   } 
-#'   \code{check_TS_inputs}: An error message is thrown if any input
-#'   is not proper, else \code{NULL}.
-#'
-#' @references
-#'   Bishop, C. M. 2006. \emph{Pattern Recognition and Machine Learning}. 
-#'    Springer, New York, NY, USA.
-#'
-#'   Christensen, E., D. J. Harris, and S. K. M. Ernest. 2018.
-#'   Long-term community change through multiple rapid transitions in a 
-#'   desert rodent community. \emph{Ecology} \strong{99}:1523-1529. 
-#'   \href{https://doi.org/10.1002/ecy.2373}{link}.
-#'
-#'   Earl, D. J. and M. W. Deem. 2005. Parallel tempering: theory, 
-#'   applications, and new perspectives. \emph{Physical Chemistry Chemical 
-#'   Physics} \strong{7}: 3910-3916.
-#'   \href{https://doi.org/10.1039/B509983H}{link}.
-#'
-#'   McCullagh, P. and J. A. Nelder. 1989. \emph{Generalized Linear Models}.
-#'   2nd Edition. Chapman and Hall, New York, NY, USA.
-#'
-#'   Ripley, B. D. 1996. \emph{Pattern Recognition and Neural Networks}. 
-#'   Cambridge University Press, Cambridge, UK.
-#'
-#'   Ruggieri, E. 2013. A Bayesian approach to detecting change points in 
-#'   climactic records. \emph{International Journal of Climatology}
-#'   \strong{33}:520-528.
-#'   \href{https://doi.org/10.1002/joc.3447}{link}.
-#'
-#'   Venables, W. N. and B. D. Ripley. 2002. \emph{Modern and Applied
-#'   Statistics with S}. Fourth Edition. Springer, New York, NY, USA.
-#'
-#'   Western, B. and M. Kleykamp. 2004. A Bayesian change point model for 
-#'   historical time series analysis. \emph{Political Analysis}
-#'   \strong{12}:354-374.
-#'   \href{https://doi.org/10.1093/pan/mph023}{link}.
-#'
-#' @examples 
-#'   data(rodents)
-#'   document_term_table <- rodents$document_term_table
-#'   document_covariate_table <- rodents$document_covariate_table
-#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
-#'   data <- document_covariate_table
-#'   data$gamma <- LDA_models@gamma
-#'   weights <- document_weights(document_term_table)
-#' \donttest{
-#'   TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, "newmoon", weights)
-#' }
-#'   check_TS_inputs(data, timename = "newmoon")
-#'
-#' @export
-#'
-TS <- function(data, formula = gamma ~ 1, nchangepoints = 0, 
+TSx <- function(data, formula = gamma ~ 1, nchangepoints = 0, 
                timename = "time", weights = NULL, control = list()){
   check_TS_inputs(data, formula, nchangepoints, timename, weights, control)
   control <- do.call("TS_control", control)
@@ -176,10 +142,6 @@ TS <- function(data, formula = gamma ~ 1, nchangepoints = 0,
   package_TS(data, formula, timename, weights, control, rho_dist, eta_dist)
 }
 
-#' @rdname TS
-#' 
-#' @export
-#'
 check_TS_inputs <- function(data, formula = gamma ~ 1, nchangepoints = 0, 
                             timename = "time", weights = NULL, 
                             control = list()){
@@ -191,114 +153,6 @@ check_TS_inputs <- function(data, formula = gamma ~ 1, nchangepoints = 0,
   return() 
 }
 
-#' @title Summarize the Time Series model 
-#'
-#' @description Calculate relevant summaries for the run of a Time Series
-#'   model within \code{\link{TS}} and package the output as a
-#'   \code{TS_fit}-class object.
-#'
-#' @param data \code{data.frame} including [1] the time variable (indicated 
-#'   in \code{timename}), [2] the predictor variables (required by
-#'   \code{formula}) and [3], the multinomial response variable (indicated in
-#'   \code{formula}) as verified by \code{\link{check_timename}} and 
-#'   \code{\link{check_formula}}. Note that the response variables should be
-#'   formatted as a \code{data.frame} object named as indicated by the 
-#'   \code{response} entry in the \code{control} list, such as \code{gamma} 
-#'   for a standard TS analysis on LDA output. 
-#'
-#' @param formula \code{\link[stats]{formula}} defining the regression between
-#'   relationship the change points. Any 
-#'   predictor variable included must also be a column in 
-#'   \code{data} and any (multinomial) response variable must be a set of
-#'   columns in \code{data}, as verified by \code{\link{check_formula}}.
-#'
-#' @param timename \code{character} element indicating the time variable
-#'   used in the time series. 
-#'
-#' @param weights Optional class \code{numeric} vector of weights for each 
-#'   document. Defaults to \code{NULL}, translating to an equal weight for
-#'   each document. When using \code{multinom_TS} in a standard LDATS 
-#'   analysis, it is advisable to weight the documents by their total size,
-#'   as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
-#'   proportions, which does not account for size differences among documents.
-#'   For most models, a scaling of the weights (so that the average is 1) is
-#'   most appropriate, and this is accomplished using \code{document_weights}.
-#'
-#' @param control A \code{list} of parameters to control the fitting of the
-#'   Time Series model including the parallel tempering Markov Chain 
-#'   Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
-#'   \code{\link{TS_control}}.
-#'
-#' @param rho_dist List of saved data objects from the ptMCMC estimation of
-#'   change point locations returned by \code{\link{est_changepoints}}
-#'   (unless \code{nchangepoints} is 0, then \code{NULL}).
-#'
-#' @param eta_dist Matrix of draws (rows) from the marginal posteriors of the 
-#'   coefficients across the segments (columns), as estimated by
-#'   \code{\link{est_regressors}}. 
-#'
-#' @return \code{TS_fit}-class list containing the following elements, many of
-#'   which are hidden for \code{print}ing, but are accessible:
-#'   \describe{
-#'     \item{data}{\code{data} input to the function.}
-#'     \item{formula}{\code{\link[stats]{formula}} input to the function.}
-#'     \item{nchangepoints}{\code{nchangepoints} input to the function.}
-#'     \item{weights}{\code{weights} input to the function.}
-#'     \item{timename}{\code{timename} input to the function.}
-#'     \item{control}{\code{control} input to the function.}
-#'     \item{lls}{Iteration-by-iteration 
-#'                \link[=logLik.multinom_TS_fit]{logLik} values for the
-#'                 full time series fit by \code{\link{multinom_TS}}.}
-#'     \item{rhos}{Iteration-by-iteration change point estimates from
-#'                 \code{\link{est_changepoints}}.}
-#'     \item{etas}{Iteration-by-iteration marginal regressor estimates from
-#'                 \code{\link{est_regressors}}, which have been 
-#'                 unconditioned with respect to the change point locations.}
-#'     \item{ptMCMC_diagnostics}{ptMCMC diagnostics, 
-#'                                see \code{\link{diagnose_ptMCMC}}}
-#'     \item{rho_summary}{Summary table describing \code{rhos} (the change
-#'                        point locations), 
-#'                        see \code{\link{summarize_rhos}}.}
-#'     \item{rho_vcov}{Variance-covariance matrix for the estimates of
-#'                      \code{rhos} (the change point locations), see 
-#'                      \code{\link{measure_rho_vcov}}.}
-#'     \item{eta_summary}{Summary table describing \code{ets} (the 
-#'                        regressors), 
-#'                        see \code{\link{summarize_etas}}.}
-#'     \item{eta_vcov}{Variance-covariance matrix for the estimates of
-#'                      \code{etas} (the regressors), see 
-#'                      \code{\link{measure_eta_vcov}}.}
-#'     \item{logLik}{Across-iteration average of log-likelihoods 
-#'                    (\code{lls}).}
-#'     \item{nparams}{Total number of parameters in the full model,
-#'                    including the change point locations and regressors.}
-#'     \item{AIC}{Penalized negative log-likelihood, based on 
-#'                     \code{logLik} and \code{nparams}.}
-#'   }
-#'
-#' @examples 
-#' \donttest{
-#'   data(rodents)
-#'   document_term_table <- rodents$document_term_table
-#'   document_covariate_table <- rodents$document_covariate_table
-#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
-#'   data <- document_covariate_table
-#'   data$gamma <- LDA_models@gamma
-#'   weights <- document_weights(document_term_table)
-#'   formula <- gamma ~ 1
-#'   nchangepoints <- 1
-#'   control <- TS_control()
-#'   data <- data[order(data[,"newmoon"]), ]
-#'   rho_dist <- est_changepoints(data, formula, nchangepoints, "newmoon", 
-#'                                weights, control)
-#'   eta_dist <- est_regressors(rho_dist, data, formula, "newmoon", weights, 
-#'                              control)
-#'   package_TS(data, formula, "newmoon", weights, control, rho_dist, 
-#'              eta_dist)
-#' }
-#'
-#' @export
-#'
 package_TS <- function(data, formula, timename, weights, control, rho_dist, 
                          eta_dist){
 
@@ -347,70 +201,13 @@ package_TS <- function(data, formula, timename, weights, control, rho_dist,
   attr(out, "hidden") <- to_hide
   out
 }
-
-#' @title Print a Time Series model fit
-#'
-#' @description Convenience function to print only the most important 
-#'   components of a \code{TS_fit}-class object fit by 
-#'   \code{\link{TS}}.
-#'
-#' @param x Class \code{TS_fit} object to be printed.
-#'
-#' @param ... Not used, simply included to maintain method compatibility.
-#'
-#' @return The non-hidden parts of \code{x} as a \code{list}.
-#'
-#' @examples 
-#' \donttest{
-#'   data(rodents)
-#'   document_term_table <- rodents$document_term_table
-#'   document_covariate_table <- rodents$document_covariate_table
-#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
-#'   data <- document_covariate_table
-#'   data$gamma <- LDA_models@gamma
-#'   weights <- document_weights(document_term_table)
-#'   TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, "newmoon", weights)
-#'   print(TSmod)
-#' }
-#'
-#' @export
-#'
 print.TS_fit <- function(x, ...){
   hid <- attr(x, "hidden")
   notHid <- !names(x) %in% hid
   print(x[notHid])
 }
 
-#' @title Summarize the regressor (eta) distributions
-#'
-#' @description \code{summarize_etas} calculates summary statistics for each
-#'   of the chunk-level regressors. 
-#'   \cr \cr
-#'   \code{measure_ets_vcov} generates the variance-covariance matrix for 
-#'   the regressors.
-#'
-#' @param etas Matrix of regressors (columns) across iterations of the 
-#'   ptMCMC (rows), as returned from \code{\link{est_regressors}}.
-#'
-#' @param control A \code{list} of parameters to control the fitting of the
-#'   Time Series model including the parallel tempering Markov Chain 
-#'   Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
-#'   \code{\link{TS_control}}.
-#'
-#' @return \code{summarize_etas}: table of summary statistics for chunk-level
-#'   regressors including mean, median, mode, posterior interval, standard
-#'   deviation, MCMC error, autocorrelation, and effective sample size for 
-#'   each regressor. \cr \cr
-#'   \code{measure_eta_vcov}: variance-covariance matrix for chunk-level
-#'   regressors.
-#'
-#' @examples
-#'  etas <- matrix(rnorm(100), 50, 2)
-#'  summarize_etas(etas)
-#'  measure_eta_vcov(etas)
-#' 
-#' @export 
-#'
+
 summarize_etas <- function(etas, control = list()){
   check_control(control)
   control <- do.call("TS_control", control)
@@ -435,10 +232,6 @@ summarize_etas <- function(etas, control = list()){
   out
 }
 
-#' @rdname summarize_etas 
-#'
-#' @export
-#'
 measure_eta_vcov <- function(etas){
   if (!is.matrix(etas)){
     stop("expecting etas to be a matrix")
@@ -448,38 +241,6 @@ measure_eta_vcov <- function(etas){
   rownames(out) <- colnames(etas)
   out
 }
-
-#' @title Summarize the rho distributions
-#'
-#' @description \code{summarize_rho} calculates summary statistics for each
-#'   of the change point locations.
-#'   \cr \cr
-#'   \code{measure_rho_vcov} generates the variance-covariance matrix for the 
-#'   change point locations.
-#'
-#' @param rhos Matrix of change point locations (columns) across iterations of 
-#'   the ptMCMC (rows) or \code{NULL} if no change points are in the model,
-#'   as returned from \code{\link{est_changepoints}}.
-#'
-#' @param control A \code{list} of parameters to control the fitting of the
-#'   Time Series model including the parallel tempering Markov Chain 
-#'   Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
-#'   \code{\link{TS_control}}.
-#'
-#' @return \code{summarize_rhos}: table of summary statistics for change point
-#'   locations including mean, median, mode, posterior interval, standard
-#'   deviation, MCMC error, autocorrelation, and effective sample size for 
-#'   each change point location. \cr \cr
-#'   \code{measure_rho_vcov}: variance-covariance matrix for change 
-#'   point locations.
-#'
-#' @examples
-#'  rhos <- matrix(sample(80:100, 100, TRUE), 50, 2)
-#'  summarize_rhos(rhos)
-#'  measure_rho_vcov(rhos)
-#' 
-#' @export 
-#'
 summarize_rhos <- function(rhos, control = list()){
   check_control(control)
   control <- do.call("TS_control", control)
@@ -504,10 +265,6 @@ summarize_rhos <- function(rhos, control = list()){
   out
 }
 
-#' @rdname summarize_rhos 
-#'
-#' @export
-#'
 measure_rho_vcov <- function(rhos){
   if (is.null(rhos)) {
     return()
@@ -521,104 +278,6 @@ measure_rho_vcov <- function(rhos){
   out
 }
 
-#' @title Estimate the distribution of regressors, unconditional on the
-#'   change point locations
-#'
-#' @description This function uses the marginal posterior distributions of
-#'   the change point locations (estimated by \code{\link{est_changepoints}})
-#'   in combination with the conditional (on the change point locations) 
-#'   posterior distributions of the regressors (estimated by
-#'   \code{\link{multinom_TS}}) to estimate the marginal posterior 
-#'   distribution of the regressors, unconditional on the change point 
-#'   locations.
-#'
-#' @details The general approach follows that of Western and Kleykamp
-#'   (2004), although we note some important differences. Our regression
-#'   models are fit independently for each chunk (segment of time), and 
-#'   therefore the variance-covariance matrix for the full model 
-#'   has \code{0} entries for covariances between regressors in different
-#'   chunks of the time series. Further, because the regression model here
-#'   is a standard (non-hierarchical) softmax (Ripley 1996, Venables and 
-#'   Ripley 2002, Bishop 2006), there is no error term in the regression  
-#'   (as there is in the normal model used by Western and Kleykamp 2004), 
-#'   and so the posterior distribution used here is a multivariate normal,
-#'   as opposed to a multivariate t, as used by Western and Kleykamp (2004).
-#'
-#' @param rho_dist List of saved data objects from the ptMCMC estimation of
-#'   change point locations (unless \code{nchangepoints} is 0, then 
-#'   \code{NULL}) returned from \code{\link{est_changepoints}}.
-#'
-#' @param data \code{data.frame} including [1] the time variable (indicated 
-#'   in \code{timename}), [2] the predictor variables (required by
-#'   \code{formula}) and [3], the multinomial response variable (indicated in
-#'   \code{formula}) as verified by \code{\link{check_timename}} and 
-#'   \code{\link{check_formula}}. Note that the response variables should be
-#'   formatted as a \code{data.frame} object named as indicated by the 
-#'   \code{response} entry in the \code{control} list, such as \code{gamma} 
-#'   for a standard TS analysis on LDA output. 
-#'
-#' @param formula \code{\link[stats]{formula}} defining the regression between
-#'   relationship the change points. Any 
-#'   predictor variable included must also be a column in 
-#'   \code{data} and any (multinomial) response variable must be a set of
-#'   columns in \code{data}, as verified by \code{\link{check_formula}}.
-#'
-#' @param timename \code{character} element indicating the time variable
-#'   used in the time series. 
-#'
-#' @param weights Optional class \code{numeric} vector of weights for each 
-#'   document. Defaults to \code{NULL}, translating to an equal weight for
-#'   each document. When using \code{multinom_TS} in a standard LDATS 
-#'   analysis, it is advisable to weight the documents by their total size,
-#'   as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
-#'   proportions, which does not account for size differences among documents.
-#'   For most models, a scaling of the weights (so that the average is 1) is
-#'   most appropriate, and this is accomplished using \code{document_weights}.
-#'
-#' @param control A \code{list} of parameters to control the fitting of the
-#'   Time Series model including the parallel tempering Markov Chain 
-#'   Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
-#'   \code{\link{TS_control}}.
-#'
-#' @return \code{matrix} of draws (rows) from the marginal posteriors of the 
-#'   coefficients across the segments (columns). 
-#'
-#' @references
-#'   Bishop, C. M. 2006. \emph{Pattern Recognition and Machine Learning}. 
-#'    Springer, New York, NY, USA.
-#'
-#'   Ripley, B. D. 1996. \emph{Pattern Recognition and Neural Networks}. 
-#'   Cambridge University Press, Cambridge, UK.
-#'
-#'   Venables, W. N. and B. D. Ripley. 2002. \emph{Modern and Applied
-#'   Statistics with S}. Fourth Edition. Springer, New York, NY, USA.
-#'
-#'   Western, B. and M. Kleykamp. 2004. A Bayesian change point model for 
-#'   historical time series analysis. \emph{Political Analysis}
-#'   \strong{12}:354-374.
-#'   \href{https://doi.org/10.1093/pan/mph023}{link}.
-#'
-#' @examples 
-#' \donttest{
-#'   data(rodents)
-#'   document_term_table <- rodents$document_term_table
-#'   document_covariate_table <- rodents$document_covariate_table
-#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
-#'   data <- document_covariate_table
-#'   data$gamma <- LDA_models@gamma
-#'   weights <- document_weights(document_term_table)
-#'   formula <- gamma ~ 1
-#'   nchangepoints <- 1
-#'   control <- TS_control()
-#'   data <- data[order(data[,"newmoon"]), ]
-#'   rho_dist <- est_changepoints(data, formula, nchangepoints, "newmoon", 
-#'                                weights, control)
-#'   eta_dist <- est_regressors(rho_dist, data, formula, "newmoon", weights, 
-#'                              control)
-#' }
-#'
-#' @export
-#'
 est_regressors <- function(rho_dist, data, formula, timename, weights, 
                            control = list()){
   check_formula(data, formula)  
@@ -687,74 +346,6 @@ est_regressors <- function(rho_dist, data, formula, timename, weights,
 }
 
 
-#' @title Use ptMCMC to estimate the distribution of change point locations
-#'
-#' @description This function executes ptMCMC-based estimation of the 
-#'   change point location distributions for multinomial Time Series analyses.
-#'
-#' @param data \code{data.frame} including [1] the time variable (indicated 
-#'   in \code{timename}), [2] the predictor variables (required by
-#'   \code{formula}) and [3], the multinomial response variable (indicated in
-#'   \code{formula}) as verified by \code{\link{check_timename}} and 
-#'   \code{\link{check_formula}}. Note that the response variables should be
-#'   formatted as a \code{data.frame} object named as indicated by the 
-#'   \code{response} entry in the \code{control} list, such as \code{gamma} 
-#'   for a standard TS analysis on LDA output. 
-#'
-#' @param formula \code{\link[stats]{formula}} defining the regression between
-#'   relationship the change points. Any 
-#'   predictor variable included must also be a column in 
-#'   \code{data} and any (multinomial) response variable must be a set of
-#'   columns in \code{data}, as verified by \code{\link{check_formula}}.
-#'
-#' @param nchangepoints \code{integer} corresponding to the number of 
-#'   change points to include in the model. 0 is a valid input (corresponding
-#'   to no change points, so a singular time series model), and the current 
-#'   implementation can reasonably include up to 6 change points. The 
-#'   number of change points is used to dictate the segmentation of the 
-#'   time series into chunks fit with separate models dictated by 
-#'   \code{formula}.
-#'
-#' @param timename \code{character} element indicating the time variable
-#'   used in the time series. 
-#'
-#' @param weights Optional class \code{numeric} vector of weights for each 
-#'   document. Defaults to \code{NULL}, translating to an equal weight for
-#'   each document. When using \code{multinom_TS} in a standard LDATS 
-#'   analysis, it is advisable to weight the documents by their total size,
-#'   as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
-#'   proportions, which does not account for size differences among documents.
-#'   For most models, a scaling of the weights (so that the average is 1) is
-#'   most appropriate, and this is accomplished using \code{document_weights}.
-#'
-#' @param control A \code{list} of parameters to control the fitting of the
-#'   Time Series model including the parallel tempering Markov Chain 
-#'   Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
-#'   \code{\link{TS_control}}.
-#'
-#' @return List of saved data objects from the ptMCMC estimation of
-#'   change point locations (unless \code{nchangepoints} is 0, then 
-#'   \code{NULL} is returned).
-#'
-#' @examples 
-#' \donttest{
-#'   data(rodents)
-#'   document_term_table <- rodents$document_term_table
-#'   document_covariate_table <- rodents$document_covariate_table
-#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
-#'   data <- document_covariate_table
-#'   data$gamma <- LDA_models@gamma
-#'   weights <- document_weights(document_term_table)
-#'   formula <- gamma ~ 1
-#'   nchangepoints <- 1
-#'   control <- TS_control()
-#'   data <- data[order(data[,"newmoon"]), ]
-#'   rho_dist <- est_changepoints(data, formula, nchangepoints, "newmoon", 
-#'                                weights, control)
-#' }
-#'
-#' @export
-#'
 est_changepoints <- function(data, formula, nchangepoints, timename, weights, 
                              control = list()){
   check_TS_inputs(data, formula, nchangepoints, timename, weights, control)
@@ -788,37 +379,6 @@ est_changepoints <- function(data, formula, nchangepoints, timename, weights,
   process_saves(saves, control)
 }
 
-#' @title Initialize and tick through the progress bar
-#'
-#' @description \code{prep_pbar} creates and \code{update_pbar} steps
-#'   through the progress bars (if desired) in \code{\link{TS}}
-#'
-#' @param control A \code{list} of parameters to control the fitting of the
-#'   Time Series model including the parallel tempering Markov Chain 
-#'   Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
-#'   \code{\link{TS_control}}. Of use here is \code{quiet} which is a
-#'   a \code{logical} indicator of whether there should be information 
-#'   (i.e. the progress bar) printed during the run or not. Default is 
-#'   \code{TRUE}.
-#'
-#' @param bar_type "rho" (for change point locations) or "eta" (for 
-#'   regressors).
-#'
-#' @param nr \code{integer} number of unique realizations, needed when
-#'   \code{bar_type} = "eta".
-#'
-#' @param pbar The progress bar object returned from \code{prep_pbar}.
-#'
-#' @return \code{prep_pbar}: the initialized progress bar object. \cr \cr
-#'   \code{update_pbar}: the ticked-forward \code{pbar}.
-#'
-#' @examples
-#'   pb <- prep_pbar(control = list(nit = 2)); pb
-#'   pb <- update_pbar(pb); pb
-#'   pb <- update_pbar(pb); pb
-#'
-#' @export
-#'
 prep_pbar <- function(control = list(), bar_type = "rho", 
                       nr = NULL){
   check_control(control)
@@ -844,10 +404,6 @@ prep_pbar <- function(control = list(), bar_type = "rho",
   out
 }
 
-#' @rdname prep_pbar
-#'
-#' @export
-#'
 update_pbar <- function(pbar, control = list()){
   if (!("progress_bar" %in% class(pbar))){
     stop("pbar must be of class progress_bar")
@@ -861,37 +417,6 @@ update_pbar <- function(pbar, control = list()){
 }
 
 
-#' @title Check that a formula is proper
-#' 
-#' @description Check that \code{formula} is actually a 
-#'   \code{\link[stats]{formula}} and that the
-#'   response and predictor variables are all included in \code{data}.
-#'   
-#' @param formula \code{formula} to evaluate.
-#'
-#' @param data \code{data.frame} including [1] the time variable (indicated 
-#'   in \code{timename}), [2] the predictor variables (required by
-#'   \code{formula}) and [3], the multinomial response variable (indicated in
-#'   \code{formula}) as verified by \code{\link{check_timename}} and 
-#'   \code{\link{check_formula}}. Note that the response variables should be
-#'   formatted as a \code{data.frame} object named as indicated by the 
-#'   \code{response} entry in the \code{control} list, such as \code{gamma} 
-#'   for a standard TS analysis on LDA output. 
-#' 
-#' @return An error message is thrown if \code{formula} is not proper,
-#'   else \code{NULL}.
-#' 
-#' @examples 
-#'   data(rodents)
-#'   document_term_table <- rodents$document_term_table
-#'   document_covariate_table <- rodents$document_covariate_table
-#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
-#'   data <- document_covariate_table
-#'   data$gamma <- LDA_models@gamma
-#'   check_formula(data, gamma ~ 1)
-#'
-#' @export
-#'
 check_formula <- function(data, formula){
 
   if (!is(formula, "formula")){
@@ -916,72 +441,7 @@ check_formula <- function(data, formula){
   return()
 }
 
-#' @title Create the controls list for the Time Series model
-#'
-#' @description This function provides a simple creation and definition of a
-#'   list used to control the time series model fit occurring within 
-#'   \code{\link{TS}}. 
-#'
-#' @param memoise \code{logical} indicator of whether the multinomial 
-#'   functions should be memoised (via \code{\link[memoise]{memoise}}). 
-#'   Memoisation happens to both \code{\link{multinom_TS}} and 
-#'   \code{\link{multinom_TS_chunk}}.
-#'
-#' @param response \code{character} element indicating the response variable 
-#'   used in the time series. 
-#'
-#' @param lambda \code{numeric} "weight" decay term used to set the prior
-#'   on the regressors within each chunk-level model. Defaults to 0, 
-#'   corresponding to a fully vague prior.
-#'
-#' @param measurer,selector Function names for use in evaluation of the TS
-#'   models. \code{measurer} is used to create a value for each model
-#'   and \code{selector} operates on the values to choose the model. 
-#'
-#' @param ntemps \code{integer} number of temperatures (chains) to use in the 
-#'   ptMCMC algorithm.
-#'
-#' @param penultimate_temp Penultimate temperature in the ptMCMC sequence.
-#'
-#' @param ultimate_temp Ultimate temperature in the ptMCMC sequence.
-#'
-#' @param q Exponent controlling the ptMCMC temperature sequence from the 
-#'   focal chain (reference with temperature = 1) to the penultimate chain. 0
-#'   (default) implies a geometric sequence. 1 implies squaring before 
-#'   exponentiating.
-#'
-#' @param nit \code{integer} number of iterations (steps) used in the ptMCMC
-#'   algorithm.
-#'
-#' @param magnitude Average magnitude (defining a geometric distribution)
-#'   for the proposed step size in the ptMCMC algorithm.
-#'
-#' @param quiet \code{logical} indicator of whether the model should run 
-#'   quietly (if \code{FALSE}, a progress bar and notifications are printed).
-#'
-#' @param burnin \code{integer} number of iterations to remove from the 
-#'   beginning of the ptMCMC algorithm.
-#'
-#' @param thin_frac Fraction of iterations to retain, must be \eqn{(0, 1]},
-#'   and the default value of 1 represents no thinning.
-#'
-#' @param summary_prob Probability used for summarizing the posterior 
-#'   distributions (via the highest posterior density interval, see
-#'   \code{\link[coda]{HPDinterval}}).
-#'
-#' @param seed Input to \code{set.seed} for replication purposes.
-#'
-#' @param model_fun \code{character} name of the model function to be used to
-#'   fit the multivariate response.
-#'
-#' @return \code{list}, with named elements corresponding to the arguments.
-#'
-#' @examples
-#'   TS_control()
-#'
-#' @export
-#'
-TS_control <- function(memoise = TRUE, response = "gamma", lambda = 0, 
+TS_controlx <- function(memoise = TRUE, response = "gamma", lambda = 0, 
                        measurer = AIC, selector = min, ntemps = 6, 
                        penultimate_temp = 2^6, ultimate_temp = 1e10, q = 0, 
                        nit = 1e4, magnitude = 12, quiet = FALSE, burnin = 0, 
@@ -996,33 +456,6 @@ TS_control <- function(memoise = TRUE, response = "gamma", lambda = 0,
 
 }
 
-#' @title Determine the log likelihood of a Time Series model
-#'
-#' @description Convenience function to extract and format the log likelihood
-#'   of a \code{TS_fit}-class object fit by \code{\link{multinom_TS}}.
-#'
-#' @param object Class \code{TS_fit} object to be evaluated.
-#'
-#' @param ... Not used, simply included to maintain method compatibility.
-#'
-#' @return Log likelihood of the model \code{logLik}, also with \code{df}
-#'   (degrees of freedom) and \code{nobs} (number of observations) values.
-#'
-#' @examples 
-#' \donttest{
-#'   data(rodents)
-#'   document_term_table <- rodents$document_term_table
-#'   document_covariate_table <- rodents$document_covariate_table
-#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
-#'   data <- document_covariate_table
-#'   data$gamma <- LDA_models@gamma
-#'   weights <- document_weights(document_term_table)
-#'   TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, "newmoon", weights)
-#'   logLik(TSmod)
-#' }
-#'
-#' @export
-#'
 logLik.TS_fit <- function(object, ...){
   val <- object$logLik
   attr(val, "df") <- object$nparams

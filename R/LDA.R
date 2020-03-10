@@ -165,7 +165,7 @@ select_LDA <- function(LDAs = list(), control = list()){
   fun <- control$selector_function
   args <- update_list(control$selector_args, x = vals)
   selection <- do.call(what = fun, args = args)
-  LDAs[[selection]]  
+  LDAs[selection]  
 }
 
 measure_LDA <- function(LDAs = list(), control = list()){

@@ -1,6 +1,9 @@
    data(rodents)
-   dtt <- rodents$document_term_table
-   lda <- LDA_set(dtt, 3, 1, list(quiet = TRUE))
+
+   lda <- LDA(rodents, 3, 1, list(quiet = TRUE))
+
+lda
+
    dct <- rodents$document_covariate_table
    dct$gamma <- lda[[1]]@gamma
    weights <- document_weights(dtt)
