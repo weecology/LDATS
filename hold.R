@@ -1,4 +1,20 @@
+devtools::load_all()
+
    data(rodents)
+
+data <- rodents
+topics = 2 
+reps = 2
+formulas = ~ 1
+nchangepoints = 1
+timename = "newmoon"
+weights = TRUE
+control = list()
+control <- do.call("LDA_TS_control", control)
+data <- conform_data(data = data, control = control)
+LDAs <- LDA(data = data, topics = topics, reps = reps, 
+              control = control$LDA_control)
+
 
    lda <- LDA(rodents, 3, 1, list(quiet = TRUE))
 

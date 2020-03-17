@@ -7,7 +7,7 @@ LDA_TS <- function(data, topics = 2, reps = 1, formulas = ~ 1,
                    control = list()){
   control <- do.call("LDA_TS_control", control)
   data <- conform_data(data = data, control = control)
-  LDAs <- LDA(data = data, topics = topics, nseeds = nseeds, 
+  LDAs <- LDA(data = data, topics = topics, reps = reps, 
               control = control$LDA_control)
   TSs <- TS(LDAs = LDAs, data = data, formulas = formulas, 
             nchangepoints = nchangepoints, timename = timename, 

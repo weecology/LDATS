@@ -1,3 +1,5 @@
+time_order_data ... hmmmmm
+
 
 standardized output from LDA functions
 s3 object with

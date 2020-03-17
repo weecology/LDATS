@@ -3,6 +3,64 @@ TS_fun <- function(control){
   memoise_fun(fun, control$memoise)
 }
 
+prep_temp_sequence <- function(control = list()){
+  ntemps <- control$ntemps
+  penultimate_temp <- control$penultimate_temp
+  ultimate_temp <- control$ultimate_temp
+  q <- control$q
+  sequence <- seq(0, log2(penultimate_temp), length.out = ntemps - 1)
+  log_temps <- sequence^(1 + q) / log2(penultimate_temp)^q
+  c(2^(log_temps), ultimate_temp) 
+}
+
+
+prep_saves <- function(nchangepoints, control = list()){
+  ntemps <- control$ntemps
+  nit <- control$nit
+  cpts <- array(NA, c(nchangepoints, ntemps, nit))
+  lls <- matrix(NA, ntemps, nit)
+  ids <- matrix(NA, ntemps, nit)
+  step_accepts <- matrix(FALSE, ntemps, nit)
+  swap_accepts <- matrix(FALSE, ntemps - 1, nit)
+  list(cpts = cpts, lls = lls, ids = ids, step_accepts = step_accepts, 
+       swap_accepts = swap_accepts)
+}
+
+
+
+prep_ptMCMC_inputs <- function(data, formula, nchangepoints, timename, 
+                               weights = NULL, control = list()){
+  control$selector <- NULL
+  control$measurer <- NULL
+  out <- list(control = control, temps = prep_temp_sequence(control), 
+              pdist = prep_proposal_dist(nchangepoints, control),
+              formula = formula, weights = weights, data = data, 
+              TS_function = TS_fun(control),
+              timename = timename)
+  class(out) <- c("ptMCMC_inputs", "list")
+  out
+}
+
+
+
+prep_proposal_dist <- function(nchangepoints, control = list()){
+  ntemps <- control$ntemps
+  nit <- control$nit
+  if(nchangepoints == 0){
+    steps <- matrix(0, nrow = nit, ncol = ntemps)
+    which_steps <- matrix(numeric(0), nrow = nit, ncol = ntemps)
+  } else{
+    magnitude <- control$magnitude 
+    step_signs <- sample(c(-1, 1), nit * ntemps, replace = TRUE)
+    step_magnitudes <- 1 + rgeom(nit * ntemps, 1 / magnitude)
+    steps <- matrix(step_signs * step_magnitudes, nrow = nit)
+    which_steps <- sample.int(nchangepoints, nit * ntemps, replace = TRUE)
+    which_steps <- matrix(which_steps, nrow = nit)
+  }
+  list(steps = steps, which_steps = which_steps)
+}
+
+
 #' @title Calculate ptMCMC summary diagnostics
 #'
 #' @description Summarize the step and swap acceptance rates as well as trip
@@ -586,7 +644,7 @@ update_ids <- function(ids, swaps){
 #' }
 #' @export
 #'
-prep_ptMCMC_inputs <- function(data, formula, nchangepoints, timename, 
+prep_ptMCMC_inputsx <- function(data, formula, nchangepoints, timename, 
                                weights = NULL, control = list()){
   check_timename(data, timename)
   check_formula(data, formula)
@@ -641,7 +699,7 @@ prep_ptMCMC_inputs <- function(data, formula, nchangepoints, timename,
 #'
 #' @export
 #'
-prep_proposal_dist <- function(nchangepoints, control = list()){
+prep_proposal_distx <- function(nchangepoints, control = list()){
   check_nchangepoints(nchangepoints)
   check_control(control)
   control <- do.call("TS_control", control)
@@ -725,7 +783,7 @@ prep_proposal_dist <- function(nchangepoints, control = list()){
 #'
 #' @export
 #'
-prep_saves <- function(nchangepoints, control = list()){
+prep_savesx <- function(nchangepoints, control = list()){
   check_nchangepoints(nchangepoints)
   check_control(control)
   control <- do.call("TS_control", control)
@@ -926,7 +984,7 @@ update_cpts <- function(cpts, swaps){
 #'
 #' @export
 #'
-prep_temp_sequence <- function(control = list()){
+prep_temp_sequencex <- function(control = list()){
   check_control(control)
   control <- do.call("TS_control", control)
   ntemps <- control$ntemps

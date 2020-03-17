@@ -119,6 +119,7 @@ topicmodels_LDA <- function(LDA, method = "VEM", seeded = TRUE, ...){
     class(mod_ll) <- "logLik"
     out <- list(params = list(alpha = mod@alpha, beta = mod@beta),
                 document_topic_matrix = mod@gamma, 
+                test_document_topic_matrix = NULL, #not yet available
                 log_likelihood = mod_ll, data = data,
                 topics = topics, rep = rep, data_subset = data_subset)
     class(out) <- c("LDA", "list")

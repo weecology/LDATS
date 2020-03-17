@@ -1,6 +1,12 @@
+##
+#
+#  working in here 
+
+
+
+
 TS <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0, 
                timename = "time", weights = NULL, control = list()){
-
   control <- do.call("TS_control", control)
   messageq("----Time Series Analyses----", control$quiet)
   TSs <- prep_TS_models(LDAs = LDAs, data = data, formulas = formulas,
@@ -12,20 +18,66 @@ TS <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0,
   }
   selected_TSs <- select_TS(TSs = TSs, control = control)
   package_TS(selected_TSs = selected_TSs, TSs = TSs, control = control)
+}
 
+
+
+
+# the defining characteristic here is the sequential
+#  estimation of rho then eta, ostensibly it could be done together
+
+
+sequential_TS <- function(TS, control = list()){
+  rho_dist <- est_changepoints(TS = TS, control = control)
+  eta_dist <- est_regressors(rho_dist = rho_dist, TS = TS, control = control)
+
+}
+
+est_changepoints <- function(TS, control = list()){
+
+  if (nchanTS$nchangepoints == 0){
+    return(NULL)
+  }
+
+x <- memoizer(TS, control = control$TS_fit_args)
+
+   
+}
+
+
+
+
+memoizer <- function(TS, control = list()){
+    
+  data <- TS$data$train$ts_data
+  nchangepoints <- TS$nchangepoints
+  formula <- TS$formula
+  weights <- TS$weights
+  timename <- TS$timename
+
+
+  saves <- prep_saves(nchangepoints, control)
+
+  inputs <- prep_ptMCMC_inputs(data, formula, nchangepoints, timename, 
+                               weights, control)
+  cpts <- prep_cpts(data, formula, nchangepoints, timename, weights, control)
+  ids <- prep_ids(control)
+  pbar <- prep_pbar(control, "rho")
+
+  for(i in 1:control$nit){
+    update_pbar(pbar, control)
+    steps <- step_chains(i, cpts, inputs)
+    swaps <- swap_chains(steps, inputs, ids)
+    saves <- update_saves(i, saves, steps, swaps)
+    cpts <- update_cpts(cpts, swaps)
+    ids <- update_ids(ids, swaps)
+  }
+
+  process_saves(saves, control)
 
 }
 
 
-compositional_TS <- function(TS, response = "multinomial", fitting = "memo",
-                             ...){
-  data <- TS$data
-
-}
-
-memoizer <- function(){
-
-}
 
 
 prep_TS_models <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0, 
@@ -42,35 +94,57 @@ prep_TS_models <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0,
       stop("formulas does not contain all formula(s)")
   }
 
-  nLDAs <- length(LDAs[[2]])
-
-  out <- formulas
+  formulas2 <- formulas
   for (i in seq_along(formulas)) {
     tformula <- paste(as.character(formulas[[i]]), collapse = "")
-    out[[i]] <- as.formula(paste("gamma", tformula))
+    formulas2[[i]] <- as.formula(paste("gamma", tformula))
   }
-  formulas <- out
-  nmods <- length(LDA_models)
+  formulas <- formulas2
+  nmods <- length(LDAs[[1]])
   mods <- 1:nmods
-  out <- expand.grid(mods, formulas, nchangepoints, stringsAsFactors = FALSE)
-  colnames(out) <- c("LDA", "formula", "nchangepoints") 
-  out
+  tab <- expand.grid(mods, formulas, nchangepoints, stringsAsFactors = FALSE)
+  colnames(tab) <- c("LDA", "formula", "nchangepoints") 
+  
+  nTSs <- NROW(tab)
+  TSs <- vector("list", length = nTSs)
+  for(i in 1:nTSs){
+    lda <- LDAs[[1]][[tab$LDA[i]]]
+ 
+    ts_data <- lda$data
+    ts_data$train$ts_data <- lda$data$train$document_covariate_table
+    ts_data$train$ts_data$gamma <- lda$document_topic_matrix
 
+    ts_data$test$ts_data <- lda$data$test$document_covariate_table
+    ts_data$test$ts_data$gamma <- lda$test_document_topic_matrix
 
-
+    TSs[[i]] <- list(data = ts_data,
+                     data_subset = lda[["data_subset"]],
+                     formula = tab$formula[[i]],
+                     nchangepoints = tab$nchangepoints[i], 
+                     weights = weights,
+                     timename = timename)
+  }
+  name_tab <- data.frame(paste("LDA", tab[ , 1]), 
+                         paste(",", tab[ , 2]),
+                         paste(",", tab[ , 3], "changepoints"))
+  names(TSs) <- apply(name_tab, 1, paste0, collapse = "")
   TSs
 }
 
 
 
-TS_control <- function(TS_response_function = compositional_TS, 
-                       TS_response_args = list(family = "multinomial"),
+TS_control <- function(TS_function = multinom_TS, 
+                       TS_args = list(),
                        TS_fit_function = memoizer,
-                       TS_fit_args = list(),
+                       TS_fit_args = list(ntemps = 6, penultimate_temp = 2^6, 
+                                          ultimate_temp = 1e10, q = 0, 
+                                          nit = 1e4, magnitude = 12, 
+                                          burnin = 0, thin_frac = 1, 
+                                          quiet = FALSE),
                        soften = TRUE, 
                        quiet = FALSE){
-  list(TS_response_function = TS_response_function, 
-       TS_response_args = TS_response_args, 
+  list(TS_function = TS_function, 
+       TS_args = TS_args, 
        TS_fit_function = TS_fit_function, TS_fit_args = TS_fit_args, 
        soften = soften, quiet = quiet)
 }
@@ -153,7 +227,7 @@ check_TS_inputs <- function(data, formula = gamma ~ 1, nchangepoints = 0,
   return() 
 }
 
-package_TS <- function(data, formula, timename, weights, control, rho_dist, 
+package_TSx <- function(data, formula, timename, weights, control, rho_dist, 
                          eta_dist){
 
   check_formula(data, formula) 
@@ -278,7 +352,7 @@ measure_rho_vcov <- function(rhos){
   out
 }
 
-est_regressors <- function(rho_dist, data, formula, timename, weights, 
+est_regressorsx <- function(rho_dist, data, formula, timename, weights, 
                            control = list()){
   check_formula(data, formula)  
   check_weights(weights)
@@ -346,7 +420,7 @@ est_regressors <- function(rho_dist, data, formula, timename, weights,
 }
 
 
-est_changepoints <- function(data, formula, nchangepoints, timename, weights, 
+est_changepointsx <- function(data, formula, nchangepoints, timename, weights, 
                              control = list()){
   check_TS_inputs(data, formula, nchangepoints, timename, weights, control)
   control <- do.call("TS_control", control)
