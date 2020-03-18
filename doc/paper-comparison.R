@@ -1,35 +1,35 @@
 params <-
 list(run_models = FALSE)
 
-## ----setup, include=FALSE------------------------------------------------
+## ----setup, include=FALSE-----------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 
-## ---- include=FALSE------------------------------------------------------
+## ---- include=FALSE-----------------------------------------------------------
 vers <- packageVersion("LDATS")
 
-## ---- eval = FALSE-------------------------------------------------------
+## ---- eval = FALSE------------------------------------------------------------
 #  install.packages("devtools")
 #  devtools::install_github("weecology/LDATS")
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 library(LDATS)
 set.seed(42)
 nseeds <- 200
 nit <- 10000
 
-## ---- eval = params$run_models-------------------------------------------
+## ---- eval = params$run_models------------------------------------------------
 #  install.packages(c("dplyr", "gridExtra", "multipanel", "RColorBrewer", "RCurl", "reshape2"))
 
-## ---- eval = FALSE-------------------------------------------------------
+## ---- eval = FALSE------------------------------------------------------------
 #  rmarkdown::render("paper-comparison.Rmd", params = list(run_models = TRUE))
 
-## ----set download location-----------------------------------------------
+## ----set download location----------------------------------------------------
 vignette_files <- tempdir()
 
-## ----download scripts and data-------------------------------------------
+## ----download scripts and data------------------------------------------------
 test_file <- file.path(vignette_files, "scripts", "rodent_LDA_analysis.r")
 
 if (!file.exists(test_file)){
@@ -60,7 +60,7 @@ if (!file.exists(test_file)){
   }
 }
 
-## ----download pre-generated model outputs--------------------------------
+## ----download pre-generated model outputs-------------------------------------
 test_file <- file.path(vignette_files, "output", "ldats_ldamodel.RDS")
 
 if (!file.exists(test_file)){
@@ -92,12 +92,12 @@ if (!file.exists(test_file)){
   }
 }
 
-## ----LDATS data----------------------------------------------------------
+## ----LDATS data---------------------------------------------------------------
 data(rodents)
 
 head(rodents[[1]])
 
-## ----Paper data, eval = params$run_models--------------------------------
+## ----Paper data, eval = params$run_models-------------------------------------
 #  # parameters for subsetting the full Portal rodents data
 #  periods <- 1:436
 #  control_plots <- c(2, 4, 8, 11, 12, 14, 17, 22)
@@ -129,18 +129,18 @@ head(rodents[[1]])
 #      cos_year = cos(year_continuous * 2 * pi)
 #    )
 
-## ----Paper data2, eval = !params$run_models, include = FALSE-------------
+## ----Paper data2, eval = !params$run_models, include = FALSE------------------
   moondat <- read.csv(file.path(vignette_files, "data", "moon_dates.csv"), stringsAsFactors = FALSE)
   paper_dat <- read.csv(file.path(vignette_files, "data", "paper_dat.csv"), stringsAsFactors = FALSE)
   paper_dates <- read.csv(file.path(vignette_files, "data", "paper_dates.csv"), stringsAsFactors = FALSE)
   paper_covariates <- read.csv(file.path(vignette_files, "data", "paper_covariates.csv"), stringsAsFactors = FALSE)
 
-## ----rodent data comparison----------------------------------------------
+## ----rodent data comparison---------------------------------------------------
 compare <- rodents[[1]] == paper_dat
 
 length(which(rowSums(compare) < ncol(compare)))
 
-## ----Data adjustment eval, eval = FALSE----------------------------------
+## ----Data adjustment eval, eval = FALSE---------------------------------------
 #    # retrieve data on number of plots trapped per month
 #    trap_table = read.csv('https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent_trapping.csv')
 #    trap_table_controls = filter(trap_table, plot %in% selected_plots)
@@ -153,7 +153,7 @@ length(which(rowSums(compare) < ncol(compare)))
 #      r_table_adjusted[n,] = round(r_table_adjusted[n,]/nplots_controls$x[n]*8)
 #    }
 
-## ----adjust LDATS data after Christensen et al, eval = params$run_models----
+## ----adjust LDATS data after Christensen et al, eval = params$run_models------
 #  # get the trapping effort for each sample
 #  trap_table <- read.csv(file.path(vignette_files, "data", "Portal_rodent_trapping.csv"))
 #  trap_table_controls <- dplyr::filter(trap_table, plot %in% control_plots)
@@ -167,29 +167,29 @@ length(which(rowSums(compare) < ncol(compare)))
 #  ldats_rodents_adjusted <- as.data.frame.matrix(rodents[[1]])
 #  ldats_rodents_adjusted[periods, ] <- round(ldats_rodents_adjusted[periods, ] / nplots_controls$x[periods] * 8)
 
-## ----eval = params$run_models, include = FALSE---------------------------
+## ----eval = params$run_models, include = FALSE--------------------------------
 #  saveRDS(ldats_rodents_adjusted, file = file.path(vignette_files, "output", "ldats_rodents_adjusted.RDS"))
 
-## ----eval = !params$run_models, include = FALSE--------------------------
+## ----eval = !params$run_models, include = FALSE-------------------------------
 ldats_rodents_adjusted <- readRDS(file.path(vignette_files, "output", "ldats_rodents_adjusted.RDS"))
 
-## ----dataset comparisons, eval = params$run_models-----------------------
+## ----dataset comparisons, eval = params$run_models----------------------------
 #  compare_raw <- rodents[[1]] == ldats_rodents_adjusted
 #  length(which(rowSums(compare_raw) < ncol(compare_raw)))
 #  
 #  compare_adjusted <- ldats_rodents_adjusted == paper_dat
 #  length(which(rowSums(compare_adjusted) < ncol(compare_adjusted)))
 
-## ----switch to adjusted rodents------------------------------------------
+## ----switch to adjusted rodents-----------------------------------------------
 rodents[[1]] <- paper_dat
 
-## ----show covariate table------------------------------------------------
+## ----show covariate table-----------------------------------------------------
 head(rodents$document_covariate_table)
 
-## ----eval = params$run_models, include = FALSE---------------------------
+## ----eval = params$run_models, include = FALSE--------------------------------
 #  "%>%" <- dplyr::"%>%"
 
-## ----add dates to covariate table, eval = params$run_models--------------
+## ----add dates to covariate table, eval = params$run_models-------------------
 #  new_cov_table <- dplyr::left_join(rodents$document_covariate_table,
 #                                    dplyr::select(moondat, newmoonnumber, censusdate),
 #                                    by = c("newmoon" = "newmoonnumber")) %>%
@@ -197,17 +197,17 @@ head(rodents$document_covariate_table)
 #  
 #  rodents$document_covariate_table <- new_cov_table
 
-## ----eval = params$run_models, include = FALSE---------------------------
+## ----eval = params$run_models, include = FALSE--------------------------------
 #  saveRDS(rodents, file = file.path(vignette_files, "output", "rodents.RDS"))
 
-## ----LDATS LDAs, eval = params$run_models--------------------------------
+## ----LDATS LDAs, eval = params$run_models-------------------------------------
 #  ldats_ldas <- LDATS::LDA_set(document_term_table = rodents$document_term_table,
 #                               topics = 2:6, nseeds = nseeds)
 #  ldats_ldamodel <- LDATS::select_LDA(LDA_models = ldats_ldas)[[1]]
 #  
 #  saveRDS(ldats_ldamodel, file = file.path(vignette_files, "ldats_ldamodel.RDS"))
 
-## ----paper LDAs, eval = params$run_models--------------------------------
+## ----paper LDAs, eval = params$run_models-------------------------------------
 #  source(file.path(vignette_files, "scripts", "AIC_model_selection.R"))
 #  source(file.path(vignette_files, "scripts", "LDA-distance.R"))
 #  
@@ -254,20 +254,20 @@ head(rodents$document_covariate_table)
 #  
 #  saveRDS(ldamodel, file = file.path(vignette_files, "paper_ldamodel.RDS"))
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 knitr::include_graphics(file.path(vignette_files, "output", "lda_distances.png"))
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 ldamodel <- readRDS(file.path(vignette_files, "output", "paper_ldamodel.RDS"))
 ldats_ldamodel <- readRDS(file.path(vignette_files, "output", "ldats_ldamodel.RDS"))
 
-## ----plot paper LDA, fig.width = 7, fig.height = 6-----------------------
+## ----plot paper LDA, fig.width = 7, fig.height = 6----------------------------
 plot(ldamodel, cols = NULL, option = "D")
 
-## ----plot LDATS LDA, fig.width = 7, fig.height = 6-----------------------
+## ----plot LDATS LDA, fig.width = 7, fig.height = 6----------------------------
 plot(ldats_ldamodel, cols = NULL, option = "D")
 
-## ----paper changepoint models, eval = params$run_models------------------
+## ----paper changepoint models, eval = params$run_models-----------------------
 #  #### Run changepoint ####
 #  source(file.path(vignette_files, "scripts", "changepointmodel.r"))
 #  
@@ -318,10 +318,10 @@ plot(ldats_ldamodel, cols = NULL, option = "D")
 #      dplyr::left_join(covariates, by = c("value" = "index"))
 #  }
 
-## ----save annual_hist, include = FALSE, eval = params$run_models---------
+## ----save annual_hist, include = FALSE, eval = params$run_models--------------
 #  saveRDS(annual_hist, file = file.path(vignette_files, "output", "annual_hist.RDS"))
 
-## ----run LDATS LDA and paper cpt, eval = params$run_models---------------
+## ----run LDATS LDA and paper cpt, eval = params$run_models--------------------
 #  ldats_paper_results <- find_changepoints(ldats_ldamodel, paper_covariates)
 #  
 #  saveRDS(ldats_paper_results, file = file.path(vignette_files, "output", "ldats_paper.RDS"))
@@ -333,11 +333,11 @@ plot(ldats_ldamodel, cols = NULL, option = "D")
 #                                      ntopics = ldats_ldamodel@k)
 #  ldats_paper_cpt_dates <- get_dates(ldats_paper_cpt)
 
-## ----include = FALSE, eval = params$run_models---------------------------
+## ----include = FALSE, eval = params$run_models--------------------------------
 #  saveRDS(ldats_paper_cpt, file = file.path(vignette_files, "output", "ldats_paper_cpt.RDS"))
 #  saveRDS(ldats_paper_cpt_dates, file = file.path(vignette_files, "output", "ldats_paper_cpt_dates.RDS"))
 
-## ----run paper LDA and paper cpt, eval = params$run_models---------------
+## ----run paper LDA and paper cpt, eval = params$run_models--------------------
 #  paper_paper_results <- find_changepoints(ldamodel, paper_covariates)
 #  
 #  saveRDS(paper_paper_results, file = file.path(vignette_files, "paper_paper.RDS"))
@@ -349,11 +349,11 @@ plot(ldats_ldamodel, cols = NULL, option = "D")
 #                                      ntopics = ldamodel@k)
 #  paper_paper_cpt_dates <- get_dates(ldats_paper_cpt)
 
-## ----include = FALSE, eval = params$run_models---------------------------
+## ----include = FALSE, eval = params$run_models--------------------------------
 #  saveRDS(paper_paper_cpt, file = file.path(vignette_files, "output", "paper_paper_cpt.RDS"))
 #  saveRDS(paper_paper_cpt_dates, file = file.path(vignette_files, "output", "paper_paper_cpt_dates.RDS"))
 
-## ----run LDATS LDA and LDATS cpt, eval = params$run_models---------------
+## ----run LDATS LDA and LDATS cpt, eval = params$run_models--------------------
 #  ldats_ldats_results <- TS_on_LDA(LDA_models = ldats_ldamodel,
 #                                   document_covariate_table = rodents$document_covariate_table,
 #                                   formulas = ~ sin_year + cos_year,
@@ -389,11 +389,11 @@ plot(ldats_ldamodel, cols = NULL, option = "D")
 #    reshape::melt() %>%
 #    dplyr::left_join(ldats_dates, by = c("value" = "index"))
 
-## ----include = FALSE, eval = params$run_models---------------------------
+## ----include = FALSE, eval = params$run_models--------------------------------
 #  saveRDS(ldats_ldats_cpt, file = file.path(vignette_files,  "output", "ldats_ldats_cpt.RDS"))
 #  saveRDS(ldats_ldats_cpt_dates, file = file.path(vignette_files,  "output", "ldats_ldats_cpt_dates.RDS"))
 
-## ----run paper LDA and LDATS cpt, eval = params$run_models---------------
+## ----run paper LDA and LDATS cpt, eval = params$run_models--------------------
 #  paper_ldats_results <- TS_on_LDA(LDA_models = ldamodel,
 #                               document_covariate_table = rodents$document_covariate_table,
 #                               formulas = ~ sin_year + cos_year,
@@ -406,7 +406,7 @@ plot(ldats_ldamodel, cols = NULL, option = "D")
 #  
 #  saveRDS(paper_ldats_results, file = file.path(vignette_files, "output", "paper_ldats.RDS"))
 
-## ----select paper lda + ldats cpt, eval = params$run_models--------------
+## ----select paper lda + ldats cpt, eval = params$run_models-------------------
 #  paper_ldats_results <- readRDS(file.path(vignette_files, "output", "paper_ldats.RDS"))
 #  
 #  paper_ldats_cpt <- select_TS(paper_ldats_results)
@@ -416,11 +416,11 @@ plot(ldats_ldamodel, cols = NULL, option = "D")
 #    reshape::melt() %>%
 #    dplyr::left_join(ldats_dates, by = c("value" = "index"))
 
-## ----include = FALSE, eval = params$run_models---------------------------
+## ----include = FALSE, eval = params$run_models--------------------------------
 #  saveRDS(paper_ldats_cpt, file = file.path(vignette_files,  "output", "paper_ldats_cpt.RDS"))
 #  saveRDS(paper_ldats_cpt_dates, file = file.path(vignette_files,  "output", "paper_ldats_cpt_dates.RDS"))
 
-## ----eval = !params$run_models, include = FALSE--------------------------
+## ----eval = !params$run_models, include = FALSE-------------------------------
 ldats_paper_cpt <- readRDS(file.path(vignette_files, "output", "ldats_paper_cpt.RDS"))
 paper_paper_cpt <- readRDS(file.path(vignette_files, "output", "paper_paper_cpt.RDS"))
 paper_ldats_cpt <- readRDS(file.path(vignette_files, "output", "paper_ldats_cpt.RDS"))
@@ -430,22 +430,22 @@ paper_paper_cpt_dates <- readRDS(file.path(vignette_files, "output", "paper_pape
 paper_ldats_cpt_dates <- readRDS(file.path(vignette_files, "output", "paper_ldats_cpt_dates.RDS"))
 ldats_ldats_cpt_dates <- readRDS(file.path(vignette_files, "output", "ldats_ldats_cpt_dates.RDS"))
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 nlevels(ldats_paper_cpt_dates$variable)
 nlevels(paper_paper_cpt_dates$variable)
 nlevels(ldats_ldats_cpt_dates$variable)
 nlevels(paper_ldats_cpt_dates$variable)
 
-## ----plot paper LDA and LDATS cpts, fig.width = 7, fig.height = 6--------
+## ----plot paper LDA and LDATS cpts, fig.width = 7, fig.height = 6-------------
 plot(paper_ldats_cpt)
 
-## ----plot ldats LDA and LDATS cpt, fig.width = 7, fig.height = 6---------
+## ----plot ldats LDA and LDATS cpt, fig.width = 7, fig.height = 6--------------
 plot(ldats_ldats_cpt)
 
-## ---- eval = !params$run_models------------------------------------------
+## ---- eval = !params$run_models-----------------------------------------------
 annual_hist <- readRDS(file.path(vignette_files, "output", "annual_hist.RDS"))
 
-## ----plot paper LDA and paper cpt, eval = params$run_models--------------
+## ----plot paper LDA and paper cpt, eval = params$run_models-------------------
 #  paper_cpts <- find_changepoint_location(paper_paper_cpt)
 #  ntopics <- ldamodel@k
 #  
@@ -454,13 +454,13 @@ annual_hist <- readRDS(file.path(vignette_files, "output", "annual_hist.RDS"))
 #                                             weights = rep(1, NROW(paper_covariates)))
 #  dev.off()
 
-## ----plot paper LDA and LDATS cpts2, fig.width = 7, fig.height = 6-------
+## ----plot paper LDA and LDATS cpts2, fig.width = 7, fig.height = 6------------
 paper_paper_hist <- annual_hist(paper_paper_cpt, paper_covariates$year_continuous)
 
-## ----eval = !params$run_models, include = FALSE--------------------------
+## ----eval = !params$run_models, include = FALSE-------------------------------
 knitr::include_graphics(file.path(vignette_files, "output", "paper_paper_cpt_plot.png"))
 
-## ----plot LDATS lda and paper cpt, eval = params$run_models--------------
+## ----plot LDATS lda and paper cpt, eval = params$run_models-------------------
 #  ldats_cpts <- find_changepoint_location(ldats_paper_cpt)
 #  ntopics <- ldats_ldamodel@k
 #  
@@ -469,13 +469,13 @@ knitr::include_graphics(file.path(vignette_files, "output", "paper_paper_cpt_plo
 #                                             weights = rep(1, NROW(paper_covariates)))
 #  dev.off()
 
-## ----plot LDATS lda and paper cpt2, fig.width = 7, fig.height = 6--------
+## ----plot LDATS lda and paper cpt2, fig.width = 7, fig.height = 6-------------
 ldats_paper_hist <- annual_hist(ldats_paper_cpt, paper_covariates$year_continuous)
 
-## ----eval = !params$run_models, include = FALSE--------------------------
+## ----eval = !params$run_models, include = FALSE-------------------------------
 knitr::include_graphics(file.path(vignette_files, "output", "ldats_paper_cpt_plot.png"))
 
-## ----report cpt dates, include = FALSE, eval = params$run_models---------
+## ----report cpt dates, include = FALSE, eval = params$run_models--------------
 #  paper_paper_cpt_dates$date <- as.Date(paper_paper_cpt_dates$date)
 #  ldats_paper_cpt_dates$date <- as.Date(ldats_paper_cpt_dates$date)
 #  
@@ -492,9 +492,9 @@ knitr::include_graphics(file.path(vignette_files, "output", "ldats_paper_cpt_plo
 #  
 #  saveRDS(cpt_dates, file = file.path(vignette_files,  "output", "cpt_dates.RDS"))
 
-## ----eval = !params$run_models, include = FALSE--------------------------
+## ----eval = !params$run_models, include = FALSE-------------------------------
 cpt_dates <- readRDS(file.path(vignette_files, "output", "cpt_dates.RDS"))
 
-## ----print cpt dates-----------------------------------------------------
+## ----print cpt dates----------------------------------------------------------
 knitr::kable(cpt_dates)
 
