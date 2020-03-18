@@ -1,6 +1,6 @@
 ---
 title: "Comparison to Christensen et al. 2018"
-author: "Renata Diaz and Hao Ye"
+author: "Renata Diaz, Juniper Simonis, and Hao Ye"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{paper-comparison}
@@ -22,7 +22,8 @@ vers <- packageVersion("LDATS")
 
 # Introduction
 
-This document provides a side-by-side comparison of **`LDATS`** (version `r vers`) results with analysis from [Christensen et al. 2018](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2373).
+This document provides a side-by-side comparison of **`LDATS`** (version `r vers`) results with analysis from [Christensen et al. 2018](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2373). 
+Due to the size and duration of model runs, we use pre-generated model output from the [LDATS-replications repo](https://github.com/weecology/LDATS-replications).
 
 ## Summary
 
@@ -69,7 +70,7 @@ We're going to download analysis scripts, data files, and model objects, so we u
 vignette_files <- tempdir()
 ```
 
-To replicate the Christensen et al. 2018 analysis, we download some of the original scripts & data files from [Extreme-events-LDA repo](https://github.com/emchristensen/Extreme-events-LDA), as well as some raw data files from the [PortalData repo](https://github.com/weecology/PortalData):
+To replicate the Christensen et al. 2018 analysis, we download some of the original scripts & data files from [Extreme-events-LDA repo](https://github.com/emchristensen/Extreme-events-LDA), as well as some raw data files from the [PortalData repo](https://github.com/weecology/PortalData), which are stored in the [LDATS-replications repo](https://github.com/weecology/LDATS-replications):
 
 Main Analysis Scripts:
 
@@ -104,32 +105,34 @@ Figure scripts:
 * `LDA_figure_scripts.R`
 - contains functions for making main plots in manuscript (Fig 1). Called from rodent_LDA_analysis.R
 
-```{r download scripts}
-test_file <- file.path(vignette_files, "rodent_LDA_analysis.r")
+```{r download scripts and data}
+test_file <- file.path(vignette_files, "scripts", "rodent_LDA_analysis.r")
 
-if (!file.exists(test_file))
-{
-  # from the Extreme-events-LDA repo
-  github_path <- "https://raw.githubusercontent.com/emchristensen/Extreme-events-LDA/master/"
+if (!file.exists(test_file)){
+
+  # scripts
+  dir.create(file.path(vignette_files, "scripts"), showWarnings = FALSE)
+  github_path <- "https://raw.githubusercontent.com/weecology/LDATS-replications/master/scripts/"
   files_to_download <- c("rodent_LDA_analysis.r", "rodent_data_for_LDA.r", 
                          "AIC_model_selection.R", "changepointmodel.r", 
-                         "LDA-distance.R", "Rodent_table_dat.csv", 
-                         "LDA_figure_scripts.R")
+                         "LDA-distance.R", "LDA_figure_scripts.R")
   
-  for (file in files_to_download)
-  {
+  for (file in files_to_download)  {
     download.file(url = paste0(github_path, file),
-                  destfile = file.path(vignette_files, file))
+                  destfile = file.path(vignette_files, "scripts", file))
   }
+
+    
+  # data
+  dir.create(file.path(vignette_files, "data"), showWarnings = FALSE)
+  github_path <- "https://raw.githubusercontent.com/weecology/LDATS-replications/master/data/"
+  files_to_download <- c("moon_dates.csv", "Portal_rodent_trapping.csv", 
+                         "Rodent_table_dat.csv", "paper_dat.csv",
+                         "paper_dates.csv", "paper_covariates.csv")
   
-  # from the PortalData repo
-  github_path <- "https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/"
-  files_to_download <- c("moon_dates.csv", "Portal_rodent_trapping.csv")
-  
-  for (file in files_to_download)
-  {
+  for (file in files_to_download)  {
     download.file(url = paste0(github_path, file),
-                  destfile = file.path(vignette_files, file))
+                  destfile = file.path(vignette_files, "data", file))
   }
 }
 ```
@@ -165,22 +168,21 @@ Figures
 * `lda_distances.png`
   - figure showing the variance in the topics identified by the paper's LDA model code
 
-```{r download pre-generated model outputs, eval = !params$run_model}
-test_file <- file.path(vignette_files, "ldats_ldamodel.RDS")
+```{r download pre-generated model outputs}
+test_file <- file.path(vignette_files, "model_outputs", "ldats_ldamodel.RDS")
 
-if (!file.exists(test_file))
-{
-  # from the Extreme-events-LDA repo
+if (!file.exists(test_file)){
+
+  dir.create(file.path(vignette_files, "model_outputs"), showWarnings = FALSE)
   github_path <- "https://raw.githubusercontent.com/weecology/LDATS-replications/master/model_outputs/"
   files_to_download <- c("ldats_ldamodel.RDS", "paper_ldamodel.RDS", 
                          "ldats_ldats.RDS", "ldats_paper.RDS", 
                          "paper_ldats.RDS", "paper_paper.RDS", 
                          "lda_distances.png")
 
-  for (file in files_to_download)
-  {
+  for (file in files_to_download){
     download.file(url = paste0(github_path, file),
-                  destfile = file.path(vignette_files, file), 
+                  destfile = file.path(vignette_files, "model_outputs", file), 
                   mode = "wb")
   }
 }
@@ -198,7 +200,7 @@ head(rodents[[1]])
 
 We can compare this against the data used in Christensen et al:
 
-```{r Paper data}
+```{r Paper data, eval = params$run_models}
 # parameters for subsetting the full Portal rodents data
 periods <- 1:436
 control_plots <- c(2, 4, 8, 11, 12, 14, 17, 22)
@@ -231,6 +233,13 @@ paper_covariates <- data.frame(
   )
 ```
 
+```{r Paper data2, eval = !params$run_models, include = FALSE}
+  moondat <- read.csv(file.path(vignette_files, "data", "moon_dates.csv"), stringsAsFactors = FALSE)
+  paper_dat <- read.csv(file.path(vignette_files, "data", "paper_dat.csv"), stringsAsFactors = FALSE)
+  paper_dates <- read.csv(file.path(vignette_files, "data", "paper_dates.csv"), stringsAsFactors = FALSE)
+  paper_covariates <- read.csv(file.path(vignette_files, "data", "paper_covariates.csv"), stringsAsFactors = FALSE)
+```
+
 ## Compare the data from Christensen et al. with the included data in `LDATS`
 
 ```{r rodent data comparison}
@@ -239,11 +248,11 @@ compare <- rodents[[1]] == paper_dat
 length(which(rowSums(compare) < ncol(compare)))
 ```
 
-There are 16 rows where the data included in LDATS differs from the paper data. This is because the LDATS data is not adjusted to account for trapping effort, while the paper data does, by dividing all census counts by the actual number of plots trapped and multiplying by 8 to account for incompletely-trapped censuses.
+There are 16 rows where the data included in LDATS differs from the paper data. This is because the LDATS data is not adjusted to account for trapping effort, while the paper data is, by dividing all census counts by the actual number of plots trapped and multiplying by 8 to account for incompletely-trapped censuses.
 
 To confirm this, refer to lines 36-46 in `rodent_data_for_LDA.r`:
 
-```{}
+```{r Data adjustment eval, eval = FALSE}
   # retrieve data on number of plots trapped per month
   trap_table = read.csv('https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent_trapping.csv')
   trap_table_controls = filter(trap_table, plot %in% selected_plots)
@@ -259,9 +268,9 @@ To confirm this, refer to lines 36-46 in `rodent_data_for_LDA.r`:
 
 We can run the same procedure on the LDATS data to verify that we obtain a data.frame that matches.
 
-```{r adjust LDATS data after Christensen et al, eval = TRUE}
+```{r adjust LDATS data after Christensen et al, eval = params$run_models}
 # get the trapping effort for each sample
-trap_table <- read.csv(file.path(vignette_files, "Portal_rodent_trapping.csv"))
+trap_table <- read.csv(file.path(vignette_files, "data", "Portal_rodent_trapping.csv"))
 trap_table_controls <- dplyr::filter(trap_table, plot %in% control_plots)
 nplots_controls <- aggregate(trap_table_controls$sampled, 
                             by = list(period = trap_table_controls$period), 
@@ -274,9 +283,16 @@ ldats_rodents_adjusted <- as.data.frame.matrix(rodents[[1]])
 ldats_rodents_adjusted[periods, ] <- round(ldats_rodents_adjusted[periods, ] / nplots_controls$x[periods] * 8)
 ```
 
+```{r eval = params$run_models, include = FALSE}
+saveRDS(ldats_rodents_adjusted, file = file.path(vignette_files, "model_outputs", "ldats_rodents_adjusted.RDS"))
+```
+
 Now we can compare the adjusted LDATS dataset with both the original ldats dataset and the dataset from the paper:
 
-```{r dataset comparisons}
+```{r eval = !params$run_models, include = FALSE}
+ldats_rodents_adjusted <- readRDS(file.path(vignette_files, "model_outputs", "ldats_rodents_adjusted.RDS"))
+```
+```{r dataset comparisons, eval = params$run_models}
 compare_raw <- rodents[[1]] == ldats_rodents_adjusted
 length(which(rowSums(compare_raw) < ncol(compare_raw)))
 
@@ -292,15 +308,24 @@ rodents[[1]] <- paper_dat
 
 The LDATS rodent data comes with a `document_covariate_table`, which we will use later as the predictor variables for the changepoint models. In this table, time is expressed as new moon numbers. Later we will want to be able to interpret the results in terms of census dates. We will add a column to the `document_covariate_table` to convert new moon numbers to census dates. We will not reference this column in any of the formulas we pass to the changepoint models, so it will be ignored until we need it.
 
-```{r add dates to covariate table}
-head(rodents$document_covariate_table)
 
+```{r show covariate table}
+head(rodents$document_covariate_table)
+```
+
+```{r eval = params$run_models, include = FALSE}
+"%>%" <- dplyr::"%>%"
+```
+```{r add dates to covariate table, eval = params$run_models}
 new_cov_table <- dplyr::left_join(rodents$document_covariate_table, 
                                   dplyr::select(moondat, newmoonnumber, censusdate), 
                                   by = c("newmoon" = "newmoonnumber")) %>%
   dplyr::rename(date = censusdate)
 
 rodents$document_covariate_table <- new_cov_table
+```
+```{r eval = params$run_models, include = FALSE}
+saveRDS(rodents, file = file.path(vignette_files, "model_outputs", "rodents.RDS"))
 ```
 
 # Identify community groups using LDA
@@ -320,8 +345,8 @@ saveRDS(ldats_ldamodel, file = file.path(vignette_files, "ldats_ldamodel.RDS"))
 Second, we run the LDA models from Christensen et al. to do the same task:
 
 ```{r paper LDAs, eval = params$run_models}
-source(file.path(vignette_files, "AIC_model_selection.R"))
-source(file.path(vignette_files, "LDA-distance.R"))
+source(file.path(vignette_files, "scripts", "AIC_model_selection.R"))
+source(file.path(vignette_files, "scripts", "LDA-distance.R"))
 
 # Some of the functions require the data to be stored in the `dat` variable
 dat <- paper_dat
@@ -350,7 +375,7 @@ seeds_4topics <- best_ntopic %>%
 # choose seed with highest log likelihood for all following analyses
 #    (also produces plot of community composition for "best" run compared to "worst")
 
-png(file.path(vignette_files, "lda_distances.png"), width = 800, height = 400)
+png(file.path(vignette_files, "model_outputs", "lda_distances.png"), width = 800, height = 400)
 dat <- paper_dat # calculate_LDA_distance has some required named variables
 best_seed <- calculate_LDA_distance(paper_dat, seeds_4topics)
 dev.off()
@@ -368,15 +393,15 @@ saveRDS(ldamodel, file = file.path(vignette_files, "paper_ldamodel.RDS"))
 ```
 
 ```{r}
-knitr::include_graphics(file.path(vignette_files, "lda_distances.png"))
+knitr::include_graphics(file.path(vignette_files, "model_outputs", "lda_distances.png"))
 ```
 
 ## Plots
 
 To visualize the LDA assignment of species to topics, we load in the saved LDA models from previously:
 ```{r}
-ldamodel <- readRDS(file.path(vignette_files, "paper_ldamodel.RDS"))
-ldats_ldamodel <- readRDS(file.path(vignette_files, "ldats_ldamodel.RDS"))
+ldamodel <- readRDS(file.path(vignette_files, "model_outputs", "paper_ldamodel.RDS"))
+ldats_ldamodel <- readRDS(file.path(vignette_files, "model_outputs", "ldats_ldamodel.RDS"))
 ```
 
 How the paper LDA model assigns species to topics:
