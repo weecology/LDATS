@@ -70,20 +70,14 @@ if (!file.exists(test_file)){
   files_to_download <- c("ldats_ldamodel.RDS", "paper_ldamodel.RDS", 
                          "ldats_ldats.RDS", "ldats_paper.RDS", 
                          "paper_ldats.RDS", "paper_paper.RDS", 
-                         "lda_distances.png", 
-                         "ldats_rodents_adjusted.RDS",
-                         "rodents.RDS",
-                         "ldats_paper_cpt.RDS",
-                         "ldats_paper_cpt_dates.RDS",
-                         "ldats_ldats_cpt.RDS",
-                         "ldats_ldats_cpt_dates.RDS",
-                         "paper_paper_cpt.RDS",
-                         "paper_paper_cpt_dates.RDS",
-                         "paper_ldats_cpt.RDS",
-                         "paper_ldats_cpt_dates.RDS",
-                         "paper_paper_cpt_plot.png",
-                         "ldats_paper_cpt_plot.png",
-                         "annual_hist.RDS", "cpt_dates.RDS")
+                         "ldats_rodents_adjusted.RDS", "rodents.RDS",
+                         "ldats_paper_cpt.RDS", "ldats_paper_cpt_dates.RDS",
+                         "ldats_ldats_cpt.RDS", "ldats_ldats_cpt_dates.RDS",
+                         "paper_paper_cpt.RDS", "paper_paper_cpt_dates.RDS",
+                         "paper_ldats_cpt.RDS", "paper_ldats_cpt_dates.RDS",
+                         "annual_hist.RDS", "cpt_dates.RDS",
+                         "lda_distances.png", "paper_paper_cpt_plot.png",
+                         "ldats_paper_cpt_plot.png")
 
   for (file in files_to_download){
     download.file(url = paste0(github_path, file),
@@ -457,7 +451,7 @@ annual_hist <- readRDS(file.path(vignette_files, "output", "annual_hist.RDS"))
 ## ----plot paper LDA and LDATS cpts2, fig.width = 7, fig.height = 6------------
 paper_paper_hist <- annual_hist(paper_paper_cpt, paper_covariates$year_continuous)
 
-## ----eval = !params$run_models, include = FALSE-------------------------------
+## -----------------------------------------------------------------------------
 knitr::include_graphics(file.path(vignette_files, "output", "paper_paper_cpt_plot.png"))
 
 ## ----plot LDATS lda and paper cpt, eval = params$run_models-------------------
@@ -465,14 +459,14 @@ knitr::include_graphics(file.path(vignette_files, "output", "paper_paper_cpt_plo
 #  ntopics <- ldats_ldamodel@k
 #  
 #  png(file.path(vignette_files, "output", "ldats_paper_cpt_plot.png"), width = 800, height = 600)
-#  ldats_paper_cpt_plot <- get_ll_non_memoized_plot(ldamodel, paper_covariates, paper_cpts, make_plot = TRUE,
+#  get_ll_non_memoized_plot(ldats_ldamodel, paper_covariates, ldats_cpts, make_plot = TRUE,
 #                                             weights = rep(1, NROW(paper_covariates)))
 #  dev.off()
 
 ## ----plot LDATS lda and paper cpt2, fig.width = 7, fig.height = 6-------------
 ldats_paper_hist <- annual_hist(ldats_paper_cpt, paper_covariates$year_continuous)
 
-## ----eval = !params$run_models, include = FALSE-------------------------------
+## -----------------------------------------------------------------------------
 knitr::include_graphics(file.path(vignette_files, "output", "ldats_paper_cpt_plot.png"))
 
 ## ----report cpt dates, include = FALSE, eval = params$run_models--------------

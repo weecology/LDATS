@@ -2,6 +2,15 @@
 
 Version numbers follow [Semantic Versioning](https://semver.org/).
 
+
+# LDATS 0.2.7(https://github.com/weecology/ldats/releases/tag/v0.2.7)
+*2020-03-18* 
+
+## Patching CRAN issues with vignette building
+* Dependencies are being managed different now
+* For the paper comparison vignette, all of the code is pre-run and saved in the LDATS-replications repository
+* Allows removal of otherwise unused packages from this package's dependency list
+
 # LDATS 0.2.6(https://github.com/weecology/ldats/releases/tag/v0.2.6)
 *2020-03-02* 
 

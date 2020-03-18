@@ -1,8 +1,11 @@
-This resubmission addresses problems associated with the stringsAsFactors update in R-devel
+This resubmission addresses problems associated with vignette dependencies
 
 ## Test environments
 * local Windows 10 home install, R 3.6.1 64-bit and 32-bit 
-* local Windows 10 home install, R-devel (2020-03-01 r77881) 64-bit and 32-bit 
+* local Windows 10 home install, R-devel (2020-03-12 r77936) 64-bit and 32-bit 
+
+
+
 * ubuntu 16.04.6 LTS (on travis-ci), R 3.6.2 and R-devel (2019-03-02 r77888) 
 * win builder, R 3.6.3
 * win builder, R-devel (2020-01-28 r77738) 
