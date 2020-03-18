@@ -51,7 +51,6 @@ Imports:
     topicmodels,
     viridis
 Suggests:
-    dplyr,
     here,
     knitr,
     pkgdown,
@@ -60,7 +59,6 @@ Suggests:
     vdiffr, 
     clue, 
     reshape,
-    RCurl, 
     tidyr
 VignetteBuilder:
     knitr
