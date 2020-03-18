@@ -431,12 +431,11 @@ Having divided the data to generate catch-per-effort, the paper changepoint mode
 
 We define a few helper functions for running the changepoints model of Christensen et al. and processing the output to obtain the dates:
 
-```{r paper changepoint models}
+```{r paper changepoint models, eval = params$run_models}
 #### Run changepoint ####
-source(file.path(vignette_files, "changepointmodel.r"))
+source(file.path(vignette_files, "scripts", "changepointmodel.r"))
 
-find_changepoints <- function(lda_model, paper_covariates, n_changepoints = 1:6)
-{
+find_changepoints <- function(lda_model, paper_covariates, n_changepoints = 1:6){
   # set up parameters for model
   x <- dplyr::select(paper_covariates, 
                      year_continuous, 
@@ -446,8 +445,7 @@ find_changepoints <- function(lda_model, paper_covariates, n_changepoints = 1:6)
   # run models with 1, 2, 3, 4, 5, 6 changepoints
   cpt_results <- data.frame(n_changepoints = n_changepoints)
   cpt_results$cpt_model <- lapply(cpt_results$n_changepoints,
-                                  function(n_changepoints)
-                                  {
+                                  function(n_changepoints){
                                     changepoint_model(lda_model, x, n_changepoints, maxit = nit, 
                                                       weights = rep(1, NROW(x)))
                                   })
@@ -458,8 +456,7 @@ find_changepoints <- function(lda_model, paper_covariates, n_changepoints = 1:6)
 #   - compute AIC
 #   - select the model with the best AIC
 #   - get the posterior distributions for the changepoints
-select_cpt_model <- function(cpt_results, ntopics)
-{
+select_cpt_model <- function(cpt_results, ntopics){
   # compute log likelihood as the mean deviance
   cpt_results$mean_deviances <- vapply(cpt_results$cpt_model, 
                                        function(cpt_model) {mean(cpt_model$saved_lls)}, 
@@ -477,8 +474,7 @@ select_cpt_model <- function(cpt_results, ntopics)
 
 # transform the output from `compute_cpt` and match up the time indices with 
 #   dates from the original data
-get_dates <- function(cpt, covariates = paper_covariates)
-{
+get_dates <- function(cpt, covariates = paper_covariates){
   cpt$saved[,1,] %>%
     t() %>%
     as.data.frame() %>%
@@ -487,22 +483,33 @@ get_dates <- function(cpt, covariates = paper_covariates)
 }
 ```
 
+```{r eval = params$run_models, include = FALSE}
+saveRDS(find_changepoints, file = file.path(vignette_files, "model_outputs", "find_changepoints.RDS"))
+saveRDS(select_cpt_model, file = file.path(vignette_files, "model_outputs", "select_cpt_model.RDS"))
+saveRDS(get_dates, file = file.path(vignette_files, "model_outputs", "get_dates.RDS"))
+```
+
+
 ### LDATS LDA and paper changepoint
 
 Run the Christensen et al. time series model to identify changepoints on the LDA topics selected by LDATS:
 ```{r run LDATS LDA and paper cpt, eval = params$run_models}
 ldats_paper_results <- find_changepoints(ldats_ldamodel, paper_covariates)
 
-saveRDS(ldats_paper_results, file = file.path(vignette_files, "ldats_paper.RDS"))
+saveRDS(ldats_paper_results, file = file.path(vignette_files, "model_outputs", "ldats_paper.RDS"))
 ```
 
 Extract the dates of the changepoints:
-```{r compute changepoints for LDATS LDA and paper cpt}
-ldats_paper_results <- readRDS(file.path(vignette_files, "ldats_paper.RDS"))
+```{r compute changepoints for LDATS LDA and paper cpt, eval = params$run_models}
+ldats_paper_results <- readRDS(file.path(vignette_files, "model_outputs", "ldats_paper.RDS"))
 
 ldats_paper_cpt <- select_cpt_model(ldats_paper_results, 
                                     ntopics = ldats_ldamodel@k)
 ldats_paper_cpt_dates <- get_dates(ldats_paper_cpt)
+```
+```{r include = FALSE, eval = !params$run_models}
+saveRDS(ldats_paper_cpt, file = file.path(vignette_files, "model_outputs", "ldats_paper_cpt.RDS"))
+saveRDS(ldats_paper_cpt_dates, file = file.path(vignette_files, "model_outputs", "ldats_paper_cpt_dates.RDS"))
 ```
 
 ### Paper LDA and paper changepoint
@@ -515,12 +522,16 @@ saveRDS(paper_paper_results, file = file.path(vignette_files, "paper_paper.RDS")
 ```
 
 Extract the dates of the changepoints:
-```{r compute changepoints for paper LDA and paper cpt}
-paper_paper_results <- readRDS(file.path(vignette_files, "paper_paper.RDS"))
+```{r compute changepoints for paper LDA and paper cpt, eval = params$run_models}
+paper_paper_results <- readRDS(file.path(vignette_files, "model_outputs", "paper_paper.RDS"))
 
 paper_paper_cpt <- select_cpt_model(paper_paper_results, 
                                     ntopics = ldamodel@k)
 paper_paper_cpt_dates <- get_dates(ldats_paper_cpt)
+```
+```{r include = FALSE, eval = !params$run_models}
+saveRDS(paper_paper_cpt, file = file.path(vignette_files, "model_outputs", "paper_paper_cpt.RDS"))
+saveRDS(paper_paper_cpt_dates, file = file.path(vignette_files, "model_outputs", "paper_paper_cpt_dates.RDS"))
 ```
 
 ## Running LDATS changepoint models
@@ -538,12 +549,12 @@ ldats_ldats_results <- TS_on_LDA(LDA_models = ldats_ldamodel,
                                  weights = NULL,
                                  control = list(nit = nit))
 
-saveRDS(ldats_ldats_results, file = file.path(vignette_files, "ldats_ldats.RDS"))
+saveRDS(ldats_ldats_results, file = file.path(vignette_files, "model_outputs", "ldats_ldats.RDS"))
 ```
 
 Unlike the paper changepoint model, LDATS can recognize that sampling periods may not be equidistant, and can place changepoint estimates at new moons if they fall between nonconsecutive sampling periods. We can estimate the dates corresponding to those new moons, extrapolating from the census dates for adjacent census periods.
 
-```{r construct lookup table for LDATS output for changepoint times}
+```{r construct lookup table for LDATS output for changepoint times, eval = params$run_models}
 # make the full sequence of possible newmoon values
 full_index <- seq(min(rodents$document_covariate_table$newmoon), 
                   max(rodents$document_covariate_table$newmoon))
@@ -561,8 +572,8 @@ ldats_dates <- approx(rodents$document_covariate_table$newmoon,
 
 Select the best time series model and extract the dates of the changepoints:
 
-```{r compute changepoints for LDATS LDA and LDATS cpt}
-ldats_ldats_results <- readRDS(file.path(vignette_files, "ldats_ldats.RDS"))
+```{r compute changepoints for LDATS LDA and LDATS cpt, eval = params$run_models}
+ldats_ldats_results <- readRDS(file.path(vignette_files, "model_outputs", "ldats_ldats.RDS"))
   
 ldats_ldats_cpt <- select_TS(ldats_ldats_results)
 
@@ -570,6 +581,10 @@ ldats_ldats_cpt_dates <- ldats_ldats_cpt$rhos %>%
   as.data.frame() %>%
   reshape::melt() %>%
   dplyr::left_join(ldats_dates, by = c("value" = "index"))
+```
+```{r include = FALSE, eval = !params$run_models}
+saveRDS(ldats_ldats_cpt, file = file.path(vignette_files,  "model_outputs", "ldats_ldats_cpt.RDS"))
+saveRDS(ldats_ldats_cpt_dates, file = file.path(vignette_files,  "model_outputs", "ldats_ldats_cpt_dates.RDS"))
 ```
 
 ### Paper LDA and LDATS changepoint
@@ -587,13 +602,13 @@ paper_ldats_results <- TS_on_LDA(LDA_models = ldamodel,
                              control = list(nit = nit))
 
 
-saveRDS(paper_ldats_results, file = file.path(vignette_files, "paper_ldats.RDS"))
+saveRDS(paper_ldats_results, file = file.path(vignette_files, "model_outputs", "paper_ldats.RDS"))
 ```
 
 Select the best time series model and extract the dates of the changepoints:
 
-```{r select paper lda + ldats cpt}
-paper_ldats_results <- readRDS(file.path(vignette_files, "paper_ldats.RDS"))
+```{r select paper lda + ldats cpt, eval = params$run_models}
+paper_ldats_results <- readRDS(file.path(vignette_files, "model_outputs", "paper_ldats.RDS"))
   
 paper_ldats_cpt <- select_TS(paper_ldats_results)
 
@@ -602,9 +617,22 @@ paper_ldats_cpt_dates <- paper_ldats_cpt$rhos %>%
   reshape::melt() %>%
   dplyr::left_join(ldats_dates, by = c("value" = "index"))
 ```
+```{r include = FALSE, eval = !params$run_models}
+saveRDS(paper_ldats_cpt, file = file.path(vignette_files,  "model_outputs", "paper_ldats_cpt.RDS"))
+saveRDS(paper_ldats_cpt_dates, file = file.path(vignette_files,  "model_outputs", "paper_ldats_cpt_dates.RDS"))
+```
 
 ## How many changepoints were identified?
-
+```{r eval = !params$run_models, include = FALSE}
+ldats_paper_cpt <- readRDS(file.path(vignette_files, "model_outputs", "ldats_paper_cpt.RDS"))
+paper_paper_cpt <- readRDS(file.path(vignette_files, "model_outputs", "paper_paper_cpt.RDS"))
+paper_ldats_cpt <- readRDS(file.path(vignette_files, "model_outputs", "paper_ldats_cpt.RDS"))
+ldats_ldats_cpt <- readRDS(file.path(vignette_files, "model_outputs", "ldats_ldats_cpt.RDS"))
+ldats_paper_cpt_dates <- readRDS(file.path(vignette_files, "model_outputs", "ldats_paper_cpt_dates.RDS"))
+paper_paper_cpt_dates <- readRDS(file.path(vignette_files, "model_outputs", "paper_paper_cpt_dates.RDS"))
+paper_ldats_cpt_dates <- readRDS(file.path(vignette_files, "model_outputs", "paper_ldats_cpt_dates.RDS"))
+ldats_ldats_cpt_dates <- readRDS(file.path(vignette_files, "model_outputs", "ldats_ldats_cpt_dates.RDS"))
+```
 ```{r}
 nlevels(ldats_paper_cpt_dates$variable)
 nlevels(paper_paper_cpt_dates$variable)
