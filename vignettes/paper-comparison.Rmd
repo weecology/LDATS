@@ -178,7 +178,18 @@ if (!file.exists(test_file)){
   files_to_download <- c("ldats_ldamodel.RDS", "paper_ldamodel.RDS", 
                          "ldats_ldats.RDS", "ldats_paper.RDS", 
                          "paper_ldats.RDS", "paper_paper.RDS", 
-                         "lda_distances.png")
+                         "lda_distances.png", 
+                         "ldats_rodents_adjusted.RDS",
+                         "rodents.RDS",
+                         "ldats_paper_cpt.RDS",
+                         "ldats_paper_cpt_dates.RDS",
+                         "ldats_ldats_cpt.RDS",
+                         "ldats_ldats_cpt_dates.RDS",
+                         "paper_paper_cpt.RDS",
+                         "paper_paper_cpt_dates.RDS",
+                         "paper_paper_cpt.RDS",
+                         "paper_paper_cpt_dates.RDS",
+                         "annual_hist")
 
   for (file in files_to_download){
     download.file(url = paste0(github_path, file),
@@ -207,7 +218,7 @@ control_plots <- c(2, 4, 8, 11, 12, 14, 17, 22)
 species_list <- c("BA", "DM", "DO", "DS", "NA", "OL", "OT", "PB", "PE", "PF", 
                   "PH", "PI", "PL", "PM", "PP", "RF", "RM", "RO", "SF", "SH", "SO")
 
-source(file.path(vignette_files, "rodent_data_for_LDA.r"))
+source(file.path(vignette_files, "scripts", "rodent_data_for_LDA.r"))
 
 # assemble `paper_dat`, the data from Christensen et al. 2018
 paper_dat <- create_rodent_table(period_first = min(periods),
@@ -216,7 +227,7 @@ paper_dat <- create_rodent_table(period_first = min(periods),
                                  selected_species = species_list)
 
 # assemble `paper_covariates`, the associated dates and covariate data
-moondat <- read.csv(file.path(vignette_files, "moon_dates.csv"), stringsAsFactors = F)
+moondat <- read.csv(file.path(vignette_files, "data", "moon_dates.csv"), stringsAsFactors = F)
 
 paper_dates <- moondat %>%
   dplyr::filter(period %>% dplyr::between(min(periods), max(periods))) %>% 
@@ -320,7 +331,7 @@ head(rodents$document_covariate_table)
 new_cov_table <- dplyr::left_join(rodents$document_covariate_table, 
                                   dplyr::select(moondat, newmoonnumber, censusdate), 
                                   by = c("newmoon" = "newmoonnumber")) %>%
-  dplyr::rename(date = censusdate)
+                                  dplyr::rename(date = censusdate)
 
 rodents$document_covariate_table <- new_cov_table
 ```
@@ -482,11 +493,8 @@ get_dates <- function(cpt, covariates = paper_covariates){
     dplyr::left_join(covariates, by = c("value" = "index"))
 }
 ```
-
-```{r eval = params$run_models, include = FALSE}
-saveRDS(find_changepoints, file = file.path(vignette_files, "model_outputs", "find_changepoints.RDS"))
-saveRDS(select_cpt_model, file = file.path(vignette_files, "model_outputs", "select_cpt_model.RDS"))
-saveRDS(get_dates, file = file.path(vignette_files, "model_outputs", "get_dates.RDS"))
+```{r save annual_hist, include = FALSE, eval = !params$run_models}
+saveRDS(annual_hist, file = file.path(vignette_files, "model_outputs", "annual_hist.RDS"))
 ```
 
 
@@ -656,33 +664,60 @@ plot(ldats_ldats_cpt)
 ```
 
 ### Paper LDA and paper changepoint
-```{r plot paper LDA and paper cpt, fig.width = 7, fig.height = 6}
+```{r plot paper LDA and paper cpt, eval = params$run_models}
 paper_cpts <- find_changepoint_location(paper_paper_cpt)
 ntopics <- ldamodel@k
 
-paper_cpt_plot <- get_ll_non_memoized_plot(ldamodel, paper_covariates, paper_cpts, make_plot = TRUE,
+paper_paper_cpt_plot <- get_ll_non_memoized_plot(ldamodel, paper_covariates, paper_cpts, make_plot = TRUE,
                                            weights = rep(1, NROW(paper_covariates)))
 
-annual_hist(paper_paper_cpt, paper_covariates$year_continuous)
-paper_cpt_plot
+```
+```{r include = FALSE, eval = params$run_models}
+saveRDS(paper_paper_cpt_plot, file = file.path(vignette_files,  "model_outputs", "paper_paper_cpt_plot.RDS"))
 ```
 
+```{r eval = !params$run_models, include = FALSE}
+paper_paper_cpt_plot <- readRDS(file.path(vignette_files, "model_outputs", "paper_paper_cpt_plot.RDS"))
+}
+
+```{r plot paper LDA and LDATS cpts2, fig.width = 7, fig.height = 6}
+paper_paper_hist <- annual_hist(paper_paper_cpt, paper_covariates$year_continuous)
+paper_paper_cpt_plot
+```
+
+
 ### LDATS LDA and paper changepoint
-```{r plot LDATS lda and paper cpt, fig.width = 7, fig.height = 6}
+```{r plot LDATS lda and paper cpt, eval = params$run_models}
 ldats_cpts <- find_changepoint_location(ldats_paper_cpt)
 ntopics <- ldats_ldamodel@k
 
-ldats_cpt_plot <- get_ll_non_memoized_plot(ldats_ldamodel, paper_covariates, ldats_cpts, make_plot = TRUE,
+ldats_paper_cpt_plot <- get_ll_non_memoized_plot(ldats_ldamodel, paper_covariates, ldats_cpts, make_plot = TRUE,
                                            weights = rep(1, NROW(paper_covariates)))
 
-annual_hist(ldats_paper_cpt, paper_covariates$year_continuous)
-ldats_cpt_plot
 ```
+```{r include = FALSE, eval = params$run_models}
+saveRDS(ldats_paper_cpt_plot, file = file.path(vignette_files,  "model_outputs", "ldats_paper_cpt_plot.RDS"))
+```
+
+```{r eval = !params$run_models, include = FALSE}
+ldats_paper_cpt_plot <- readRDS(file.path(vignette_files, "model_outputs", "ldats_paper_cpt_plot.RDS"))
+}
+
+```{r plot LDATS lda and paper cpt2, fig.width = 7, fig.height = 6}
+ldats_paper_hist <- annual_hist(ldats_paper_cpt, paper_covariates$year_continuous)
+ldats_paper_cpt_plot
+```
+
+
 
 The results of the changepoint model appear robust to both choice of LDA model and choice of changepoint model.
 
 ## Report changepoint dates
-```{r report cpt dates, include = F}
+
+```{r report cpt dates, include = FALSE, eval = params$run_models}
+paper_paper_cpt_dates$date <- as.Date(paper_paper_cpt_dates$date)
+ldats_paper_cpt_dates$date <- as.Date(ldats_paper_cpt_dates$date)
+
 cpt_dates <- dplyr::bind_rows("paperLDA_paperCPT" = paper_paper_cpt_dates, 
                               "ldatsLDA_paperCPT" = ldats_paper_cpt_dates, 
                               "ldatsLDA_ldatsCPT" = ldats_ldats_cpt_dates, 
@@ -693,7 +728,13 @@ cpt_dates <- dplyr::bind_rows("paperLDA_paperCPT" = paper_paper_cpt_dates,
   dplyr::ungroup() %>%
   dplyr::rename(changepoint = variable) %>%
   tidyr::spread(analysis, date)
+
+saveRDS(cpt_dates, file = file.path(vignette_files,  "model_outputs", "cpt_dates.RDS"))
 ```
+
+```{r eval = !params$run_models, include = FALSE}
+cpt_dates <- readRDS(file.path(vignette_files, "model_outputs", "cpt_dates.RDS"))
+}
 
 ```{r print cpt dates}
 knitr::kable(cpt_dates)
