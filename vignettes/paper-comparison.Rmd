@@ -194,8 +194,10 @@ if (!file.exists(test_file)){
                          "ldats_ldats_cpt_dates.RDS",
                          "paper_paper_cpt.RDS",
                          "paper_paper_cpt_dates.RDS",
-                         "paper_paper_cpt.RDS",
-                         "paper_paper_cpt_dates.RDS",
+                         "paper_ldats_cpt.RDS",
+                         "paper_ldats_cpt_dates.RDS",
+                         "paper_paper_cpt_plot.png",
+                         "ldats_paper_cpt_plot.png",
                          "annual_hist.RDS", "cpt_dates.RDS")
 
   for (file in files_to_download){
@@ -670,26 +672,27 @@ plot(paper_ldats_cpt)
 plot(ldats_ldats_cpt)
 ```
 
+```{r, eval = !params$run_models}
+annual_hist <- readRDS(file.path(vignette_files, "output", "annual_hist.RDS"))
+```
+
 ### Paper LDA and paper changepoint
 ```{r plot paper LDA and paper cpt, eval = params$run_models}
 paper_cpts <- find_changepoint_location(paper_paper_cpt)
 ntopics <- ldamodel@k
 
-paper_paper_cpt_plot <- get_ll_non_memoized_plot(ldamodel, paper_covariates, paper_cpts, make_plot = TRUE,
+png(file.path(vignette_files, "output", "paper_paper_cpt_plot.png"), width = 800, height = 600)
+get_ll_non_memoized_plot(ldamodel, paper_covariates, paper_cpts, make_plot = TRUE,
                                            weights = rep(1, NROW(paper_covariates)))
-
-```
-```{r include = FALSE, eval = params$run_models}
-saveRDS(paper_paper_cpt_plot, file = file.path(vignette_files,  "output", "paper_paper_cpt_plot.RDS"))
-```
-
-```{r eval = !params$run_models, include = FALSE}
-paper_paper_cpt_plot <- readRDS(file.path(vignette_files, "output", "paper_paper_cpt_plot.RDS"))
+dev.off()
 ```
 
 ```{r plot paper LDA and LDATS cpts2, fig.width = 7, fig.height = 6}
 paper_paper_hist <- annual_hist(paper_paper_cpt, paper_covariates$year_continuous)
-paper_paper_cpt_plot
+```
+
+```{r eval = !params$run_models, include = FALSE}
+knitr::include_graphics(file.path(vignette_files, "output", "paper_paper_cpt_plot.png"))
 ```
 
 
@@ -698,24 +701,21 @@ paper_paper_cpt_plot
 ldats_cpts <- find_changepoint_location(ldats_paper_cpt)
 ntopics <- ldats_ldamodel@k
 
-ldats_paper_cpt_plot <- get_ll_non_memoized_plot(ldats_ldamodel, paper_covariates, ldats_cpts, make_plot = TRUE,
+png(file.path(vignette_files, "output", "ldats_paper_cpt_plot.png"), width = 800, height = 600)
+ldats_paper_cpt_plot <- get_ll_non_memoized_plot(ldamodel, paper_covariates, paper_cpts, make_plot = TRUE,
                                            weights = rep(1, NROW(paper_covariates)))
-
+dev.off()
 ```
-```{r include = FALSE, eval = params$run_models}
-saveRDS(ldats_paper_cpt_plot, file = file.path(vignette_files,  "output", "ldats_paper_cpt_plot.RDS"))
 ```
 
-```{r eval = !params$run_models, include = FALSE}
-ldats_paper_cpt_plot <- readRDS(file.path(vignette_files, "output", "ldats_paper_cpt_plot.RDS"))
-```
 
 ```{r plot LDATS lda and paper cpt2, fig.width = 7, fig.height = 6}
 ldats_paper_hist <- annual_hist(ldats_paper_cpt, paper_covariates$year_continuous)
-ldats_paper_cpt_plot
 ```
 
-
+```{r eval = !params$run_models, include = FALSE}
+knitr::include_graphics(file.path(vignette_files, "output", "ldats_paper_cpt_plot.png"))
+```
 
 The results of the changepoint model appear robust to both choice of LDA model and choice of changepoint model.
 

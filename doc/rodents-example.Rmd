@@ -81,7 +81,7 @@ lda_model_set2 <- LDA_set(document_term_table = rodents$document_term_table,
 `LDA_set()` returns a list of LDA models. We use `select_LDA()` to identify the best number of topics and choice of seed from our set of models. By default, we will choose models based on minimum AIC. To use different selection criteria, define the appropriate functions and specify them by passing `list(measurer = [measurer function], selector = [max, min, etc])` to the `control` argument. 
 
 ```{r load lda model set, include = F}
-load(here::here('vignettes', 'rodents-example-files', 'lda_model_set.Rds'))
+load(file.path('.', 'rodents-example-files', 'lda_model_set.Rds'))
 rm(lda_model_set2)
 ```
 
@@ -137,7 +137,7 @@ Also, it is important to note that by default the TS functions take the name of 
 `select_TS()` will identify the best-fit changepoint model of the models from `TS_on_LDA()`. As with `select_LDA()`, we can adjust the `measurer` and `selector` functions using the `control` argument list. 
 
 ```{r reload ts, include = F}
-load(here::here('vignettes', 'rodents-example-files', 'changepoint_models.Rds'))
+load(file.path('.', 'rodents-example-files', 'changepoint_models.Rds'))
 ```
 
 ```{r select ts}
@@ -180,7 +180,7 @@ lda_ts_results <- LDA_TS(data = rodents,
 ```
 
 ```{r load ldats results, include = F}
-load(here::here('vignettes', 'rodents-example-files', 'lda_ts_results.Rds'))
+load(file.path('.', 'rodents-example-files', 'lda_ts_results.Rds'))
 ```
 
 `LDA_TS()` returns a list of all the model objects, and we can access their contents as above:

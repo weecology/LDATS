@@ -51,15 +51,11 @@ Imports:
     topicmodels,
     viridis
 Suggests:
-    here,
     knitr,
     pkgdown,
     rmarkdown,
     testthat, 
-    vdiffr, 
-    clue, 
-    reshape,
-    tidyr
+    vdiffr
 VignetteBuilder:
     knitr
 RoxygenNote: 6.1.1

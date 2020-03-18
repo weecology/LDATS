@@ -32,7 +32,7 @@ head(rodents$document_covariate_table, 10)
 #                           nseeds = 2)
 
 ## ----load lda model set, include = F-------------------------------------
-load(here::here('vignettes', 'rodents-example-files', 'lda_model_set.Rds'))
+load(file.path('.', 'rodents-example-files', 'lda_model_set.Rds'))
 rm(lda_model_set2)
 
 ## ----select LDA----------------------------------------------------------
@@ -63,7 +63,7 @@ plot(selected_lda_model[[1]])
 #  
 
 ## ----reload ts, include = F----------------------------------------------
-load(here::here('vignettes', 'rodents-example-files', 'changepoint_models.Rds'))
+load(file.path('.', 'rodents-example-files', 'changepoint_models.Rds'))
 
 ## ----select ts-----------------------------------------------------------
 selected_changepoint_model <- select_TS(changepoint_models)
@@ -93,7 +93,7 @@ plot(selected_changepoint_model)
 #                           control = list(nit = 1000))
 
 ## ----load ldats results, include = F-------------------------------------
-load(here::here('vignettes', 'rodents-example-files', 'lda_ts_results.Rds'))
+load(file.path('.', 'rodents-example-files', 'lda_ts_results.Rds'))
 
 ## ----LDA_TS results------------------------------------------------------
 names(lda_ts_results)
