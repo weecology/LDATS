@@ -1,6 +1,6 @@
 Package: LDATS
 Title: Latent Dirichlet Allocation Coupled with Time Series Analyses
-Version: 0.2.6
+Version: 0.2.7
 Authors@R: c(
     person(c("Juniper", "L."), "Simonis",
       email = "juniper.simonis@weecology.org", role = c("aut", "cre"),
@@ -51,17 +51,11 @@ Imports:
     topicmodels,
     viridis
 Suggests:
-    dplyr,
-    here,
     knitr,
     pkgdown,
     rmarkdown,
     testthat, 
-    vdiffr, 
-    clue, 
-    reshape,
-    RCurl, 
-    tidyr
+    vdiffr
 VignetteBuilder:
     knitr
 RoxygenNote: 6.1.1
