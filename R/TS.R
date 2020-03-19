@@ -1,7 +1,13 @@
 ##
 #
 #  working in here 
-
+#
+#  looks pretty nice!
+#
+#  generally pretty well working, needs to get tidied up considerably tho
+#  pull redundant code out into functions etc
+#   and figure out better namings etc
+#  also make sure when no changepoint that it still says estimating regressor
 
 
 
@@ -32,10 +38,11 @@ TS_control <- function(response = "multinom",
                                           burnin = 0, thin_frac = 1, 
                                           memoise = TRUE,
                                           quiet = FALSE),
+                       summary_prob = 0.95,
                        soften = TRUE, 
                        quiet = FALSE){
   list(response = response, method = method, method_args = method_args, 
-       soften = soften, quiet = quiet)
+       summary_prob = summary_prob, soften = soften, quiet = quiet)
 }
 
 
@@ -50,52 +57,224 @@ sequential_TS <- function(TS, control = list()){
   rho_dist <- est_changepoints(TS = TS, control = control)
   eta_dist <- est_regressors(rho_dist = rho_dist, TS = TS, control = control)
 
-
-# include all of the model packaging here like in topicmodels_LDA
-
+  package_sequential_TS(TS = TS, rho_dist = rho_dist, eta_dist = eta_dist, 
+                        control = control)
 }
 
-est_changepoints <- function(TS, control = list()){
+package_sequential_TS <- function(TS, rho_dist, eta_dist, control = list()){
 
+
+  if(is.null(rho_dist)){
+    focal_rho_dist <- NULL
+    data <- TS$data$train$ts_data
+    fun <- eval(parse(text = paste0(TS$response, "_TS")))
+    args <- list(data = data, formula = TS$formula, changepoints = NULL, 
+                 timename = TS$timename, weights = TS$weights, 
+                 control = control$method_args)
+    mod <- soft_call(fun, args, TRUE)
+    lls <- as.numeric(logLik(mod))
+
+
+
+  } else{
+    vals <- rho_dist$cpts[ , 1, , drop = FALSE]
+    dims <- dim(rho_dist$cpts)[c(1, 3)]
+    lls <- rho_dist$lls[1, ]
+    focal_rho_dist <- t(array(vals, dim = dims))
+  }
+
+
+  rho_summary <- summarize_rhos(rhos = focal_rho_dist, control = control)
+  rho_vcov <- measure_rho_vcov(rhos = focal_rho_dist)
+  eta_summary <- summarize_etas(etas = eta_dist, control = control)
+  eta_vcov <- measure_eta_vcov(etas = eta_dist)
+
+  logLik <- mean(lls)
+  ncoefs <- ncol(eta_dist)
+  nparams <- TS$nchangepoints + ncoefs 
+
+  out <- update_list(TS, focal_rhos = focal_rho_dist, rhos = rho_dist,
+                     etas = eta_dist, rho_summary = rho_summary,
+                     rho_vcov = rho_vcov, eta_summary = eta_summary,
+                     eta_vcov = eta_vcov, logLik = logLik, nparams = nparams)
+  class(out) <- c("TS", "list")
+  to_hide <- c("data", "weights", "control", "lls", "rhos", "etas", 
+               "focal_rhos", "rho_vcov", "eta_vcov")
+  if (TS$nchangepoints == 0){
+    to_hide <- c(to_hide, "rho_summary")
+  }
+  attr(out, "hidden") <- to_hide
+  out  
+}
+
+
+
+
+
+
+print.TS <- function(x, ...){
+  hid <- attr(x, "hidden")
+  notHid <- !(names(x) %in% hid)
+  print(x[notHid])
+}
+
+
+summarize_etas <- function(etas, control = list()){
+  check_control(control)
+  control <- do.call("TS_control", control)
+  if (!is.matrix(etas)){
+    stop("etas should be a matrix")
+  }
+  prob <- control$summary_prob
+  Mean <- round(apply(etas, 2, mean), 4)
+  Median <- round(apply(etas, 2, median), 4)
+  SD <- round(apply(etas, 2, sd), 4)
+  MCMCerr <- round(SD / sqrt(nrow(etas)), 4)
+  HPD <- HPDinterval(as.mcmc(etas), prob = prob)
+  Lower <- round(HPD[ , "lower"], 4)
+  Upper <- round(HPD[ , "upper"], 4)
+  AC10 <- tryCatch(t(round(autocorr.diag(as.mcmc(etas), lag = 10), 4)),
+                   error = function(x){"-"})
+  ESS <- effectiveSize(etas)
+  out <- data.frame(Mean, Median, Lower, Upper, SD, MCMCerr, AC10, ESS)
+  colnames(out)[3:4] <- paste0(c("Lower_", "Upper_"), paste0(prob*100, "%"))
+  colnames(out)[7] <- "AC10"
+  rownames(out) <- colnames(etas)
+  out
+}
+
+measure_eta_vcov <- function(etas){
+  if (!is.matrix(etas)){
+    stop("expecting etas to be a matrix")
+  }
+  out <- var(etas)
+  colnames(out) <- colnames(etas)
+  rownames(out) <- colnames(etas)
+  out
+}
+summarize_rhos <- function(rhos, control = list()){
+  if (is.null(rhos)) {
+    return()
+  }
+  prob <- control$summary_prob
+  Mean <- round(apply(rhos, 2, mean), 2)
+  Median <- apply(rhos, 2, median)
+  Mode <- apply(rhos, 2, modalvalue)
+  SD <- round(apply(rhos, 2, sd), 2)
+  MCMCerr <- round(SD / sqrt(nrow(rhos)), 4)
+  HPD <- HPDinterval(as.mcmc(rhos), prob = prob)
+  Lower <- HPD[ , "lower"]
+  Upper <- HPD[ , "upper"]
+  AC10 <- t(round(autocorr.diag(as.mcmc(rhos), lag = 10), 4))
+  ESS <- effectiveSize(rhos)
+  out <- data.frame(Mean, Median, Mode, Lower, Upper, SD, MCMCerr, AC10, ESS)
+  colnames(out)[4:5] <- paste0(c("Lower_", "Upper_"), paste0(prob*100, "%"))
+  colnames(out)[8] <- "AC10"
+  rownames(out) <- sprintf("Changepoint_%d", seq_len(nrow(out)))
+  out
+}
+
+measure_rho_vcov <- function(rhos){
+  if (is.null(rhos)) {
+    return()
+  }
+  if (!is.matrix(rhos)){
+    stop("expecting rhos to be a matrix")
+  }
+  out <- var(rhos)
+  colnames(out) <- sprintf("CP_%d", 1:dim(out)[1])
+  rownames(out) <- sprintf("CP_%d", 1:dim(out)[2])
+  out
+}
+
+
+
+
+est_changepoints <- function(TS, control = list()){
   if (TS$nchangepoints == 0){
     return(NULL)
   }
+  fun <- control$method
+  args <- list(TS = TS, control = control$method_args)
+  soft_call(fun = fun, args = args, soften = control$soften)
+}
 
-# working right here. really walk through the process and pull out specifics
-# reference directly to the existing function
+
+est_regressors <- function(rho_dist, TS, control = list()){
+  data <- TS$data$train$ts_data
+  if(is.null(rho_dist)){
+    fun <- eval(parse(text = paste0(TS$response, "_TS")))
+    args <- list(data = data, formula = TS$formula, changepoints = NULL, 
+                 timename = TS$timename, weights = TS$weights, 
+                 control = control$method_args)
+    mod <- soft_call(fun, args, TRUE)
+
+    mod <- mod[[1]][[1]]
+    mv <- as.vector(t(coef(mod)))
+    vcv <- mirror_vcov(mod)
+    eta <- rmvnorm(control$method_args$nit, mv, vcv)
+    seg_names <- rep(1, ncol(vcv))
+    coef_names <- colnames(vcv)
+    colnames(eta) <- paste(seg_names, coef_names, sep = "_")
+    return(eta)
+  }
+
   
- 
-  # construct input arguments to the focal function
-  #  the function will be the same but will have different options
+  focal_rho <- rho_dist$cpts[ , 1, ]
+  nchangepts <- dim(rho_dist$cpts)[1]
+  if (nchangepts == 1){
+    collapsedrho <- focal_rho
+  } else{
+    collapsedrho <- apply(focal_rho, 2, paste, collapse = "_")
+  }
+  freq_r <- table(collapsedrho)
+  unique_r <- names(freq_r)
+  nr <- length(unique_r)
+  n_topic <- ncol(data$gamma)
+  n_covar <- length(attr(terms(TS$formula), "term.labels"))
+  n_eta_segment <- (n_topic - 1) * (n_covar + 1)
+  n_changept <- dim(rho_dist$cpts)[1]
+  n_segment <- n_changept + 1
+  n_eta <- n_eta_segment * n_segment 
+  n_iter <- dim(rho_dist$cpts)[3]
+  eta <- matrix(NA, nrow = n_iter, ncol = n_eta)
+  pbar <- prep_pbar(control = control, bar_type = "eta", nr = nr)
 
-  # run focal function
+  for(i in 1:nr){
+    update_pbar(pbar = pbar, control = control)
+    cpts <- as.numeric(strsplit(unique_r[i], "_")[[1]])
 
-  cptfn()
 
-  # process output from focal function
+    data <- TS$data$train$ts_data
+    fun <- eval(parse(text = paste0(TS$response, "_TS")))
+    fun <- memoise_fun(fun, control$method_args$memoise)
+    args <- list(data = data, formula = TS$formula, changepoints = cpts, 
+                 timename = TS$timename, weights = TS$weights, 
+                 control = control$method_args)
+    mod <- soft_call(fun, args, TRUE)
+
+
+    ndraws <- freq_r[i]
+    colindex1 <- 1
+    for(j in 1:n_segment){
+      colindex2 <- colindex1 + n_eta_segment - 1
+      seg_mod <- mod[[1]][[j]]
+      mv <- as.vector(t(coef(seg_mod)))
+      vcv <- mirror_vcov(seg_mod)
+      drawn <- rmvnorm(ndraws, mv, vcv)    
+      rows_in <- which(collapsedrho == unique_r[i])
+      cols_in <- colindex1:colindex2
+      eta[rows_in, cols_in] <- drawn
+      colindex1 <- colindex2 + 1
+    }
+  }
+  seg_names <- rep(1:n_segment, each = n_eta_segment)
+  coef_names <- rep(colnames(vcv), n_segment)
+  colnames(eta) <- paste(seg_names, coef_names, sep = "_")
+  eta
+  
+
 }
-
-
-cptfn <- function(TS, 
-method = "ldats_classic", control = list()){
-control <- control$method_args
-}
-
-
-TS_responses <- function(){
-c("multinom", "ilr", "alr")
-# associated model functions:
-
-}
-
-
-TS_methods <- function(){
-c("ldats_classic")
-}
-
-
-
-
 
 
 prep_TS_models <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0, 
@@ -271,82 +450,6 @@ package_TSx <- function(data, formula, timename, weights, control, rho_dist,
     to_hide <- c(to_hide, "ptMCMC_diagnostics", "rho_summary")
   }
   attr(out, "hidden") <- to_hide
-  out
-}
-print.TS_fit <- function(x, ...){
-  hid <- attr(x, "hidden")
-  notHid <- !names(x) %in% hid
-  print(x[notHid])
-}
-
-
-summarize_etas <- function(etas, control = list()){
-  check_control(control)
-  control <- do.call("TS_control", control)
-  if (!is.matrix(etas)){
-    stop("etas should be a matrix")
-  }
-  prob <- control$summary_prob
-  Mean <- round(apply(etas, 2, mean), 4)
-  Median <- round(apply(etas, 2, median), 4)
-  SD <- round(apply(etas, 2, sd), 4)
-  MCMCerr <- round(SD / sqrt(nrow(etas)), 4)
-  HPD <- HPDinterval(as.mcmc(etas), prob = prob)
-  Lower <- round(HPD[ , "lower"], 4)
-  Upper <- round(HPD[ , "upper"], 4)
-  AC10 <- tryCatch(t(round(autocorr.diag(as.mcmc(etas), lag = 10), 4)),
-                   error = function(x){"-"})
-  ESS <- effectiveSize(etas)
-  out <- data.frame(Mean, Median, Lower, Upper, SD, MCMCerr, AC10, ESS)
-  colnames(out)[3:4] <- paste0(c("Lower_", "Upper_"), paste0(prob*100, "%"))
-  colnames(out)[7] <- "AC10"
-  rownames(out) <- colnames(etas)
-  out
-}
-
-measure_eta_vcov <- function(etas){
-  if (!is.matrix(etas)){
-    stop("expecting etas to be a matrix")
-  }
-  out <- var(etas)
-  colnames(out) <- colnames(etas)
-  rownames(out) <- colnames(etas)
-  out
-}
-summarize_rhos <- function(rhos, control = list()){
-  check_control(control)
-  control <- do.call("TS_control", control)
-  if (is.null(rhos)) {
-    return()
-  }
-  prob <- control$summary_prob
-  Mean <- round(apply(rhos, 2, mean), 2)
-  Median <- apply(rhos, 2, median)
-  Mode <- apply(rhos, 2, modalvalue)
-  SD <- round(apply(rhos, 2, sd), 2)
-  MCMCerr <- round(SD / sqrt(nrow(rhos)), 4)
-  HPD <- HPDinterval(as.mcmc(rhos), prob = prob)
-  Lower <- HPD[ , "lower"]
-  Upper <- HPD[ , "upper"]
-  AC10 <- t(round(autocorr.diag(as.mcmc(rhos), lag = 10), 4))
-  ESS <- effectiveSize(rhos)
-  out <- data.frame(Mean, Median, Mode, Lower, Upper, SD, MCMCerr, AC10, ESS)
-  colnames(out)[4:5] <- paste0(c("Lower_", "Upper_"), paste0(prob*100, "%"))
-  colnames(out)[8] <- "AC10"
-  rownames(out) <- sprintf("Changepoint_%d", seq_len(nrow(out)))
-  out
-}
-
-measure_rho_vcov <- function(rhos){
-  if (is.null(rhos)) {
-    return()
-  }
-  if (!is.matrix(rhos)){
-    stop("expecting rhos to be a matrix")
-  }
-  out <- var(rhos)
-  colnames(out) <- sprintf("CP_%d", 1:dim(out)[1])
-  rownames(out) <- sprintf("CP_%d", 1:dim(out)[2])
   out
 }
 

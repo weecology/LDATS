@@ -11,7 +11,7 @@ data <- rodents
 topics = 2 
 reps = 2
 formulas = ~ 1
-nchangepoints = 1
+nchangepoints = 0:2
 timename = "newmoon"
 weights = TRUE
 control = list()

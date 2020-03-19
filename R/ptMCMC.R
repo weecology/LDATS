@@ -56,7 +56,7 @@
 #' 
 #' @export 
 #'
-diagnose_ptMCMC <- function(ptMCMCout){
+diagnose_ptMCMCx <- function(ptMCMCout){
   if(is.null(ptMCMCout)){
     return(NULL)
   }
@@ -109,7 +109,7 @@ diagnose_ptMCMC <- function(ptMCMCout){
 #'
 #' @export 
 #'
-count_trips <- function(ids){
+count_tripsx <- function(ids){
   nit <- ncol(ids)
   ntemps <- nrow(ids)
   last_extreme <- NA

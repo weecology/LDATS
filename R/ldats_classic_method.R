@@ -32,13 +32,55 @@ process_saves <- function(saves, control = list()){
   thin_interval <- ceiling(1/control$thin_frac)
   iters_thinned <- seq(1, niters, by = thin_interval)
   dims <- c(dim(saves$cpts)[1:2], length(iters_thinned))
+
+  trips <- count_trips(saves$ids)
+  diagnostics <- list(step_acceptance_rate = rowMeans(saves$step_accepts), 
+                      swap_acceptance_rate = rowMeans(saves$swap_accepts), 
+                      trip_counts = trips$trip_counts, 
+                      trip_rates = trips$trip_rates)
+
+
   saves$cpts <- array(saves$cpts[ , , iters_thinned], dim = dims)
   saves$lls <- saves$lls[, iters_thinned]
   saves$ids <- saves$ids[, iters_thinned]
   saves$step_accepts <- saves$step_accepts[ , iters_thinned]
   saves$swap_accepts <- saves$swap_accepts[ , iters_thinned]
+
+  saves$diagnostics <- diagnostics
+
+
   saves
 }
+
+
+count_trips <- function(ids){
+  nit <- ncol(ids)
+  ntemps <- nrow(ids)
+  last_extreme <- NA
+  last_extreme_vector <- numeric(nit)
+  trips <- numeric(ntemps)
+  for(i in 1:ntemps){
+    for(j in 1:nit){
+      if(ids[1, j] == i){
+        last_extreme <- "bottom"
+      }
+      if(ids[ntemps, j] == i){
+        last_extreme <- "top"
+      }
+      last_extreme_vector[j] <- last_extreme
+    }
+    first_top <- match("top", last_extreme_vector)
+    if (is.na(first_top)){
+      trips[i] <- 0
+    } else{
+      last_pos <- rle(last_extreme_vector[first_top:nit])$values
+      trips[i] <- sum(last_pos == "bottom")
+    }
+  }
+  trip_rates <- trips / nit
+  list(trip_counts = trips, trip_rates = trip_rates)
+}
+
 
 
 update_saves <- function(i, saves, steps, swaps){

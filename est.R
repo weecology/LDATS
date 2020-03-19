@@ -1,37 +1,34 @@
 
+package_TSx <- function(data, formula, timename, weights, control, rho_dist, 
+                         eta_dist){
 
-est_changepointsx <- function(data, formula, nchangepoints, timename, weights, 
-                             control = list()){
-  check_TS_inputs(data, formula, nchangepoints, timename, weights, control)
-  control <- do.call("TS_control", control)
-  data <- time_order_data(data, timename = timename)
-  if (nchangepoints == 0){
-    return(NULL)
+  if (is.null(nchangepoints)){
+    nchangepoints <- 0
+    mod <- multinom_TS(data, formula, changepoints = NULL, timename, weights,
+                       control)
+    mod <- mod[[1]][[1]]
+    lls <- as.numeric(logLik(mod))
+    rhos <- NULL
+  } else{
+    lls <- rho_dist$lls[1, ]
+    rhos <- t(array(rho_dist$cpts[ , 1, ], dim = dim(rho_dist$cpts)[c(1, 3)]))
   }
 
-# break this into a "classic" approach or whatever and give it its own
-#  function that is akin to temper
 
-  saves <- prep_saves(nchangepoints, control)
 
-  inputs <- prep_ptMCMC_inputs(data, formula, nchangepoints, timename, 
-                               weights, control)
-  cpts <- prep_cpts(data, formula, nchangepoints, timename, weights, control)
-  ids <- prep_ids(control)
-  pbar <- prep_pbar(control, "rho")
+  logLik <- mean(lls)
+  ncoefs <- ncol(eta_dist)
+  nparams <- nchangepoints + ncoefs 
+  AIC <- -2 * logLik + 2 * nparams
 
-  for(i in 1:control$nit){
-    update_pbar(pbar, control)
-    steps <- step_chains(i, cpts, inputs)
-    swaps <- swap_chains(steps, inputs, ids)
-    saves <- update_saves(i, saves, steps, swaps)
-    cpts <- update_cpts(cpts, swaps)
-    ids <- update_ids(ids, swaps)
-  }
-  process_saves(saves, control)
+  out <- list(lls = lls, rhos = rhos,
+              etas = eta_dist, ptMCMC_diagnostics = ptMCMC_diagnostics,
+              rho_summary = rho_summary, rho_vcov = rho_vcov,
+              eta_summary = eta_summary, eta_vcov = eta_vcov,
+              logLik = logLik, nparams = nparams, AIC = AIC)
 
-# the separate function runs to here
-# and then process the output
+
+
 
 
 }
