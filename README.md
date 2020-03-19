@@ -64,7 +64,7 @@ Based on initial work using [LDA to analyze time-series data at Portal by Erica 
 
 The motivating study—the Portal Project—has been funded nearly continuously since 1977 by the [National Science Foundation](http://nsf.gov/), most recently by [DEB-1622425](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1622425) to S. K. M. Ernest, which also supported (in part) E. Christensen’s time. 
 Much of the computational work (including time of J. Simonis, D. Harris, and H. Ye) was supported by the [Gordon and Betty Moore Foundation’s Data-Driven Discovery Initiative](http://www.moore.org/programs/science/data-driven-discovery) through [Grant GBMF4563](http://www.moore.org/grants/list/GBMF4563) to E. P. White. 
-R. Diaz was supported in part by a [National Science Foundation Graduate Research Fellowship](https://www.nsfgrfp.org/) (No. [DGE-1315138](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1315138) and [DGE-1842473](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1842473)).
+R. Diaz was supported in part by a [National Science Foundation Graduate Research Fellowship](http://www.nsfgrfp.org/) (No. [DGE-1315138](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1315138) and [DGE-1842473](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1842473)).
 
 ## Author Contributions
 
