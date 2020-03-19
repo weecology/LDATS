@@ -1,7 +1,37 @@
-TS_fun <- function(control){
-  fun <- eval(parse(text = paste0(control$model_fun, "_TS")))
-  memoise_fun(fun, control$memoise)
+
+
+prep_cpts <- function(TS, control = list()){
+
+  data <- TS$data$train$ts_data
+  temps <- prep_temp_sequence(control)
+  ntemps <- length(temps)
+  min_time <- min(data[ , timename])
+  max_time <- max(data[ , timename])
+  times <- seq(min_time, max_time, 1)
+  avail_times <- times[-c(1, length(times))]
+  cps <- matrix(NA, nrow = TS$nchangepoints, ncol = ntemps)
+  for (i in 1:ntemps){
+    cp_times <- sort(sample(avail_times, TS$nchangepoints, replace = FALSE))
+    cps[ , i] <- cp_times
+  }
+  lls <- rep(NA, ntemps)
+  for (i in 1:ntemps){
+    fun <- eval(parse(text = paste0(TS$response, "_TS")))
+    fun <- memoise_fun(fun, control$memoise)
+    args <- list(data = data, formula = TS$formula, changepoints = cps[ , i], 
+                 timename = TS$timename, weights = TS$weights, 
+                 control = control)
+    modfit <- soft_call(fun, args, TRUE)
+    lls[i] <- modfit$logLik
+  }  
+  cps <- cps[ , order(lls, decreasing = TRUE), drop = FALSE]
+  lls <- sort(lls, decreasing = TRUE)
+
+  out <- list(cps, lls)
+  names(out) <- c("changepts", "lls")
+  out
 }
+
 
 prep_temp_sequence <- function(control = list()){
   ntemps <- control$ntemps
@@ -14,7 +44,8 @@ prep_temp_sequence <- function(control = list()){
 }
 
 
-prep_saves <- function(nchangepoints, control = list()){
+prep_saves <- function(TS, control = list()){
+  nchangepoints <- TS$nchangepoints
   ntemps <- control$ntemps
   nit <- control$nit
   cpts <- array(NA, c(nchangepoints, ntemps, nit))
@@ -28,15 +59,16 @@ prep_saves <- function(nchangepoints, control = list()){
 
 
 
-prep_ptMCMC_inputs <- function(data, formula, nchangepoints, timename, 
-                               weights = NULL, control = list()){
-  control$selector <- NULL
-  control$measurer <- NULL
-  out <- list(control = control, temps = prep_temp_sequence(control), 
-              pdist = prep_proposal_dist(nchangepoints, control),
-              formula = formula, weights = weights, data = data, 
-              TS_function = TS_fun(control),
-              timename = timename)
+prep_ptMCMC_inputs <- function(TS, control = list()){
+    
+  out <- list(control = control, 
+              temps = prep_temp_sequence(control), 
+              pdist = prep_proposal_dist(TS$nchangepoints, control),
+              formula = TS$formula, 
+              weights = TS$weights, 
+              data = TS$data$train$ts_data, 
+              response = TS$response,
+              timename = TS$timename)
   class(out) <- c("ptMCMC_inputs", "list")
   out
 }
@@ -920,7 +952,7 @@ process_saves <- function(saves, control = list()){
 #'
 #' @export
 #'
-prep_cpts <- function(data, formula, nchangepoints, timename, weights, 
+prep_cptsx <- function(data, formula, nchangepoints, timename, weights, 
                             control = list()){
 
   check_formula(data, formula)

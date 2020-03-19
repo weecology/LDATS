@@ -1,3 +1,20 @@
+soft_call <- function(fun = function(x){invisible(NULL)}, args = list(NULL), 
+                      soften = FALSE){
+  if(list_depth(args) == 0){
+    args <- list(args)
+  }
+  if(soften){
+    tryCatch(do.call(what = fun, args = args), 
+             warning = function(x){eval(x$call)}, 
+             error = function(x = list()){list(error = x$message)})
+  } else{
+    do.call(what = fun, args = args)
+  }
+}
+
+
+
+
 time_order_data <- function(x, timename = "time"){
   time_order <- order(x[ , timename])
   x[time_order , ]

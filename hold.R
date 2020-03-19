@@ -1,3 +1,8 @@
+# work on making formulas be able to be repeatedly prepped
+
+# in the midst of the TS classic ldats...looks like starting to work, need
+# to double back through tho
+
 devtools::load_all()
 
    data(rodents)

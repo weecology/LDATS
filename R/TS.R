@@ -8,13 +8,13 @@
 TS <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0, 
                timename = "time", weights = NULL, control = list()){
   control <- do.call("TS_control", control)
-  messageq("----Time Series Analyses----", control$quiet)
+  messageq("----- Time Series Analyses -----", control$quiet)
   TSs <- prep_TS_models(LDAs = LDAs, data = data, formulas = formulas,
                         nchangepoints = nchangepoints, timename = timename,
                         weights = weights, control = control)
   nTS <- length(TSs)
   for (i in 1:nTS){
-    TSs[[i]] <- TS_call(TS = TSs[[i]], control = control)
+    TSs[[i]] <- sequential_TS(TS = TSs[[i]], control = control)
   }
   selected_TSs <- select_TS(TSs = TSs, control = control)
   package_TS(selected_TSs = selected_TSs, TSs = TSs, control = control)
@@ -23,43 +23,84 @@ TS <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0,
 
 
 
+
+TS_control <- function(response = "multinom",
+                       method = "ldats_classic",
+                       method_args = list(ntemps = 6, penultimate_temp = 2^6, 
+                                          ultimate_temp = 1e10, q = 0, 
+                                          nit = 1e4, magnitude = 12, 
+                                          burnin = 0, thin_frac = 1, 
+                                          memoise = TRUE,
+                                          quiet = FALSE),
+                       soften = TRUE, 
+                       quiet = FALSE){
+  list(response = response, method = method, method_args = method_args, 
+       soften = soften, quiet = quiet)
+}
+
+
+
 # the defining characteristic here is the sequential
 #  estimation of rho then eta, ostensibly it could be done together
-
+#  
 
 sequential_TS <- function(TS, control = list()){
+  control <- do.call("TS_control", control)
+  TS_msg(TS = TS, quiet = control$quiet)
   rho_dist <- est_changepoints(TS = TS, control = control)
   eta_dist <- est_regressors(rho_dist = rho_dist, TS = TS, control = control)
+
+
+# include all of the model packaging here like in topicmodels_LDA
 
 }
 
 est_changepoints <- function(TS, control = list()){
 
-  if (nchanTS$nchangepoints == 0){
+  if (TS$nchangepoints == 0){
     return(NULL)
   }
 
-x <- memoizer(TS, control = control$TS_fit_args)
+# working right here. really walk through the process and pull out specifics
+# reference directly to the existing function
+  
+ 
+  # construct input arguments to the focal function
+  #  the function will be the same but will have different options
 
-   
+  # run focal function
+
+  cptfn()
+
+  # process output from focal function
+}
+
+
+cptfn <- function(TS, 
+method = "ldats_classic", control = list()){
+control <- control$method_args
+}
+
+
+TS_responses <- function(){
+c("multinom", "ilr", "alr")
+# associated model functions:
+
+}
+
+
+TS_methods <- function(){
+c("ldats_classic")
 }
 
 
 
 
-memoizer <- function(TS, control = list()){
-    
-  data <- TS$data$train$ts_data
-  nchangepoints <- TS$nchangepoints
-  formula <- TS$formula
-  weights <- TS$weights
-  timename <- TS$timename
+ldats_classic <- function(TS, control = list()){
 
+  saves <- prep_saves(TS = TS, control = control)
 
-  saves <- prep_saves(nchangepoints, control)
-
-  inputs <- prep_ptMCMC_inputs(data, formula, nchangepoints, timename, 
-                               weights, control)
+  inputs <- prep_ptMCMC_inputs(TS = TS, control = control)
   cpts <- prep_cpts(data, formula, nchangepoints, timename, weights, control)
   ids <- prep_ids(control)
   pbar <- prep_pbar(control, "rho")
@@ -117,12 +158,17 @@ prep_TS_models <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0,
     ts_data$test$ts_data <- lda$data$test$document_covariate_table
     ts_data$test$ts_data$gamma <- lda$test_document_topic_matrix
 
+    weights <- iftrue(weights, 
+                      document_weights(lda$data$train$document_term_table))
+
     TSs[[i]] <- list(data = ts_data,
                      data_subset = lda[["data_subset"]],
                      formula = tab$formula[[i]],
                      nchangepoints = tab$nchangepoints[i], 
                      weights = weights,
-                     timename = timename)
+                     timename = timename,
+                     response = control$response,
+                     topics = lda$topics, rep = lda$rep)
   }
   name_tab <- data.frame(paste("LDA", tab[ , 1]), 
                          paste(",", tab[ , 2]),
@@ -133,42 +179,17 @@ prep_TS_models <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0,
 
 
 
-TS_control <- function(TS_function = multinom_TS, 
-                       TS_args = list(),
-                       TS_fit_function = memoizer,
-                       TS_fit_args = list(ntemps = 6, penultimate_temp = 2^6, 
-                                          ultimate_temp = 1e10, q = 0, 
-                                          nit = 1e4, magnitude = 12, 
-                                          burnin = 0, thin_frac = 1, 
-                                          quiet = FALSE),
-                       soften = TRUE, 
-                       quiet = FALSE){
-  list(TS_function = TS_function, 
-       TS_args = TS_args, 
-       TS_fit_function = TS_fit_function, TS_fit_args = TS_fit_args, 
-       soften = soften, quiet = quiet)
-}
-
-
-
-
-TS_call <- function(TS = NULL, control = list()){
-  control <- do.call("TS_control", control)  
-  TS_msg(TS = TS, quiet = control$quiet)
-  fun <- control$TS_function
-  args <- update_list(control$TS_args, TS = TS)
-  if(control$soften){
-    tryCatch(do.call(what = fun, args = args), 
-             warning = function(x){eval(x$call)}, 
-             error = function(x = list()){list(error = x$message)})
-  } else{
-    do.call(what = fun, args = args)
-  }
-}
-
-
 TS_msg <- function(TS, quiet = FALSE){
-  messageq("hi how are you?", quiet)
+  subset_msg <- paste0("  - data subset ", TS$data_subset)
+  topic_msg <- paste0(", ", TS$topics, " topics")
+  rep_msg <- paste0(", replicate ", TS$rep)
+
+  formula_msg <- paste0(", formula ", deparse(TS$formula))
+  nchangepoints <- TS$nchangepoints
+  txt <- ifelse(nchangepoints == 1, " changepoint", " changepoints")
+  changepoints_msg <- paste0(", ", nchangepoints, txt)
+  msg <- paste0(subset_msg, topic_msg, rep_msg, formula_msg, changepoints_msg)
+  messageq(msg, quiet)
 }
 
 

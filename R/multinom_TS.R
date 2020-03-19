@@ -78,9 +78,6 @@ multinom_TS <- function(data, formula, changepoints = NULL,
                         timename = "time", weights = NULL, 
                         control = list()){
 
-  check_multinom_TS_inputs(data, formula, changepoints, timename, weights, 
-                           control)
-  control <- do.call("TS_control", control)
   if (!verify_changepoint_locations(data, changepoints, timename)){
     out <- list("chunk models" = NA, "logLik" = -Inf, "chunks" = NA)
     class(out) <- c("multinom_TS_fit", "list")
@@ -384,7 +381,6 @@ verify_changepoint_locations <- function(data, changepoints = NULL,
 #'
 multinom_TS_chunk <- function(data, formula, chunk, timename = "time",
                               weights = NULL, control = list()){
-  control <- do.call("TS_control", control)
   formula <- as.formula(format(formula))
   time_obs <- data[ , timename] 
   chunk_start <- as.numeric(chunk["start"])

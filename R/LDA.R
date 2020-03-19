@@ -19,7 +19,7 @@
 
 LDA <- function(data, topics = 2, reps = 1, control = list()){
   control <- do.call("LDA_control", control)
-  messageq("----Linguistic Decomposition Analyses----", control$quiet)
+  messageq("----- Linguistic Decomposition Analyses -----", control$quiet)
   LDAs <- prep_LDA_models(data = data, topics = topics, reps = reps,
                           control = control)
   nLDA <- length(LDAs)
@@ -76,20 +76,14 @@ LDA_call <- function(LDA = NULL, control = list()){
   LDA_msg(LDA = LDA, quiet = control$quiet)
   fun <- control$LDA_function
   args <- update_list(control$LDA_args, LDA = LDA)
-  if(control$soften){
-    tryCatch(do.call(what = fun, args = args), 
-             warning = function(x){eval(x$call)}, 
-             error = function(x = list()){list(error = x$message)})
-  } else{
-    do.call(what = fun, args = args)
-  }
+  soft_call(fun = fun, args = args, soften = control$soften)
 }
 
 
 
 
 LDA_msg <- function(LDA, quiet = FALSE){
-  subset_msg <- paste0("  data subset ", LDA$data_subset)
+  subset_msg <- paste0("  - data subset ", LDA$data_subset)
   topic_msg <- paste0(", ", LDA$topics, " topics")
   rep_msg <- paste0(", replicate ", LDA$rep)
   messageq(paste0(subset_msg, topic_msg, rep_msg), quiet)
@@ -136,7 +130,8 @@ identity_LDA <- function(LDA){
   colnames(document_topic_table) <- NULL
   out <- list(params = list(), document_topic_table = document_topic_table, 
               log_likelihood = NULL, data = data,
-              topics = 1, rep = rep, data_subset = data_subset)
+              topics = 1, rep = rep, data_subset = data_subset,
+              test_document_topic_matrix = NULL) #not yet available
   class(out) <- c("LDA", "list")
   out
 }
