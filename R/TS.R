@@ -96,29 +96,6 @@ c("ldats_classic")
 
 
 
-ldats_classic <- function(TS, control = list()){
-
-  saves <- prep_saves(TS = TS, control = control)
-
-  inputs <- prep_ptMCMC_inputs(TS = TS, control = control)
-  cpts <- prep_cpts(data, formula, nchangepoints, timename, weights, control)
-  ids <- prep_ids(control)
-  pbar <- prep_pbar(control, "rho")
-
-  for(i in 1:control$nit){
-    update_pbar(pbar, control)
-    steps <- step_chains(i, cpts, inputs)
-    swaps <- swap_chains(steps, inputs, ids)
-    saves <- update_saves(i, saves, steps, swaps)
-    cpts <- update_cpts(cpts, swaps)
-    ids <- update_ids(ids, swaps)
-  }
-
-  process_saves(saves, control)
-
-}
-
-
 
 
 prep_TS_models <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0, 
@@ -184,7 +161,7 @@ TS_msg <- function(TS, quiet = FALSE){
   topic_msg <- paste0(", ", TS$topics, " topics")
   rep_msg <- paste0(", replicate ", TS$rep)
 
-  formula_msg <- paste0(", formula ", deparse(TS$formula))
+  formula_msg <- paste0(", ", deparse(TS$formula))
   nchangepoints <- TS$nchangepoints
   txt <- ifelse(nchangepoints == 1, " changepoint", " changepoints")
   changepoints_msg <- paste0(", ", nchangepoints, txt)
@@ -474,10 +451,32 @@ est_changepointsx <- function(data, formula, nchangepoints, timename, weights,
   process_saves(saves, control)
 }
 
-prep_pbar <- function(control = list(), bar_type = "rho", 
-                      nr = NULL){
-  check_control(control)
-  control <- do.call("TS_control", control)
+check_formula <- function(data, formula){
+
+  if (!is(formula, "formula")){
+    stop("formula does not contain a single formula")
+  }
+
+  respLoc <- attr(terms(formula), "response")
+  if (respLoc == 0){
+    stop("formula inputs should include response variable")
+  }  
+
+  resp <- as.character(attr(terms(formula), "variables"))[-1][respLoc]
+  pred <- attr(terms(formula), "term.labels")
+  if (!resp %in% colnames(data)){
+    stop("formula includes response not present in data")
+  }
+  if (!all(pred %in% colnames(data))){
+    misses <- pred[which(pred %in% colnames(data) == FALSE)]
+    mis <- paste(misses, collapse = ", ")
+    stop(paste0("formula includes predictors not present in data: ", mis))
+  }
+  return()
+}
+
+
+prep_pbar <- function(control = list(), bar_type = "rho", nr = NULL){
   if (!(bar_type %in% c("eta", "rho"))){
     stop("bar_type must be eta or rho")
   }
@@ -503,52 +502,10 @@ update_pbar <- function(pbar, control = list()){
   if (!("progress_bar" %in% class(pbar))){
     stop("pbar must be of class progress_bar")
   }
-  check_control(control)
-  control <- do.call("TS_control", control)
   if (control$quiet){
     return()
   }
   pbar$tick()
-}
-
-
-check_formula <- function(data, formula){
-
-  if (!is(formula, "formula")){
-    stop("formula does not contain a single formula")
-  }
-
-  respLoc <- attr(terms(formula), "response")
-  if (respLoc == 0){
-    stop("formula inputs should include response variable")
-  }  
-
-  resp <- as.character(attr(terms(formula), "variables"))[-1][respLoc]
-  pred <- attr(terms(formula), "term.labels")
-  if (!resp %in% colnames(data)){
-    stop("formula includes response not present in data")
-  }
-  if (!all(pred %in% colnames(data))){
-    misses <- pred[which(pred %in% colnames(data) == FALSE)]
-    mis <- paste(misses, collapse = ", ")
-    stop(paste0("formula includes predictors not present in data: ", mis))
-  }
-  return()
-}
-
-TS_controlx <- function(memoise = TRUE, response = "gamma", lambda = 0, 
-                       measurer = AIC, selector = min, ntemps = 6, 
-                       penultimate_temp = 2^6, ultimate_temp = 1e10, q = 0, 
-                       nit = 1e4, magnitude = 12, quiet = FALSE, burnin = 0, 
-                       thin_frac = 1, summary_prob = 0.95, seed = NULL,
-                       model_fun = "multinom"){
-  list(memoise = memoise, response = response, lambda = lambda, 
-       measurer = measurer, selector = selector, ntemps = ntemps, 
-       penultimate_temp = penultimate_temp, ultimate_temp = ultimate_temp, 
-       q = q, nit = nit, magnitude = magnitude, quiet = quiet, 
-       burnin = burnin, thin_frac = thin_frac, summary_prob = summary_prob,
-       seed = seed, model_fun = model_fun)
-
 }
 
 logLik.TS_fit <- function(object, ...){

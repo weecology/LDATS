@@ -20,7 +20,7 @@ data <- conform_data(data = data, control = control)
 LDAs <- LDA(data = data, topics = topics, reps = reps, 
               control = control$LDA_control)
 
-
+control <- list()
    lda <- LDA(rodents, 3, 1, list(quiet = TRUE))
 
 lda

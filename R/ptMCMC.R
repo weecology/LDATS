@@ -1,98 +1,4 @@
 
-
-prep_cpts <- function(TS, control = list()){
-
-  data <- TS$data$train$ts_data
-  temps <- prep_temp_sequence(control)
-  ntemps <- length(temps)
-  min_time <- min(data[ , timename])
-  max_time <- max(data[ , timename])
-  times <- seq(min_time, max_time, 1)
-  avail_times <- times[-c(1, length(times))]
-  cps <- matrix(NA, nrow = TS$nchangepoints, ncol = ntemps)
-  for (i in 1:ntemps){
-    cp_times <- sort(sample(avail_times, TS$nchangepoints, replace = FALSE))
-    cps[ , i] <- cp_times
-  }
-  lls <- rep(NA, ntemps)
-  for (i in 1:ntemps){
-    fun <- eval(parse(text = paste0(TS$response, "_TS")))
-    fun <- memoise_fun(fun, control$memoise)
-    args <- list(data = data, formula = TS$formula, changepoints = cps[ , i], 
-                 timename = TS$timename, weights = TS$weights, 
-                 control = control)
-    modfit <- soft_call(fun, args, TRUE)
-    lls[i] <- modfit$logLik
-  }  
-  cps <- cps[ , order(lls, decreasing = TRUE), drop = FALSE]
-  lls <- sort(lls, decreasing = TRUE)
-
-  out <- list(cps, lls)
-  names(out) <- c("changepts", "lls")
-  out
-}
-
-
-prep_temp_sequence <- function(control = list()){
-  ntemps <- control$ntemps
-  penultimate_temp <- control$penultimate_temp
-  ultimate_temp <- control$ultimate_temp
-  q <- control$q
-  sequence <- seq(0, log2(penultimate_temp), length.out = ntemps - 1)
-  log_temps <- sequence^(1 + q) / log2(penultimate_temp)^q
-  c(2^(log_temps), ultimate_temp) 
-}
-
-
-prep_saves <- function(TS, control = list()){
-  nchangepoints <- TS$nchangepoints
-  ntemps <- control$ntemps
-  nit <- control$nit
-  cpts <- array(NA, c(nchangepoints, ntemps, nit))
-  lls <- matrix(NA, ntemps, nit)
-  ids <- matrix(NA, ntemps, nit)
-  step_accepts <- matrix(FALSE, ntemps, nit)
-  swap_accepts <- matrix(FALSE, ntemps - 1, nit)
-  list(cpts = cpts, lls = lls, ids = ids, step_accepts = step_accepts, 
-       swap_accepts = swap_accepts)
-}
-
-
-
-prep_ptMCMC_inputs <- function(TS, control = list()){
-    
-  out <- list(control = control, 
-              temps = prep_temp_sequence(control), 
-              pdist = prep_proposal_dist(TS$nchangepoints, control),
-              formula = TS$formula, 
-              weights = TS$weights, 
-              data = TS$data$train$ts_data, 
-              response = TS$response,
-              timename = TS$timename)
-  class(out) <- c("ptMCMC_inputs", "list")
-  out
-}
-
-
-
-prep_proposal_dist <- function(nchangepoints, control = list()){
-  ntemps <- control$ntemps
-  nit <- control$nit
-  if(nchangepoints == 0){
-    steps <- matrix(0, nrow = nit, ncol = ntemps)
-    which_steps <- matrix(numeric(0), nrow = nit, ncol = ntemps)
-  } else{
-    magnitude <- control$magnitude 
-    step_signs <- sample(c(-1, 1), nit * ntemps, replace = TRUE)
-    step_magnitudes <- 1 + rgeom(nit * ntemps, 1 / magnitude)
-    steps <- matrix(step_signs * step_magnitudes, nrow = nit)
-    which_steps <- sample.int(nchangepoints, nit * ntemps, replace = TRUE)
-    which_steps <- matrix(which_steps, nrow = nit)
-  }
-  list(steps = steps, which_steps = which_steps)
-}
-
-
 #' @title Calculate ptMCMC summary diagnostics
 #'
 #' @description Summarize the step and swap acceptance rates as well as trip
@@ -306,7 +212,7 @@ count_trips <- function(ids){
 #'
 #' @export
 #'
-swap_chains <- function(chainsin, inputs, ids){
+swap_chainsx <- function(chainsin, inputs, ids){
   temps <- inputs$temps
   itemps <- 1/temps
   ntemps <- length(temps)
@@ -427,7 +333,7 @@ swap_chains <- function(chainsin, inputs, ids){
 #'
 #' @export
 #'
-step_chains <- function(i, cpts, inputs){
+step_chainsx <- function(i, cpts, inputs){
   prop_step <- propose_step(i, cpts, inputs)
   accept_step <- eval_step(i, cpts, prop_step, inputs)
   take_step(cpts, prop_step, accept_step)
@@ -437,7 +343,7 @@ step_chains <- function(i, cpts, inputs){
 #'
 #' @export
 #'
-propose_step <- function(i, cpts, inputs){
+propose_stepx <- function(i, cpts, inputs){
 
   pdist <- inputs$pdist
   ntemps <- length(inputs$temps)
@@ -458,7 +364,7 @@ propose_step <- function(i, cpts, inputs){
 #'
 #' @export
 #'
-eval_step <- function(i, cpts, prop_step, inputs){
+eval_stepx <- function(i, cpts, prop_step, inputs){
   temps <- inputs$temps
   ntemps <- length(temps)
   itemps <- 1 / temps
@@ -469,7 +375,7 @@ eval_step <- function(i, cpts, prop_step, inputs){
 #'
 #' @export
 #'
-take_step <- function(cpts, prop_step, accept_step){
+take_stepx <- function(cpts, prop_step, accept_step){
   changepts <- cpts$changepts
   lls <- cpts$lls
   changepts[ , accept_step] <- prop_step$changepts[ , accept_step]
@@ -524,7 +430,7 @@ take_step <- function(cpts, prop_step, accept_step){
 #'
 #' @export
 #'
-proposed_step_mods <- function(prop_changepts, inputs){ 
+proposed_step_modsx <- function(prop_changepts, inputs){ 
 
   data <- inputs$data
   formula <- inputs$formula
@@ -592,7 +498,7 @@ proposed_step_mods <- function(prop_changepts, inputs){
 #'
 #' @export
 #'
-prep_ids <- function(control = list()){
+prep_idsx <- function(control = list()){
   control <- do.call("TS_control", control)
   if (!is.numeric(control$ntemps) || any(control$ntemps %% 1 != 0)){
     stop("ntemps must be integer-valued")
@@ -604,7 +510,7 @@ prep_ids <- function(control = list()){
 #'
 #' @export
 #'
-update_ids <- function(ids, swaps){
+update_idsx <- function(ids, swaps){
   swaps$ids
 }
 
@@ -834,7 +740,7 @@ prep_savesx <- function(nchangepoints, control = list()){
 #'
 #' @export
 #'
-update_saves <- function(i, saves, steps, swaps){
+update_savesx <- function(i, saves, steps, swaps){
   saves$cpts[ , , i] <- swaps$changepts
   saves$lls[ , i] <- swaps$lls
   saves$ids[ , i] <- swaps$ids
@@ -847,7 +753,7 @@ update_saves <- function(i, saves, steps, swaps){
 #'
 #' @export
 #'
-process_saves <- function(saves, control = list()){
+process_savesx <- function(saves, control = list()){
   control <- do.call("TS_control", control)
   nit <- control$nit
   iters <- 1:nit
@@ -989,7 +895,7 @@ prep_cptsx <- function(data, formula, nchangepoints, timename, weights,
 #'
 #' @export
 #'
-update_cpts <- function(cpts, swaps){
+update_cptsx <- function(cpts, swaps){
   list(changepts = swaps$changepts, lls = swaps$lls)
 }
 
