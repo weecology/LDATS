@@ -28,6 +28,41 @@ TS <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0,
 
 
 
+select_TS <- function(TSs, control = list()){
+
+  vals <- measure_TS(TSs = TSs, control = control)
+  fun <- control$selector_function
+  args <- update_list(control$selector_args, x = vals)
+  selection <- do.call(what = fun, args = args)
+  TSs[selection]  
+}
+
+measure_TS <- function(TSs, control = list()){
+  fun <- control$measurer_function
+  args <- control$measurer_args
+  nTSs <- length(TSs)
+  vals <- rep(NA, nTSs)
+  for(i in 1:nTSs){
+    args <- update_list(args, object = TSs[[i]])
+    vals_i <- do.call(what = fun, args = args)
+    if(length(vals_i) != 0){
+      vals[i] <- vals_i
+    }
+  }
+  vals
+}
+
+
+
+package_TS <- function(selected_TSs, TSs, control = list()){
+  out <- list(selected_TSs = selected_TSs, TSs = TSs, control = control)
+  class(out) <- c("TS_set", "list")
+  out
+}
+
+
+
+
 
 
 TS_control <- function(response = "multinom",
@@ -39,17 +74,18 @@ TS_control <- function(response = "multinom",
                                           memoise = TRUE,
                                           quiet = FALSE),
                        summary_prob = 0.95,
+                        measurer_function = AIC,
+                        measurer_args = list(),
+                        selector_function = which.min,
+                        selector_args = list(), 
                        soften = TRUE, 
                        quiet = FALSE){
   list(response = response, method = method, method_args = method_args, 
+       measurer_function = measurer_function, measurer_args = measurer_args, 
+       selector_function = selector_function, selector_args = selector_args,
        summary_prob = summary_prob, soften = soften, quiet = quiet)
 }
 
-
-
-# the defining characteristic here is the sequential
-#  estimation of rho then eta, ostensibly it could be done together
-#  
 
 sequential_TS <- function(TS, control = list()){
   control <- do.call("TS_control", control)
@@ -350,210 +386,6 @@ TS_msg <- function(TS, quiet = FALSE){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-predict.TS_fit <- function(object, newdata = NULL, control = list(), ...){
-  if(is.null(newdata)){
-    newdata <- object$data
-  }
-  control <- do.call("TS_control", control)
-  nit <- object$control$nit
-  rhos <- object$rhos
-  etas <- object$etas
-  nnewdata <- NROW(newdata)
-  formula <- object$formula
-  out <- matrix(NA, nrow = nit, ncol = nnewdata)
-  for(i in 1:nit){
-    
-    out[i , ] <- predicts
-  }
-
-}
-
-TSx <- function(data, formula = gamma ~ 1, nchangepoints = 0, 
-               timename = "time", weights = NULL, control = list()){
-  check_TS_inputs(data, formula, nchangepoints, timename, weights, control)
-  control <- do.call("TS_control", control)
-  set.seed(control$seed)
-  data <- time_order_data(data, timename = timename)
-  rho_dist <- est_changepoints(data, formula, nchangepoints, timename, 
-                               weights, control)
-  eta_dist <- est_regressors(rho_dist, data, formula, timename, weights, 
-                             control)
-  package_TS(data, formula, timename, weights, control, rho_dist, eta_dist)
-}
-
-check_TS_inputs <- function(data, formula = gamma ~ 1, nchangepoints = 0, 
-                            timename = "time", weights = NULL, 
-                            control = list()){
-  check_formula(data, formula)  
-  check_nchangepoints(nchangepoints)
-  check_weights(weights)
-  check_timename(data, timename)
-  check_control(control)
-  return() 
-}
-
-package_TSx <- function(data, formula, timename, weights, control, rho_dist, 
-                         eta_dist){
-
-  check_formula(data, formula) 
-  check_weights(weights)
-  check_control(control)
-  check_timename(data, timename)
-  control <- do.call("TS_control", control)
-  nchangepoints <- dim(rho_dist$cpts)[1]
-  if (is.null(nchangepoints)){
-    nchangepoints <- 0
-    mod <- multinom_TS(data, formula, changepoints = NULL, timename, weights,
-                       control)
-    mod <- mod[[1]][[1]]
-    lls <- as.numeric(logLik(mod))
-    rhos <- NULL
-  } else{
-    lls <- rho_dist$lls[1, ]
-    rhos <- t(array(rho_dist$cpts[ , 1, ], dim = dim(rho_dist$cpts)[c(1, 3)]))
-  }
-
-  ptMCMC_diagnostics <- diagnose_ptMCMC(rho_dist)
-  rho_summary <- summarize_rhos(rhos, control)
-  rho_vcov <- measure_rho_vcov(rhos)
-  eta_summary <- summarize_etas(eta_dist, control)
-  eta_vcov <- measure_eta_vcov(eta_dist)
-
-  logLik <- mean(lls)
-  ncoefs <- ncol(eta_dist)
-  nparams <- nchangepoints + ncoefs 
-  AIC <- -2 * logLik + 2 * nparams
-
-  out <- list(data = data, formula = formula, nchangepoints = nchangepoints,
-              timename = timename, weights = weights,
-              control = control, lls = lls, rhos = rhos,
-              etas = eta_dist, ptMCMC_diagnostics = ptMCMC_diagnostics,
-              rho_summary = rho_summary, rho_vcov = rho_vcov,
-              eta_summary = eta_summary, eta_vcov = eta_vcov,
-              logLik = logLik, nparams = nparams, AIC = AIC)
-  class(out) <- c("TS_fit", "list")
-  to_hide <- c("data", "weights", "control", "lls", "rhos", "etas", 
-               "rho_vcov", "eta_vcov")
-  if (nchangepoints == 0){
-    to_hide <- c(to_hide, "ptMCMC_diagnostics", "rho_summary")
-  }
-  attr(out, "hidden") <- to_hide
-  out
-}
-
-est_regressorsx <- function(rho_dist, data, formula, timename, weights, 
-                           control = list()){
-  check_formula(data, formula)  
-  check_weights(weights)
-  check_control(control)
-  control <- do.call("TS_control", control)
-  if (!is.null(rho_dist)){
-    if (any(names(rho_dist)[1:3] != c("cpts", "lls", "ids"))){
-      stop("expecting rho_dist to have elements cpts, lls, ids")
-    }
-  }
-  if (is.null(rho_dist)){
-    mod <- multinom_TS(data, formula, changepoints = NULL, timename, weights, 
-                       control)
-    mod <- mod[[1]][[1]]
-    mv <- as.vector(t(coef(mod)))
-    vcv <- mirror_vcov(mod)
-    eta <- rmvnorm(control$nit, mv, vcv)
-    seg_names <- rep(1, ncol(vcv))
-    coef_names <- colnames(vcv)
-    colnames(eta) <- paste(seg_names, coef_names, sep = "_")
-    return(eta)
-  }
-
-  focal_rho <- rho_dist$cpts[ , 1, ]
-  nchangepts <- dim(rho_dist$cpts)[1]
-  if (nchangepts == 1){
-    collapsedrho <- focal_rho
-  } else{
-    collapsedrho <- apply(focal_rho, 2, paste, collapse = "_")
-  }
-  freq_r <- table(collapsedrho)
-  unique_r <- names(freq_r)
-  nr <- length(unique_r)
-  n_topic <- ncol(data$gamma)
-  n_covar <- length(attr(terms(formula), "term.labels"))
-  n_eta_segment <- (n_topic - 1) * (n_covar + 1)
-  n_changept <- dim(rho_dist$cpts)[1]
-  n_segment <- n_changept + 1
-  n_eta <- n_eta_segment * n_segment 
-  eta <- matrix(NA, nrow = control$nit, ncol = n_eta)
-  pbar <- prep_pbar(control, "eta", nr)
-
-  for(i in 1:nr){
-    update_pbar(pbar, control)
-    cpts <- as.numeric(strsplit(unique_r[i], "_")[[1]])
-    mods <- multinom_TS(data, formula, cpts, timename, weights, control)
-    ndraws <- freq_r[i]
-    colindex1 <- 1
-    for(j in 1:n_segment){
-      colindex2 <- colindex1 + n_eta_segment - 1
-      seg_mod <- mods[[1]][[j]]
-      mv <- as.vector(t(coef(seg_mod)))
-      vcv <- mirror_vcov(seg_mod)
-      drawn <- rmvnorm(ndraws, mv, vcv)    
-      rows_in <- which(collapsedrho == unique_r[i])
-      cols_in <- colindex1:colindex2
-      eta[rows_in, cols_in] <- drawn
-      colindex1 <- colindex2 + 1
-    }
-  }
-  seg_names <- rep(1:n_segment, each = n_eta_segment)
-  coef_names <- rep(colnames(vcv), n_segment)
-  colnames(eta) <- paste(seg_names, coef_names, sep = "_")
-  eta
-}
-
-
-est_changepointsx <- function(data, formula, nchangepoints, timename, weights, 
-                             control = list()){
-  check_TS_inputs(data, formula, nchangepoints, timename, weights, control)
-  control <- do.call("TS_control", control)
-  data <- time_order_data(data, timename = timename)
-  if (nchangepoints == 0){
-    return(NULL)
-  }
-  saves <- prep_saves(nchangepoints, control)
-
-# break this into a "classic" approach or whatever and give it its own
-#  function that is akin to temper
-
-  inputs <- prep_ptMCMC_inputs(data, formula, nchangepoints, timename, 
-                               weights, control)
-  cpts <- prep_cpts(data, formula, nchangepoints, timename, weights, control)
-  ids <- prep_ids(control)
-  pbar <- prep_pbar(control, "rho")
-
-  for(i in 1:control$nit){
-    update_pbar(pbar, control)
-    steps <- step_chains(i, cpts, inputs)
-    swaps <- swap_chains(steps, inputs, ids)
-    saves <- update_saves(i, saves, steps, swaps)
-    cpts <- update_cpts(cpts, swaps)
-    ids <- update_ids(ids, swaps)
-  }
-# the separate function runs to here
-# and then process the output
-
-  process_saves(saves, control)
-}
-
 check_formula <- function(data, formula){
 
   if (!is(formula, "formula")){
@@ -611,10 +443,125 @@ update_pbar <- function(pbar, control = list()){
   pbar$tick()
 }
 
-logLik.TS_fit <- function(object, ...){
+logLik.TS <- function(object, ...){
   val <- object$logLik
   attr(val, "df") <- object$nparams
   attr(val, "nobs") <- nrow(object$data)
   class(val) <- "logLik"
   val
+}
+
+
+#' @title Check that a set of change point locations is proper
+#' 
+#' @description Check that the change point locations are \code{numeric}
+#'   and conformable to \code{interger} values. 
+#'   
+#' @param changepoints Change point locations to evaluate.
+#' 
+#' @return An error message is thrown if \code{changepoints} are not proper,
+#'   else \code{NULL}.
+#'
+#' @examples
+#'   check_changepoints(100)
+#'
+#' @export
+#'
+check_changepoints <- function(changepoints = NULL){
+  if (is.null(changepoints)){
+    return()
+  }
+  if (!is.numeric(changepoints) || any(changepoints %% 1 != 0)){
+    stop("changepoints must be integer-valued")
+  }
+}
+
+
+#' @title Prepare the time chunk table for a multinomial change point 
+#'   Time Series model
+#'
+#' @description Creates the table containing the start and end times for each
+#'   chunk within a time series, based on the change points (used to break up
+#'   the time series) and the range of the time series. If there are no 
+#'   change points (i.e. \code{changepoints} is \code{NULL}, there is still a
+#'   single chunk defined by the start and end of the time series.
+#'
+#' @param data Class \code{data.frame} object including the predictor and 
+#'   response variables, but specifically here containing the column indicated
+#'   by the \code{timename} input. 
+#'
+#' @param changepoints Numeric vector indicating locations of the change 
+#'   points. Must be conformable to \code{integer} values. 
+#'
+#' @param timename \code{character} element indicating the time variable
+#'   used in the time series. Defaults to \code{"time"}. The variable must be
+#'   integer-conformable or a \code{Date}. If the variable named
+#'   is a \code{Date}, the input is converted to an integer, resulting in the
+#'   timestep being 1 day, which is often not desired behavior.
+#'
+#' @return \code{data.frame} of \code{start} and \code{end} times (columns)
+#'   for each chunk (rows).
+#'
+#' @examples
+#'   data(rodents)
+#'   dtt <- rodents$document_term_table
+#'   lda <- LDA_set(dtt, 2, 1, list(quiet = TRUE))
+#'   dct <- rodents$document_covariate_table
+#'   dct$gamma <- lda[[1]]@gamma
+#'   chunks <- prep_chunks(dct, changepoints = 100, timename = "newmoon")   
+#'
+#' @export 
+#'
+prep_chunks <- function(data, changepoints = NULL, 
+                        timename = "time"){
+  start <- c(min(data[ , timename]), changepoints + 1)   
+  end <- c(changepoints, max(data[ , timename])) 
+  data.frame(start, end)
+}
+
+
+#' @title Verify the change points of a multinomial time series model
+#'
+#' @description Verify that a time series can be broken into a set 
+#'   of chunks based on input change points. 
+#'
+#' @param data Class \code{data.frame} object including the predictor and 
+#'   response variables.
+#'
+#' @param changepoints Numeric vector indicating locations of the change 
+#'   points. Must be conformable to \code{integer} values. 
+#'
+#' @param timename \code{character} element indicating the time variable
+#'   used in the time series. Defaults to \code{"time"}. The variable must be
+#'   integer-conformable or a \code{Date}. If the variable named
+#'   is a \code{Date}, the input is converted to an integer, resulting in the
+#'   timestep being 1 day, which is often not desired behavior.
+#'
+#' @return Logical indicator of the check passing \code{TRUE} or failing
+#'   \code{FALSE}.
+#'
+#' @examples
+#'   data(rodents)
+#'   dtt <- rodents$document_term_table
+#'   lda <- LDA_set(dtt, 2, 1, list(quiet = TRUE))
+#'   dct <- rodents$document_covariate_table
+#'   dct$gamma <- lda[[1]]@gamma
+#'   verify_changepoint_locations(dct, changepoints = 100, 
+#'                                timename = "newmoon")   
+#'
+#' @export 
+#'
+verify_changepoint_locations <- function(data, changepoints = NULL, 
+                                     timename = "time"){
+
+  if (is.null(changepoints)){
+    return(TRUE)
+  }
+
+  first_time <- min(data[ , timename])
+  last_time <- max(data[ , timename])
+  time_check <- any(changepoints <= first_time | changepoints >= last_time)
+  sort_check <- is.unsorted(changepoints, strictly = TRUE)
+
+  !(time_check | sort_check)
 }

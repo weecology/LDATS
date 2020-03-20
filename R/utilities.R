@@ -369,10 +369,10 @@ memoise_fun <- function(fun, memoise_tf = TRUE){
   if (!("function" %in% class(fun))){
     stop("fun is not a function")
   }
-  if (!("logical" %in% class(memoise_tf))){
+  if (!(is.null(memoise_tf) || "logical" %in% class(memoise_tf))){
     stop("memoise_tf is not logical")
   }
-  if (memoise_tf){
+  if (!is.null(memoise_tf) && memoise_tf){
     fun <- memoise(fun)
   }
   fun

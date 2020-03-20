@@ -111,30 +111,6 @@ check_multinom_TS_inputs <- function(data, formula = gamma~1,
   check_control(control)
 }
 
-#' @title Check that a set of change point locations is proper
-#' 
-#' @description Check that the change point locations are \code{numeric}
-#'   and conformable to \code{interger} values. 
-#'   
-#' @param changepoints Change point locations to evaluate.
-#' 
-#' @return An error message is thrown if \code{changepoints} are not proper,
-#'   else \code{NULL}.
-#'
-#' @examples
-#'   check_changepoints(100)
-#'
-#' @export
-#'
-check_changepoints <- function(changepoints = NULL){
-  if (is.null(changepoints)){
-    return()
-  }
-  if (!is.numeric(changepoints) || any(changepoints %% 1 != 0)){
-    stop("changepoints must be integer-valued")
-  }
-}
-
 #' @title Log likelihood of a multinomial TS model
 #' 
 #' @description Convenience function to simply extract the \code{logLik}
@@ -233,93 +209,8 @@ package_chunk_fits <- function(chunks, fits){
   out
 }
 
-#' @title Prepare the time chunk table for a multinomial change point 
-#'   Time Series model
-#'
-#' @description Creates the table containing the start and end times for each
-#'   chunk within a time series, based on the change points (used to break up
-#'   the time series) and the range of the time series. If there are no 
-#'   change points (i.e. \code{changepoints} is \code{NULL}, there is still a
-#'   single chunk defined by the start and end of the time series.
-#'
-#' @param data Class \code{data.frame} object including the predictor and 
-#'   response variables, but specifically here containing the column indicated
-#'   by the \code{timename} input. 
-#'
-#' @param changepoints Numeric vector indicating locations of the change 
-#'   points. Must be conformable to \code{integer} values. 
-#'
-#' @param timename \code{character} element indicating the time variable
-#'   used in the time series. Defaults to \code{"time"}. The variable must be
-#'   integer-conformable or a \code{Date}. If the variable named
-#'   is a \code{Date}, the input is converted to an integer, resulting in the
-#'   timestep being 1 day, which is often not desired behavior.
-#'
-#' @return \code{data.frame} of \code{start} and \code{end} times (columns)
-#'   for each chunk (rows).
-#'
-#' @examples
-#'   data(rodents)
-#'   dtt <- rodents$document_term_table
-#'   lda <- LDA_set(dtt, 2, 1, list(quiet = TRUE))
-#'   dct <- rodents$document_covariate_table
-#'   dct$gamma <- lda[[1]]@gamma
-#'   chunks <- prep_chunks(dct, changepoints = 100, timename = "newmoon")   
-#'
-#' @export 
-#'
-prep_chunks <- function(data, changepoints = NULL, 
-                        timename = "time"){
-  start <- c(min(data[ , timename]), changepoints + 1)   
-  end <- c(changepoints, max(data[ , timename])) 
-  data.frame(start, end)
-}
 
-#' @title Verify the change points of a multinomial time series model
-#'
-#' @description Verify that a time series can be broken into a set 
-#'   of chunks based on input change points. 
-#'
-#' @param data Class \code{data.frame} object including the predictor and 
-#'   response variables.
-#'
-#' @param changepoints Numeric vector indicating locations of the change 
-#'   points. Must be conformable to \code{integer} values. 
-#'
-#' @param timename \code{character} element indicating the time variable
-#'   used in the time series. Defaults to \code{"time"}. The variable must be
-#'   integer-conformable or a \code{Date}. If the variable named
-#'   is a \code{Date}, the input is converted to an integer, resulting in the
-#'   timestep being 1 day, which is often not desired behavior.
-#'
-#' @return Logical indicator of the check passing \code{TRUE} or failing
-#'   \code{FALSE}.
-#'
-#' @examples
-#'   data(rodents)
-#'   dtt <- rodents$document_term_table
-#'   lda <- LDA_set(dtt, 2, 1, list(quiet = TRUE))
-#'   dct <- rodents$document_covariate_table
-#'   dct$gamma <- lda[[1]]@gamma
-#'   verify_changepoint_locations(dct, changepoints = 100, 
-#'                                timename = "newmoon")   
-#'
-#' @export 
-#'
-verify_changepoint_locations <- function(data, changepoints = NULL, 
-                                     timename = "time"){
 
-  if (is.null(changepoints)){
-    return(TRUE)
-  }
-
-  first_time <- min(data[ , timename])
-  last_time <- max(data[ , timename])
-  time_check <- any(changepoints <= first_time | changepoints >= last_time)
-  sort_check <- is.unsorted(changepoints, strictly = TRUE)
-
-  !(time_check | sort_check)
-}
 
 #' @title Fit a multinomial Time Series model chunk
 #'

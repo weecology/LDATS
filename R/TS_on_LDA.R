@@ -32,7 +32,7 @@ prep_TS_data <- function(document_covariate_table, LDA_models, mods, i = 1){
   data_i
 }
 
-select_TS <- function(TS_models, control = list()){
+select_TSx <- function(TS_models, control = list()){
   if (!("TS_on_LDA" %in% class(TS_models))){
     stop("TS_models must be of class TS_on_LDA")
   }

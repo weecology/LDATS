@@ -1,6 +1,21 @@
+to do
+
+ldats classic method/ptmcmc
+  a. tidy up function naming and calling
+  b. documentation
+  c. cut old script
+  d. make sure memoization is located properly
+
+multinom_TS/ilr_TS/others
+  a. generalize functions more
+  b. drop special classes 
+  c. documentation
+  
+  
+
 time_order_data ... hmmmmm
 
-
+its not really right to use gamma as a name for ilr 
 standardized output from LDA functions
 s3 object with
 params (however they're provided, collated into a list)

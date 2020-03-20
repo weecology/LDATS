@@ -3,6 +3,10 @@
 # in the midst of the TS classic ldats...looks like starting to work, need
 # to double back through tho
 
+# get memo into a better location
+
+# lots of tidying to do!
+
 devtools::load_all()
 
    data(rodents)
