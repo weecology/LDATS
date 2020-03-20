@@ -33,7 +33,7 @@
 #'
 #' @param control A \code{list} of parameters to control the fitting of the
 #'   Time Series model. Values not input assume defaults set by 
-#'   \code{\link{TS_control}}.
+#'   \code{\link{sequential_TS_control}}.
 #'
 #' @details The general approach follows that of Western and Kleykamp
 #'   (2004), although we note some important differences. Our regression
@@ -65,9 +65,9 @@
 #' @return 
 #'   \code{est_changepoints}: \code{list} of saved data objects from the 
 #'     estimation of change point locations, uunless \code{nchangepoints} 
-#'     is 0, then \code{NULL}.
+#'     is 0, then \code{NULL}. \cr \cr
 #'   \code{est_regressors}: \code{matrix} of draws (rows) from the marginal 
-#'     posteriors of the coefficients across the segments (columns). 
+#'     posteriors of the coefficients across the segments (columns). \cr \cr
 #'   \code{sequential_TS} and \code{package_sequential_TS}: 
 #'     \code{TS}-class list containing the following elements, many of
 #'      which are hidden for \code{print}ing, but are accessible:
@@ -109,7 +109,7 @@
 #' @export
 #'
 sequential_TS <- function(TS, control = list()){
-  control <- do.call("TS_control", control)
+  control <- do.call("sequential_TS_control", control)
   sequential_TS_msg(TS = TS, control = control)
   rho_dist <- est_changepoints(TS = TS, control = control)
   eta_dist <- est_regressors(rho_dist = rho_dist, TS = TS, control = control)
@@ -117,14 +117,12 @@ sequential_TS <- function(TS, control = list()){
                         control = control)
 }
 
-#'
 #' @rdname sequential_TS
 #'
 #' @export
 #'
 package_sequential_TS <- function(TS, rho_dist, eta_dist, control = list()){
-
-
+  control <- do.call("sequential_TS_control", control)
   if(is.null(rho_dist)){
     focal_rho_dist <- NULL
     data <- TS$data$train$ts_data
@@ -168,12 +166,12 @@ package_sequential_TS <- function(TS, rho_dist, eta_dist, control = list()){
   out  
 }
 
-#'
 #' @rdname sequential_TS
 #'
 #' @export
 #'
 est_changepoints <- function(TS, control = list()){
+  control <- do.call("sequential_TS_control", control)
   if (TS$nchangepoints == 0){
     return(NULL)
   }
@@ -182,12 +180,12 @@ est_changepoints <- function(TS, control = list()){
   soft_call(fun = fun, args = args, soften = control$soften)
 }
 
-#'
 #' @rdname sequential_TS
 #'
 #' @export
 #'
 est_regressors <- function(rho_dist, TS, control = list()){
+  control <- do.call("sequential_TS_control", control)
   data <- TS$data$train$ts_data
   if(is.null(rho_dist)){
     fun <- eval(parse(text = paste0(TS$response, "_TS")))
@@ -261,12 +259,12 @@ est_regressors <- function(rho_dist, TS, control = list()){
   eta
 }
 
-#'
 #' @rdname sequential_TS
 #'
 #' @export
 #'
 sequential_TS_msg <- function(TS, control = list()){
+  control <- do.call("sequential_TS_control", control)
   subset_msg <- paste0("  - data subset ", TS$data_subset)
   topic_msg <- paste0(", ", TS$topics, " topics")
   rep_msg <- paste0(", replicate ", TS$rep)
@@ -279,6 +277,52 @@ sequential_TS_msg <- function(TS, control = list()){
   messageq(msg, control$quiet)
 }
 
+
+#' @title Create the controls list for a sequential Time Series model
+#'
+#' @description This function provides a simple creation and definition of a
+#'   list used to control the time series model fit occurring within 
+#'   \code{\link{sequential_TS}}. 
+#'
+#' @param response \code{character} element indicating the response variable 
+#'   used in the time series. \cr \cr
+#'   Must have a corresponding \code{<response>_TS} function.
+#'
+#' @param summary_prob Probability used for summarizing the posterior 
+#'   distributions (via the highest posterior density interval, see
+#'   \code{\link[coda]{HPDinterval}}).
+#'
+#' @param quiet \code{logical} indicator of whether the model should run 
+#'   quietly (if \code{FALSE}, a progress bar and notifications are printed).
+#'
+#' @param soften \code{logical} indicator of whether the model should error 
+#'   softly or if errors should trigger a full-stop to the pipeline.
+#'
+#' @param method \code{function} used to drive the sampler of the TS
+#'   models; \code{method} defines and operates the computational procedure.
+#'   \cr \cr
+#'   Current pre-built options include \code{\link{ldats_classic}}.
+#'
+#' @param method_args \code{list} of (named) arguments to be used in 
+#'   \code{method} via \code{\link{do.call}}. 
+#'   \cr \cr
+#'   Could be managed via a \code{<method>_control} function like
+#'   \code{\link{ldats_classic_control}}.
+#'
+#' @param ... Not passed along to the output, rather included to allow for
+#'   automated removal of unneeded controls.
+#'
+#' @return \code{list}, with named elements corresponding to the arguments.
+#'
+#' @export
+#'
+sequential_TS_control <- function(method = "ldats_classic",
+                                  method_args = ldats_classic_control(),
+                                  summary_prob = 0.95, soften = TRUE, 
+                                  quiet = FALSE, ...){
+  list(method = method, method_args = method_args, 
+        summary_prob = summary_prob, soften = soften, quiet = quiet)
+}
 
 #' @title Summarize the regressor (eta) distributions of a time series model
 #'
@@ -293,7 +337,7 @@ sequential_TS_msg <- function(TS, control = list()){
 #'
 #' @param control A \code{list} of parameters to control the fitting of the
 #'   Time Series model. Values not input assume defaults set by 
-#'   \code{\link{TS_control}}.
+#'   \code{\link{sequential_TS_control}}.
 #'
 #' @return \code{summarize_etas}: table of summary statistics for chunk-level
 #'   regressors including mean, median, mode, posterior interval, standard
@@ -305,7 +349,7 @@ sequential_TS_msg <- function(TS, control = list()){
 #' @export 
 #'
 summarize_etas <- function(etas, control = list()){
-  control <- do.call("TS_control", control)
+  control <- do.call("sequential_TS_control", control)
   if (!is.matrix(etas)){
     stop("etas should be a matrix")
   }
@@ -327,7 +371,6 @@ summarize_etas <- function(etas, control = list()){
   out
 }
 
-#'
 #' @rdname summarize_etas
 #'
 #' @export 
@@ -356,7 +399,7 @@ measure_eta_vcov <- function(etas){
 #'
 #' @param control A \code{list} of parameters to control the fitting of the
 #'   Time Series model. Values not input assume defaults set by 
-#'   \code{\link{TS_control}}.
+#'   \code{\link{sequential_TS_control}}.
 #'
 #' @return \code{summarize_rhos}: table of summary statistics for change point
 #'   locations including mean, median, mode, posterior interval, standard
@@ -368,6 +411,7 @@ measure_eta_vcov <- function(etas){
 #' @export 
 #'
 summarize_rhos <- function(rhos, control = list()){
+  control <- do.call("sequential_TS_control", control)
   if (is.null(rhos)) {
     return()
   }
@@ -389,7 +433,6 @@ summarize_rhos <- function(rhos, control = list()){
   out
 }
 
-#'
 #' @rdname summarize_rhos
 #'
 #' @export 

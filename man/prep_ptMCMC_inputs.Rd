@@ -11,7 +11,8 @@ prep_ptMCMC_inputs(TS, control = list())
 \item{TS}{\code{list} time series model object.}
 
 \item{control}{A \code{list} of parameters to control the fitting of the
-Time Series model.}
+time series model via the LDATS classic ptMCMC method. Values not input 
+assume defaults set by \code{\link{ldats_classic_control}}.}
 }
 \value{
 \code{list} containing the static 

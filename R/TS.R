@@ -1,12 +1,6 @@
 ##
 #
-#  working in here 
-#
-#  looks pretty nice!
-#
-#  generally pretty well working, needs to get tidied up considerably tho
-#  pull redundant code out into functions etc
-#   and figure out better namings etc
+#  working in here on documentation and follow through
 #  also make sure when no change point that it still says estimating regressor
 
 
@@ -85,17 +79,19 @@ prep_TS_models <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0,
 
 }
 
+
+
 select_TS <- function(TSs, control = list()){
 
   vals <- measure_TS(TSs = TSs, control = control)
-  fun <- control$selector_function
+  fun <- control$selector
   args <- update_list(control$selector_args, x = vals)
   selection <- do.call(what = fun, args = args)
   TSs[selection]  
 }
 
 measure_TS <- function(TSs, control = list()){
-  fun <- control$measurer_function
+  fun <- control$measurer
   args <- control$measurer_args
   nTSs <- length(TSs)
   vals <- rep(NA, nTSs)
@@ -109,8 +105,6 @@ measure_TS <- function(TSs, control = list()){
   vals
 }
 
-
-
 package_TS <- function(selected_TSs, TSs, control = list()){
   out <- list(selected_TSs = selected_TSs, TSs = TSs, control = control)
   class(out) <- c("TS_set", "list")
@@ -119,37 +113,95 @@ package_TS <- function(selected_TSs, TSs, control = list()){
 
 
 
-
-
-
-TS_control <- function(response = "multinom",
+#' @title Create the controls list for the Time Series model
+#'
+#' @description This function provides a simple creation and definition of a
+#'   list used to control the time series model fit occurring within 
+#'   \code{\link{TS}}. 
+#'
+#' @param response \code{character} element indicating the response variable 
+#'   used in the time series. \cr \cr
+#'   Must have a corresponding \code{<response>_TS} function.
+#'
+#' @param summary_prob Probability used for summarizing the posterior 
+#'   distributions (via the highest posterior density interval, see
+#'   \code{\link[coda]{HPDinterval}}).
+#'
+#' @param quiet \code{logical} indicator of whether the model should run 
+#'   quietly (if \code{FALSE}, a progress bar and notifications are printed).
+#'
+#' @param soften \code{logical} indicator of whether the model should error 
+#'   softly or if errors should trigger a full-stop to the pipeline.
+#'
+#' @param method \code{function} used to drive the sampler of the TS
+#'   models; \code{method} defines and operates the computational procedure.
+#'   \cr \cr
+#'   Current pre-built options include \code{\link{ldats_classic}}.
+#'
+#' @param method_args \code{list} of (named) arguments to be used in 
+#'   \code{method} via \code{\link{do.call}}. 
+#'   \cr \cr
+#'   Could be managed via a \code{<method>_control} function like
+#'   \code{\link{ldats_classic_control}}.
+#'
+#' @param measurer \code{function} used in evaluation of the TS
+#'   models; \code{measurer} creates a value for each model.
+#'
+#' @param measurer_args \code{list} of (named) arguments to be used in 
+#'   \code{measurer} via \code{\link{do.call}}. 
+#'
+#' @param selector \code{function} usde in evaluation of the TS
+#'   models; \code{selector} operates on the values to choose the models. 
+#'
+#' @param selector_args \code{list} of (named) arguments to be used in 
+#'   \code{selector} via \code{\link{do.call}}. 
+#'
+#' @param ... Not passed along to the output, rather included to allow for
+#'   automated removal of unneeded controls.
+#'
+#' @return \code{list}, with named elements corresponding to the arguments.
+#'
+#' @examples
+#'   TS_control()
+#'
+#' @export
+#'
+TS_control <- function(model = sequential_TS,
+                       model_args = list(),
+                       response = "multinom",
+                       response_args = list(),
                        method = "ldats_classic",
-                       method_args = list(ntemps = 6, penultimate_temp = 2^6, 
-                                          ultimate_temp = 1e10, q = 0, 
-                                          nit = 1e4, magnitude = 12, 
-                                          burnin = 0, thin_frac = 1, 
-                                          memoise = TRUE,
-                                          quiet = FALSE),
+                       method_args = ldats_classic_control(),
                        summary_prob = 0.95,
-                       measurer_function = AIC,
+                       measurer = AIC,
                        measurer_args = list(),
-                       selector_function = which.min,
+                       selector = which.min,
                        selector_args = list(), 
                        soften = TRUE, 
-                       quiet = FALSE){
+                       quiet = FALSE, ...){
   list(response = response, method = method, method_args = method_args, 
-       measurer_function = measurer_function, measurer_args = measurer_args, 
-       selector_function = selector_function, selector_args = selector_args,
+       measurer = measurer, measurer_args = measurer_args, 
+       selector = selector, selector_args = selector_args,
        summary_prob = summary_prob, soften = soften, quiet = quiet)
 }
 
 
 
-
-
-
-
-
+#' @title Print a Time Series model 
+#'
+#' @description Convenience function to print only the most important 
+#'   components of a \code{TS}-class object fit by 
+#'   \code{\link{sequential_TS}}.
+#'
+#' @param x Class \code{TS_fit} object to be printed.
+#'
+#' @param ... Not used, simply included to maintain method compatibility.
+#'
+#' @return The non-hidden parts of \code{x} are printed and returned 
+#'   invisibly as a \code{list}.
+#'
+#' @export 
+#'
 print.TS <- function(x, ...){
   hid <- attr(x, "hidden")
   notHid <- !(names(x) %in% hid)

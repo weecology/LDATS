@@ -10,7 +10,8 @@ ldats_classic(TS, control = list())
 \item{TS}{\code{list} time series model object.}
 
 \item{control}{A \code{list} of parameters to control the fitting of the
-Values not input assume defaults set by \code{\link{TS_control}}.}
+time series model via the LDATS classic ptMCMC method. Values not input 
+assume defaults set by \code{\link{ldats_classic_control}}.}
 }
 \value{
 \code{list} of changepoint locations, log likelihoods, and model

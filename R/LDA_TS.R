@@ -17,26 +17,48 @@ LDA_TS <- function(data, topics = 2, reps = 1, formulas = ~ 1,
 
 
 
-LDA_TS_control <- function(LDA_function = topicmodels_LDA, 
-                        LDA_args = list(method = "VEM", seeded = TRUE),
-                        LDA_measurer_function = AIC,
-                        LDA_measurer_args = list(),
-                        LDA_selector_function = which.min,
-                        LDA_selector_args = list(), 
-                        nsubsets = 1,
-                        subset_rule = NULL,
-                        soften = TRUE, 
-                        quiet = FALSE){
+LDA_TS_control <- function(LDA_model = topicmodels_LDA, 
+                           LDA_model_args = 
+                             list(method = "VEM", seeded = TRUE),
+                           LDA_measurer = AIC,
+                           LDA_measurer_args = list(),
+                           LDA_selector = which.min,
+                           LDA_selector_args = list(), 
+                           TS_model = sequential_TS,
+                           TS_model_args = list(),
+                           TS_response = "multinom",
+                           TS_response_args = list(),
+                           TS_method = "ldats_classic",
+                           TS_method_args = ldats_classic_control(),
+                           TS_measurer = AIC,
+                           TS_measurer_args = list(),
+                           TS_selector = which.min,
+                           TS_selector_args = list(),
+                           nsubsets = 1,
+                           subset_rule = NULL,
+                           summary_prob = 0.95,
+                           soften = TRUE, 
+                           quiet = FALSE, ...){
 
-  LDA_control <- LDA_control(LDA_function = LDA_function, LDA_args = LDA_args, 
-                            measurer_function = LDA_measurer_function, 
-                            measurer_args = LDA_measurer_args, 
-                            selector_function = LDA_selector_function, 
-                            selector_args = LDA_selector_args,
-                            nsubsets = nsubsets, subset_rule = subset_rule,
-                            soften = soften, quiet = quiet)
+  LDA_control <- LDA_control(model = LDA_model, model_args = LDA_model_args, 
+                             measurer = LDA_measurer, 
+                             measurer_args = LDA_measurer_args, 
+                             selector = LDA_selector, 
+                             selector_args = LDA_selector_args,
+                             nsubsets = nsubsets, subset_rule = subset_rule,
+                             soften = soften, quiet = quiet)
 
-  TS_control <- TS_control(soften = soften, quiet = quiet)
+  TS_control <- TS_control(response = TS_response, 
+                           response_args = TS_response_args, 
+                           method = TS_method, 
+                           method_args = TS_method_args, 
+                           measurer = TS_measurer,
+                           measurer_args = TS_measurer_args, 
+                           selector = TS_selector, 
+                           selector_args = TS_selector_args,
+                           summary_prob = summary_prob, 
+                           soften = soften, quiet = quiet)
+
 
   list(LDA_control = LDA_control, TS_control = TS_control, 
        nsubsets = nsubsets, subset_rule = subset_rule,

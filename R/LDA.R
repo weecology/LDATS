@@ -31,19 +31,19 @@ LDA <- function(data, topics = 2, reps = 1, control = list()){
 }
 
 
-LDA_control <- function(LDA_function = topicmodels_LDA, 
-                        LDA_args = list(method = "VEM", seeded = TRUE),
-                        measurer_function = AIC,
+LDA_control <- function(model = topicmodels_LDA, 
+                        model_args = list(method = "VEM", seeded = TRUE),
+                        measurer = AIC,
                         measurer_args = list(),
-                        selector_function = which.min,
+                        selector = which.min,
                         selector_args = list(), 
                         nsubsets = 1,
                         subset_rule = NULL,
                         soften = TRUE, 
-                        quiet = FALSE){
-  list(LDA_function = LDA_function,  LDA_args = LDA_args, 
-       measurer_function = measurer_function, measurer_args = measurer_args, 
-       selector_function = selector_function, selector_args = selector_args,
+                        quiet = FALSE, ...){
+  list(model = model,  model_args = model_args, 
+       measurer = measurer, measurer_args = measurer_args, 
+       selector = selector, selector_args = selector_args,
        nsubsets = nsubsets, subset_rule = subset_rule,
        soften = soften, quiet = quiet)
 }
@@ -74,8 +74,8 @@ prep_LDA_models <- function(data, topics = 2, reps = 1, control = list()){
 LDA_call <- function(LDA = NULL, control = list()){
   control <- do.call("LDA_control", control)  
   LDA_msg(LDA = LDA, quiet = control$quiet)
-  fun <- control$LDA_function
-  args <- update_list(control$LDA_args, LDA = LDA)
+  fun <- control$model
+  args <- update_list(control$model_args, LDA = LDA)
   soft_call(fun = fun, args = args, soften = control$soften)
 }
 
@@ -158,14 +158,14 @@ select_LDA <- function(LDAs = list(), control = list()){
     return(LDAs)
   }
   vals <- measure_LDA(LDAs = LDAs, control = control)
-  fun <- control$selector_function
+  fun <- control$selector
   args <- update_list(control$selector_args, x = vals)
   selection <- do.call(what = fun, args = args)
   LDAs[selection]  
 }
 
 measure_LDA <- function(LDAs = list(), control = list()){
-  fun <- control$measurer_function
+  fun <- control$measurer
   args <- control$measurer_args
   nLDAs <- length(LDAs)
   vals <- rep(NA, nLDAs)

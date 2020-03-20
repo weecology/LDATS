@@ -6,7 +6,8 @@
 #' @param TS \code{list} time series model object. 
 #'
 #' @param control A \code{list} of parameters to control the fitting of the
-#'   Values not input assume defaults set by \code{\link{TS_control}}.
+#'   time series model via the LDATS classic ptMCMC method. Values not input 
+#'   assume defaults set by \code{\link{ldats_classic_control}}.
 #'
 #' @return \code{list} of changepoint locations, log likelihoods, and model
 #'  diagnostics.
@@ -14,7 +15,7 @@
 #' @export
 #'
 ldats_classic <- function(TS, control = list()){
-
+  control <- do.call("ldats_classic_control", control)
   saves <- prep_saves(TS = TS, control = control)
 
   inputs <- prep_ptMCMC_inputs(TS = TS, control = control)
@@ -33,6 +34,59 @@ ldats_classic <- function(TS, control = list()){
 
   process_saves(saves = saves, control = control)
 
+}
+
+
+#' @title Create the controls list for the classic LDATS ptMCMC sampler
+#'
+#' @description This function provides a simple creation and definition of a
+#'   list used to control time series model fitting via the
+#'   \code{\link{ldats_classic}} sampler. 
+#'
+#' @param ntemps \code{integer} number of temperatures (chains) to use in the 
+#'   ptMCMC algorithm.
+#'
+#' @param penultimate_temp Penultimate temperature in the ptMCMC sequence.
+#'
+#' @param ultimate_temp Ultimate temperature in the ptMCMC sequence.
+#'
+#' @param q Exponent controlling the ptMCMC temperature sequence from the 
+#'   focal chain (reference with temperature = 1) to the penultimate chain. 0
+#'   (default) implies a geometric sequence. 1 implies squaring before 
+#'   exponentiating.
+#'
+#' @param nit \code{integer} number of iterations (steps) used in the ptMCMC
+#'   algorithm.
+#'
+#' @param magnitude Average magnitude (defining a geometric distribution)
+#'   for the proposed step size in the ptMCMC algorithm.
+#'
+#' @param burnin \code{integer} number of iterations to remove from the 
+#'   beginning of the ptMCMC algorithm.
+#'
+#' @param thin_frac Fraction of iterations to retain, must be \eqn{(0, 1]},
+#'   and the default value of 1 represents no thinning.
+#'
+#'
+#' @param quiet \code{logical} indicator of whether the model should run 
+#'   quietly (if \code{FALSE}, a progress bar and notifications are printed).
+#'
+#' @param memoise \code{logical} indicator of whether the response 
+#'   function should be memoised (via \code{\link[memoise]{memoise}}). 
+#'
+#' @return \code{list}, with named elements corresponding to the arguments.
+#'
+#' @export
+#'
+ldats_classic_control <- function(ntemps = 6, penultimate_temp = 2^6, 
+                                  ultimate_temp = 1e10, q = 0, 
+                                  nit = 1e4, magnitude = 12, 
+                                  burnin = 0, thin_frac = 1, 
+                                  memoise = TRUE, quiet = FALSE){
+  list(ntemps = ntemps, penultimate_temp = penultimate_temp, 
+       ultimate_temp = ultimate_temp, q = q, nit = nit, 
+       magnitude = magnitude, burnin = burnin, thin_frac = thin_frac, 
+       memoise = memoise, quiet = quiet)
 }
 
 
@@ -190,8 +244,8 @@ swap_chains <- function(chainsin, inputs, ids){
 #' @param TS \code{list} time series model object. 
 #'
 #' @param control A \code{list} of parameters to control the fitting of the
-#'   Time Series model. Values not input assume defaults set by 
-#'   \code{\link{TS_control}}.
+#'   time series model via the LDATS classic ptMCMC method. Values not input 
+#'   assume defaults set by \code{\link{ldats_classic_control}}.
 #'
 #' @param cpts The existing matrix of change points.
 #'
@@ -205,7 +259,7 @@ swap_chains <- function(chainsin, inputs, ids){
 #' @export
 #'
 prep_cpts <- function(TS, control = list()){
-
+  control <- do.call("ldats_classic_control", control)
   data <- TS$data$train$ts_data
   temps <- prep_temp_sequence(TS = TS, control = control)
   ntemps <- length(temps)
@@ -257,8 +311,8 @@ update_cpts <- function(cpts, swaps){
 #'   includes the relevant control parameters.
 #'
 #' @param control A \code{list} of parameters to control the fitting of the
-#'   Time Series model. Values not input assume defaults set by 
-#'   \code{\link{TS_control}}.
+#'   time series model via the LDATS classic ptMCMC method. Values not input 
+#'   assume defaults set by \code{\link{ldats_classic_control}}.
 #'
 #' @param TS \code{list} time series model object. 
 #'
@@ -270,6 +324,7 @@ update_cpts <- function(cpts, swaps){
 #' @export
 #'
 prep_temp_sequence <- function(TS, control = list()){
+  control <- do.call("ldats_classic_control", control)
   ntemps <- control$ntemps
   penultimate_temp <- control$penultimate_temp
   ultimate_temp <- control$ultimate_temp
@@ -297,7 +352,8 @@ prep_temp_sequence <- function(TS, control = list()){
 #' @param TS \code{list} time series model object. 
 #'
 #' @param control A \code{list} of parameters to control the fitting of the
-#'   Time Series model.
+#'   time series model via the LDATS classic ptMCMC method. Values not input 
+#'   assume defaults set by \code{\link{ldats_classic_control}}.
 #'
 #' @param i \code{integer} iteration index. 
 #'
@@ -315,6 +371,7 @@ prep_temp_sequence <- function(TS, control = list()){
 #' @export
 #'
 prep_saves <- function(TS, control = list()){
+  control <- do.call("ldats_classic_control", control)
   nchangepoints <- TS$nchangepoints
   ntemps <- control$ntemps
   nit <- control$nit
@@ -345,6 +402,7 @@ update_saves <- function(i, saves, steps, swaps){
 #' @export
 #'
 process_saves <- function(saves, control = list()){
+  control <- do.call("ldats_classic_control", control)
   nit <- control$nit
   iters <- 1:nit
   if (control$burnin > 0){
@@ -388,7 +446,8 @@ process_saves <- function(saves, control = list()){
 #' @param TS \code{list} time series model object. 
 #'
 #' @param control A \code{list} of parameters to control the fitting of the
-#'   Time Series model.
+#'   time series model via the LDATS classic ptMCMC method. Values not input 
+#'   assume defaults set by \code{\link{ldats_classic_control}}.
 #'
 #' @return \code{list} containing the static 
 #'   inputs for use within the ptMCMC algorithm for estimating change points. 
@@ -396,6 +455,7 @@ process_saves <- function(saves, control = list()){
 #' @export
 #'
 prep_ptMCMC_inputs <- function(TS, control = list()){
+  control <- do.call("ldats_classic_control", control)
   fun <- eval(parse(text = paste0(TS$response, "_TS")))
   fun <- memoise_fun(fun, control$memoise)
   list(control = control, 
@@ -425,9 +485,8 @@ prep_ptMCMC_inputs <- function(TS, control = list()){
 #' @param TS \code{list} time series model object. 
 #'
 #' @param control A \code{list} of parameters to control the fitting of the
-#'   Time Series model Relevant here is 
-#'   \code{magnitude}, which controls the magnitude of the step size (is the 
-#'   average of the geometric distribution). 
+#'   time series model via the LDATS classic ptMCMC method. Values not input 
+#'   assume defaults set by \code{\link{ldats_classic_control}}.
 #'
 #' @return \code{list} of two \code{matrix} elements: [1] the size of the 
 #'   proposed step for each iteration of each chain and [2] the identity of 
@@ -437,6 +496,7 @@ prep_ptMCMC_inputs <- function(TS, control = list()){
 #' @export
 #'
 prep_proposal_dist <- function(TS, control = list()){
+  control <- do.call("ldats_classic_control", control)
   nchangepoints <- TS$nchangepoints
   ntemps <- control$ntemps
   nit <- control$nit
@@ -471,7 +531,8 @@ prep_proposal_dist <- function(TS, control = list()){
 #' @param TS \code{list} time series model object. 
 #'
 #' @param control A \code{list} of parameters to control the fitting of the
-#'   Values not input assume defaults set by \code{\link{TS_control}}.
+#'   time series model via the LDATS classic ptMCMC method. Values not input 
+#'   assume defaults set by \code{\link{ldats_classic_control}}.
 #'
 #' @param ids The existing vector of chain ids.
 #'
@@ -482,6 +543,7 @@ prep_proposal_dist <- function(TS, control = list()){
 #' @export
 #'
 prep_ids <- function(TS, control = list()){
+  control <- do.call("ldats_classic_control", control)
   if (!is.numeric(control$ntemps) || any(control$ntemps %% 1 != 0)){
     stop("ntemps must be integer-valued")
   }

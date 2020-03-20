@@ -11,9 +11,8 @@ prep_proposal_dist(TS, control = list())
 \item{TS}{\code{list} time series model object.}
 
 \item{control}{A \code{list} of parameters to control the fitting of the
-Time Series model Relevant here is 
-\code{magnitude}, which controls the magnitude of the step size (is the 
-average of the geometric distribution).}
+time series model via the LDATS classic ptMCMC method. Values not input 
+assume defaults set by \code{\link{ldats_classic_control}}.}
 }
 \value{
 \code{list} of two \code{matrix} elements: [1] the size of the 

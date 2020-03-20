@@ -14,7 +14,8 @@ update_ids(ids, swaps)
 \item{TS}{\code{list} time series model object.}
 
 \item{control}{A \code{list} of parameters to control the fitting of the
-Values not input assume defaults set by \code{\link{TS_control}}.}
+time series model via the LDATS classic ptMCMC method. Values not input 
+assume defaults set by \code{\link{ldats_classic_control}}.}
 
 \item{ids}{The existing vector of chain ids.}
 
