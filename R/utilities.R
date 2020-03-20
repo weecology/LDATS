@@ -20,6 +20,67 @@ time_order_data <- function(x, timename = "time"){
   x[time_order , ]
 }
 
+
+#' @title Initialize and tick through the progress bar
+#'
+#' @description \code{prep_pbar} creates and \code{update_pbar} steps
+#'   through the progress bars (if desired) in, e.g., \code{\link{TS}}
+#'
+#' @param control A \code{list} of parameters to control the fitting of the
+#'   iterative model.
+#'
+#' @param bar_type \code{character} value of possible types of progress bars.
+#'   Currently available options are "rho" (for change point locations) and
+#'   "eta" (for time series regressors).
+#'
+#' @param nr \code{integer} number of unique realizations, needed when
+#'   \code{bar_type} = "eta".
+#'
+#' @param pbar The progress bar object returned from \code{prep_pbar}.
+#'
+#' @return 
+#'   \code{prep_pbar}: the initialized progress bar object. \cr \cr
+#'   \code{update_pbar}: the ticked-forward \code{pbar}.
+#'
+#' @export
+#'
+prep_pbar <- function(control = list(), bar_type = "rho", nr = NULL){
+  if (!(bar_type %in% c("eta", "rho"))){
+    stop("bar_type must be eta or rho")
+  }
+  if (!is.null(nr)){
+    if (!is.numeric(nr) || any(nr %% 1 != 0)){
+      stop("nr must be integer-valued")
+    }
+  }
+  form <- "  [:bar] :percent eta: :eta"
+  if (bar_type == "rho"){
+    msg <- "  Estimating change point distribution"
+    out <- progress_bar$new(form, control$nit, width = 60)
+  }
+  if (bar_type == "eta"){
+    msg <- "  Estimating regressor distribution"
+    out <- progress_bar$new(form, nr, width = 60)
+  }
+  messageq(msg, control$quiet)
+  out
+}
+
+#' @rdname prep_pbar
+#'
+#' @export
+#'
+update_pbar <- function(pbar, control = list()){
+  if (!("progress_bar" %in% class(pbar))){
+    stop("pbar must be of class progress_bar")
+  }
+  if (control$quiet){
+    return()
+  }
+  pbar$tick()
+}
+
+
 #' @title Determine the depth of a list
 #'
 #' @description Evaluate an input for the depth of its nesting. 

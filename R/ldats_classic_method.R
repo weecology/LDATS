@@ -95,8 +95,6 @@ count_trips <- function(ids){
 
 
 
-
-
 #' @title Conduct a set of among-chain swaps for the ptMCMC algorithm
 #'
 #' @description This function handles the among-chain swapping based on 
@@ -256,8 +254,7 @@ update_cpts <- function(cpts, swaps){
 #'   This function was designed to work within \code{\link{TS}} and 
 #'   \code{\link{est_changepoints}} specifically, but has been generalized
 #'   and would work with any ptMCMC model as long as \code{control}
-#'   includes the relevant control parameters (and provided that the 
-#'   \code{\link{check_control}} function and its use here are generalized).
+#'   includes the relevant control parameters.
 #'
 #' @param control A \code{list} of parameters to control the fitting of the
 #'   Time Series model. Values not input assume defaults set by 

@@ -24,8 +24,7 @@ Create the series of temperatures used in the ptMCMC
   This function was designed to work within \code{\link{TS}} and 
   \code{\link{est_changepoints}} specifically, but has been generalized
   and would work with any ptMCMC model as long as \code{control}
-  includes the relevant control parameters (and provided that the 
-  \code{\link{check_control}} function and its use here are generalized).
+  includes the relevant control parameters.
 }
 \examples{
   prep_temp_sequence()
