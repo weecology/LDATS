@@ -1,6 +1,0 @@
-need to do
-
-sequential_TS_control
-
-multinom_TS_control
-irl_TS_control

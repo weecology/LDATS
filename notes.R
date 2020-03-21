@@ -1,36 +1,28 @@
-to do
+# work on making formulas be able to be repeatedly prepped
+# its not really right to use gamma as a name for ilr 
+# lots of tidying to do!
 
-ldats classic method/ptmcmc
-  a. tidy up function naming and calling
-  b. documentation
-  c. cut old script
-  d. make sure memoization is located properly
+devtools::load_all()
 
-multinom_TS/ilr_TS/others
-  a. generalize functions more
-  b. drop special classes 
-  c. documentation
-  
-  
+   data(rodents)
 
-time_order_data ... hmmmmm
+data <- rodents
+topics = 2 
+reps = 2
+formulas = ~ 1
+nchangepoints = 0:2
+timename = "newmoon"
+weights = TRUE
+control = list()
+control <- do.call("LDA_TS_control", control)
+data <- conform_data(data = data, control = control)
+LDAs <- LDA(data = data, topics = topics, reps = reps, 
+              control = control$LDA_control)
+control$TS_control$method_args$nit <- 100
+TSs <- TS(LDAs = LDAs, data = data, formulas = formulas, 
+          nchangepoints = nchangepoints, timename = timename, 
+          weights = weights, control = control$TS_control)
 
-its not really right to use gamma as a name for ilr 
-standardized output from LDA functions
-s3 object with
-params (however they're provided, collated into a list)
-document_topic_table
-log_likelihood as a logLik object
-data used to fit the model
-
-def still in the thick of this
-just need to take a solid break 
-currently working in LDA to get it to work with function args
-
-
-LDA_set is now LDA and TS_on_LDA is now TS
-
-trying to really streamline the code at each level of the pipeline and such
 
 now LDA could be any of the linquistic decomposition analyses or whatever
 including any of a number of "LDA" functions or models, so i'm revoking
@@ -38,17 +30,12 @@ the importing of LDA from topicmodels but keeping topicmodels imported
 to allow calling of topicmodels::LDA from inside LDA (the default!)
 
 
-generalizing multinom_TS to be compositional_TS
-
-in the multi_LDA_TS
-  in test_LDA_TS
-  requires a predict.LDA_TS
-
-LDAT_TS
-  developing predict method
-
-check seeds is now check_nreps
 seed is rep
 
 introduction of soften logical variable
 designed to help soften errors in pipelines through wrapping in tryCatch
+
+LDA_set is now LDA and TS_on_LDA is now TS
+
+
+standardized output from LDA and TS functions

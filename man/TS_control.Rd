@@ -9,7 +9,7 @@ TS_control(model = sequential_TS, model_args = list(),
   method = "ldats_classic", method_args = ldats_classic_control(),
   summary_prob = 0.95, measurer = AIC, measurer_args = list(),
   selector = which.min, selector_args = list(), soften = TRUE,
-  quiet = FALSE)
+  quiet = FALSE, ...)
 }
 \arguments{
 \item{response}{\code{character} element indicating the response variable 
@@ -48,6 +48,9 @@ softly or if errors should trigger a full-stop to the pipeline.}
 
 \item{quiet}{\code{logical} indicator of whether the model should run 
 quietly (if \code{FALSE}, a progress bar and notifications are printed).}
+
+\item{...}{Not passed along to the output, rather included to allow for
+automated removal of unneeded controls.}
 }
 \value{
 \code{list}, with named elements corresponding to the arguments.

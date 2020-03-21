@@ -67,7 +67,7 @@
 ilr_TS <- function(data, formula, changepoints = NULL, 
                    timename = "time", weights = NULL, 
                    control = list()){
-
+  control <- do.call("ilr_TS_control", control)
   if (!verify_changepoint_locations(data, changepoints, timename)){
     out <- list("chunk models" = NA, "logLik" = -Inf, "chunks" = NA)
     return(out)
@@ -102,3 +102,24 @@ ilr_TS_chunk <- function(data, formula, chunk, timename = "time",
   fit 
 }
 
+
+
+#' @title Create the controls list for the ILR Time Series model
+#'
+#' @description This function provides a simple creation and definition of a
+#'   list used to control the time series model fit occurring within 
+#'   \code{\link{ilr_TS}}. 
+#'
+#' @param quiet \code{logical} indicator of whether the model should run 
+#'   quietly (if \code{FALSE}, a progress bar and notifications are printed).
+#'
+#' @param ... Not passed along to the output, rather included to allow for
+#'   automated removal of unneeded controls.
+#'
+#' @return \code{list}, with named elements corresponding to the arguments.
+#'
+#' @export
+#'
+ilr_TS_control <- function(quiet = FALSE, ...){
+  list(quiet = quiet)
+}

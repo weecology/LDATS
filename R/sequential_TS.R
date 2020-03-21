@@ -126,7 +126,7 @@ package_sequential_TS <- function(TS, rho_dist, eta_dist, control = list()){
   if(is.null(rho_dist)){
     focal_rho_dist <- NULL
     data <- TS$data$train$ts_data
-    fun <- eval(parse(text = paste0(TS$response, "_TS")))
+    fun <- TS$response
     args <- list(data = data, formula = TS$formula, changepoints = NULL, 
                  timename = TS$timename, weights = TS$weights, 
                  control = control$method_args)
@@ -188,7 +188,11 @@ est_regressors <- function(rho_dist, TS, control = list()){
   control <- do.call("sequential_TS_control", control)
   data <- TS$data$train$ts_data
   if(is.null(rho_dist)){
-    fun <- eval(parse(text = paste0(TS$response, "_TS")))
+
+    msg <- "    - estimating regressor distribution"
+    messageq(msg, control$quiet)
+
+    fun <- TS$response
     args <- list(data = data, formula = TS$formula, changepoints = NULL, 
                  timename = TS$timename, weights = TS$weights, 
                  control = control$method_args)
@@ -231,7 +235,7 @@ est_regressors <- function(rho_dist, TS, control = list()){
 
 
     data <- TS$data$train$ts_data
-    fun <- eval(parse(text = paste0(TS$response, "_TS")))
+    fun <- TS$response
     fun <- memoise_fun(fun, control$method_args$memoise)
     args <- list(data = data, formula = TS$formula, changepoints = cpts, 
                  timename = TS$timename, weights = TS$weights, 

@@ -6,7 +6,7 @@
 \usage{
 sequential_TS_control(method = "ldats_classic",
   method_args = ldats_classic_control(), summary_prob = 0.95,
-  soften = TRUE, quiet = FALSE)
+  soften = TRUE, quiet = FALSE, ...)
 }
 \arguments{
 \item{method}{\code{function} used to drive the sampler of the TS
@@ -29,6 +29,9 @@ softly or if errors should trigger a full-stop to the pipeline.}
 
 \item{quiet}{\code{logical} indicator of whether the model should run 
 quietly (if \code{FALSE}, a progress bar and notifications are printed).}
+
+\item{...}{Not passed along to the output, rather included to allow for
+automated removal of unneeded controls.}
 
 \item{response}{\code{character} element indicating the response variable 
 used in the time series. \cr \cr

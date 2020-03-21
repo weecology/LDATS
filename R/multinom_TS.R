@@ -71,7 +71,7 @@
 multinom_TS <- function(data, formula, changepoints = NULL, 
                         timename = "time", weights = NULL, 
                         control = list()){
-
+  control <- do.call("multinom_TS_control", control)
   if (!verify_changepoint_locations(data, changepoints, timename)){
     out <- list("chunk models" = NA, "logLik" = -Inf, "chunks" = NA)
     class(out) <- c("TS_fit", "list")
@@ -107,3 +107,29 @@ multinom_TS_chunk <- function(data, formula, chunk, timename = "time",
   fit$timevals <- time_obs[which(in_chunk)]
   fit 
 }
+
+
+#' @title Create the controls list for the multinomial Time Series model
+#'
+#' @description This function provides a simple creation and definition of a
+#'   list used to control the time series model fit occurring within 
+#'   \code{\link{multinom_TS}}. 
+#'
+#' @param lambda \code{numeric} "weight" decay term used to set the prior
+#'   on the regressors within each chunk-level model. Defaults to 0, 
+#'   corresponding to a fully vague prior.
+#'
+#' @param quiet \code{logical} indicator of whether the model should run 
+#'   quietly (if \code{FALSE}, a progress bar and notifications are printed).
+#'
+#' @param ... Not passed along to the output, rather included to allow for
+#'   automated removal of unneeded controls.
+#'
+#' @return \code{list}, with named elements corresponding to the arguments.
+#'
+#' @export
+#'
+multinom_TS_control <- function(lambda = 0, quiet = FALSE, ...){
+  list(lambda = lambda, quiet = quiet)
+}
+

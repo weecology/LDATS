@@ -274,7 +274,7 @@ prep_cpts <- function(TS, control = list()){
   }
   lls <- rep(NA, ntemps)
   for (i in 1:ntemps){
-    fun <- eval(parse(text = paste0(TS$response, "_TS")))
+    fun <- TS$reponse
     fun <- memoise_fun(fun, control$memoise)
     args <- list(data = data, formula = TS$formula, changepoints = cps[ , i], 
                  timename = TS$timename, weights = TS$weights, 
@@ -456,7 +456,7 @@ process_saves <- function(saves, control = list()){
 #'
 prep_ptMCMC_inputs <- function(TS, control = list()){
   control <- do.call("ldats_classic_control", control)
-  fun <- eval(parse(text = paste0(TS$response, "_TS")))
+  fun <- TS$response
   fun <- memoise_fun(fun, control$memoise)
   list(control = control, 
               temps = prep_temp_sequence(TS = TS, control = control), 

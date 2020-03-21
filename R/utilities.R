@@ -55,11 +55,11 @@ prep_pbar <- function(control = list(), bar_type = "rho", nr = NULL){
   }
   form <- "  [:bar] :percent eta: :eta"
   if (bar_type == "rho"){
-    msg <- "  Estimating change point distribution"
+    msg <- "    - estimating change point distribution"
     out <- progress_bar$new(form, control$nit, width = 60)
   }
   if (bar_type == "eta"){
-    msg <- "  Estimating regressor distribution"
+    msg <- "    - estimating regressor distribution"
     out <- progress_bar$new(form, nr, width = 60)
   }
   messageq(msg, control$quiet)
