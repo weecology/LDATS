@@ -4,7 +4,7 @@
 \alias{sequential_TS_control}
 \title{Create the controls list for a sequential Time Series model}
 \usage{
-sequential_TS_control(method = "ldats_classic",
+sequential_TS_control(method = ldats_classic,
   method_args = ldats_classic_control(), summary_prob = 0.95,
   soften = TRUE, quiet = FALSE, ...)
 }

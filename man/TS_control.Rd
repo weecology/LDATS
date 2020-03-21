@@ -4,9 +4,9 @@
 \alias{TS_control}
 \title{Create the controls list for the Time Series model}
 \usage{
-TS_control(model = sequential_TS, model_args = list(),
-  response = "multinom", response_args = list(),
-  method = "ldats_classic", method_args = ldats_classic_control(),
+TS_control(model = sequential_TS, model_args = sequential_TS_control(),
+  response = multinom_TS, response_args = multinom_TS_control(),
+  method = ldats_classic, method_args = ldats_classic_control(),
   summary_prob = 0.95, measurer = AIC, measurer_args = list(),
   selector = which.min, selector_args = list(), soften = TRUE,
   quiet = FALSE, ...)
@@ -15,6 +15,12 @@ TS_control(model = sequential_TS, model_args = list(),
 \item{response}{\code{character} element indicating the response variable 
 used in the time series. \cr \cr
 Must have a corresponding \code{<response>_TS} function.}
+
+\item{response_args}{\code{list} of (named) arguments to be used in 
+\code{response} via \code{\link{do.call}}. 
+\cr \cr
+Could be managed via a \code{<reponse>_TS_control} function like
+\code{\link{multinom_TS_control}}.}
 
 \item{method}{\code{function} used to drive the sampler of the TS
 models; \code{method} defines and operates the computational procedure.

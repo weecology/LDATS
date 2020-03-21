@@ -2,6 +2,17 @@
 # its not really right to use gamma as a name for ilr 
 # lots of tidying to do!
 
+
+known to dos
+
+package LDA_TS
+check functions
+utilities
+plotting functions
+simulate
+generalize ilr to simplical to allow for other transforms?
+
+
 devtools::load_all()
 
    data(rodents)
@@ -37,5 +48,38 @@ designed to help soften errors in pipelines through wrapping in tryCatch
 
 LDA_set is now LDA and TS_on_LDA is now TS
 
-
 standardized output from LDA and TS functions
+
+
+# LDA is now functionally what LDA_set was before
+# "reps" replaces "nseeds" but otherwise things are the same generally at api
+# the control list is expanded to now include a base LDA modeling function
+# and then arguments for all three functions, it also gets the subset info
+# because it may be needed, and in addition to quiet a boolean "soften"
+# which softens errors during model running
+# prep_LDA_models combines the data (conforming if needed), topics, 
+# reps, and subsets to prep the list of model inputs, that will actually be
+# appended to with the results, which are done at the top with LDA_call.
+# LDA_call prints the message, and then preps the input arguments as used
+# in a do.call on the function given in the control list. there are
+# examples of both a generalized topicmodels LDA function wrapper (works
+# with Gibbs sampling approach too!) and an "identity" 1-topic function.
+# these functions allow for pre- and post-processing around the main model
+# function without having to impact the general LDA_call
+# select_LDA does a general measuring and then selecting, which now allows
+# for arguments to be passed in!
+
+
+# data can come into LDA_TS LDA TS in a variety of forms, and depending on 
+# usages, might take a variety of different forms
+# the purpose of this function is to generalize and extract the code used
+# to shuddle between data formats from functions / replace with a single line
+# it's still a work in progress and needs more extensive usage exploration,
+# as it's going to be a workhorse function. 
+currently its not saving the test/train split explicitly,
+# just implicitly via the data encoding that exists. we should probably
+# shore this up a bit more for sure.
+# also this function is big and modularized a good degree already...it could
+# get chunked into subfunctions
+# there are functions for basic leave p out cross validation, including
+# both systematic and random approaches

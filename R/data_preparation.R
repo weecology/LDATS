@@ -1,34 +1,41 @@
-# data can come into LDA_TS LDA TS in a variety of forms, and depending on 
-# usages, might take a variety of different forms
-# the purpose of this function is to generalize and extract the code used
-# to shuddle between data formats from functions / replace with a single line
-# it's still a work in progress and needs more extensive usage exploration,
-# as it's going to be a workhorse function. 
-# this function makes use of a utility i brought over from portalcasting
-# called list_depth that recursively works through an object to tell you
-# how nested lists are. its extremely useful when you could have a list or
-# a list of multiple lists and need to easily distinguish
-# the idea is as follows: working up from the most elemental version
-# possible, if it's not a list, but the data are a term table, the covariate
-# table is added with assumed equispersed data like before and the data are
-# now a list
-# then, if it is a list but only a list of depth 1 (a list of two tables)
-# we actually need to wrap it in a list to make it depth 2...think of this
-# as a 1-subset data set. then, for a list of depth two, we need to 
-# potentially expand to a multiple-subset data set, to allow for cross valid
-# methods, for example. so the list of depth 2 is replicated out to 
-# create a longer list that is still depth 2 but is now of length 
-# control$nsubsets. and then the subsetting of the data occurs according to 
-# the control$subset_rule, and each depth-2 list is actually split to
-# a final level of train and test data, making the list depth 3
-# the training and testing data are saved as trimmed versions of the 
-# two tables. currently its not saving the test/train split explicitly,
-# just implicitly via the data encoding that exists. we should probably
-# shore this up a bit more for sure.
-# also this function is big and modularized a good degree already...it could
-# get chunked into subfunctions
-# there are functions for basic leave p out cross validation, including
-# both systematic and random approaches
+#' @title Conform data for LDATS modeling
+#'
+#' @description Given any of a variety of possible data input types 
+#'  (\code{data.frame}/\code{matrix}, \code{list}, \code{list} of 
+#'  \code{list}s, or \code{list} of \code{list} of \code{list}s) and 
+#'  controls, this produces a properly formatted set of data (sets) for 
+#'  LDATS modeling.
+#'
+#' @details This function makes use of the \code{\link{list_depth}}
+#'  utility that recursively works through an object to tell you
+#'  how nested a lists is. Working up from the most elemental version
+#'  possible, if it's not a \code{list}, but the data are a term table, the
+#'  covariate table is added with assumed equispersed data like before and
+#'  the data are now a \code{list}. Then, if it is a \code{list} but only a 
+#'  of depth 1 (a \code{list} of two tables), we need to wrap it in a 
+#'  \code{list} to make it depth-2, functionally a 1-subset data set. Then, 
+#'  for a \code{list} of depth two, we need to potentially expand to a 
+#'  multiple-subset data set, to allow for cross validtion methods, for 
+#'  example. So, the \code{list} of depth 2 is replicated out to create a 
+#'  longer \code{list} that is still depth 2 but is now of length 
+#'  \code{control$nsubsets}. Then, the subsetting of the data occurs 
+#'  according to the \code{control$subset_rule}, and each depth-2 \code{list}
+#'  is actually split to a final level of train and test subsets of the data,
+#'  making the \code{list} depth 3. \cr \cr
+#'  The training and testing data are saved as trimmed versions of the 
+#'  two tables. 
+#'
+#' @param data A document term table, \code{list} of document term and 
+#'   covariate tables, a list of training and test sets of the two tables,
+#'   or a list of multiple replicate splits of training and test sets of
+#'   the two tables. 
+#'
+#' @param control \code{list} of control options for the data conforming.
+#'
+#' @return \code{list} of properly formatted LDATS data.
+#'
+#' @export
+#'
 conform_data <- function(data, control = list()){
 
   depth <- list_depth(data)
@@ -163,31 +170,73 @@ conform_data <- function(data, control = list()){
 
 }
 
+#' @title Subset data sets 
+#'
+#' @description For use within, e.g., cross validation methods, these 
+#'  functions subdivide the data into testing and training subsets. \cr \cr
+#'  \code{null_rule} places all data in the training set. \cr \cr 
+#'  \code{random_loo} conducts randomized leave-one-out with no buffer. 
+#'   \cr \cr 
+#'  \code{systematic_loo} conducts systematic leave-one-out with no buffer. 
+#'   Assumes 1:1 between iteration and datum location to drop. \cr \cr 
+#'  \code{leave_p_out} is a fully flexible leave p out function allowing for 
+#'   asymmetric buffers and randomization. If \code{random = TRUE}, the test 
+#'   data are selected randomly, otherwise locations are used.
+#'
+#' @param data \code{data.frame} or \code{matrix} of data to be split.
+#'
+#' @param iteration \code{integer}-conformable value indicating which 
+#'  iteration through the process the current implementation is.
+#'
+#' @param p \code{integer}-conformable value of how many samples to leave out.
+#'
+#' @param pre,post \code{integer}-conformable values of how many samples
+#'  to include in the buffer around the focal left out data. Can be 
+#'  asymmetric.
+#' 
+#' @param random \code{logical} indicator of if the left out data should be
+#'  randomly selected.
+#'
+#' @param locations \code{integer}-conformable values referencing which
+#'  data to hold out.
+#'
+#' @return \code{character} \code{vector} of \code{"train"} and \code{"test"}
+#'  values.
+#'
+#' @name data_subsetting
+#'
 
-# data subsetting rules
 
+#' @rdname data_subsetting
+#'
+#' @export
+#'
 null_rule <- function(data, iteration = 1){
   n <- NROW(data)
   rep("train", n)
 }
 
-# simple leave one outs with no buffer
 
-# assumes 1:1 between iteration and datum location to drop
-
+#' @rdname data_subsetting
+#'
+#' @export
+#'
 systematic_loo <- function(data, iteration = 1){
   leave_p_out(data = data, random = FALSE, locations = iteration)
 }
 
-# randomly selected 
-
+#' @rdname data_subsetting
+#'
+#' @export
+#'
 random_loo <- function(data, iteration = 1){
   leave_p_out(data = data)
 }
 
-# fully flexible leave p out function allowing for buffers
-# if random the test data are selected randomly, otherwise locations are used
-
+#' @rdname data_subsetting
+#'
+#' @export
+#'
 leave_p_out <- function(data, p = 1, pre = 0, post = 0, 
                         random = TRUE, locations = NULL){
   n <- NROW(data)

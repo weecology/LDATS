@@ -274,7 +274,7 @@ prep_cpts <- function(TS, control = list()){
   }
   lls <- rep(NA, ntemps)
   for (i in 1:ntemps){
-    fun <- TS$reponse
+    fun <- TS$response
     fun <- memoise_fun(fun, control$memoise)
     args <- list(data = data, formula = TS$formula, changepoints = cps[ , i], 
                  timename = TS$timename, weights = TS$weights, 

@@ -104,7 +104,8 @@
 #'                    (\code{lls}).}
 #'       \item{nparams}{Total number of parameters in the full model,
 #'                      including the change point locations and regressors.}
-#'     }
+#'     } \cr \cr
+#'   \code{TS_msg}: a message is produced.
 #'
 #' @export
 #'
@@ -320,7 +321,7 @@ sequential_TS_msg <- function(TS, control = list()){
 #'
 #' @export
 #'
-sequential_TS_control <- function(method = "ldats_classic",
+sequential_TS_control <- function(method = ldats_classic,
                                   method_args = ldats_classic_control(),
                                   summary_prob = 0.95, soften = TRUE, 
                                   quiet = FALSE, ...){

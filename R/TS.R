@@ -55,12 +55,6 @@
 #'   most appropriate, and this is accomplished using \code{document_weights}.
 #'
 #' @param control A \code{list} of parameters to control the fitting of the
-#'   Time Series model including the parallel tempering Markov Chain 
-#'   Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
-#'   \code{\link{TS_control}}.
-#'
-#'
-#' @param control A \code{list} of parameters to control the fitting of the
 #'   Time Series model. Values not input assume defaults set by 
 #'   \code{\link{TS_control}}.
 #'
@@ -296,7 +290,7 @@ TS_control <- function(model = sequential_TS,
                        selector_args = list(), 
                        soften = TRUE, 
                        quiet = FALSE, ...){
-  list(response = response, response_args = response_args
+  list(response = response, response_args = response_args,
        method = method, method_args = method_args, 
        measurer = measurer, measurer_args = measurer_args, 
        selector = selector, selector_args = selector_args,

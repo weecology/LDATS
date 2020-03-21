@@ -73,7 +73,8 @@ of the coefficients across the segments (columns), as estimated by
                    (\code{lls}).}
       \item{nparams}{Total number of parameters in the full model,
                      including the change point locations and regressors.}
-    }
+    } \cr \cr
+  \code{TS_msg}: a message is produced.
 }
 \description{
 This set of functions estimates the Time Series model
