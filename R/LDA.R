@@ -1,25 +1,35 @@
 
 #' @title Run a set of Linguistic Decomposition Analysis models
 #' 
-#' @description 
-#'   \code{LDA} is the main interface function for the LDATS application
-#'     of Linguistic Decomposition Analysis (Christensen 
+#' @description Conduct Linguistic Decomposition Analyses. \cr \cr
+#'   \code{LDA} provides the main interface for Linguistic Decomposition 
+#'     Analysis conducted within the LDATS application of (Christensen 
 #'     \emph{et al.} 2018). \cr \cr
 #'   \code{prep_LDA_models} pre-prepares the LDA model objects for simpler 
-#'     use within the subfunctions.
+#'     use within the subfunctions. \cr \cr 
 #'   \code{LDA_call} runs (via \code{\link{do.call}}) a single LDA model
-#'     as set up by \code{prep_LDA_models}.
+#'     as set up by \code{prep_LDA_models}. \cr \cr
 #'   \code{LDA_msg} produces a model-running message if desired.
 #'
-#' @details For a (potentiall subset) dataset consisting of counts of words 
-#'   across multiple documents in a corpus, conduct multiple Linguistic 
-#'   Decomposition Analysis (LDA) models (e.g., Latent Dirichlet Allocation
-#'   using the Variational Expectation Maximization (VEM) algorithm; 
-#'   Blei \emph{et al.} 2003) to account for [1]  
-#'   uncertainty in the number of latent topics and [2] the impact of initial
-#'   values in the estimation procedure. 
+#' @details For a (potentially subset) dataset consisting of counts of words 
+#'   across multiple documents in a corpus, 
+#'   \enumerate{
+#'     \item Conduct multiple Linguistic Decomposition Analysis (LDA) models 
+#'       (e.g., Latent Dirichlet Allocation using the Variational Expectation
+#'       Maximization (VEM) algorithm; Blei \emph{et al.} 2003, Grun and
+#'       Hornik 2011),
+#'     \item Select from the LDA model results to pick those used in the Time
+#'       Series (TS) models, and
+#'     \item Package the results.
+#'   }
 #'
-#' @param data
+#' @param data Any of the data structures allowable for LDATS analyses:
+#'   \code{matrix} or \code{data.frame} document term table, 
+#'   \code{list} of document term and covariate tables, a \code{list} of 
+#'   training and test sets of the two tables, or a \code{list} of multiple 
+#'   replicate splits of training and test sets of the two tables. \cr
+#'   See \code{\link{conform_data}}, which is used to ensure data structure
+#'   validity for the desired model.
 #'  
 #' @param topics Vector of the number of topics to evaluate for each model.
 #'   Must be conformable to \code{integer} values.
@@ -37,10 +47,10 @@
 #'     data input(s) as well as the control \code{list} used to fit the 
 #'     model. \cr \cr
 #'   \code{prep_LDA_models}: \code{list} of \code{list}s, each of which is a
-#'     preliminary model object for an LDA model fit.
+#'     preliminary model object for an LDA model fit. \cr \cr
 #'   \code{LDA_call}: \code{LDA} \code{list} of model results from a single
 #'     run of a \code{<model>} function, such as 
-#'     \code{\link{topicmodels_LDA}}.
+#'     \code{\link{topicmodels_LDA}}. \cr \cr
 #'   \code{LDA_msg}: a message is produced.
 #' 
 #' @references 
@@ -48,6 +58,11 @@
 #'   Allocation. \emph{Journal of Machine Learning Research} 
 #'   \strong{3}:993-1022.
 #'   \href{http://jmlr.csail.mit.edu/papers/v3/blei03a.html}{link}.
+#'
+#'   Christensen, E., D. J. Harris, and S. K. M. Ernest. 2018.
+#'   Long-term community change through multiple rapid transitions in a 
+#'   desert rodent community. \emph{Ecology} \strong{99}:1523-1529. 
+#'   \href{https://doi.org/10.1002/ecy.2373}{link}.
 #'
 #'   Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
 #'   Models. \emph{Journal of Statistical Software} \strong{40}:13.
@@ -184,14 +199,15 @@ LDA_control <- function(model = topicmodels_LDA,
 }
 
 
-#' @title Class Latent Dirichlet Allocation Linguistic Decomposition Analysis
+#' @title Latent Dirichlet Allocation Linguistic Decomposition Analysis
 #'   as conducted via the topicmodels package
 #'
 #' @description Fit the standard LDATS LDA model (a true Latent Dirichlet
 #'   Allocation) using \code{\link[topicmodels]{topicmodels::LDA}}
-#'   (Grun and Hornik 2011). Default methodology is the Variational
+#'   (Grun and Hornik 2011). \cr 
+#'   Default methodology is the Variational
 #'   Expectation Maximization routine (VEM) as described by 
-#'   Blei \emph{et al.} (2003). \cr \cr
+#'   Blei \emph{et al.} (2003) and implemented by Grun and Hornik (2011). \cr
 #'   If the model is defined to only fit one topic, \code{\link{identity_LDA}}
 #'   is used by default.
 #'

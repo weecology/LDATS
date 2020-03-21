@@ -2,7 +2,7 @@
 % Please edit documentation in R/LDA.R
 \name{topicmodels_LDA}
 \alias{topicmodels_LDA}
-\title{Class Latent Dirichlet Allocation Linguistic Decomposition Analysis
+\title{Latent Dirichlet Allocation Linguistic Decomposition Analysis
   as conducted via the topicmodels package}
 \usage{
 topicmodels_LDA(LDA, method = "VEM", seeded = TRUE, ...)
@@ -27,9 +27,10 @@ replicate.}
 \description{
 Fit the standard LDATS LDA model (a true Latent Dirichlet
   Allocation) using \code{\link[topicmodels]{topicmodels::LDA}}
-  (Grun and Hornik 2011). Default methodology is the Variational
+  (Grun and Hornik 2011). \cr 
+  Default methodology is the Variational
   Expectation Maximization routine (VEM) as described by 
-  Blei \emph{et al.} (2003). \cr \cr
+  Blei \emph{et al.} (2003) and implemented by Grun and Hornik (2011). \cr
   If the model is defined to only fit one topic, \code{\link{identity_LDA}}
   is used by default.
 }

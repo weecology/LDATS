@@ -21,13 +21,23 @@ Note that the response variables should be formatted as a
 in the \code{control} list, such as \code{gamma} for a standard TS 
 analysis on LDA output.}
 
-\item{nchangepoints}{\code{integer} corresponding to the number of 
-change points to include in the model. 0 is a valid input (corresponding
-to no change points, so a singular time series model), and the current 
+\item{formulas}{Vector of \code{\link[stats]{formula}}(s) defining the 
+regression between the change points. Any predictor variable included 
+must also be a column in \code{data} and any (compositional) response 
+variable must be a set of columns in \code{data}. \cr
+Each element (formula) in the vector is evaluated for each number of 
+change points and each LDA model.}
+
+\item{nchangepoints}{\code{integer}-conformable vector corresponding to the 
+number of change points to include in the models. 0 is valid (corresponds
+to no change points, so a singular time series model) and the current 
 implementation can reasonably include up to 6 change points. The 
 number of change points is used to dictate the segmentation of the 
 time series into chunks fit with separate models dictated by 
-\code{formula}.}
+\code{formula}. \cr
+Each element in the vector is the number of change points 
+used to segment the data for each formula (entry in \code{formulas}) 
+component of the TS model, for each selected LDA model.}
 
 \item{timename}{\code{character} element indicating the time variable
 used in the time series. Defaults to \code{"time"}. The variable must be
@@ -37,9 +47,9 @@ timestep being 1 day, which is often not desired behavior.}
 
 \item{weights}{Optional class \code{numeric} vector of weights for each 
 document. Defaults to \code{NULL}, translating to an equal weight for
-each document. When using \code{multinom_TS} in a standard LDATS 
+each document. When using \code{\link{sequential_TS}} in a standard LDATS 
 analysis, it is advisable to weight the documents by their total size,
-as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
+as the result of, e.g., \code{\link[topicmodels]{LDA}} is a matrix of 
 proportions, which does not account for size differences among documents.
 For most models, a scaling of the weights (so that the average is 1) is
 most appropriate, and this is accomplished using \code{document_weights}.}
@@ -47,11 +57,6 @@ most appropriate, and this is accomplished using \code{document_weights}.}
 \item{control}{A \code{list} of parameters to control the fitting of the
 Time Series model. Values not input assume defaults set by 
 \code{\link{TS_control}}.}
-
-\item{formula}{\code{\link[stats]{formula}} defining the regression between
-the change points. Any predictor variable included must also be a column 
-in \code{data} and any (compositional) response variable must be a set 
-of columns in \code{data}.}
 }
 \value{
 \code{TS}: class \code{TS_set} \code{list} of both selected and all
@@ -62,18 +67,25 @@ of columns in \code{data}.}
     preliminary model object for a Time Series model fit.
 }
 \description{
-\code{TS} is the main interface function for the LDATS application
+Analyze compositional Time Series models. \cr \cr
+  \code{TS} is the main interface function for the LDATS application
     of Bayesian change point Time Series analyses (Christensen 
     \emph{et al.} 2018). \cr \cr
   \code{prep_TS_models} pre-prepares the TS model objects for simpler 
     use within the subfunctions.
-
- @details This model extends the approach of Western and Kleykamp (2004;
-  see also Ruggieri 2013) to compositional response data using
-  softmax regression (Ripley 1996, Venables and Ripley 2002, Bishop 2006) 
-  or simplical geometry ()
-  via a generalized linear modeling approach (McCullagh and Nelder 1989).
-  The models can be fit using a range of methods, but available procedures
-  are different flavors of parallel tempering Markov Chain Monte Carlo
-  (ptMCMC) methods (Earl and Deem 2005)
+}
+\details{
+For a (potentially subset) dataset consisting of proportions of
+  topics across multiple documents in a corpus 
+  \enumerate{
+    \item Conduct multiple compositional Bayesian TS models 
+      (e.g., changepoint softmax regression; Ripley 1996, Venables 
+      and Ripley 2002, Western and Kleykamp 2004, Bishop 2006, Ruggieri 
+      2013) via a generalized linear modeling approach (McCullagh and 
+      Nelder 1989) and using parallel tempering Markov Chain Monte Carlo
+     (ptMCMC) methods (Earl and Deem 2005),
+    \item Select from the TS model results to pick those used to summarize
+      the whole model, and
+    \item Package the results.
+  }
 }

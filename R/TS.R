@@ -1,21 +1,27 @@
 
 #' @title Conduct a Bayesian compositional Time Series analysis 
 #'
-#' @description 
+#' @description Analyze compositional Time Series models using Bayesian
+#'   sampling methods. \cr \cr
 #'   \code{TS} is the main interface function for the LDATS application
 #'     of Bayesian change point Time Series analyses (Christensen 
 #'     \emph{et al.} 2018). \cr \cr
 #'   \code{prep_TS_models} pre-prepares the TS model objects for simpler 
 #'     use within the subfunctions.
 #'
-#'  @details This model extends the approach of Western and Kleykamp (2004;
-#'   see also Ruggieri 2013) to compositional response data using
-#'   softmax regression (Ripley 1996, Venables and Ripley 2002, Bishop 2006) 
-#'   or simplical geometry ()
-#'   via a generalized linear modeling approach (McCullagh and Nelder 1989).
-#'   The models can be fit using a range of methods, but available procedures
-#'   are different flavors of parallel tempering Markov Chain Monte Carlo
-#'   (ptMCMC) methods (Earl and Deem 2005) 
+#' @details For a (potentially subset) dataset consisting of proportions of
+#'   topics across multiple documents in a corpus 
+#'   \enumerate{
+#'     \item Conduct multiple compositional Bayesian TS models 
+#'       (e.g., changepoint softmax regression; Ripley 1996, Venables 
+#'       and Ripley 2002, Western and Kleykamp 2004, Bishop 2006, Ruggieri 
+#'       2013) via a generalized linear modeling approach (McCullagh and 
+#'       Nelder 1989) and using parallel tempering Markov Chain Monte Carlo
+#'      (ptMCMC) methods (Earl and Deem 2005),
+#'     \item Select from the TS model results to pick those used to summarize
+#'       the whole model, and
+#'     \item Package the results.
+#'   }
 #'
 #' @param data \code{data.frame} including [1] the time variable (indicated 
 #'   in \code{timename}), [2] the predictor variables (required by
@@ -26,18 +32,23 @@
 #'   in the \code{control} list, such as \code{gamma} for a standard TS 
 #'   analysis on LDA output. 
 #'
-#' @param formula \code{\link[stats]{formula}} defining the regression between
-#'   the change points. Any predictor variable included must also be a column 
-#'   in \code{data} and any (compositional) response variable must be a set 
-#'   of columns in \code{data}.
+#' @param formulas Vector of \code{\link[stats]{formula}}(s) defining the 
+#'   regression between the change points. Any predictor variable included 
+#'   must also be a column in \code{data} and any (compositional) response 
+#'   variable must be a set of columns in \code{data}. \cr
+#'   Each element (formula) in the vector is evaluated for each number of 
+#'   change points and each LDA model.
 #'
-#' @param nchangepoints \code{integer} corresponding to the number of 
-#'   change points to include in the model. 0 is a valid input (corresponding
-#'   to no change points, so a singular time series model), and the current 
+#' @param nchangepoints \code{integer}-conformable vector corresponding to the 
+#'   number of change points to include in the models. 0 is valid (corresponds
+#'   to no change points, so a singular time series model) and the current 
 #'   implementation can reasonably include up to 6 change points. The 
 #'   number of change points is used to dictate the segmentation of the 
 #'   time series into chunks fit with separate models dictated by 
-#'   \code{formula}.
+#'   \code{formula}. \cr
+#'   Each element in the vector is the number of change points 
+#'   used to segment the data for each formula (entry in \code{formulas}) 
+#'   component of the TS model, for each selected LDA model.
 #'
 #' @param timename \code{character} element indicating the time variable
 #'   used in the time series. Defaults to \code{"time"}. The variable must be
@@ -47,9 +58,9 @@
 #'
 #' @param weights Optional class \code{numeric} vector of weights for each 
 #'   document. Defaults to \code{NULL}, translating to an equal weight for
-#'   each document. When using \code{multinom_TS} in a standard LDATS 
+#'   each document. When using \code{\link{sequential_TS}} in a standard LDATS 
 #'   analysis, it is advisable to weight the documents by their total size,
-#'   as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
+#'   as the result of, e.g., \code{\link[topicmodels]{LDA}} is a matrix of 
 #'   proportions, which does not account for size differences among documents.
 #'   For most models, a scaling of the weights (so that the average is 1) is
 #'   most appropriate, and this is accomplished using \code{document_weights}.
@@ -170,8 +181,8 @@ prep_TS_models <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0,
 #'
 #' @return 
 #'   \code{measure_TS}: \code{vector} of values corresponding to the model
-#'     evaluations.
-#'   \code{select_TS}: \code{list} of selected models' \code{list}s.
+#'     evaluations. \cr \cr
+#'   \code{select_TS}: \code{list} of selected models' \code{list}s. \cr \cr
 #'   \code{pacakage_TS}: class \code{TS_set} \code{list} of both selected and
 #'     all results from \code{\link{sequential_TS}} applied for each model on
 #'     each LDA model input as well as the control \code{list} used to fit 

@@ -94,9 +94,9 @@ Could be managed via a \code{<reponse>_TS_control} function like
   elements corresponding to the arguments.
 }
 \description{
-This function provides a simple creation and definition of a
-  list used to control the decomposition and time series model fitting 
-  occurring within \code{\link{LDA_TS}}.
+Defines and creates a \code{list} used to control the 
+  decomposition and time series model fitting occurring within 
+  \code{\link{LDA_TS}}.
 }
 \examples{
   LDA_TS_control()
