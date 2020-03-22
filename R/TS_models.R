@@ -8,6 +8,8 @@
 #'   regressor values unconditional on change point locations. \cr \cr
 #'   \code{sequential_TS} combines each stage of the model estimation and 
 #'     packages the model results in a consistent output. \cr \cr
+#'   \code{sequential_TS_control} defines and creates the control \code{list}
+#'     used to fit the sequential Time Series model.
 #'   \code{est_changepoints} estimates the change point location 
 #'     distributions for multinomial Time Series analyses. \cr \cr
 #'   \code{est_regressors} uses the marginal posterior distributions of
@@ -20,6 +22,14 @@
 #'   \code{package_sequential_TS} calculates relevant summaries for the run of
 #'     a sequenial Time Series model within \code{\link{sequential_TS}} and 
 #'     packages the output as a \code{TS}-class object. \cr \cr
+#'   \code{summarize_etas} calculates summary statistics for each
+#'     of the chunk-level regressors. \cr \cr
+#'   \code{measure_ets_vcov} generates the variance-covariance matrix for 
+#'     the regressors. \cr \cr
+#'  \code{summarize_rho} calculates summary statistics for each
+#'     of the change point locations. \cr \cr
+#'   \code{measure_rho_vcov} generates the variance-covariance matrix for the 
+#'     change point locations.
 #'
 #' @param rho_dist \code{list} of saved data objects from the estimation of
 #'   change point locations (unless \code{nchangepoints} is 0, then 
@@ -33,7 +43,42 @@
 #'   Time Series model. Values not input assume defaults set by 
 #'   \code{\link{sequential_TS_control}}.
 #'
+#' @param etas \code{matrix} of regressors (columns) across iterations of the 
+#'   sampler (rows), as returned from \code{\link{est_regressors}}.
+#'
+#' @param rhos \code{matrix} of change point locations (columns) across
+#'   iterations of the sampler (rows) or \code{NULL} if no change points are 
+#'   in the model, as returned from \code{\link{est_change points}}.
+#'
 #' @param TS Time series model \code{list}.
+#'
+#' @param response \code{character} element indicating the response variable 
+#'   used in the time series. \cr \cr
+#'   Must have a corresponding \code{<response>_TS} function.
+#'
+#' @param summary_prob Probability used for summarizing the posterior 
+#'   distributions (via the highest posterior density interval, see
+#'   \code{\link[coda]{HPDinterval}}).
+#'
+#' @param quiet \code{logical} indicator of whether the model should run 
+#'   quietly (if \code{FALSE}, a progress bar and notifications are printed).
+#'
+#' @param soften \code{logical} indicator of whether the model should error 
+#'   softly or if errors should trigger a full-stop to the pipeline.
+#'
+#' @param method \code{function} used to drive the sampler of the TS
+#'   models; \code{method} defines and operates the computational procedure.
+#'   \cr \cr
+#'   Current pre-built options include \code{\link{ldats_classic}}.
+#'
+#' @param method_args \code{list} of (named) arguments to be used in 
+#'   \code{method} via \code{\link{do.call}}. 
+#'   \cr \cr
+#'   Could be managed via a \code{<method>_control} function like
+#'   \code{\link{ldats_classic_control}}.
+#'
+#' @param ... Not passed along to the output, rather included to allow for
+#'   automated removal of unneeded controls.
 #'
 #' @details The general approach follows that of Western and Kleykamp
 #'   (2004), although we note some important differences. Our regression
@@ -65,11 +110,6 @@
 #'   \href{https://doi.org/10.1093/pan/mph023}{link}.
 #'
 #' @return 
-#'   \code{est_changepoints}: \code{list} of saved data objects from the 
-#'     estimation of change point locations, uunless \code{nchangepoints} 
-#'     is 0, then \code{NULL}. \cr \cr
-#'   \code{est_regressors}: \code{matrix} of draws (rows) from the marginal 
-#'     posteriors of the coefficients across the segments (columns). \cr \cr
 #'   \code{sequential_TS} and \code{package_sequential_TS}: 
 #'     \code{TS}-class list containing the following elements, many of
 #'      which are hidden for \code{print}ing, but are accessible:
@@ -106,7 +146,26 @@
 #'                    (\code{lls}).}
 #'       \item{nparams}{Total number of parameters in the full model,
 #'                      including the change point locations and regressors.}
-#'     }
+#'     } \cr \cr
+#'   \code{sequential_TS_control}: \code{list} of named control elements for 
+#'     sequential model fitting. 
+#'   \code{est_changepoints}: \code{list} of saved data objects from the 
+#'     estimation of change point locations, uunless \code{nchangepoints} 
+#'     is 0, then \code{NULL}. \cr \cr
+#'   \code{est_regressors}: \code{matrix} of draws (rows) from the marginal 
+#'     posteriors of the coefficients across the segments (columns). \cr \cr
+#'   \code{summarize_etas}: table of summary statistics for chunk-level
+#'     regressors including mean, median, mode, posterior interval, standard
+#'     deviation, MCMC error, autocorrelation, and effective sample size for 
+#'     each regressor. \cr \cr
+#'   \code{measure_eta_vcov}: variance-covariance matrix for chunk-level
+#'     regressors. \cr \cr
+#'  \code{summarize_rhos}: table of summary statistics for change point
+#'     locations including mean, median, mode, posterior interval, standard
+#'     deviation, MCMC error, autocorrelation, and effective sample size for 
+#'     each change point location. \cr \cr
+#'   \code{measure_rho_vcov}: variance-covariance matrix for change 
+#'     point locations.
 #'
 #' @name sequential_TS
 #'
@@ -264,45 +323,9 @@ est_regressors <- function(rho_dist, TS){
 }
 
 
-
-
-#' @title Create the controls list for a sequential Time Series model
+#' @rdname sequential_TS
 #'
-#' @description This function provides a simple creation and definition of a
-#'   list used to control the time series model fit occurring within 
-#'   \code{\link{sequential_TS}}. 
-#'
-#' @param response \code{character} element indicating the response variable 
-#'   used in the time series. \cr \cr
-#'   Must have a corresponding \code{<response>_TS} function.
-#'
-#' @param summary_prob Probability used for summarizing the posterior 
-#'   distributions (via the highest posterior density interval, see
-#'   \code{\link[coda]{HPDinterval}}).
-#'
-#' @param quiet \code{logical} indicator of whether the model should run 
-#'   quietly (if \code{FALSE}, a progress bar and notifications are printed).
-#'
-#' @param soften \code{logical} indicator of whether the model should error 
-#'   softly or if errors should trigger a full-stop to the pipeline.
-#'
-#' @param method \code{function} used to drive the sampler of the TS
-#'   models; \code{method} defines and operates the computational procedure.
-#'   \cr \cr
-#'   Current pre-built options include \code{\link{ldats_classic}}.
-#'
-#' @param method_args \code{list} of (named) arguments to be used in 
-#'   \code{method} via \code{\link{do.call}}. 
-#'   \cr \cr
-#'   Could be managed via a \code{<method>_control} function like
-#'   \code{\link{ldats_classic_control}}.
-#'
-#' @param ... Not passed along to the output, rather included to allow for
-#'   automated removal of unneeded controls.
-#'
-#' @return \code{list}, with named elements corresponding to the arguments.
-#'
-#' @export
+#' @export 
 #'
 sequential_TS_control <- function(method = ldats_classic,
                                   method_args = ldats_classic_control(),
@@ -312,46 +335,7 @@ sequential_TS_control <- function(method = ldats_classic,
         summary_prob = summary_prob, soften = soften, quiet = quiet)
 }
 
-#' @title Summarize the change point (rho) and regressor (eta) distributions 
-#'   of a sequential time series model
-#'
-#' @description 
-#'   \code{summarize_etas} calculates summary statistics for each
-#'     of the chunk-level regressors. \cr \cr
-#'   \code{measure_ets_vcov} generates the variance-covariance matrix for 
-#'     the regressors. \cr \cr
-#'  \code{summarize_rho} calculates summary statistics for each
-#'     of the change point locations. \cr \cr
-#'   \code{measure_rho_vcov} generates the variance-covariance matrix for the 
-#'     change point locations.
-#'
-#' @param etas \code{matrix} of regressors (columns) across iterations of the 
-#'   sampler (rows), as returned from \code{\link{est_regressors}}.
-#'
-#' @param rhos \code{matrix} of change point locations (columns) across
-#'   iterations of the sampler (rows) or \code{NULL} if no change points are 
-#'   in the model, as returned from \code{\link{est_change points}}.
-#'
-#' @param TS Time series model \code{list}.
-#'
-#' @return 
-#'   \code{summarize_etas}: table of summary statistics for chunk-level
-#'     regressors including mean, median, mode, posterior interval, standard
-#'     deviation, MCMC error, autocorrelation, and effective sample size for 
-#'     each regressor. \cr \cr
-#'   \code{measure_eta_vcov}: variance-covariance matrix for chunk-level
-#'     regressors. \cr \cr
-#'  \code{summarize_rhos}: table of summary statistics for change point
-#'     locations including mean, median, mode, posterior interval, standard
-#'     deviation, MCMC error, autocorrelation, and effective sample size for 
-#'     each change point location. \cr \cr
-#'   \code{measure_rho_vcov}: variance-covariance matrix for change 
-#'     point locations.
-#' 
-#' @name summarize_sequential_TS
-#'
-
-#' @rdname summarize_sequential_TS
+#' @rdname sequential_TS
 #'
 #' @export 
 #'
@@ -377,7 +361,7 @@ summarize_etas <- function(etas, TS){
   out
 }
 
-#' @rdname summarize_sequential_TS
+#' @rdname sequential_TS
 #'
 #' @export 
 #'
@@ -393,7 +377,7 @@ measure_eta_vcov <- function(etas){
 
 
 
-#' @rdname summarize_sequential_TS
+#' @rdname sequential_TS
 #'
 #' @export 
 #'
@@ -419,7 +403,7 @@ summarize_rhos <- function(rhos, TS){
   out
 }
 
-#' @rdname summarize_sequential_TS
+#' @rdname sequential_TS
 #'
 #' @export 
 #'

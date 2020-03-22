@@ -2,12 +2,29 @@
 % Please edit documentation in R/LDA_TS.R
 \name{LDA_TS}
 \alias{LDA_TS}
+\alias{package_LDA_TS}
+\alias{LDA_TS_control}
 \title{Run a set of Linguistic Decomposition Analysis models coupled to
   Bayesian Time Series models}
 \usage{
 LDA_TS(data, topics = 2, reps = 1, formulas = ~1,
   nchangepoints = 0, timename = "time", weights = TRUE,
   control = list())
+
+package_LDA_TS(LDAs, TSs, control)
+
+LDA_TS_control(LDA_model = topicmodels_LDA,
+  LDA_model_args = list(method = "VEM", seeded = TRUE),
+  LDA_measurer = AIC, LDA_measurer_args = list(NULL),
+  LDA_selector = which.min, LDA_selector_args = list(NULL),
+  TS_model = sequential_TS, TS_model_args = list(control =
+  sequential_TS_control()), TS_response = multinom_TS,
+  TS_response_args = list(control = multinom_TS_control()),
+  TS_method = ldats_classic, TS_method_args = list(control =
+  ldats_classic_control()), nsubsets = 1, subset_rule = NULL,
+  summary_prob = 0.95, soften = TRUE, quiet = FALSE,
+  TS_measurer = AIC, TS_measurer_args = list(NULL),
+  TS_selector = which.min, TS_selector_args = list(NULL), ...)
 }
 \arguments{
 \item{data}{Any of the data structures allowable for LDATS analyses:
@@ -20,10 +37,6 @@ validity for the desired model.}
 
 \item{topics}{\code{integer}-conformable \code{vector} of the number of 
 topics to evaluate for each model. \cr
-(See \code{\link{LDA}}.)}
-
-\item{reps}{\code{integer}-conformable number of replicate starts to use 
-for each value of \code{topics}. \cr
 (See \code{\link{LDA}}.)}
 
 \item{formulas}{Vector of \code{\link[stats]{formula}}(s) defining the 
@@ -67,22 +80,111 @@ most appropriate, and this is accomplished using \code{document_weights}.
 \item{control}{\code{list} of parameters to control the fitting of the
 LDATS model. Values not input assume defaults set by 
 \code{\link{LDA_TS_control}}.}
+
+\item{LDAs}{\code{LDA_set} \code{list} of selected and all LDAs from 
+\code{\link{LDA}}.}
+
+\item{TSs}{\code{TS_set} \code{list} of selected and all TSs from 
+\code{\link{TS}}.}
+
+\item{LDA_model}{Main LDA \code{function}.}
+
+\item{LDA_model_args}{\code{list} of (named) arguments to be used in 
+\code{LDA_model} via \code{\link{LDA_call}}.}
+
+\item{LDA_measurer}{\code{function} used in evaluation of the LDA
+models; \code{LDA_measurer} creates a value for each model.}
+
+\item{LDA_measurer_args}{\code{list} of (named) arguments to be used in 
+\code{LDA_measurer} via \code{\link{do.call}}.}
+
+\item{LDA_selector}{\code{function} usde in evaluation of the LDA
+models; \code{LDA_selector} operates on the values to choose the models.}
+
+\item{LDA_selector_args}{\code{list} of (named) arguments to be used in 
+\code{LDA_selector} via \code{\link{do.call}}.}
+
+\item{TS_model}{Main TS \code{function}.}
+
+\item{TS_model_args}{\code{list} of (named) arguments to be used in 
+\code{TS_model}.}
+
+\item{TS_response}{\code{function} used to model the compositional 
+response.}
+
+\item{TS_method}{\code{function} used to drive the sampler of the TS
+models; \code{TS_method} defines and operates the computational 
+procedure. \cr \cr
+Current pre-built options include \code{\link{ldats_classic}}.}
+
+\item{TS_method_args}{\code{list} of (named) arguments to be used in 
+\code{TS_method} via \code{\link{do.call}}. 
+\cr \cr
+Could be managed via a \code{<method>_control} function like
+\code{\link{ldats_classic_control}}.}
+
+\item{nsubsets}{Number of data subsets.}
+
+\item{subset_rule}{\code{function} used to subset the data.}
+
+\item{summary_prob}{Probability used for summarizing the posterior 
+distributions (via the highest posterior density interval, see
+\code{\link[coda]{HPDinterval}}).}
+
+\item{soften}{\code{logical} indicator of whether the model should error 
+softly or if errors should trigger a full-stop to the pipeline.}
+
+\item{quiet}{\code{logical} indicator of whether the model should run 
+quietly (if \code{FALSE}, a progress bar and notifications are printed).}
+
+\item{TS_measurer}{\code{function} used in evaluation of the TS
+models; \code{measurer} creates a value for each model.}
+
+\item{TS_measurer_args}{\code{list} of (named) arguments to be used in 
+\code{TS_measurer} via \code{\link{do.call}}.}
+
+\item{TS_selector}{\code{function} usde in evaluation of the TS
+models; \code{TS_selector} operates on the values to choose the models.}
+
+\item{TS_selector_args}{\code{list} of (named) arguments to be used in 
+\code{TS_selector} via \code{\link{do.call}}.}
+
+\item{...}{Not passed along to the output, rather included to allow for
+automated removal of unneeded controls.}
+
+\item{replicates}{\code{integer}-conformable number of replicate starts to
+use for each value of \code{topics}. \cr
+(See \code{\link{LDA}}.)}
+
+\item{response_args}{\code{list} of (named) arguments to be used in 
+\code{TS_response} via \code{\link{do.call}}. 
+\cr \cr
+Could be managed via a \code{<reponse>_TS_control} function like
+\code{\link{multinom_TS_control}}.}
 }
 \value{
-\code{LDA_TS} \code{list} with all fitted LDA and TS models and 
-  selected models specifically as elements named
-  \describe{
-    \item{\code{LDA models}}{\code{list} of all and selected models as well
-      as controls from \code{\link{LDA}}}
-    \item{\code{TS models}}{\code{list} of all and selected models as well
-      as controls from \code{\link{TS}}}
-    \item{\code{control}}{\code{list} of overall model controls}
-  }
+\code{LDA_TS},\code{package_LDA_TS}: class-\code{LDA_TS} \code{list} 
+   with all fitted LDA and TS models and selected models specifically 
+   as elements named
+   \describe{
+     \item{\code{LDA models}}{\code{list} of all and selected models as 
+       well as controls from \code{\link{LDA}}}
+     \item{\code{TS models}}{\code{list} of all and selected models as 
+       well as controls from \code{\link{TS}}}
+     \item{\code{control}}{\code{list} of overall model controls}
+   } \cr \cr
+ \code{LDA_TS_control}: \code{list} of \code{list}s and single elements
+   that control fitting of the LDATS model, with named elements 
+   corresponding to the arguments.
 }
 \description{
 Analyze compositional time series using the Linguistic 
   Decomposition Analysis coupled to Bayesian Time Series models 
   generally following Christensen \emph{et al.} (2018).
+  \code{LDA_TS} is the primary model function. \cr \cr
+  \code{LDA_TS_control} defines the control \code{list} arguments for
+    \code{\link{LDA_TS}}. \cr \cr
+  \code{package_LDA_TS} combines the results from each model component.
 }
 \details{
 For a (potentially subset) dataset consisting of counts of words 

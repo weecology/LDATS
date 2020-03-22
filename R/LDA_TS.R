@@ -3,7 +3,11 @@
 #' 
 #' @description Analyze compositional time series using the Linguistic 
 #'   Decomposition Analysis coupled to Bayesian Time Series models 
-#'   generally following Christensen \emph{et al.} (2018). 
+#'   generally following Christensen \emph{et al.} (2018).
+#'   \code{LDA_TS} is the primary model function. \cr \cr
+#'   \code{LDA_TS_control} defines the control \code{list} arguments for
+#'     \code{\link{LDA_TS}}. \cr \cr
+#'   \code{package_LDA_TS} combines the results from each model component.
 #'
 #' @details For a (potentially subset) dataset consisting of counts of words 
 #'   across multiple documents in a corpus, 
@@ -78,113 +82,15 @@
 #'   topics to evaluate for each model. \cr
 #'   (See \code{\link{LDA}}.)
 #'
-#' @param reps \code{integer}-conformable number of replicate starts to use 
-#'   for each value of \code{topics}. \cr
+#' @param replicates \code{integer}-conformable number of replicate starts to
+#'   use for each value of \code{topics}. \cr
 #'   (See \code{\link{LDA}}.)
-#'
-#' @return \code{LDA_TS} \code{list} with all fitted LDA and TS models and 
-#'   selected models specifically as elements named
-#'   \describe{
-#'     \item{\code{LDA models}}{\code{list} of all and selected models as well
-#'       as controls from \code{\link{LDA}}}
-#'     \item{\code{TS models}}{\code{list} of all and selected models as well
-#'       as controls from \code{\link{TS}}}
-#'     \item{\code{control}}{\code{list} of overall model controls}
-#'   }
-#' 
-#' @references 
-#'   Blei, D. M., A. Y. Ng, and M. I. Jordan. 2003. Latent Dirichlet
-#'   Allocation. \emph{Journal of Machine Learning Research} 
-#'   \strong{3}:993-1022.
-#'   \href{http://jmlr.csail.mit.edu/papers/v3/blei03a.html}{link}.
-#'
-#'   Bishop, C. M. 2006. \emph{Pattern Recognition and Machine Learning}. 
-#'    Springer, New York, NY, USA.
-#'
-#'   Christensen, E., D. J. Harris, and S. K. M. Ernest. 2018.
-#'   Long-term community change through multiple rapid transitions in a 
-#'   desert rodent community. \emph{Ecology} \strong{99}:1523-1529. 
-#'   \href{https://doi.org/10.1002/ecy.2373}{link}.
-#'
-#'   Earl, D. J. and M. W. Deem. 2005. Parallel tempering: theory, 
-#'   applications, and new perspectives. \emph{Physical Chemistry Chemical 
-#'   Physics} \strong{7}: 3910-3916.
-#'   \href{https://doi.org/10.1039/B509983H}{link}.
-#'
-#'   Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
-#'   Models. \emph{Journal of Statistical Software} \strong{40}:13.
-#'   \href{https://www.jstatsoft.org/article/view/v040i13}{link}.
-#'
-#'   McCullagh, P. and J. A. Nelder. 1989. \emph{Generalized Linear Models}.
-#'   2nd Edition. Chapman and Hall, New York, NY, USA.
-#'
-#'   Ripley, B. D. 1996. \emph{Pattern Recognition and Neural Networks}. 
-#'   Cambridge University Press, Cambridge, UK.
-#'
-#'   Ruggieri, E. 2013. A Bayesian approach to detecting change points in 
-#'   climactic records. \emph{International Journal of Climatology}
-#'   \strong{33}:520-528.
-#'   \href{https://doi.org/10.1002/joc.3447}{link}.
-#'
-#'   Venables, W. N. and B. D. Ripley. 2002. \emph{Modern and Applied
-#'   Statistics with S}. Fourth Edition. Springer, New York, NY, USA.
-#'
-#'   Western, B. and M. Kleykamp. 2004. A Bayesian change point model for 
-#'   historical time series analysis. \emph{Political Analysis}
-#'   \strong{12}:354-374.
-#'   \href{https://doi.org/10.1093/pan/mph023}{link}.
-#'
-#' @export
-#'
-LDA_TS <- function(data, topics = 2, reps = 1, formulas = ~ 1, 
-                   nchangepoints = 0, timename = "time", weights = TRUE, 
-                   control = list()){
-  control <- do.call("LDA_TS_control", control)
-  LDAs <- LDA(data = data, topics = topics, reps = reps, 
-              control = control$LDA_control)
-  TSs <- TS(LDAs = LDAs, data = data, formulas = formulas, 
-            nchangepoints = nchangepoints, timename = timename, 
-            weights = weights, control = control$TS_control) 
-  package_LDA_TS(LDAs = LDAs, TSs = TSs, control = control)
-}
-
-
-#' @title Package LDA and TS model outputs
-#'
-#' @description Combine the results from each model component.
 #'
 #' @param LDAs \code{LDA_set} \code{list} of selected and all LDAs from 
 #'   \code{\link{LDA}}.
 #'
 #' @param TSs \code{TS_set} \code{list} of selected and all TSs from 
 #'   \code{\link{TS}}.
-#'
-#' @param control A \code{list} of parameters to control the fitting of the
-#'   LDATS model. Values not input assume defaults set by 
-#'   \code{\link{LDA_TS_control}}.
-#'
-#' @return \code{LDA_TS} \code{list} with all fitted LDA and TS models and 
-#'     selected models specifically as elements named
-#'     \code{"LDA models"} (from \code{\link{LDA_set}}),
-#'     \code{"Selected LDA models"} (from \code{\link{select_LDA}}), 
-#'     \code{"TS models"} (from \code{\link{TS_on_LDA}}), and
-#'     \code{"Selected TS models"} (from \code{\link{select_TS}}) elements.
-#'
-#' @export
-#'
-package_LDA_TS <- function(LDAs, TSs, control){
-  out <- list("LDA models" = LDAs, "TS models" = TSs, control = control)
-  class(out) <- c("LDA_TS", "list")
-}
-
-
-
-#' @title Create the controls list for the complete Linguistic Decomposition
-#'   Analysis and Time Series model
-#'
-#' @description Defines and creates a \code{list} used to control the 
-#'   decomposition and time series model fitting occurring within 
-#'   \code{\link{LDA_TS}}. 
 #'
 #' @param LDA_model Main LDA \code{function}.
 #'
@@ -257,11 +163,92 @@ package_LDA_TS <- function(LDAs, TSs, control){
 #'
 #' @param subset_rule \code{function} used to subset the data.
 #'
-#' @return \code{list} of \code{list}s and single elements, with named 
-#'   elements corresponding to the arguments.
+#' @return 
+#'  \code{LDA_TS},\code{package_LDA_TS}: class-\code{LDA_TS} \code{list} 
+#'    with all fitted LDA and TS models and selected models specifically 
+#'    as elements named
+#'    \describe{
+#'      \item{\code{LDA models}}{\code{list} of all and selected models as 
+#'        well as controls from \code{\link{LDA}}}
+#'      \item{\code{TS models}}{\code{list} of all and selected models as 
+#'        well as controls from \code{\link{TS}}}
+#'      \item{\code{control}}{\code{list} of overall model controls}
+#'    } \cr \cr
+#'  \code{LDA_TS_control}: \code{list} of \code{list}s and single elements
+#'    that control fitting of the LDATS model, with named elements 
+#'    corresponding to the arguments.
+#' 
+#' @references 
+#'   Blei, D. M., A. Y. Ng, and M. I. Jordan. 2003. Latent Dirichlet
+#'   Allocation. \emph{Journal of Machine Learning Research} 
+#'   \strong{3}:993-1022.
+#'   \href{http://jmlr.csail.mit.edu/papers/v3/blei03a.html}{link}.
 #'
-#' @examples
-#'   LDA_TS_control()
+#'   Bishop, C. M. 2006. \emph{Pattern Recognition and Machine Learning}. 
+#'    Springer, New York, NY, USA.
+#'
+#'   Christensen, E., D. J. Harris, and S. K. M. Ernest. 2018.
+#'   Long-term community change through multiple rapid transitions in a 
+#'   desert rodent community. \emph{Ecology} \strong{99}:1523-1529. 
+#'   \href{https://doi.org/10.1002/ecy.2373}{link}.
+#'
+#'   Earl, D. J. and M. W. Deem. 2005. Parallel tempering: theory, 
+#'   applications, and new perspectives. \emph{Physical Chemistry Chemical 
+#'   Physics} \strong{7}: 3910-3916.
+#'   \href{https://doi.org/10.1039/B509983H}{link}.
+#'
+#'   Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
+#'   Models. \emph{Journal of Statistical Software} \strong{40}:13.
+#'   \href{https://www.jstatsoft.org/article/view/v040i13}{link}.
+#'
+#'   McCullagh, P. and J. A. Nelder. 1989. \emph{Generalized Linear Models}.
+#'   2nd Edition. Chapman and Hall, New York, NY, USA.
+#'
+#'   Ripley, B. D. 1996. \emph{Pattern Recognition and Neural Networks}. 
+#'   Cambridge University Press, Cambridge, UK.
+#'
+#'   Ruggieri, E. 2013. A Bayesian approach to detecting change points in 
+#'   climactic records. \emph{International Journal of Climatology}
+#'   \strong{33}:520-528.
+#'   \href{https://doi.org/10.1002/joc.3447}{link}.
+#'
+#'   Venables, W. N. and B. D. Ripley. 2002. \emph{Modern and Applied
+#'   Statistics with S}. Fourth Edition. Springer, New York, NY, USA.
+#'
+#'   Western, B. and M. Kleykamp. 2004. A Bayesian change point model for 
+#'   historical time series analysis. \emph{Political Analysis}
+#'   \strong{12}:354-374.
+#'   \href{https://doi.org/10.1093/pan/mph023}{link}.
+#'
+#' @name LDA_TS
+#'
+
+#' @rdname LDA_TS
+#'
+#' @export
+#'
+LDA_TS <- function(data, topics = 2, reps = 1, formulas = ~ 1, 
+                   nchangepoints = 0, timename = "time", weights = TRUE, 
+                   control = list()){
+  control <- do.call("LDA_TS_control", control)
+  LDAs <- LDA(data = data, topics = topics, reps = reps, 
+              control = control$LDA_control)
+  TSs <- TS(LDAs = LDAs, data = data, formulas = formulas, 
+            nchangepoints = nchangepoints, timename = timename, 
+            weights = weights, control = control$TS_control) 
+  package_LDA_TS(LDAs = LDAs, TSs = TSs, control = control)
+}
+
+#' @rdname LDA_TS
+#'
+#' @export
+#'
+package_LDA_TS <- function(LDAs, TSs, control){
+  out <- list("LDA models" = LDAs, "TS models" = TSs, control = control)
+  class(out) <- c("LDA_TS", "list")
+}
+
+#' @rdname LDA_TS
 #'
 #' @export
 #'

@@ -9,6 +9,7 @@
 \alias{package_TS}
 \alias{select_TS}
 \alias{measure_TS}
+\alias{TS_control}
 \title{Conduct a Bayesian compositional Time Series analysis}
 \usage{
 TS(LDAs, data, formulas = ~1, nchangepoints = 0, timename = "time",
@@ -28,6 +29,14 @@ package_TS(TSs)
 select_TS(TSs)
 
 measure_TS(TSs)
+
+TS_control(model = sequential_TS, model_args = list(control =
+  sequential_TS_control()), response = multinom_TS,
+  response_args = list(control = multinom_TS_control()),
+  method = ldats_classic, method_args = list(control =
+  ldats_classic_control()), summary_prob = 0.95, measurer = AIC,
+  measurer_args = list(NULL), selector = which.min,
+  selector_args = list(NULL), soften = TRUE, quiet = FALSE, ...)
 }
 \arguments{
 \item{data}{\code{data.frame} including [1] the time variable (indicated 
@@ -79,6 +88,52 @@ Time Series model. Values not input assume defaults set by
 \item{TS, TSs}{time series model \code{list} (\code{TS}) or a \code{list} 
 of many time series model \code{list}s (\code{TSs}).}
 
+\item{response}{\code{character} element indicating the response variable 
+used in the time series. \cr \cr
+Must have a corresponding \code{<response>_TS} function.}
+
+\item{response_args}{\code{list} of (named) arguments to be used in 
+\code{response} via \code{\link{do.call}}. 
+\cr \cr
+Could be managed via a \code{<reponse>_TS_control} function like
+\code{\link{multinom_TS_control}}.}
+
+\item{method}{\code{function} used to drive the sampler of the TS
+models; \code{method} defines and operates the computational procedure.
+\cr \cr
+Current pre-built options include \code{\link{ldats_classic}}.}
+
+\item{method_args}{\code{list} of (named) arguments to be used in 
+\code{method} via \code{\link{do.call}}. 
+\cr \cr
+Could be managed via a \code{<method>_control} function like
+\code{\link{ldats_classic_control}}.}
+
+\item{summary_prob}{Probability used for summarizing the posterior 
+distributions (via the highest posterior density interval, see
+\code{\link[coda]{HPDinterval}}).}
+
+\item{measurer}{\code{function} used in evaluation of the TS
+models; \code{measurer} creates a value for each model.}
+
+\item{measurer_args}{\code{list} of (named) arguments to be used in 
+\code{measurer} via \code{\link{do.call}}.}
+
+\item{selector}{\code{function} usde in evaluation of the TS
+models; \code{selector} operates on the values to choose the models.}
+
+\item{selector_args}{\code{list} of (named) arguments to be used in 
+\code{selector} via \code{\link{do.call}}.}
+
+\item{soften}{\code{logical} indicator of whether the model should error 
+softly or if errors should trigger a full-stop to the pipeline.}
+
+\item{quiet}{\code{logical} indicator of whether the model should run 
+quietly (if \code{FALSE}, a progress bar and notifications are printed).}
+
+\item{...}{Not passed along to the output, rather included to allow for
+automated removal of unneeded controls.}
+
 \item{selected_TSs}{\code{list} of selected time series model \code{list}s.}
 }
 \value{
@@ -86,8 +141,10 @@ of many time series model \code{list}s (\code{TSs}).}
     selected and all results from \code{\link{TS_call}} applied for 
     each model on each LDA model input as well as the control \code{list} 
     used to fit the model. \cr \cr
-  \code{prep_TS_models}: \code{list} of \code{list}s, each of which is a
+  \code{prepare_TS}: \code{list} of \code{list}s, each of which is a
     preliminary model object for a Time Series model fit. \cr \cr
+  \code{TS_control}: \code{list} of named control elements for
+    model fitting.
   \code{measure_TS}: \code{vector} of values corresponding to the model
     evaluations. \cr \cr
   \code{select_TS}: \code{list} of selected models' \code{list}s. \cr \cr
@@ -107,6 +164,8 @@ Analyze compositional Time Series models using Bayesian
     \emph{et al.} 2018). \cr \cr
   \code{prepare_TS} pre-prepares the TS model objects for simpler 
     use within the subfunctions. \cr \cr
+  \code{TS_control} defines and creates the control \code{list} for the TS
+    model running. \cr \cr
   \code{run_TS} runs (via \code{\link{TS_call}}) all TS models
     as set up by \code{prep_TS_models}. \cr \cr
   \code{TS_call} runs (via \code{\link{do.call}}) a single TS model

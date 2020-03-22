@@ -8,6 +8,8 @@
 #'     \emph{et al.} 2018). \cr \cr
 #'   \code{prepare_TS} pre-prepares the TS model objects for simpler 
 #'     use within the subfunctions. \cr \cr
+#'   \code{TS_control} defines and creates the control \code{list} for the TS
+#'     model running. \cr \cr
 #'   \code{run_TS} runs (via \code{\link{TS_call}}) all TS models
 #'     as set up by \code{prep_TS_models}. \cr \cr
 #'   \code{TS_call} runs (via \code{\link{do.call}}) a single TS model
@@ -86,13 +88,61 @@
 #'
 #' @param selected_TSs \code{list} of selected time series model \code{list}s.
 #'
+#' @param response \code{character} element indicating the response variable 
+#'   used in the time series. \cr \cr
+#'   Must have a corresponding \code{<response>_TS} function.
+#'
+#' @param response_args \code{list} of (named) arguments to be used in 
+#'   \code{response} via \code{\link{do.call}}. 
+#'   \cr \cr
+#'   Could be managed via a \code{<reponse>_TS_control} function like
+#'   \code{\link{multinom_TS_control}}.
+#'
+#' @param summary_prob Probability used for summarizing the posterior 
+#'   distributions (via the highest posterior density interval, see
+#'   \code{\link[coda]{HPDinterval}}).
+#'
+#' @param quiet \code{logical} indicator of whether the model should run 
+#'   quietly (if \code{FALSE}, a progress bar and notifications are printed).
+#'
+#' @param soften \code{logical} indicator of whether the model should error 
+#'   softly or if errors should trigger a full-stop to the pipeline.
+#'
+#' @param method \code{function} used to drive the sampler of the TS
+#'   models; \code{method} defines and operates the computational procedure.
+#'   \cr \cr
+#'   Current pre-built options include \code{\link{ldats_classic}}.
+#'
+#' @param method_args \code{list} of (named) arguments to be used in 
+#'   \code{method} via \code{\link{do.call}}. 
+#'   \cr \cr
+#'   Could be managed via a \code{<method>_control} function like
+#'   \code{\link{ldats_classic_control}}.
+#'
+#' @param measurer \code{function} used in evaluation of the TS
+#'   models; \code{measurer} creates a value for each model.
+#'
+#' @param measurer_args \code{list} of (named) arguments to be used in 
+#'   \code{measurer} via \code{\link{do.call}}. 
+#'
+#' @param selector \code{function} usde in evaluation of the TS
+#'   models; \code{selector} operates on the values to choose the models. 
+#'
+#' @param selector_args \code{list} of (named) arguments to be used in 
+#'   \code{selector} via \code{\link{do.call}}. 
+#'
+#' @param ... Not passed along to the output, rather included to allow for
+#'   automated removal of unneeded controls.
+#'
 #' @return 
 #'   \code{TS},\code{pacakage_TS}: class \code{TS_set} \code{list} of both 
 #'     selected and all results from \code{\link{TS_call}} applied for 
 #'     each model on each LDA model input as well as the control \code{list} 
 #'     used to fit the model. \cr \cr
-#'   \code{prep_TS_models}: \code{list} of \code{list}s, each of which is a
+#'   \code{prepare_TS}: \code{list} of \code{list}s, each of which is a
 #'     preliminary model object for a Time Series model fit. \cr \cr
+#'   \code{TS_control}: \code{list} of named control elements for
+#'     model fitting.
 #'   \code{measure_TS}: \code{vector} of values corresponding to the model
 #'     evaluations. \cr \cr
 #'   \code{select_TS}: \code{list} of selected models' \code{list}s. \cr \cr
@@ -311,63 +361,7 @@ measure_TS <- function(TSs){
 }
 
 
-
-
-#' @title Create the controls list for the Time Series model
-#'
-#' @description Creation and definition of a \code{list} to control the 
-#'   time series model fit occurring within \code{\link{TS}}. 
-#'
-#' @param response \code{character} element indicating the response variable 
-#'   used in the time series. \cr \cr
-#'   Must have a corresponding \code{<response>_TS} function.
-#'
-#' @param response_args \code{list} of (named) arguments to be used in 
-#'   \code{response} via \code{\link{do.call}}. 
-#'   \cr \cr
-#'   Could be managed via a \code{<reponse>_TS_control} function like
-#'   \code{\link{multinom_TS_control}}.
-#'
-#' @param summary_prob Probability used for summarizing the posterior 
-#'   distributions (via the highest posterior density interval, see
-#'   \code{\link[coda]{HPDinterval}}).
-#'
-#' @param quiet \code{logical} indicator of whether the model should run 
-#'   quietly (if \code{FALSE}, a progress bar and notifications are printed).
-#'
-#' @param soften \code{logical} indicator of whether the model should error 
-#'   softly or if errors should trigger a full-stop to the pipeline.
-#'
-#' @param method \code{function} used to drive the sampler of the TS
-#'   models; \code{method} defines and operates the computational procedure.
-#'   \cr \cr
-#'   Current pre-built options include \code{\link{ldats_classic}}.
-#'
-#' @param method_args \code{list} of (named) arguments to be used in 
-#'   \code{method} via \code{\link{do.call}}. 
-#'   \cr \cr
-#'   Could be managed via a \code{<method>_control} function like
-#'   \code{\link{ldats_classic_control}}.
-#'
-#' @param measurer \code{function} used in evaluation of the TS
-#'   models; \code{measurer} creates a value for each model.
-#'
-#' @param measurer_args \code{list} of (named) arguments to be used in 
-#'   \code{measurer} via \code{\link{do.call}}. 
-#'
-#' @param selector \code{function} usde in evaluation of the TS
-#'   models; \code{selector} operates on the values to choose the models. 
-#'
-#' @param selector_args \code{list} of (named) arguments to be used in 
-#'   \code{selector} via \code{\link{do.call}}. 
-#'
-#' @param ... Not passed along to the output, rather included to allow for
-#'   automated removal of unneeded controls.
-#'
-#' @return \code{list}, with named elements corresponding to the arguments.
-#'
-#' @examples
-#'   TS_control()
+#' @rdname TS
 #'
 #' @export
 #'

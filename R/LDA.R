@@ -7,6 +7,8 @@
 #'     \emph{et al.} 2018). \cr \cr
 #'   \code{prepare_LDA} pre-prepares the LDA model objects for simpler 
 #'     use within the subfunctions. \cr \cr 
+#'   \code{LDA_control} defines and creates the control list used to fit 
+#'     the LDA model. \cr \cr 
 #'   \code{run_LDA} runs (via \code{\link{LDA_call}}) all LDA models
 #'     as set up by \code{prep_LDA_models}. \cr \cr
 #'   \code{LDA_call} runs (via \code{\link{do.call}}) a single LDA model
@@ -50,17 +52,50 @@
 #'   LDA model. Values not input assume defaults set by 
 #'   \code{\link{LDA_control}}.
 #'
-#' @param LDAs \code{list} of LDA model \code{list}s.
+#' @param LDA,LDAs model \code{list} (\code{LDA}) or a \code{list} of LDA 
+#'   model \code{list}s (\code{LDAs}).
 #'
 #' @param selected_LDAs \code{list} of selected LDA model \code{list}s.
+#'
+#' @param model Main LDA \code{function}.
+#'
+#' @param model_args \code{list} of (named) arguments to be used in 
+#'   \code{model} via \code{\link{LDA_call}}. 
+#'
+#' @param nsubsets Number of data subsets.
+#'
+#' @param subset_rule \code{function} used to subset the data.
+#'
+#' @param quiet \code{logical} indicator of whether the model should run 
+#'   quietly (if \code{FALSE}, a progress bar and notifications are printed).
+#'
+#' @param soften \code{logical} indicator of whether the model should error 
+#'   softly or if errors should trigger a full-stop to the pipeline.
+#'
+#' @param measurer \code{function} used in evaluation of the LDA
+#'   models; \code{measurer} creates a value for each model.
+#'
+#' @param measurer_args \code{list} of (named) arguments to be used in 
+#'   \code{measurer} via \code{\link{do.call}}. 
+#'
+#' @param selector \code{function} usde in evaluation of the LDA
+#'   models; \code{selector} operates on the values to choose the models. 
+#'
+#' @param selector_args \code{list} of (named) arguments to be used in 
+#'   \code{selector} via \code{\link{do.call}}. 
+#'
+#' @param ... Not passed along to the output, rather included to allow for
+#'   automated removal of unneeded controls.
 #'
 #' @return 
 #'   \code{LDA},\code{pacakage_LDA}: class \code{LDA_set} \code{list} of 
 #'     both selected and all results from \code{\link{LDA_call}} applied for 
 #'     each model on each data input(s) as well as the control \code{list} 
 #'     used to fit the model. \cr \cr
-#'   \code{prep_LDA_models}: \code{list} of \code{list}s, each of which is a
+#'   \code{prepare_LDA}: \code{list} of \code{list}s, each of which is a
 #'     preliminary model object for an LDA model fit. \cr \cr
+#'   \code{LDA_control}: \code{list} of controls for the LDA model, with
+#'     named elements corresponding to the arguments.
 #'   \code{run_LDA}: \code{LDA_set} \code{list} of model results from all
 #'     runs of a \code{<model>} function, such as 
 #'     \code{\link{topicmodels_LDA}}. \cr \cr
@@ -227,48 +262,7 @@ measure_LDA <- function(LDAs){
 }
 
 
-
-
-#' @title Create the controls list for the Time Series model
-#'
-#' @description This function provides a simple creation and definition of a
-#'   list used to control the LDA model fit occurring within 
-#'   \code{\link{LDA}}. 
-#'
-#' @param model Main LDA \code{function}.
-#'
-#' @param model_args \code{list} of (named) arguments to be used in 
-#'   \code{model} via \code{\link{LDA_call}}. 
-#'
-#' @param nsubsets Number of data subsets.
-#'
-#' @param subset_rule \code{function} used to subset the data.
-#'
-#' @param quiet \code{logical} indicator of whether the model should run 
-#'   quietly (if \code{FALSE}, a progress bar and notifications are printed).
-#'
-#' @param soften \code{logical} indicator of whether the model should error 
-#'   softly or if errors should trigger a full-stop to the pipeline.
-#'
-#' @param measurer \code{function} used in evaluation of the LDA
-#'   models; \code{measurer} creates a value for each model.
-#'
-#' @param measurer_args \code{list} of (named) arguments to be used in 
-#'   \code{measurer} via \code{\link{do.call}}. 
-#'
-#' @param selector \code{function} usde in evaluation of the LDA
-#'   models; \code{selector} operates on the values to choose the models. 
-#'
-#' @param selector_args \code{list} of (named) arguments to be used in 
-#'   \code{selector} via \code{\link{do.call}}. 
-#'
-#' @param ... Not passed along to the output, rather included to allow for
-#'   automated removal of unneeded controls.
-#'
-#' @return \code{list}, with named elements corresponding to the arguments.
-#'
-#' @examples
-#'   LDA_control()
+#' @rdname LDA
 #'
 #' @export
 #'
