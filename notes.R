@@ -1,19 +1,14 @@
-# work on making formulas be able to be repeatedly prepped
-# its not really right to use gamma as a name for ilr 
-# lots of tidying to do!
-
-
 known to dos
-pipeline generalization and doc streamline
 check functions
 utilities
 plotting functions
 simulate
-generalize ilr to simplical to allow for other transforms
+make formulas be able to be repeatedly prepped
+its not really right to use gamma as a name for simplex
+citations for simplex
 
 
 devtools::load_all()
-
    data(rodents)
 
 data <- rodents
