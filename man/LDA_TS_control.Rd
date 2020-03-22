@@ -7,15 +7,16 @@
 \usage{
 LDA_TS_control(LDA_model = topicmodels_LDA,
   LDA_model_args = list(method = "VEM", seeded = TRUE),
-  LDA_measurer = AIC, LDA_measurer_args = list(),
-  LDA_selector = which.min, LDA_selector_args = list(),
-  TS_model = sequential_TS, TS_model_args = sequential_TS_control(),
-  TS_response = multinom_TS, TS_response_args = multinom_TS_control(),
-  TS_method = ldats_classic, TS_method_args = ldats_classic_control(),
-  nsubsets = 1, subset_rule = NULL, summary_prob = 0.95,
-  soften = TRUE, quiet = FALSE, TS_measurer = AIC,
-  TS_measurer_args = list(), TS_selector = which.min,
-  TS_selector_args = list(), ...)
+  LDA_measurer = AIC, LDA_measurer_args = list(NULL),
+  LDA_selector = which.min, LDA_selector_args = list(NULL),
+  TS_model = sequential_TS, TS_model_args = list(control =
+  sequential_TS_control()), TS_response = multinom_TS,
+  TS_response_args = list(control = multinom_TS_control()),
+  TS_method = ldats_classic, TS_method_args = list(control =
+  ldats_classic_control()), nsubsets = 1, subset_rule = NULL,
+  summary_prob = 0.95, soften = TRUE, quiet = FALSE,
+  TS_measurer = AIC, TS_measurer_args = list(NULL),
+  TS_selector = which.min, TS_selector_args = list(NULL), ...)
 }
 \arguments{
 \item{LDA_model}{Main LDA \code{function}.}

@@ -5,40 +5,35 @@ LDA_TS
     TS_control
 
   LDA
-    LDA_control
-    prep_LDA_models
-    LDA_call 
-      - uses control$model
-    select_LDA
-      measure_LDA
-        - uses control$measurer
-      - uses control$selector
+    prepare_LDA
+      LDA_control
+      conform_data
+    run_LDA
+      LDA_call (replicated for each model)
+       LDA_msg
+       LDA$control$model with LDA$control$model_args
     package_LDA
+      measure_LDA (replicated for each model)
+       LDA$control$measurer with LDA$control$measurer_args
+      select_LDA
+       LDA$control$selector with LDA$control$selector_args
 
   TS
-    TS_control
-    prep_TS_models
-    sequential_TS
-      sequential_TS_control
-      est_changepoints
-        - uses control$method
-      est_regressors
-        - uses TS$reponse
-      package_sequential_TS
-    select_TS
-      measure_TS
-        - uses control$measurer
-      - uses control$selector
+    prepare_TS
+      TS_control
+    run_TS
+      TS_call (replicated for each model)
+       TS_msg
+       TS$control$model with TS$control$model_args
+
+[one more level deeper here!]
+
     package_TS
+      measure_TS (replicated for each model)
+       TS$control$measurer with TS$control$measurer_args
+      select_TS
+       TS$control$selector with TS$control$selector_args
 
-  package_LDA_TS
 
 
 
-to consider
-TS versus control object passing around...like once the controls are in the 
-    model object why still pass them around>??
-make sequential_TS the model like in LDA_call
-condense x_call
-bring select_x within package_x
-rename prep_x_models as prep_x

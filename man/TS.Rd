@@ -2,14 +2,32 @@
 % Please edit documentation in R/TS.R
 \name{TS}
 \alias{TS}
-\alias{prep_TS_models}
+\alias{run_TS}
+\alias{TS_call}
+\alias{TS_msg}
+\alias{prepare_TS}
+\alias{package_TS}
+\alias{select_TS}
+\alias{measure_TS}
 \title{Conduct a Bayesian compositional Time Series analysis}
 \usage{
 TS(LDAs, data, formulas = ~1, nchangepoints = 0, timename = "time",
   weights = NULL, control = list())
 
-prep_TS_models(LDAs, data, formulas = ~1, nchangepoints = 0,
+run_TS(TSs)
+
+TS_call(TS)
+
+TS_msg(TS)
+
+prepare_TS(LDAs, data, formulas = ~1, nchangepoints = 0,
   timename = "time", weights = NULL, control = list())
+
+package_TS(TSs)
+
+select_TS(TSs)
+
+measure_TS(TSs)
 }
 \arguments{
 \item{data}{\code{data.frame} including [1] the time variable (indicated 
@@ -47,7 +65,7 @@ timestep being 1 day, which is often not desired behavior.}
 
 \item{weights}{Optional class \code{numeric} vector of weights for each 
 document. Defaults to \code{NULL}, translating to an equal weight for
-each document. When using \code{\link{sequential_TS}} in a standard LDATS 
+each document. When using \code{\link{TS_call}} in a standard LDATS 
 analysis, it is advisable to weight the documents by their total size,
 as the result of, e.g., \code{\link[topicmodels]{LDA}} is a matrix of 
 proportions, which does not account for size differences among documents.
@@ -57,22 +75,49 @@ most appropriate, and this is accomplished using \code{document_weights}.}
 \item{control}{A \code{list} of parameters to control the fitting of the
 Time Series model. Values not input assume defaults set by 
 \code{\link{TS_control}}.}
+
+\item{TSs}{\code{list} of  time series model \code{list}s.}
+
+\item{selected_TSs}{\code{list} of selected time series model \code{list}s.}
 }
 \value{
-\code{TS}: class \code{TS_set} \code{list} of both selected and all
-    results from \code{\link{sequential_TS}} applied for each model on each
-    LDA model input as well as the control \code{list} used to fit the 
-    model. \cr \cr
+\code{TS},\code{pacakage_TS}: class \code{TS_set} \code{list} of both 
+    selected and all results from \code{\link{TS_call}} applied for 
+    each model on each LDA model input as well as the control \code{list} 
+    used to fit the model. \cr \cr
   \code{prep_TS_models}: \code{list} of \code{list}s, each of which is a
-    preliminary model object for a Time Series model fit.
+    preliminary model object for a Time Series model fit. \cr \cr
+  \code{measure_TS}: \code{vector} of values corresponding to the model
+    evaluations. \cr \cr
+  \code{select_TS}: \code{list} of selected models' \code{list}s. \cr \cr
+  \code{run_TS}: \code{TS_set} \code{list} of model results from all
+    runs of a \code{<model>} function, such as 
+    \code{\link{topicmodels_TS}}. \cr \cr
+  \code{TS_call}: \code{TS} \code{list} of model results from a single
+    run of a \code{<model>} function, such as 
+    \code{\link{sequential_TS}}. \cr \cr
+  \code{TS_msg}: a message is produced.
 }
 \description{
-Analyze compositional Time Series models. \cr \cr
+Analyze compositional Time Series models using Bayesian
+  sampling methods. \cr \cr
   \code{TS} is the main interface function for the LDATS application
     of Bayesian change point Time Series analyses (Christensen 
     \emph{et al.} 2018). \cr \cr
-  \code{prep_TS_models} pre-prepares the TS model objects for simpler 
-    use within the subfunctions.
+  \code{prepare_TS} pre-prepares the TS model objects for simpler 
+    use within the subfunctions. \cr \cr
+  \code{run_TS} runs (via \code{\link{TS_call}}) all TS models
+    as set up by \code{prep_TS_models}. \cr \cr
+  \code{TS_call} runs (via \code{\link{do.call}}) a single TS model
+    as set up by \code{prep_TS_models}. \cr \cr
+  \code{TS_msg} produces a model-running message if desired. \cr \cr
+  \code{measure_TS} determines the fit value used to select among the 
+    models. \cr \cr
+  \code{select_TS} chooses the best model(s) of interest based on their
+    measured values and the selector function. \cr \cr
+  \code{package_TS} sets the class and names the elements of the results
+    \code{list} from \code{\link{TS_call}} applied to the 
+    combination of TS models requested for the LDA model(s) input.
 }
 \details{
 For a (potentially subset) dataset consisting of proportions of

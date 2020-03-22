@@ -5,8 +5,8 @@
 \title{Create the controls list for the Time Series model}
 \usage{
 LDA_control(model = topicmodels_LDA, model_args = list(method = "VEM",
-  seeded = TRUE), measurer = AIC, measurer_args = list(),
-  selector = which.min, selector_args = list(), nsubsets = 1,
+  seeded = TRUE), measurer = AIC, measurer_args = list(NULL),
+  selector = which.min, selector_args = list(NULL), nsubsets = 1,
   subset_rule = NULL, soften = TRUE, quiet = FALSE, ...)
 }
 \arguments{

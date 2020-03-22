@@ -5,11 +5,20 @@
 #'   \code{LDA} provides the main interface for Linguistic Decomposition 
 #'     Analysis conducted within the LDATS application of (Christensen 
 #'     \emph{et al.} 2018). \cr \cr
-#'   \code{prep_LDA_models} pre-prepares the LDA model objects for simpler 
+#'   \code{prepare_LDA} pre-prepares the LDA model objects for simpler 
 #'     use within the subfunctions. \cr \cr 
+#'   \code{run_LDA} runs (via \code{\link{LDA_call}}) all LDA models
+#'     as set up by \code{prep_LDA_models}. \cr \cr
 #'   \code{LDA_call} runs (via \code{\link{do.call}}) a single LDA model
 #'     as set up by \code{prep_LDA_models}. \cr \cr
-#'   \code{LDA_msg} produces a model-running message if desired.
+#'   \code{LDA_msg} produces a model-running message if desired. \cr \cr
+#'   \code{measure_LDA} determines the fit value used to select among the 
+#'     models. \cr \cr
+#'   \code{select_LDA} chooses the best model(s) of interest based on their
+#'     measured values and the selector function. \cr \cr
+#'   \code{package_LDA} sets the class and names the elements of the results
+#'     \code{list} from \code{\link{LDA_call}} applied to the 
+#'     combination of TS models requested for the data input(s).
 #'
 #' @details For a (potentially subset) dataset consisting of counts of words 
 #'   across multiple documents in a corpus, 
@@ -34,24 +43,33 @@
 #' @param topics Vector of the number of topics to evaluate for each model.
 #'   Must be conformable to \code{integer} values.
 #'
-#' @param reps Number of replicate starts to use for each 
+#' @param replicates Number of replicate starts to use for each 
 #'   value of \code{topics}. Must be conformable to \code{integer} value.
 #'
 #' @param control A \code{list} of parameters to control the fitting of the
 #'   LDA model. Values not input assume defaults set by 
 #'   \code{\link{LDA_control}}.
 #'
+#' @param LDAs \code{list} of LDA model \code{list}s.
+#'
+#' @param selected_LDAs \code{list} of selected LDA model \code{list}s.
+#'
 #' @return 
-#'   \code{LDA}: class \code{LDA_set} \code{list} of both selected and all
-#'     results from \code{\link{LDA_call}} applied for each model on each
-#'     data input(s) as well as the control \code{list} used to fit the 
-#'     model. \cr \cr
+#'   \code{LDA},\code{pacakage_LDA}: class \code{LDA_set} \code{list} of 
+#'     both selected and all results from \code{\link{LDA_call}} applied for 
+#'     each model on each data input(s) as well as the control \code{list} 
+#'     used to fit the model. \cr \cr
 #'   \code{prep_LDA_models}: \code{list} of \code{list}s, each of which is a
 #'     preliminary model object for an LDA model fit. \cr \cr
+#'   \code{run_LDA}: \code{LDA_set} \code{list} of model results from all
+#'     runs of a \code{<model>} function, such as 
+#'     \code{\link{topicmodels_LDA}}. \cr \cr
 #'   \code{LDA_call}: \code{LDA} \code{list} of model results from a single
 #'     run of a \code{<model>} function, such as 
 #'     \code{\link{topicmodels_LDA}}. \cr \cr
-#'   \code{LDA_msg}: a message is produced.
+#'   \code{measure_LDA}: \code{vector} of values corresponding to the model
+#'     evaluations.
+#'   \code{select_LDA}: \code{list} of selected models' \code{list}s.
 #' 
 #' @references 
 #'   Blei, D. M., A. Y. Ng, and M. I. Jordan. 2003. Latent Dirichlet
@@ -68,45 +86,20 @@
 #'   Models. \emph{Journal of Statistical Software} \strong{40}:13.
 #'   \href{https://www.jstatsoft.org/article/view/v040i13}{link}.
 #'
-#' @export
+#' @name LDA
 #'
-LDA <- function(data, topics = 2, reps = 1, control = list()){
-  control <- do.call("LDA_control", control)
-  messageq("----- Linguistic Decomposition Analyses -----", control$quiet)
-  LDAs <- prep_LDA_models(data = data, topics = topics, reps = reps,
-                          control = control)
-  nLDA <- length(LDAs)
-  for (i in 1:nLDA){
-    LDAs[[i]] <- LDA_call(LDA = LDAs[[i]], control = control)
-  }
-  selected_LDAs <- select_LDA(LDAs = LDAs, control = control)
-  package_LDA(selected_LDAs = selected_LDAs, LDAs = LDAs, control = control)
-}
+#'
 
 
 #' @rdname LDA
 #'
 #' @export
 #'
-prep_LDA_models <- function(data, topics = 2, reps = 1, control = list()){
-  data <- conform_data(data = data, control = control)
-  subsets <- names(data)
-  if(length(reps) < length(topics)){
-    reps <- rep(reps, length(topics))
-  }
-  LDA_topics <- rep(topics, reps)
-  LDA_reps <- sequence(reps)
-  LDA_subsets <- rep(subsets, each = length(LDA_reps))  
-  LDA_reps <- rep(LDA_reps, length(subsets))
-  LDA_topics <- rep(LDA_topics, length(subsets))
-  nLDA <- length(LDA_topics)
-  LDAs <- vector("list", length = nLDA)
-  for(i in 1:nLDA){
-    LDAs[[i]] <- list(data = data[[LDA_subsets[[i]]]], 
-                      data_subset = LDA_subsets[[i]],
-                      topics = LDA_topics[[i]], rep = LDA_reps[[i]])
-  }
-  names(LDAs) <- paste0("model_", 1:nLDA)
+LDA <- function(data, topics = 2, replicates = 1, control = list()){
+  LDAs <- prepare_LDA(data = data, topics = topics, replicates = replicates, 
+                      control = control)
+  LDAs <- run_LDA(LDAs = LDAs)
+  LDAs <- package_LDA(LDAs = LDAs)
   LDAs
 }
 
@@ -115,12 +108,44 @@ prep_LDA_models <- function(data, topics = 2, reps = 1, control = list()){
 #'
 #' @export
 #'
-LDA_call <- function(LDA = NULL, control = list()){
-  control <- do.call("LDA_control", control)  
-  LDA_msg(LDA = LDA, control = control)
-  fun <- control$model
-  args <- update_list(control$model_args, LDA = LDA)
-  soft_call(fun = fun, args = args, soften = control$soften)
+prepare_LDA <- function(data, topics = 2, replicates = 1, control = list()){
+  control <- do.call("LDA_control", control)
+  messageq("----- Linguistic Decomposition Analyses -----", control$quiet)
+  data <- conform_data(data = data, control = control)
+  subsets <- names(data)
+  if(length(replicates) < length(topics)){
+    reps <- rep(replicates, length(topics))
+  }
+  LDA_topics <- rep(topics, replicates)
+  LDA_reps <- sequence(replicates)
+  LDA_subsets <- rep(subsets, each = length(LDA_reps))  
+  LDA_reps <- rep(LDA_reps, length(subsets))
+  LDA_topics <- rep(LDA_topics, length(subsets))
+  nLDA <- length(LDA_topics)
+  LDAs <- vector("list", length = nLDA)
+  for(i in 1:nLDA){
+    LDAs[[i]] <- list(data = data[[LDA_subsets[[i]]]], 
+                      data_subset = LDA_subsets[[i]],
+                      topics = LDA_topics[[i]], 
+                      replicate = LDA_reps[[i]],
+                      control = control)
+  }
+  names(LDAs) <- paste0("model_", 1:nLDA)
+  LDAs
+}
+
+
+
+#' @rdname LDA
+#'
+#' @export
+#'
+run_LDA <- function(LDAs){
+  nLDA <- length(LDAs)
+  for (i in 1:nLDA){
+    LDAs[[i]] <- LDA_call(LDA = LDAs[[i]])
+  }
+  LDAs
 }
 
 
@@ -128,11 +153,77 @@ LDA_call <- function(LDA = NULL, control = list()){
 #'
 #' @export
 #'
-LDA_msg <- function(LDA, control = list()){
+LDA_call <- function(LDA){
+  LDA_msg(LDA = LDA)
+  fun <- LDA$control$model
+  args <- update_list(LDA$control$model_args, LDA = LDA)
+  soft_call(fun = fun, args = args, soften = LDA$control$soften)
+}
+
+
+#' @rdname LDA
+#'
+#' @export
+#'
+LDA_msg <- function(LDA){
   subset_msg <- paste0("  - data subset ", LDA$data_subset)
   topic_msg <- paste0(", ", LDA$topics, " topics")
   rep_msg <- paste0(", replicate ", LDA$rep)
-  messageq(paste0(subset_msg, topic_msg, rep_msg), control$quiet)
+  messageq(paste0(subset_msg, topic_msg, rep_msg), LDA$control$quiet)
+}
+
+
+#' @rdname LDA
+#'
+#' @export
+#'
+package_LDA <- function(LDAs){
+  selected_LDAs <- select_LDA(LDAs = LDAs)
+  out <- list(selected_LDAs = selected_LDAs, LDAs = LDAs)
+  class(out) <- c("LDA_set", "list")
+  out
+}
+
+
+#' @rdname LDA
+#'
+#' @export
+#'
+select_LDA <- function(LDAs){
+  nLDAs <- length(LDAs)
+  maxtopics <- 0
+  for(i in 1:nLDAs){
+    maxtopics <- max(c(maxtopics, LDAs[[i]]$topics))
+  }
+  if(maxtopics == 1){
+    return(LDAs)
+  }
+  vals <- measure_LDA(LDAs = LDAs)
+  fun <- LDAs[[1]]$control$selector
+  args <- update_list(LDAs[[1]]$control$selector_args, x = vals)
+  args[names(args) == ""] <- NULL
+  selection <- do.call(what = fun, args = args)
+  LDAs[selection]  
+}
+
+#' @rdname LDA
+#'
+#' @export
+#'
+measure_LDA <- function(LDAs){
+  nLDAs <- length(LDAs)
+  vals <- rep(NA, nLDAs)
+  for(i in 1:nLDAs){
+    fun <- LDAs[[i]]$control$measurer
+    args <- LDAs[[i]]$control$measurer_args
+    args <- update_list(args, object = LDAs[[i]])
+    args[names(args) == ""] <- NULL
+    vals_i <- do.call(what = fun, args = args)
+    if(length(vals_i) != 0){
+      vals[i] <- vals_i
+    }
+  }
+  vals
 }
 
 
@@ -184,9 +275,9 @@ LDA_msg <- function(LDA, control = list()){
 LDA_control <- function(model = topicmodels_LDA, 
                         model_args = list(method = "VEM", seeded = TRUE),
                         measurer = AIC,
-                        measurer_args = list(),
+                        measurer_args = list(NULL),
                         selector = which.min,
-                        selector_args = list(), 
+                        selector_args = list(NULL), 
                         nsubsets = 1,
                         subset_rule = NULL,
                         soften = TRUE, 
@@ -198,104 +289,6 @@ LDA_control <- function(model = topicmodels_LDA,
        soften = soften, quiet = quiet)
 }
 
-
-#' @title Latent Dirichlet Allocation Linguistic Decomposition Analysis
-#'   as conducted via the topicmodels package
-#'
-#' @description Fit the standard LDATS LDA model (a true Latent Dirichlet
-#'   Allocation) using \code{\link[topicmodels]{topicmodels::LDA}}
-#'   (Grun and Hornik 2011). \cr 
-#'   Default methodology is the Variational
-#'   Expectation Maximization routine (VEM) as described by 
-#'   Blei \emph{et al.} (2003) and implemented by Grun and Hornik (2011). \cr
-#'   If the model is defined to only fit one topic, \code{\link{identity_LDA}}
-#'   is used by default.
-#'
-#' @param LDA A prepared (via \code{\link{prep_LDA_models}} LDA model
-#'   \code{list}.
-#'
-#' @param ... Additional arguments to be passed to 
-#'   \code{\link[topicmodels]{topicmodels::LDA}} as a \code{control} input.
-#'
-#' @param seeded \code{logical} indicator of if the LDA should be a seeded
-#'   replicate. 
-#'
-#' @param method Fitting routine used in 
-#'   \code{\link[topicmodels]{topicmodels::LDA}}. Currenlty, only
-#'   \code{"VEM"} and \code{"Gibbs"} are supported.
-#'
-#' @return \code{LDA} \code{list}.
-#' 
-#' @references 
-#'   Blei, D. M., A. Y. Ng, and M. I. Jordan. 2003. Latent Dirichlet
-#'   Allocation. \emph{Journal of Machine Learning Research} 
-#'   \strong{3}:993-1022.
-#'   \href{http://jmlr.csail.mit.edu/papers/v3/blei03a.html}{link}.
-#'
-#'   Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
-#'   Models. \emph{Journal of Statistical Software} \strong{40}:13.
-#'   \href{https://www.jstatsoft.org/article/view/v040i13}{link}.
-#' 
-#' @export
-#'
-topicmodels_LDA <- function(LDA, method = "VEM", seeded = TRUE, ...){
-  data <- LDA$data
-  topics <- LDA$topics 
-  rep <- LDA$rep
-  data_subset <- LDA$data_subset
-  if(topics == 1){
-    identity_LDA(LDA)
-  } else{
-    fun_control <- list(...)
-    if(seeded){
-      fun_control <- update_list(fun_control, seed = rep * 2)
-    }
-    mod <- topicmodels::LDA(x = data$train$document_term_table, k = topics, 
-                            method = method, control = fun_control)
-    mod_ll <- sum(mod@loglikelihood)
-    alpha <- tryCatch(as.integer(mod@control@estimate.alpha), 
-                      error = function(x){0})
-    df <- alpha + length(mod@beta)
-    attr(mod_ll, "df") <- df
-    attr(mod_ll, "nobs") <- mod@Dim[1] * mod@Dim[2]
-    class(mod_ll) <- "logLik"
-    out <- list(params = list(alpha = mod@alpha, beta = mod@beta),
-                document_topic_matrix = mod@gamma, 
-                test_document_topic_matrix = NULL, #not yet available
-                log_likelihood = mod_ll, data = data,
-                topics = topics, rep = rep, data_subset = data_subset)
-    class(out) <- c("LDA", "list")
-    out
-  } 
-}
-
-#' @title Identity Linguistic Decomposition Analysis
-#'
-#' @description This function acts as an "identity" model, wherein the 
-#'   output is functionally the input. This allows for "single-topic" models
-#'   that do not actually decompose the data to be included in the model set.
-#'
-#' @param LDA A prepared (via \code{\link{prep_LDA_models}} LDA model
-#'   \code{list}.
-#'
-#' @return \code{LDA} \code{list} with most components as placeholders.
-#' 
-#' @export
-#'
-identity_LDA <- function(LDA){
-  data <- LDA$data
-  rep <- LDA$rep
-  data_subset <- LDA$data_subset
-  document_topic_table <- data$train$document_term_table 
-  document_topic_table <- document_topic_table / rowSums(document_topic_table)
-  colnames(document_topic_table) <- NULL
-  out <- list(params = list(), document_topic_table = document_topic_table, 
-              log_likelihood = NULL, data = data,
-              topics = 1, rep = rep, data_subset = data_subset,
-              test_document_topic_matrix = NULL) #not yet available
-  class(out) <- c("LDA", "list")
-  out
-}
 
 
 #' @title Determine the AIC of a Linguistic Decomposition Analysis
@@ -338,85 +331,4 @@ AIC.LDA <- function(object, ..., k = 2){
 logLik.LDA <- function(object, ...){
   object$log_likelihood
 }
-
-
-
-#' @title Measure, select, and package the output of a set of Linguistic
-#'   Decomposition Analysis models
-#'
-#' @description 
-#'   \code{measure_LDA} determines the fit value used to select among the 
-#'     models. \cr \cr
-#'   \code{select_LDA} chooses the best model(s) of interest based on their
-#'     measured values and the selector function. \cr \cr
-#'   \code{package_LDA} sets the class and names the elements of the results
-#'     \code{list} from \code{\link{LDA_call}} applied to the 
-#'     combination of TS models requested for the data input(s).
-#'
-#' @param LDAs \code{list} of LDA model \code{list}s.
-#'
-#' @param selected_LDAs \code{list} of selected LDA model \code{list}s.
-#'
-#' @param control A \code{list} of parameters to control the fitting of the
-#'   LDA model. Values not input assume defaults set by 
-#'   \code{\link{LDA_control}}.
-#'
-#' @return 
-#'   \code{measure_LDA}: \code{vector} of values corresponding to the model
-#'     evaluations.
-#'   \code{select_LDA}: \code{list} of selected models' \code{list}s.
-#'   \code{pacakage_LDA}: class \code{LDA_set} \code{list} of both selected 
-#'     and all results from \code{\link{LDA_call}} applied for each model on
-#'     each data input as well as the control \code{list} used to fit 
-#'     the model.
-#'
-#' @export
-#'
-package_LDA <- function(selected_LDAs, LDAs, control = list()){
-  out <- list(selected_LDAs = selected_LDAs, LDAs = LDAs, control = control)
-  class(out) <- c("LDA_set", "list")
-  out
-}
-
-
-#' @rdname package_LDA
-#'
-#' @export
-#'
-select_LDA <- function(LDAs = list(), control = list()){
-  nLDAs <- length(LDAs)
-  maxtopics <- 0
-  for(i in 1:nLDAs){
-    maxtopics <- max(c(maxtopics, LDAs[[i]]$topics))
-  }
-  if(maxtopics == 1){
-    return(LDAs)
-  }
-  vals <- measure_LDA(LDAs = LDAs, control = control)
-  fun <- control$selector
-  args <- update_list(control$selector_args, x = vals)
-  selection <- do.call(what = fun, args = args)
-  LDAs[selection]  
-}
-
-#' @rdname package_LDA
-#'
-#' @export
-#'
-measure_LDA <- function(LDAs = list(), control = list()){
-  fun <- control$measurer
-  args <- control$measurer_args
-  nLDAs <- length(LDAs)
-  vals <- rep(NA, nLDAs)
-  for(i in 1:nLDAs){
-    args <- update_list(args, object = LDAs[[i]])
-    vals_i <- do.call(what = fun, args = args)
-    if(length(vals_i) != 0){
-      vals[i] <- vals_i
-    }
-  }
-  vals
-}
-
-
 

@@ -4,12 +4,13 @@
 \alias{TS_control}
 \title{Create the controls list for the Time Series model}
 \usage{
-TS_control(model = sequential_TS, model_args = sequential_TS_control(),
-  response = multinom_TS, response_args = multinom_TS_control(),
-  method = ldats_classic, method_args = ldats_classic_control(),
-  summary_prob = 0.95, measurer = AIC, measurer_args = list(),
-  selector = which.min, selector_args = list(), soften = TRUE,
-  quiet = FALSE, ...)
+TS_control(model = sequential_TS, model_args = list(control =
+  sequential_TS_control()), response = multinom_TS,
+  response_args = list(control = multinom_TS_control()),
+  method = ldats_classic, method_args = list(control =
+  ldats_classic_control()), summary_prob = 0.95, measurer = AIC,
+  measurer_args = list(NULL), selector = which.min,
+  selector_args = list(NULL), soften = TRUE, quiet = FALSE, ...)
 }
 \arguments{
 \item{response}{\code{character} element indicating the response variable 

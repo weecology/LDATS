@@ -5,7 +5,6 @@
 \alias{package_sequential_TS}
 \alias{est_changepoints}
 \alias{est_regressors}
-\alias{sequential_TS_msg}
 \title{Estimate a Time Series model sequentially}
 \usage{
 sequential_TS(TS, control = list())
@@ -15,8 +14,6 @@ package_sequential_TS(TS, rho_dist, eta_dist, control = list())
 est_changepoints(TS, control = list())
 
 est_regressors(rho_dist, TS, control = list())
-
-sequential_TS_msg(TS, control = list())
 }
 \arguments{
 \item{control}{A \code{list} of parameters to control the fitting of the
@@ -73,8 +70,7 @@ of the coefficients across the segments (columns), as estimated by
                    (\code{lls}).}
       \item{nparams}{Total number of parameters in the full model,
                      including the change point locations and regressors.}
-    } \cr \cr
-  \code{TS_msg}: a message is produced.
+    }
 }
 \description{
 This set of functions estimates the Time Series model
@@ -82,23 +78,21 @@ This set of functions estimates the Time Series model
   with full flexibility of the regressor models between change points,
   then estimate the regressors between the change points, intially 
   conditional on their locations, but with marginal estimation to produce
-  regressor values unconditional on change point locations. 
+  regressor values unconditional on change point locations. \cr \cr
   \code{sequential_TS} combines each stage of the model estimation and 
-    packages the model results in a consistent output. 
+    packages the model results in a consistent output. \cr \cr
   \code{est_changepoints} estimates the change point location 
-    distributions for multinomial Time Series analyses.
+    distributions for multinomial Time Series analyses. \cr \cr
   \code{est_regressors} uses the marginal posterior distributions of
     the change point locations (estimated by 
     \code{\link{est_changepoints}}) in combination with the conditional 
     (on the change point locations) posterior distributions of the 
     regressors (estimated by a \code{<response>_TS} function) to 
     estimate the marginal posterior distribution of the regressors, 
-    unconditional on the change point locations.
+    unconditional on the change point locations. \cr \cr
   \code{package_sequential_TS} calculates relevant summaries for the run of
     a sequenial Time Series model within \code{\link{sequential_TS}} and 
-    packages the output as a \code{TS}-class object.  
-  \code{sequential_TS_msg} produces a specific message about the model
-    being run.
+    packages the output as a \code{TS}-class object. \cr \cr
 }
 \details{
 The general approach follows that of Western and Kleykamp
@@ -106,12 +100,14 @@ The general approach follows that of Western and Kleykamp
   models are fit independently for each chunk (segment of time), and 
   therefore the variance-covariance matrix for the full model 
   has \code{0} entries for covariances between regressors in different
-  chunks of the time series. Further, because the regression model here
-  is a standard (non-hierarchical) softmax (Ripley 1996, Venables and 
-  Ripley 2002, Bishop 2006), there is no error term in the regression  
-  (as there is in the normal model used by Western and Kleykamp 2004), 
-  and so the posterior distribution used here is a multivariate normal,
-  as opposed to a multivariate t, as used by Western and Kleykamp (2004).
+  chunks of the time series. \cr \cr
+  Further differences are model-specific. For example, the original softmax 
+  multinomial regression model used here is a standard (non-hierarchical) 
+  model (Ripley 1996, Venables and Ripley 2002, Bishop 2006), mean that
+  there is no error term in the regression (as there is in the normal
+  model used by Western and Kleykamp 2004), and so the posterior 
+  distribution used here is a multivariate normal, as opposed to a
+  multivariate t, as used by Western and Kleykamp (2004).
 }
 \references{
 Bishop, C. M. 2006. \emph{Pattern Recognition and Machine Learning}. 

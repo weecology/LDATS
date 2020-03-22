@@ -141,7 +141,6 @@ LDA_TS <- function(data, topics = 2, reps = 1, formulas = ~ 1,
                    nchangepoints = 0, timename = "time", weights = TRUE, 
                    control = list()){
   control <- do.call("LDA_TS_control", control)
-  data <- conform_data(data = data, control = control)
   LDAs <- LDA(data = data, topics = topics, reps = reps, 
               control = control$LDA_control)
   TSs <- TS(LDAs = LDAs, data = data, formulas = formulas, 
@@ -271,24 +270,27 @@ LDA_TS_control <- function(LDA_model = topicmodels_LDA,
                            LDA_model_args = 
                              list(method = "VEM", seeded = TRUE),
                            LDA_measurer = AIC,
-                           LDA_measurer_args = list(),
+                           LDA_measurer_args = list(NULL),
                            LDA_selector = which.min,
-                           LDA_selector_args = list(), 
+                           LDA_selector_args = list(NULL), 
                            TS_model = sequential_TS,
-                           TS_model_args = sequential_TS_control(),
+                           TS_model_args = 
+                             list(control = sequential_TS_control()),
                            TS_response = multinom_TS,
-                           TS_response_args = multinom_TS_control(),
+                           TS_response_args = 
+                              list(control = multinom_TS_control()),
                            TS_method = ldats_classic,
-                           TS_method_args = ldats_classic_control(),
+                           TS_method_args = 
+                             list(control = ldats_classic_control()),
                            nsubsets = 1,
                            subset_rule = NULL,
                            summary_prob = 0.95,
                            soften = TRUE, 
                            quiet = FALSE,
                            TS_measurer = AIC,
-                           TS_measurer_args = list(),
+                           TS_measurer_args = list(NULL),
                            TS_selector = which.min,
-                           TS_selector_args = list(), ...){
+                           TS_selector_args = list(NULL), ...){
 
   LDA_control <- LDA_control(model = LDA_model, model_args = LDA_model_args, 
                              measurer = LDA_measurer, 
@@ -298,7 +300,9 @@ LDA_TS_control <- function(LDA_model = topicmodels_LDA,
                              nsubsets = nsubsets, subset_rule = subset_rule,
                              soften = soften, quiet = quiet)
 
-  TS_control <- TS_control(response = TS_response, 
+  TS_control <- TS_control(model = TS_model, 
+                           model_args = TS_model_args, 
+                           response = TS_response, 
                            response_args = TS_response_args, 
                            method = TS_method, 
                            method_args = TS_method_args, 

@@ -2,18 +2,30 @@
 % Please edit documentation in R/LDA.R
 \name{LDA}
 \alias{LDA}
-\alias{prep_LDA_models}
+\alias{prepare_LDA}
+\alias{run_LDA}
 \alias{LDA_call}
 \alias{LDA_msg}
+\alias{package_LDA}
+\alias{select_LDA}
+\alias{measure_LDA}
 \title{Run a set of Linguistic Decomposition Analysis models}
 \usage{
-LDA(data, topics = 2, reps = 1, control = list())
+LDA(data, topics = 2, replicates = 1, control = list())
 
-prep_LDA_models(data, topics = 2, reps = 1, control = list())
+prepare_LDA(data, topics = 2, replicates = 1, control = list())
 
-LDA_call(LDA = NULL, control = list())
+run_LDA(LDAs)
 
-LDA_msg(LDA, control = list())
+LDA_call(LDA)
+
+LDA_msg(LDA)
+
+package_LDA(LDAs)
+
+select_LDA(LDAs)
+
+measure_LDA(LDAs)
 }
 \arguments{
 \item{data}{Any of the data structures allowable for LDATS analyses:
@@ -27,35 +39,53 @@ validity for the desired model.}
 \item{topics}{Vector of the number of topics to evaluate for each model.
 Must be conformable to \code{integer} values.}
 
-\item{reps}{Number of replicate starts to use for each 
+\item{replicates}{Number of replicate starts to use for each 
 value of \code{topics}. Must be conformable to \code{integer} value.}
 
 \item{control}{A \code{list} of parameters to control the fitting of the
 LDA model. Values not input assume defaults set by 
 \code{\link{LDA_control}}.}
+
+\item{LDAs}{\code{list} of LDA model \code{list}s.}
+
+\item{selected_LDAs}{\code{list} of selected LDA model \code{list}s.}
 }
 \value{
-\code{LDA}: class \code{LDA_set} \code{list} of both selected and all
-    results from \code{\link{LDA_call}} applied for each model on each
-    data input(s) as well as the control \code{list} used to fit the 
-    model. \cr \cr
+\code{LDA},\code{pacakage_LDA}: class \code{LDA_set} \code{list} of 
+    both selected and all results from \code{\link{LDA_call}} applied for 
+    each model on each data input(s) as well as the control \code{list} 
+    used to fit the model. \cr \cr
   \code{prep_LDA_models}: \code{list} of \code{list}s, each of which is a
     preliminary model object for an LDA model fit. \cr \cr
+  \code{run_LDA}: \code{LDA_set} \code{list} of model results from all
+    runs of a \code{<model>} function, such as 
+    \code{\link{topicmodels_LDA}}. \cr \cr
   \code{LDA_call}: \code{LDA} \code{list} of model results from a single
     run of a \code{<model>} function, such as 
     \code{\link{topicmodels_LDA}}. \cr \cr
-  \code{LDA_msg}: a message is produced.
+  \code{measure_LDA}: \code{vector} of values corresponding to the model
+    evaluations.
+  \code{select_LDA}: \code{list} of selected models' \code{list}s.
 }
 \description{
 Conduct Linguistic Decomposition Analyses. \cr \cr
   \code{LDA} provides the main interface for Linguistic Decomposition 
     Analysis conducted within the LDATS application of (Christensen 
     \emph{et al.} 2018). \cr \cr
-  \code{prep_LDA_models} pre-prepares the LDA model objects for simpler 
+  \code{prepare_LDA} pre-prepares the LDA model objects for simpler 
     use within the subfunctions. \cr \cr 
+  \code{run_LDA} runs (via \code{\link{LDA_call}}) all LDA models
+    as set up by \code{prep_LDA_models}. \cr \cr
   \code{LDA_call} runs (via \code{\link{do.call}}) a single LDA model
     as set up by \code{prep_LDA_models}. \cr \cr
-  \code{LDA_msg} produces a model-running message if desired.
+  \code{LDA_msg} produces a model-running message if desired. \cr \cr
+  \code{measure_LDA} determines the fit value used to select among the 
+    models. \cr \cr
+  \code{select_LDA} chooses the best model(s) of interest based on their
+    measured values and the selector function. \cr \cr
+  \code{package_LDA} sets the class and names the elements of the results
+    \code{list} from \code{\link{LDA_call}} applied to the 
+    combination of TS models requested for the data input(s).
 }
 \details{
 For a (potentially subset) dataset consisting of counts of words 

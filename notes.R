@@ -4,13 +4,12 @@
 
 
 known to dos
-
-package LDA_TS
+pipeline generalization and doc streamline
 check functions
 utilities
 plotting functions
 simulate
-generalize ilr to simplical to allow for other transforms?
+generalize ilr to simplical to allow for other transforms
 
 
 devtools::load_all()
@@ -19,17 +18,16 @@ devtools::load_all()
 
 data <- rodents
 topics = 2 
-reps = 2
+replicates = 2
 formulas = ~ 1
-nchangepoints = 0:2
+nchangepoints = 1
 timename = "newmoon"
 weights = TRUE
 control = list()
-control <- do.call("LDA_TS_control", control)
-data <- conform_data(data = data, control = control)
-LDAs <- LDA(data = data, topics = topics, reps = reps, 
-              control = control$LDA_control)
-control$TS_control$method_args$nit <- 100
+LDAs <- LDA(data = data, topics = topics, replicates = replicates, 
+              control = list())
+control <- LDA_TS_control()
+control$TS_control$method_args$control$nit <- 100
 TSs <- TS(LDAs = LDAs, data = data, formulas = formulas, 
           nchangepoints = nchangepoints, timename = timename, 
           weights = weights, control = control$TS_control)

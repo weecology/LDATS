@@ -20,8 +20,6 @@
 #'   \code{package_sequential_TS} calculates relevant summaries for the run of
 #'     a sequenial Time Series model within \code{\link{sequential_TS}} and 
 #'     packages the output as a \code{TS}-class object. \cr \cr
-#'   \code{sequential_TS_msg} produces a specific message about the model
-#'     being run. 
 #'
 #' @param rho_dist \code{list} of saved data objects from the estimation of
 #'   change point locations (unless \code{nchangepoints} is 0, then 
@@ -106,14 +104,12 @@
 #'                    (\code{lls}).}
 #'       \item{nparams}{Total number of parameters in the full model,
 #'                      including the change point locations and regressors.}
-#'     } \cr \cr
-#'   \code{TS_msg}: a message is produced.
+#'     }
 #'
 #' @export
 #'
 sequential_TS <- function(TS, control = list()){
   control <- do.call("sequential_TS_control", control)
-  sequential_TS_msg(TS = TS, control = control)
   rho_dist <- est_changepoints(TS = TS, control = control)
   eta_dist <- est_regressors(rho_dist = rho_dist, TS = TS, control = control)
   package_sequential_TS(TS = TS, rho_dist = rho_dist, eta_dist = eta_dist, 
@@ -178,9 +174,9 @@ est_changepoints <- function(TS, control = list()){
   if (TS$nchangepoints == 0){
     return(NULL)
   }
-  fun <- control$method
-  args <- list(TS = TS, control = control$method_args)
-  soft_call(fun = fun, args = args, soften = control$soften)
+  fun <- TS$control$method
+  args <- update_list(TS$control$method_args, TS = TS)
+  soft_call(fun = fun, args = args, soften = TS$control$soften)
 }
 
 #' @rdname sequential_TS
@@ -193,9 +189,9 @@ est_regressors <- function(rho_dist, TS, control = list()){
   if(is.null(rho_dist)){
 
     msg <- "    - estimating regressor distribution"
-    messageq(msg, control$quiet)
+    messageq(msg, TS$control$quiet)
 
-    fun <- TS$response
+    fun <- TS$control$response
     args <- list(data = data, formula = TS$formula, changepoints = NULL, 
                  timename = TS$timename, weights = TS$weights, 
                  control = control$method_args)
@@ -238,11 +234,11 @@ est_regressors <- function(rho_dist, TS, control = list()){
 
 
     data <- TS$data$train$ts_data
-    fun <- TS$response
-    fun <- memoise_fun(fun, control$method_args$memoise)
+    fun <- TS$control$response
+    fun <- memoise_fun(fun, TS$control$method_args$memoise)
     args <- list(data = data, formula = TS$formula, changepoints = cpts, 
                  timename = TS$timename, weights = TS$weights, 
-                 control = control$method_args)
+                 control = TS$control$method_args)
     mod <- soft_call(fun, args, TRUE)
 
 
@@ -266,23 +262,7 @@ est_regressors <- function(rho_dist, TS, control = list()){
   eta
 }
 
-#' @rdname sequential_TS
-#'
-#' @export
-#'
-sequential_TS_msg <- function(TS, control = list()){
-  control <- do.call("sequential_TS_control", control)
-  subset_msg <- paste0("  - data subset ", TS$data_subset)
-  topic_msg <- paste0(", ", TS$topics, " topics")
-  rep_msg <- paste0(", replicate ", TS$rep)
 
-  formula_msg <- paste0(", ", deparse(TS$formula))
-  nchangepoints <- TS$nchangepoints
-  txt <- ifelse(nchangepoints == 1, " change point", " change points")
-  changepoints_msg <- paste0(", ", nchangepoints, txt)
-  msg <- paste0(subset_msg, topic_msg, rep_msg, formula_msg, changepoints_msg)
-  messageq(msg, control$quiet)
-}
 
 
 #' @title Create the controls list for a sequential Time Series model

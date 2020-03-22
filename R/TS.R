@@ -6,8 +6,20 @@
 #'   \code{TS} is the main interface function for the LDATS application
 #'     of Bayesian change point Time Series analyses (Christensen 
 #'     \emph{et al.} 2018). \cr \cr
-#'   \code{prep_TS_models} pre-prepares the TS model objects for simpler 
-#'     use within the subfunctions.
+#'   \code{prepare_TS} pre-prepares the TS model objects for simpler 
+#'     use within the subfunctions. \cr \cr
+#'   \code{run_TS} runs (via \code{\link{TS_call}}) all TS models
+#'     as set up by \code{prep_TS_models}. \cr \cr
+#'   \code{TS_call} runs (via \code{\link{do.call}}) a single TS model
+#'     as set up by \code{prep_TS_models}. \cr \cr
+#'   \code{TS_msg} produces a model-running message if desired. \cr \cr
+#'   \code{measure_TS} determines the fit value used to select among the 
+#'     models. \cr \cr
+#'   \code{select_TS} chooses the best model(s) of interest based on their
+#'     measured values and the selector function. \cr \cr
+#'   \code{package_TS} sets the class and names the elements of the results
+#'     \code{list} from \code{\link{TS_call}} applied to the 
+#'     combination of TS models requested for the LDA model(s) input.
 #'
 #' @details For a (potentially subset) dataset consisting of proportions of
 #'   topics across multiple documents in a corpus 
@@ -58,7 +70,7 @@
 #'
 #' @param weights Optional class \code{numeric} vector of weights for each 
 #'   document. Defaults to \code{NULL}, translating to an equal weight for
-#'   each document. When using \code{\link{sequential_TS}} in a standard LDATS 
+#'   each document. When using \code{\link{TS_call}} in a standard LDATS 
 #'   analysis, it is advisable to weight the documents by their total size,
 #'   as the result of, e.g., \code{\link[topicmodels]{LDA}} is a matrix of 
 #'   proportions, which does not account for size differences among documents.
@@ -68,40 +80,101 @@
 #' @param control A \code{list} of parameters to control the fitting of the
 #'   Time Series model. Values not input assume defaults set by 
 #'   \code{\link{TS_control}}.
+#'  
+#' @param TSs \code{list} of  time series model \code{list}s.
+#'
+#' @param selected_TSs \code{list} of selected time series model \code{list}s.
 #'
 #' @return 
-#'   \code{TS}: class \code{TS_set} \code{list} of both selected and all
-#'     results from \code{\link{sequential_TS}} applied for each model on each
-#'     LDA model input as well as the control \code{list} used to fit the 
-#'     model. \cr \cr
+#'   \code{TS},\code{pacakage_TS}: class \code{TS_set} \code{list} of both 
+#'     selected and all results from \code{\link{TS_call}} applied for 
+#'     each model on each LDA model input as well as the control \code{list} 
+#'     used to fit the model. \cr \cr
 #'   \code{prep_TS_models}: \code{list} of \code{list}s, each of which is a
-#'     preliminary model object for a Time Series model fit.
+#'     preliminary model object for a Time Series model fit. \cr \cr
+#'   \code{measure_TS}: \code{vector} of values corresponding to the model
+#'     evaluations. \cr \cr
+#'   \code{select_TS}: \code{list} of selected models' \code{list}s. \cr \cr
+#'   \code{run_TS}: \code{TS_set} \code{list} of model results from all
+#'     runs of a \code{<model>} function, such as 
+#'     \code{\link{topicmodels_TS}}. \cr \cr
+#'   \code{TS_call}: \code{TS} \code{list} of model results from a single
+#'     run of a \code{<model>} function, such as 
+#'     \code{\link{sequential_TS}}. \cr \cr
+#'   \code{TS_msg}: a message is produced.
 #'
-#' @export
+#' @name TS
 #'
-TS <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0, 
-               timename = "time", weights = NULL, control = list()){
-  control <- do.call("TS_control", control)
-  messageq("----- Time Series Analyses -----", control$quiet)
-  TSs <- prep_TS_models(LDAs = LDAs, data = data, formulas = formulas,
-                        nchangepoints = nchangepoints, timename = timename,
-                        weights = weights, control = control)
-  nTS <- length(TSs)
-  for (i in 1:nTS){
-    TSs[[i]] <- sequential_TS(TS = TSs[[i]], control = control)
-  }
-  selected_TSs <- select_TS(TSs = TSs, control = control)
-  package_TS(selected_TSs = selected_TSs, TSs = TSs, control = control)
-}
+
 
 #' @rdname TS
 #'
 #' @export
 #'
-prep_TS_models <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0, 
+TS <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0, 
+               timename = "time", weights = NULL, control = list()){
+  TSs <- prepare_TS(LDAs = LDAs, data = data, formulas = formulas,
+                    nchangepoints = nchangepoints, timename = timename,
+                    weights = weights, control = control)
+  TSs <- run_TS(TSs = TSs)
+  TSs <- package_TS(TSs = TSs)
+  TSs
+}
+
+
+#' @rdname TS
+#'
+#' @export
+#'
+run_TS <- function(TSs){
+  nTS <- length(TSs)
+  for (i in 1:nTS){
+    TSs[[i]] <- TS_call(TS = TSs[[i]])
+  }
+  TSs
+}
+
+
+#' @rdname TS
+#'
+#' @export
+#'
+TS_call <- function(TS){
+  TS_msg(TS = TS)
+  fun <- TS$control$model
+  args <- update_list(TS$control$model_args, TS = TS)
+  soft_call(fun = fun, args = args, soften = TS$control$soften)
+}
+
+
+
+#' @rdname TS
+#'
+#' @export
+#'
+TS_msg <- function(TS){
+  subset_msg <- paste0("  - data subset ", TS$data_subset)
+  topic_msg <- paste0(", ", TS$topics, " topics")
+  rep_msg <- paste0(", replicate ", TS$rep)
+
+  formula_msg <- paste0(", ", deparse(TS$formula))
+  nchangepoints <- TS$nchangepoints
+  txt <- ifelse(nchangepoints == 1, " change point", " change points")
+  changepoints_msg <- paste0(", ", nchangepoints, txt)
+  msg <- paste0(subset_msg, topic_msg, rep_msg, formula_msg, changepoints_msg)
+  messageq(msg, TS$control$quiet)
+}
+
+
+#' @rdname TS
+#'
+#' @export
+#'
+prepare_TS <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0, 
                            timename = "time", weights = NULL, 
                            control = list()){
-
+  control <- do.call("TS_control", control)
+  messageq("----- Time Series Analyses -----", control$quiet)
   if (!is(formulas, "list")) {
     if (is(formulas, "formula")) {
       formulas <- c(formulas)
@@ -144,8 +217,8 @@ prep_TS_models <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0,
                      nchangepoints = tab$nchangepoints[i], 
                      weights = weights,
                      timename = timename,
-                     response = control$response,
-                     topics = lda$topics, rep = lda$rep)
+                     control = control,
+                     topics = lda$topics, replicate = lda$replicate)
   }
   name_tab <- data.frame(paste("LDA", tab[ , 1]), 
                          paste(",", tab[ , 2]),
@@ -157,69 +230,44 @@ prep_TS_models <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0,
 
 
 
-
-
-#' @title Measure, select, and package the output of a set of Time Series 
-#'   models
-#'
-#' @description 
-#'   \code{measure_TS} determines the fit value used to select among the 
-#'     models. \cr \cr
-#'   \code{select_TS} chooses the best model(s) of interest based on their
-#'     measured values and the selector function. \cr \cr
-#'   \code{package_TS} sets the class and names the elements of the results
-#'     \code{list} from \code{\link{sequential_TS}} applied to the 
-#'     combination of TS models requested for the LDA model(s) input.
-#'
-#' @param TSs \code{list} of  time series model \code{list}s.
-#'
-#' @param selected_TSs \code{list} of selected time series model \code{list}s.
-#'
-#' @param control A \code{list} of parameters to control the fitting of the
-#'   Time Series model. Values not input assume defaults set by 
-#'   \code{\link{TS_control}}.
-#'
-#' @return 
-#'   \code{measure_TS}: \code{vector} of values corresponding to the model
-#'     evaluations. \cr \cr
-#'   \code{select_TS}: \code{list} of selected models' \code{list}s. \cr \cr
-#'   \code{pacakage_TS}: class \code{TS_set} \code{list} of both selected and
-#'     all results from \code{\link{sequential_TS}} applied for each model on
-#'     each LDA model input as well as the control \code{list} used to fit 
-#'     the model.
+#' @rdname TS
 #'
 #' @export
 #'
-package_TS <- function(selected_TSs, TSs, control = list()){
-  out <- list(selected_TSs = selected_TSs, TSs = TSs, control = control)
+package_TS <- function(TSs){
+  selected_TSs <- select_TS(TSs = TSs)
+  out <- list(selected_TSs = selected_TSs, TSs = TSs)
   class(out) <- c("TS_set", "list")
   out
 }
 
-#' @rdname package_TS
+#' @rdname TS
 #'
 #' @export
 #'
-select_TS <- function(TSs, control = list()){
+select_TS <- function(TSs){
 
-  vals <- measure_TS(TSs = TSs, control = control)
-  fun <- control$selector
-  args <- update_list(control$selector_args, x = vals)
+  vals <- measure_TS(TSs = TSs)
+  fun <- TSs[[1]]$control$selector
+  args <- update_list(TSs[[1]]$control$selector_args, x = vals)
+  args[names(args) == ""] <- NULL
   selection <- do.call(what = fun, args = args)
   TSs[selection]  
 }
 
-#' @rdname package_TS
+#' @rdname TS
 #'
 #' @export
 #'
-measure_TS <- function(TSs, control = list()){
-  fun <- control$measurer
-  args <- control$measurer_args
+measure_TS <- function(TSs){
+
   nTSs <- length(TSs)
   vals <- rep(NA, nTSs)
   for(i in 1:nTSs){
+    fun <- TSs[[i]]$control$measurer
+    args <- TSs[[i]]$control$measurer_args
     args <- update_list(args, object = TSs[[i]])
+    args[names(args) == ""] <- NULL
     vals_i <- do.call(what = fun, args = args)
     if(length(vals_i) != 0){
       vals[i] <- vals_i
@@ -227,6 +275,8 @@ measure_TS <- function(TSs, control = list()){
   }
   vals
 }
+
+
 
 
 #' @title Create the controls list for the Time Series model
@@ -289,19 +339,20 @@ measure_TS <- function(TSs, control = list()){
 #' @export
 #'
 TS_control <- function(model = sequential_TS,
-                       model_args = sequential_TS_control(),
+                       model_args = list(control = sequential_TS_control()),
                        response = multinom_TS,
-                       response_args = multinom_TS_control(),
+                       response_args = list(control = multinom_TS_control()),
                        method = ldats_classic,
-                       method_args = ldats_classic_control(),
+                       method_args = list(control = ldats_classic_control()),
                        summary_prob = 0.95,
                        measurer = AIC,
-                       measurer_args = list(),
+                       measurer_args = list(NULL),
                        selector = which.min,
-                       selector_args = list(), 
+                       selector_args = list(NULL), 
                        soften = TRUE, 
                        quiet = FALSE, ...){
-  list(response = response, response_args = response_args,
+  list(model = model, model_args = model_args,
+       response = response, response_args = response_args,
        method = method, method_args = method_args, 
        measurer = measurer, measurer_args = measurer_args, 
        selector = selector, selector_args = selector_args,
