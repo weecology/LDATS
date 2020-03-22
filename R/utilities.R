@@ -1,3 +1,167 @@
+soft_call <- function(fun = function(x){invisible(NULL)}, args = list(NULL), 
+                      soften = FALSE){
+  if(list_depth(args) == 0){
+    args <- list(args)
+  }
+  if(soften){
+    tryCatch(do.call(what = fun, args = args), 
+             warning = function(x){eval(x$call)}, 
+             error = function(x = list()){list(error = x$message)})
+  } else{
+    do.call(what = fun, args = args)
+  }
+}
+
+
+
+
+time_order_data <- function(x, timename = "time"){
+  time_order <- order(x[ , timename])
+  x[time_order , ]
+}
+
+
+#' @title Initialize and tick through the progress bar
+#'
+#' @description \code{prep_pbar} creates and \code{update_pbar} steps
+#'   through the progress bars (if desired) in, e.g., \code{\link{TS}}
+#'
+#' @param control A \code{list} of parameters to control the fitting of the
+#'   iterative model.
+#'
+#' @param type \code{character} value of possible types of progress bars.
+#'   Currently available options are "rho" (for change point locations) and
+#'   "eta" (for time series regressors).
+#'
+#' @param nr \code{integer} number of unique realizations, needed when
+#'   \code{type} = "eta".
+#'
+#' @param pbar The progress bar object returned from \code{prep_pbar}.
+#'
+#' @return 
+#'   \code{prep_pbar}: the initialized progress bar object. \cr \cr
+#'   \code{update_pbar}: the ticked-forward \code{pbar}.
+#'
+#' @export
+#'
+prep_pbar <- function(control = list(), type = "rho", nr = NULL){
+  if (!(type %in% c("eta", "rho"))){
+    stop("type must be eta or rho")
+  }
+  if (!is.null(nr)){
+    if (!is.numeric(nr) || any(nr %% 1 != 0)){
+      stop("nr must be integer-valued")
+    }
+  }
+  form <- "  [:bar] :percent eta: :eta"
+  if (type == "rho"){
+    msg <- "    - estimating change point distribution"
+    out <- progress_bar$new(form, control$nit, width = 60)
+  }
+  if (type == "eta"){
+    msg <- "    - estimating regressor distribution"
+    out <- progress_bar$new(form, nr, width = 60)
+  }
+  messageq(msg, control$quiet)
+  out
+}
+
+#' @rdname prep_pbar
+#'
+#' @export
+#'
+update_pbar <- function(pbar, control = list()){
+  if (!("progress_bar" %in% class(pbar))){
+    stop("pbar must be of class progress_bar")
+  }
+  if (control$quiet){
+    return()
+  }
+  pbar$tick()
+}
+
+
+#' @title Determine the depth of a list
+#'
+#' @description Evaluate an input for the depth of its nesting. 
+#'
+#' @details If \code{xlist = list()}, then technically the input value is a 
+#'  list, but is empty (of length \code{0}), so depth is returned as \code{0}.
+#'
+#' @param xlist Focal input \code{list}.
+#'
+#' @return \code{integer} value of the depth of the list.
+#' 
+#' @examples
+#'  list_depth("a")
+#'  list_depth(list())
+#'  list_depth(list("a"))
+#'  list_depth(list(list("a")))
+#'
+#' @export 
+#'
+list_depth <- function(xlist){
+  xx <- match.call()
+  xxx <- deparse(xx[[2]])
+  if(xxx == "list()"){
+    0L
+  } else if (inherits(xlist, "data.frame")){
+    0L
+  } else if (is.list(xlist)){
+    1L + max(sapply(xlist, list_depth))
+  } else {
+    0L
+  }
+}
+
+
+#' @title Update a list's elements
+#'
+#' @description Update a list with new values for elements
+#'
+#' @param orig_list \code{list} to be updated with \code{...}. 
+#'
+#' @param ... Named elements to update in \code{orig_list}
+#'
+#' @return Updated \code{list}.
+#'
+#' @examples
+#'  orig_list <- list(a = 1, b = 3, c = 4)
+#'  update_list(orig_list)
+#'  update_list(orig_list, a = "a")
+#'  update_list(orig_list, a = 10, b = NULL)
+#'
+#' @export
+#'
+update_list <- function(orig_list = list(), ...){
+  if(!is.list(orig_list)){
+    stop("orig_list must be a list", call. = FALSE)
+  } 
+  update_elems <- list(...)
+  nupdate_elems <- length(update_elems)
+  norig_elems <- length(orig_list)
+  update_list <- vector("list", length = norig_elems)
+  names(update_list) <- names(orig_list)
+  if(norig_elems > 0){
+    for(i in 1:norig_elems){
+      if(!is.null(orig_list[[i]])){
+        update_list[[i]] <- orig_list[[i]]
+      }
+    }
+  }
+  if(nupdate_elems > 0){
+    names_update_elems <- names(update_elems)
+    for(i in 1:nupdate_elems){
+      if(!is.null(update_elems[[i]])){
+        update_list[[names_update_elems[i]]] <- update_elems[[i]]
+      }
+    }
+  }
+  update_list
+}
+
+
+
 #' @title Calculate the log-sum-exponential (LSE) of a vector
 #'
 #' @description Calculate the exponent of a vector (offset by the max), sum
@@ -266,118 +430,13 @@ memoise_fun <- function(fun, memoise_tf = TRUE){
   if (!("function" %in% class(fun))){
     stop("fun is not a function")
   }
-  if (!("logical" %in% class(memoise_tf))){
+  if (!(is.null(memoise_tf) || "logical" %in% class(memoise_tf))){
     stop("memoise_tf is not logical")
   }
-  if (memoise_tf){
+  if (!is.null(memoise_tf) && memoise_tf){
     fun <- memoise(fun)
   }
   fun
-}
-
-
-#' @title Check that a control list is proper
-#' 
-#' @description Check that a list of controls is of the right class.
-#'   
-#' @param control Control list to evaluate.
-#' 
-#' @param eclass Expected class of the list to be evaluated.
-#'
-#' @return an error message is thrown if the input is improper, otherwise 
-#'   \code{NULL}.
-#'
-#' @examples
-#'  check_control(list())
-#'
-#' @export
-#'
-check_control <- function(control, eclass = "list"){
-  if (!(eclass %in% class(control))){
-    stop(paste0("control is not a ", eclass))
-  }
-  return()
-}
-
-
-#' @title Check that document term table is proper
-#' 
-#' @description Check that the table of observations is conformable to
-#'   a matrix of integers.
-#'   
-#' @param document_term_table Table of observation count data (rows: 
-#'   documents, columns: terms. May be a class \code{matrix} or 
-#'   \code{data.frame} but must be conformable to a matrix of integers,
-#'   as verified by \code{\link{check_document_term_table}}. 
-#' 
-#' @return an error message is thrown if the input is improper, otherwise 
-#'   \code{NULL}.
-#'
-#' @examples
-#'  data(rodents)
-#'  check_document_term_table(rodents$document_term_table)
-#'
-#' @export
-#'
-check_document_term_table <- function(document_term_table){
-  document_term_table_m <- as.matrix(document_term_table)
-  if(any(document_term_table_m %% 1 != 0)){
-    dtt <- "document_term_table"
-    msg <- paste0(dtt, " is not conformable to a matrix of integers")
-    stop(msg)
-  }
-  return()
-}
-
-#' @title Check that topics vector is proper
-#' 
-#' @description Check that the vector of numbers of topics is conformable to
-#'   integers greater than 1.
-#'   
-#' @param topics Vector of the number of topics to evaluate for each model.
-#'   Must be conformable to \code{integer} values.
-#'
-#' @return an error message is thrown if the input is improper, otherwise 
-#'   \code{NULL}.
-#'
-#' @examples
-#'  check_topics(2)
-#'
-#' @export
-#'
-check_topics <- function(topics){
-  if (!is.numeric(topics) || any(topics %% 1 != 0)){
-    stop("topics vector must be integers")
-  }
-  if (any(topics < 2)){
-    stop("minimum number of topics currently allowed is 2")
-  }
-  return()
-}
-
-#' @title Check that nseeds value or seeds vector is proper
-#' 
-#' @description Check that the vector of numbers of seeds is conformable to
-#'   integers greater than 0.
-#'   
-#' @param nseeds \code{integer} number of seeds (replicate starts) to use for 
-#'   each value of \code{topics} in the LDAs. Must be conformable to a  
-#'   positive \code{integer} value.
-#' 
-#' @return an error message is thrown if the input is improper, otherwise 
-#'   \code{NULL}.
-#'
-#' @examples
-#'  check_seeds(1)
-#'  check_seeds(2)
-#'
-#' @export
-#'
-check_seeds <- function(nseeds){
-  if (!is.numeric(nseeds) || any(nseeds %% 1 != 0)){
-    stop("nseeds vector must be integers")
-  }
-  return()
 }
 
 # provides a functionality that can be used in testing for non-symmetric

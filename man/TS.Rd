@@ -2,38 +2,69 @@
 % Please edit documentation in R/TS.R
 \name{TS}
 \alias{TS}
-\alias{check_TS_inputs}
-\title{Conduct a single multinomial Bayesian Time Series analysis}
+\alias{run_TS}
+\alias{TS_call}
+\alias{TS_msg}
+\alias{prepare_TS}
+\alias{package_TS}
+\alias{select_TS}
+\alias{measure_TS}
+\alias{TS_control}
+\title{Conduct a Bayesian compositional Time Series analysis}
 \usage{
-TS(data, formula = gamma ~ 1, nchangepoints = 0, timename = "time",
+TS(LDAs, data, formulas = ~1, nchangepoints = 0, timename = "time",
   weights = NULL, control = list())
 
-check_TS_inputs(data, formula = gamma ~ 1, nchangepoints = 0,
+run_TS(TSs)
+
+TS_call(TS)
+
+TS_msg(TS)
+
+prepare_TS(LDAs, data, formulas = ~1, nchangepoints = 0,
   timename = "time", weights = NULL, control = list())
+
+package_TS(TSs)
+
+select_TS(TSs)
+
+measure_TS(TSs)
+
+TS_control(model = sequential_TS, model_args = list(control =
+  sequential_TS_control()), response = multinom_TS,
+  response_args = list(control = multinom_TS_control()),
+  method = ldats_classic, method_args = list(control =
+  ldats_classic_control()), summary_prob = 0.95, measurer = AIC,
+  measurer_args = list(NULL), selector = which.min,
+  selector_args = list(NULL), soften = TRUE, quiet = FALSE, ...)
 }
 \arguments{
 \item{data}{\code{data.frame} including [1] the time variable (indicated 
 in \code{timename}), [2] the predictor variables (required by
-\code{formula}) and [3], the multinomial response variable (indicated in
-\code{formula}) as verified by \code{\link{check_timename}} and 
-\code{\link{check_formula}}. Note that the response variables should be
-formatted as a \code{data.frame} object named as indicated by the 
-\code{response} entry in the \code{control} list, such as \code{gamma} 
-for a standard TS analysis on LDA output. See \code{Examples}.}
+\code{formula}) and [3], the compositional response variable (indicated
+in \code{formula}). \cr \cr
+Note that the response variables should be formatted as a 
+\code{data.frame} object named as indicated by the \code{response} entry
+in the \code{control} list, such as \code{gamma} for a standard TS 
+analysis on LDA output.}
 
-\item{formula}{\code{\link[stats]{formula}} defining the regression between
-relationship the change points. Any 
-predictor variable included must also be a column in 
-\code{data} and any (multinomial) response variable must be a set of
-columns in \code{data}, as verified by \code{\link{check_formula}}.}
+\item{formulas}{Vector of \code{\link[stats]{formula}}(s) defining the 
+regression between the change points. Any predictor variable included 
+must also be a column in \code{data} and any (compositional) response 
+variable must be a set of columns in \code{data}. \cr
+Each element (formula) in the vector is evaluated for each number of 
+change points and each LDA model.}
 
-\item{nchangepoints}{\code{integer} corresponding to the number of 
-change points to include in the model. 0 is a valid input (corresponding
-to no change points, so a singular time series model), and the current 
+\item{nchangepoints}{\code{integer}-conformable vector corresponding to the 
+number of change points to include in the models. 0 is valid (corresponds
+to no change points, so a singular time series model) and the current 
 implementation can reasonably include up to 6 change points. The 
 number of change points is used to dictate the segmentation of the 
 time series into chunks fit with separate models dictated by 
-\code{formula}.}
+\code{formula}. \cr
+Each element in the vector is the number of change points 
+used to segment the data for each formula (entry in \code{formulas}) 
+component of the TS model, for each selected LDA model.}
 
 \item{timename}{\code{character} element indicating the time variable
 used in the time series. Defaults to \code{"time"}. The variable must be
@@ -43,87 +74,125 @@ timestep being 1 day, which is often not desired behavior.}
 
 \item{weights}{Optional class \code{numeric} vector of weights for each 
 document. Defaults to \code{NULL}, translating to an equal weight for
-each document. When using \code{multinom_TS} in a standard LDATS 
+each document. When using \code{\link{TS_call}} in a standard LDATS 
 analysis, it is advisable to weight the documents by their total size,
-as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
+as the result of, e.g., \code{\link[topicmodels]{LDA}} is a matrix of 
 proportions, which does not account for size differences among documents.
 For most models, a scaling of the weights (so that the average is 1) is
 most appropriate, and this is accomplished using \code{document_weights}.}
 
 \item{control}{A \code{list} of parameters to control the fitting of the
-Time Series model including the parallel tempering Markov Chain 
-Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
+Time Series model. Values not input assume defaults set by 
 \code{\link{TS_control}}.}
+
+\item{TS, TSs}{time series model \code{list} (\code{TS}) or a \code{list} 
+of many time series model \code{list}s (\code{TSs}).}
+
+\item{response}{\code{character} element indicating the response variable 
+used in the time series. \cr \cr
+Must have a corresponding \code{<response>_TS} function.}
+
+\item{response_args}{\code{list} of (named) arguments to be used in 
+\code{response} via \code{\link{do.call}}. 
+\cr \cr
+Could be managed via a \code{<reponse>_TS_control} function like
+\code{\link{multinom_TS_control}}.}
+
+\item{method}{\code{function} used to drive the sampler of the TS
+models; \code{method} defines and operates the computational procedure.
+\cr \cr
+Current pre-built options include \code{\link{ldats_classic}}.}
+
+\item{method_args}{\code{list} of (named) arguments to be used in 
+\code{method} via \code{\link{do.call}}. 
+\cr \cr
+Could be managed via a \code{<method>_control} function like
+\code{\link{ldats_classic_control}}.}
+
+\item{summary_prob}{Probability used for summarizing the posterior 
+distributions (via the highest posterior density interval, see
+\code{\link[coda]{HPDinterval}}).}
+
+\item{measurer}{\code{function} used in evaluation of the TS
+models; \code{measurer} creates a value for each model.}
+
+\item{measurer_args}{\code{list} of (named) arguments to be used in 
+\code{measurer} via \code{\link{do.call}}.}
+
+\item{selector}{\code{function} usde in evaluation of the TS
+models; \code{selector} operates on the values to choose the models.}
+
+\item{selector_args}{\code{list} of (named) arguments to be used in 
+\code{selector} via \code{\link{do.call}}.}
+
+\item{soften}{\code{logical} indicator of whether the model should error 
+softly or if errors should trigger a full-stop to the pipeline.}
+
+\item{quiet}{\code{logical} indicator of whether the model should run 
+quietly (if \code{FALSE}, a progress bar and notifications are printed).}
+
+\item{...}{Not passed along to the output, rather included to allow for
+automated removal of unneeded controls.}
+
+\item{selected_TSs}{\code{list} of selected time series model \code{list}s.}
 }
 \value{
-\code{TS}: \code{TS_fit}-class list containing the following
-  elements, many of
-  which are hidden for \code{print}ing, but are accessible:
-  \describe{
-    \item{data}{\code{data} input to the function.}
-    \item{formula}{\code{\link[stats]{formula}} input to the function.}
-    \item{nchangepoints}{\code{nchangepoints} input to the function.}
-    \item{weights}{\code{weights} input to the function.}
-    \item{control}{\code{control} input to the function.}
-    \item{lls}{Iteration-by-iteration 
-               \link[=logLik.multinom_TS_fit]{logLik} values for the
-                full time series fit by \code{\link{multinom_TS}}.}
-    \item{rhos}{Iteration-by-iteration change point estimates from
-                \code{\link{est_changepoints}}.}
-    \item{etas}{Iteration-by-iteration marginal regressor estimates from
-                \code{\link{est_regressors}}, which have been 
-                unconditioned with respect to the change point locations.}
-    \item{ptMCMC_diagnostics}{ptMCMC diagnostics, 
-                               see \code{\link{diagnose_ptMCMC}}}
-    \item{rho_summary}{Summary table describing \code{rhos} (the change
-                       point locations), 
-                       see \code{\link{summarize_rhos}}.}
-    \item{rho_vcov}{Variance-covariance matrix for the estimates of
-                     \code{rhos} (the change point locations), see 
-                     \code{\link{measure_rho_vcov}}.}
-    \item{eta_summary}{Summary table describing \code{ets} (the 
-                       regressors), 
-                       see \code{\link{summarize_etas}}.}
-    \item{eta_vcov}{Variance-covariance matrix for the estimates of
-                     \code{etas} (the regressors), see 
-                     \code{\link{measure_eta_vcov}}.}
-    \item{logLik}{Across-iteration average of log-likelihoods 
-                   (\code{lls}).}
-    \item{nparams}{Total number of parameters in the full model,
-                   including the change point locations and regressors.}
-    \item{deviance}{Penalized negative log-likelihood, based on 
-                    \code{logLik} and \code{nparams}.}
-  } 
-  \code{check_TS_inputs}: An error message is thrown if any input
-  is not proper, else \code{NULL}.
+\code{TS},\code{pacakage_TS}: class \code{TS_set} \code{list} of both 
+    selected and all results from \code{\link{TS_call}} applied for 
+    each model on each LDA model input as well as the control \code{list} 
+    used to fit the model. \cr \cr
+  \code{prepare_TS}: \code{list} of \code{list}s, each of which is a
+    preliminary model object for a Time Series model fit. \cr \cr
+  \code{TS_control}: \code{list} of named control elements for
+    model fitting.
+  \code{measure_TS}: \code{vector} of values corresponding to the model
+    evaluations. \cr \cr
+  \code{select_TS}: \code{list} of selected models' \code{list}s. \cr \cr
+  \code{run_TS}: \code{TS_set} \code{list} of model results from all
+    runs of a \code{<model>} function, such as 
+    \code{\link{topicmodels_TS}}. \cr \cr
+  \code{TS_call}: \code{TS} \code{list} of model results from a single
+    run of a \code{<model>} function, such as 
+    \code{\link{sequential_TS}}. \cr \cr
+  \code{TS_msg}: a message is produced.
 }
 \description{
-This is the main interface function for the LDATS application
-  of Bayesian change point Time Series analyses (Christensen \emph{et al.}
-  2018), which extends the model of Western and Kleykamp (2004;
-  see also Ruggieri 2013) to multinomial (proportional) response data using
-  softmax regression (Ripley 1996, Venables and Ripley 2002, Bishop 2006) 
-  using a generalized linear modeling approach (McCullagh and Nelder 1989).
-  The models are fit using parallel tempering Markov Chain Monte Carlo
-  (ptMCMC) methods (Earl and Deem 2005) to locate change points and 
-  neural networks (Ripley 1996, Venables and Ripley 2002, Bishop 2006) to
-  estimate regressors. \cr \cr
-  \code{check_TS_inputs} checks that the inputs to 
-  \code{TS} are of proper classes for a full analysis.
+Analyze compositional Time Series models using Bayesian
+  sampling methods. \cr \cr
+  \code{TS} is the main interface function for the LDATS application
+    of Bayesian change point Time Series analyses (Christensen 
+    \emph{et al.} 2018). \cr \cr
+  \code{prepare_TS} pre-prepares the TS model objects for simpler 
+    use within the subfunctions. \cr \cr
+  \code{TS_control} defines and creates the control \code{list} for the TS
+    model running. \cr \cr
+  \code{run_TS} runs (via \code{\link{TS_call}}) all TS models
+    as set up by \code{prep_TS_models}. \cr \cr
+  \code{TS_call} runs (via \code{\link{do.call}}) a single TS model
+    as set up by \code{prep_TS_models}. \cr \cr
+  \code{TS_msg} produces a model-running message if desired. \cr \cr
+  \code{measure_TS} determines the fit value used to select among the 
+    models. \cr \cr
+  \code{select_TS} chooses the best model(s) of interest based on their
+    measured values and the selector function. \cr \cr
+  \code{package_TS} sets the class and names the elements of the results
+    \code{list} from \code{\link{TS_call}} applied to the 
+    combination of TS models requested for the LDA model(s) input.
 }
-\examples{
-  data(rodents)
-  document_term_table <- rodents$document_term_table
-  document_covariate_table <- rodents$document_covariate_table
-  LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
-  data <- document_covariate_table
-  data$gamma <- LDA_models@gamma
-  weights <- document_weights(document_term_table)
-\donttest{
-  TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, "newmoon", weights)
-}
-  check_TS_inputs(data, timename = "newmoon")
-
+\details{
+For a (potentially subset) dataset consisting of proportions of
+  topics across multiple documents in a corpus 
+  \enumerate{
+    \item Conduct multiple compositional Bayesian TS models 
+      (e.g., changepoint softmax regression; Ripley 1996, Venables 
+      and Ripley 2002, Western and Kleykamp 2004, Bishop 2006, Ruggieri 
+      2013) via a generalized linear modeling approach (McCullagh and 
+      Nelder 1989) and using parallel tempering Markov Chain Monte Carlo
+     (ptMCMC) methods (Earl and Deem 2005),
+    \item Select from the TS model results to pick those used to summarize
+      the whole model, and
+    \item Package the results.
+  }
 }
 \references{
 Bishop, C. M. 2006. \emph{Pattern Recognition and Machine Learning}. 

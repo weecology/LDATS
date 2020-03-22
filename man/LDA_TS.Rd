@@ -2,121 +2,209 @@
 % Please edit documentation in R/LDA_TS.R
 \name{LDA_TS}
 \alias{LDA_TS}
-\alias{conform_LDA_TS_data}
-\alias{check_LDA_TS_inputs}
-\title{Run a full set of Latent Dirichlet Allocations and Time 
-  Series models}
+\alias{package_LDA_TS}
+\alias{LDA_TS_control}
+\title{Run a set of Linguistic Decomposition Analysis models coupled to
+  Bayesian Time Series models}
 \usage{
-LDA_TS(data, topics = 2, nseeds = 1, formulas = ~1,
+LDA_TS(data, topics = 2, reps = 1, formulas = ~1,
   nchangepoints = 0, timename = "time", weights = TRUE,
   control = list())
 
-conform_LDA_TS_data(data, quiet = FALSE)
+package_LDA_TS(LDAs, TSs, control)
 
-check_LDA_TS_inputs(data = NULL, topics = 2, nseeds = 1,
-  formulas = ~1, nchangepoints = 0, timename = "time",
-  weights = TRUE, control = list())
+LDA_TS_control(LDA_model = topicmodels_LDA,
+  LDA_model_args = list(method = "VEM", seeded = TRUE),
+  LDA_measurer = AIC, LDA_measurer_args = list(NULL),
+  LDA_selector = which.min, LDA_selector_args = list(NULL),
+  TS_model = sequential_TS, TS_model_args = list(control =
+  sequential_TS_control()), TS_response = multinom_TS,
+  TS_response_args = list(control = multinom_TS_control()),
+  TS_method = ldats_classic, TS_method_args = list(control =
+  ldats_classic_control()), nsubsets = 1, subset_rule = NULL,
+  summary_prob = 0.95, soften = TRUE, quiet = FALSE,
+  TS_measurer = AIC, TS_measurer_args = list(NULL),
+  TS_selector = which.min, TS_selector_args = list(NULL), ...)
 }
 \arguments{
-\item{data}{Either a document term table or a list including at least
-a document term table (with the word "term" in the name of the element)
-and optionally also a document covariate table  (with the word 
-"covariate" in the name of the element). 
-\cr \cr 
-The document term table is a table of observation count data (rows: 
-documents, columns: terms) that may be a \code{matrix} or 
-\code{data.frame}, but must be conformable to a matrix of integers,
-as verified by \code{\link{check_document_term_table}}.   
-\cr \cr
-The document covariate table is a table of associated data (rows: 
-documents, columns: time index and covariate options) that may be a
-\code{matrix} or \code{data.frame}, but must be a conformable to a data 
-table, as verified by \code{\link{check_document_covariate_table}}. Every 
-model needs a covariate to describe the time value for each document 
-(in whatever units and whose name in the table is input in 
-\code{timename}) that dictates the application of the change points. 
-\strong{\emph{If a covariate table is not provided, the model assumes the 
-observations were equi-spaced in time}}. All covariates named within 
-specific models in \code{formulas} must be included.}
+\item{data}{Any of the data structures allowable for LDATS analyses:
+\code{matrix} or \code{data.frame} document term table, 
+\code{list} of document term and covariate tables, a \code{list} of 
+training and test sets of the two tables, or a \code{list} of multiple 
+replicate splits of training and test sets of the two tables. \cr
+See \code{\link{conform_data}}, which is used to ensure data structure
+validity for the desired model.}
 
-\item{topics}{Vector of the number of topics to evaluate for each model.
-Must be conformable to \code{integer} values.}
+\item{topics}{\code{integer}-conformable \code{vector} of the number of 
+topics to evaluate for each model. \cr
+(See \code{\link{LDA}}.)}
 
-\item{nseeds}{\code{integer} number of seeds (replicate starts) to use for 
-each value of \code{topics} in the LDAs. Must be conformable to 
-\code{integer} value.}
+\item{formulas}{Vector of \code{\link[stats]{formula}}(s) defining the 
+regression between the change points. Any predictor variable included 
+must also be a column in \code{data} and any (compositional) response 
+variable must be a set of columns in \code{data}. \cr
+Each element (formula) in the vector is evaluated for each number of 
+change points and each LDA model. \cr
+(See \code{\link{TS}}.)}
 
-\item{formulas}{Vector of \code{\link[stats]{formula}}(s) for the 
-continuous (non-change point) component of the time series models. Any 
-predictor variable included in a formula must also be a column in the
-\code{document_covariate_table}. Each element (formula) in the vector
-is evaluated for each number of change points and each LDA model.}
-
-\item{nchangepoints}{Vector of \code{integer}s corresponding to the number 
-of change points to include in the time series models. 0 is a valid input 
-corresponding to no change points (\emph{i.e.}, a singular time series
-model), and the current implementation can reasonably include up to 6 
-change points. Each element in the vector is the number of change points 
+\item{nchangepoints}{\code{integer}-conformable vector corresponding to the 
+number of change points to include in the models. 0 is valid (corresponds
+to no change points, so a singular time series model) and the current 
+implementation can reasonably include up to 6 change points. The 
+number of change points is used to dictate the segmentation of the 
+time series into chunks fit with separate models dictated by 
+\code{formula}. \cr
+Each element in the vector is the number of change points 
 used to segment the data for each formula (entry in \code{formulas}) 
-component of the TS model, for each selected LDA model.}
+component of the TS model, for each selected LDA model. \cr
+(See \code{\link{TS}}.)}
 
 \item{timename}{\code{character} element indicating the time variable
 used in the time series. Defaults to \code{"time"}. The variable must be
 integer-conformable or a \code{Date}. If the variable named
 is a \code{Date}, the input is converted to an integer, resulting in the
-timestep being 1 day, which is often not desired behavior.}
+timestep being 1 day, which is often not desired behavior. \cr
+(See \code{\link{TS}}.)}
 
-\item{weights}{Optional input for overriding standard weighting for 
-documents in the time series. Defaults to \code{TRUE},
-translating to an appropriate weighting of the documents
-based on the size (number of words) each document (the result of 
-\code{\link[topicmodels]{LDA}} is a matrix of proportions, which does not
-account for size differences among documents. Alternatively can be 
-\code{NULL} for an equal weighting among documents or a \code{numeric}
-vector.}
+\item{weights}{Optional class \code{numeric} vector of weights for each 
+document. Defaults to \code{NULL}, translating to an equal weight for
+each document. When using \code{\link{sequential_TS}} in a standard LDATS 
+analysis, it is advisable to weight the documents by their total size,
+as the result of, e.g., \code{\link[topicmodels]{LDA}} is a matrix of 
+proportions, which does not account for size differences among documents.
+For most models, a scaling of the weights (so that the average is 1) is
+most appropriate, and this is accomplished using \code{document_weights}.
+\cr
+(See \code{\link{TS}}.)}
 
-\item{control}{A \code{list} of parameters to control the running and 
-selecting of LDA and TS models. Values not input assume default values 
-set by \code{\link{LDA_TS_control}}.}
+\item{control}{\code{list} of parameters to control the fitting of the
+LDATS model. Values not input assume defaults set by 
+\code{\link{LDA_TS_control}}.}
 
-\item{quiet}{\code{logical} indicator for \code{conform_LDA_TS_data} to 
-indicate if messages should be printed.}
+\item{LDAs}{\code{LDA_set} \code{list} of selected and all LDAs from 
+\code{\link{LDA}}.}
+
+\item{TSs}{\code{TS_set} \code{list} of selected and all TSs from 
+\code{\link{TS}}.}
+
+\item{LDA_model}{Main LDA \code{function}.}
+
+\item{LDA_model_args}{\code{list} of (named) arguments to be used in 
+\code{LDA_model} via \code{\link{LDA_call}}.}
+
+\item{LDA_measurer}{\code{function} used in evaluation of the LDA
+models; \code{LDA_measurer} creates a value for each model.}
+
+\item{LDA_measurer_args}{\code{list} of (named) arguments to be used in 
+\code{LDA_measurer} via \code{\link{do.call}}.}
+
+\item{LDA_selector}{\code{function} usde in evaluation of the LDA
+models; \code{LDA_selector} operates on the values to choose the models.}
+
+\item{LDA_selector_args}{\code{list} of (named) arguments to be used in 
+\code{LDA_selector} via \code{\link{do.call}}.}
+
+\item{TS_model}{Main TS \code{function}.}
+
+\item{TS_model_args}{\code{list} of (named) arguments to be used in 
+\code{TS_model}.}
+
+\item{TS_response}{\code{function} used to model the compositional 
+response.}
+
+\item{TS_method}{\code{function} used to drive the sampler of the TS
+models; \code{TS_method} defines and operates the computational 
+procedure. \cr \cr
+Current pre-built options include \code{\link{ldats_classic}}.}
+
+\item{TS_method_args}{\code{list} of (named) arguments to be used in 
+\code{TS_method} via \code{\link{do.call}}. 
+\cr \cr
+Could be managed via a \code{<method>_control} function like
+\code{\link{ldats_classic_control}}.}
+
+\item{nsubsets}{Number of data subsets.}
+
+\item{subset_rule}{\code{function} used to subset the data.}
+
+\item{summary_prob}{Probability used for summarizing the posterior 
+distributions (via the highest posterior density interval, see
+\code{\link[coda]{HPDinterval}}).}
+
+\item{soften}{\code{logical} indicator of whether the model should error 
+softly or if errors should trigger a full-stop to the pipeline.}
+
+\item{quiet}{\code{logical} indicator of whether the model should run 
+quietly (if \code{FALSE}, a progress bar and notifications are printed).}
+
+\item{TS_measurer}{\code{function} used in evaluation of the TS
+models; \code{measurer} creates a value for each model.}
+
+\item{TS_measurer_args}{\code{list} of (named) arguments to be used in 
+\code{TS_measurer} via \code{\link{do.call}}.}
+
+\item{TS_selector}{\code{function} usde in evaluation of the TS
+models; \code{TS_selector} operates on the values to choose the models.}
+
+\item{TS_selector_args}{\code{list} of (named) arguments to be used in 
+\code{TS_selector} via \code{\link{do.call}}.}
+
+\item{...}{Not passed along to the output, rather included to allow for
+automated removal of unneeded controls.}
+
+\item{replicates}{\code{integer}-conformable number of replicate starts to
+use for each value of \code{topics}. \cr
+(See \code{\link{LDA}}.)}
+
+\item{response_args}{\code{list} of (named) arguments to be used in 
+\code{TS_response} via \code{\link{do.call}}. 
+\cr \cr
+Could be managed via a \code{<reponse>_TS_control} function like
+\code{\link{multinom_TS_control}}.}
 }
 \value{
-\code{LDA_TS}: a class \code{LDA_TS} list object including all 
-  fitted LDA and TS models and selected models specifically as elements 
-  \code{"LDA models"} (from \code{\link{LDA_set}}),
-  \code{"Selected LDA model"} (from \code{\link{select_LDA}}), 
-  \code{"TS models"} (from \code{\link{TS_on_LDA}}), and
-  \code{"Selected TS model"} (from \code{\link{select_TS}}). \cr \cr
-  \code{conform_LDA_TS_data}: a data \code{list} that is ready for analyses 
-  using the stage-specific functions. \cr \cr
-  \code{check_LDA_TS_inputs}: an error message is thrown if any input is 
-  improper, otherwise \code{NULL}.
+\code{LDA_TS},\code{package_LDA_TS}: class-\code{LDA_TS} \code{list} 
+   with all fitted LDA and TS models and selected models specifically 
+   as elements named
+   \describe{
+     \item{\code{LDA models}}{\code{list} of all and selected models as 
+       well as controls from \code{\link{LDA}}}
+     \item{\code{TS models}}{\code{list} of all and selected models as 
+       well as controls from \code{\link{TS}}}
+     \item{\code{control}}{\code{list} of overall model controls}
+   } \cr \cr
+ \code{LDA_TS_control}: \code{list} of \code{list}s and single elements
+   that control fitting of the LDATS model, with named elements 
+   corresponding to the arguments.
 }
 \description{
-Conduct a complete LDATS analysis (Christensen 
-  \emph{et al.} 2018), including running a suite of Latent Dirichlet
-  Allocation (LDA) models (Blei \emph{et al.} 2003, Grun and Hornik 2011) 
-  via \code{\link{LDA_set}}, selecting LDA model(s) via 
-  \code{\link{select_LDA}}, running a complete set of Bayesian Time Series
-  (TS) models (Western and Kleykamp 2004) via \code{\link{TS_on_LDA}} on
-  the chosen LDA model(s), and selecting the best TS model via 
-  \code{\link{select_TS}}. \cr \cr
-  \code{conform_LDA_TS_data} converts the \code{data} input to
-  match internal and sub-function specifications. \cr \cr
-  \code{check_LDA_TS_inputs} checks that the inputs to 
-  \code{LDA_TS} are of proper classes for a full analysis.
+Analyze compositional time series using the Linguistic 
+  Decomposition Analysis coupled to Bayesian Time Series models 
+  generally following Christensen \emph{et al.} (2018).
+  \code{LDA_TS} is the primary model function. \cr \cr
+  \code{LDA_TS_control} defines the control \code{list} arguments for
+    \code{\link{LDA_TS}}. \cr \cr
+  \code{package_LDA_TS} combines the results from each model component.
 }
-\examples{
-  data(rodents)
-\donttest{
-  mod <- LDA_TS(data = rodents, topics = 2, nseeds = 1, formulas = ~1,
-                nchangepoints = 1, timename = "newmoon")
-}
-  conform_LDA_TS_data(rodents)
-  check_LDA_TS_inputs(rodents, timename = "newmoon")
-
+\details{
+For a (potentially subset) dataset consisting of counts of words 
+  across multiple documents in a corpus, 
+  \enumerate{
+    \item Conduct multiple Linguistic Decomposition Analysis (LDA) models 
+      (e.g., Latent Dirichlet Allocation using the Variational Expectation
+      Maximization (VEM) algorithm; Blei \emph{et al.} 2003), 
+    \item Select from the LDA model results to pick those used in the Time
+      Series (TS) models,
+    \item Conduct multiple compositional Bayesian TS models 
+      (e.g., changepoint softmax regression; Ripley 1996, Venables 
+      and Ripley 2002, Western and Kleykamp 2004, Bishop 2006, Ruggieri 
+      2013) via a generalized linear modeling approach (McCullagh and 
+      Nelder 1989) and using parallel tempering Markov Chain Monte Carlo
+     (ptMCMC) methods (Earl and Deem 2005),
+    \item Select from the TS model results to pick those used to summarize
+      the whole model, and
+    \item Package the results.
+  }
 }
 \references{
 Blei, D. M., A. Y. Ng, and M. I. Jordan. 2003. Latent Dirichlet
@@ -124,14 +212,36 @@ Blei, D. M., A. Y. Ng, and M. I. Jordan. 2003. Latent Dirichlet
   \strong{3}:993-1022.
   \href{http://jmlr.csail.mit.edu/papers/v3/blei03a.html}{link}.
 
+  Bishop, C. M. 2006. \emph{Pattern Recognition and Machine Learning}. 
+   Springer, New York, NY, USA.
+
   Christensen, E., D. J. Harris, and S. K. M. Ernest. 2018.
   Long-term community change through multiple rapid transitions in a 
   desert rodent community. \emph{Ecology} \strong{99}:1523-1529. 
   \href{https://doi.org/10.1002/ecy.2373}{link}.
 
+  Earl, D. J. and M. W. Deem. 2005. Parallel tempering: theory, 
+  applications, and new perspectives. \emph{Physical Chemistry Chemical 
+  Physics} \strong{7}: 3910-3916.
+  \href{https://doi.org/10.1039/B509983H}{link}.
+
   Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
   Models. \emph{Journal of Statistical Software} \strong{40}:13.
   \href{https://www.jstatsoft.org/article/view/v040i13}{link}.
+
+  McCullagh, P. and J. A. Nelder. 1989. \emph{Generalized Linear Models}.
+  2nd Edition. Chapman and Hall, New York, NY, USA.
+
+  Ripley, B. D. 1996. \emph{Pattern Recognition and Neural Networks}. 
+  Cambridge University Press, Cambridge, UK.
+
+  Ruggieri, E. 2013. A Bayesian approach to detecting change points in 
+  climactic records. \emph{International Journal of Climatology}
+  \strong{33}:520-528.
+  \href{https://doi.org/10.1002/joc.3447}{link}.
+
+  Venables, W. N. and B. D. Ripley. 2002. \emph{Modern and Applied
+  Statistics with S}. Fourth Edition. Springer, New York, NY, USA.
 
   Western, B. and M. Kleykamp. 2004. A Bayesian change point model for 
   historical time series analysis. \emph{Political Analysis}

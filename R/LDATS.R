@@ -1,10 +1,12 @@
 #' @importFrom coda as.mcmc autocorr autocorr.diag effectiveSize HPDinterval
+#' @importFrom compositions acomp alr alrInv clr clrInv ilr ilrInv
 #' @importFrom digest digest
 #' @importFrom extraDistr rcat rdirichlet
 #' @importFrom graphics abline axis hist mtext par plot points rect text
 #' @importFrom grDevices devAskNewPage rgb
 #' @importFrom lubridate is.Date
 #' @importFrom magrittr %>%
+#' @importFrom mcmc temper
 #' @importFrom memoise memoise
 #' @importFrom methods is
 #' @importFrom mvtnorm rmvnorm
@@ -12,7 +14,6 @@
 #' @importFrom progress progress_bar
 #' @importFrom stats acf AIC as.formula coef ecdf logLik median rgeom rnorm
 #'   runif sd terms var vcov
-#' @importFrom topicmodels LDA
 #' @importFrom viridis viridis
 #'
 

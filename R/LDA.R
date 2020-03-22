@@ -1,40 +1,110 @@
-#' @title Run a set of Latent Dirichlet Allocation models
+
+#' @title Run a set of Linguistic Decomposition Analysis models
 #' 
-#' @description For a given dataset consisting of counts of words across 
-#'   multiple documents in a corpus, conduct multiple Latent Dirichlet 
-#'   Allocation (LDA) models (using the Variational Expectation 
-#'   Maximization (VEM) algorithm; Blei \emph{et al.} 2003) to account for [1]  
-#'   uncertainty in the number of latent topics and [2] the impact of initial
-#'   values in the estimation procedure. \cr \cr
-#'   \code{LDA_set} is a list wrapper of \code{\link[topicmodels]{LDA}}
-#'   in the \code{topicmodels} package (Grun and Hornik 2011). \cr \cr
-#'   \code{check_LDA_set_inputs} checks that all of the inputs 
-#'   are proper for \code{LDA_set} (that the table of observations is 
-#'   conformable to a matrix of integers, the number of topics is an integer, 
-#'   the number of seeds is an integer and the controls list is proper).
-#'   
-#' @param document_term_table Table of observation count data (rows: 
-#'   documents, columns: terms. May be a class \code{matrix} or 
-#'   \code{data.frame} but must be conformable to a matrix of integers,
-#'   as verified by \code{\link{check_document_term_table}}.   
+#' @description Conduct Linguistic Decomposition Analyses. \cr \cr
+#'   \code{LDA} provides the main interface for Linguistic Decomposition 
+#'     Analysis conducted within the LDATS application of (Christensen 
+#'     \emph{et al.} 2018). \cr \cr
+#'   \code{prepare_LDA} pre-prepares the LDA model objects for simpler 
+#'     use within the subfunctions. \cr \cr 
+#'   \code{LDA_control} defines and creates the control list used to fit 
+#'     the LDA model. \cr \cr 
+#'   \code{run_LDA} runs (via \code{\link{LDA_call}}) all LDA models
+#'     as set up by \code{prep_LDA_models}. \cr \cr
+#'   \code{LDA_call} runs (via \code{\link{do.call}}) a single LDA model
+#'     as set up by \code{prep_LDA_models}. \cr \cr
+#'   \code{LDA_msg} produces a model-running message if desired. \cr \cr
+#'   \code{measure_LDA} determines the fit value used to select among the 
+#'     models. \cr \cr
+#'   \code{select_LDA} chooses the best model(s) of interest based on their
+#'     measured values and the selector function. \cr \cr
+#'   \code{package_LDA} sets the class and names the elements of the results
+#'     \code{list} from \code{\link{LDA_call}} applied to the 
+#'     combination of TS models requested for the data input(s).
+#'
+#' @details For a (potentially subset) dataset consisting of counts of words 
+#'   across multiple documents in a corpus, 
+#'   \enumerate{
+#'     \item Conduct multiple Linguistic Decomposition Analysis (LDA) models 
+#'       (e.g., Latent Dirichlet Allocation using the Variational Expectation
+#'       Maximization (VEM) algorithm; Blei \emph{et al.} 2003, Grun and
+#'       Hornik 2011),
+#'     \item Select from the LDA model results to pick those used in the Time
+#'       Series (TS) models, and
+#'     \item Package the results.
+#'   }
+#'
+#' @param data Any of the data structures allowable for LDATS analyses:
+#'   \code{matrix} or \code{data.frame} document term table, 
+#'   \code{list} of document term and covariate tables, a \code{list} of 
+#'   training and test sets of the two tables, or a \code{list} of multiple 
+#'   replicate splits of training and test sets of the two tables. \cr
+#'   See \code{\link{conform_data}}, which is used to ensure data structure
+#'   validity for the desired model.
 #'  
 #' @param topics Vector of the number of topics to evaluate for each model.
 #'   Must be conformable to \code{integer} values.
 #'
-#' @param nseeds Number of seeds (replicate starts) to use for each 
+#' @param replicates Number of replicate starts to use for each 
 #'   value of \code{topics}. Must be conformable to \code{integer} value.
 #'
-#' @param control A \code{list} of parameters to control the running and 
-#'   selecting of LDA models. Values not input assume default values set 
-#'   by \code{\link{LDA_set_control}}. Values for running the LDAs replace 
-#'   defaults in (\code{LDAcontol}, see \code{\link[topicmodels]{LDA}} (but if
-#'    \code{seed} is given, it will be overwritten; use \code{iseed} instead).
-#' 
+#' @param control A \code{list} of parameters to control the fitting of the
+#'   LDA model. Values not input assume defaults set by 
+#'   \code{\link{LDA_control}}.
+#'
+#' @param LDA,LDAs model \code{list} (\code{LDA}) or a \code{list} of LDA 
+#'   model \code{list}s (\code{LDAs}).
+#'
+#' @param selected_LDAs \code{list} of selected LDA model \code{list}s.
+#'
+#' @param model Main LDA \code{function}.
+#'
+#' @param model_args \code{list} of (named) arguments to be used in 
+#'   \code{model} via \code{\link{LDA_call}}. 
+#'
+#' @param nsubsets Number of data subsets.
+#'
+#' @param subset_rule \code{function} used to subset the data.
+#'
+#' @param quiet \code{logical} indicator of whether the model should run 
+#'   quietly (if \code{FALSE}, a progress bar and notifications are printed).
+#'
+#' @param soften \code{logical} indicator of whether the model should error 
+#'   softly or if errors should trigger a full-stop to the pipeline.
+#'
+#' @param measurer \code{function} used in evaluation of the LDA
+#'   models; \code{measurer} creates a value for each model.
+#'
+#' @param measurer_args \code{list} of (named) arguments to be used in 
+#'   \code{measurer} via \code{\link{do.call}}. 
+#'
+#' @param selector \code{function} usde in evaluation of the LDA
+#'   models; \code{selector} operates on the values to choose the models. 
+#'
+#' @param selector_args \code{list} of (named) arguments to be used in 
+#'   \code{selector} via \code{\link{do.call}}. 
+#'
+#' @param ... Not passed along to the output, rather included to allow for
+#'   automated removal of unneeded controls.
+#'
 #' @return 
-#'   \code{LDA_set}: \code{list} (class: \code{LDA_set}) of LDA models 
-#'   (class: \code{LDA_VEM}).
-#'   \code{check_LDA_set_inputs}: an error message is thrown if any input is 
-#'   improper, otherwise \code{NULL}.
+#'   \code{LDA},\code{pacakage_LDA}: class \code{LDA_set} \code{list} of 
+#'     both selected and all results from \code{\link{LDA_call}} applied for 
+#'     each model on each data input(s) as well as the control \code{list} 
+#'     used to fit the model. \cr \cr
+#'   \code{prepare_LDA}: \code{list} of \code{list}s, each of which is a
+#'     preliminary model object for an LDA model fit. \cr \cr
+#'   \code{LDA_control}: \code{list} of controls for the LDA model, with
+#'     named elements corresponding to the arguments.
+#'   \code{run_LDA}: \code{LDA_set} \code{list} of model results from all
+#'     runs of a \code{<model>} function, such as 
+#'     \code{\link{topicmodels_LDA}}. \cr \cr
+#'   \code{LDA_call}: \code{LDA} \code{list} of model results from a single
+#'     run of a \code{<model>} function, such as 
+#'     \code{\link{topicmodels_LDA}}. \cr \cr
+#'   \code{measure_LDA}: \code{vector} of values corresponding to the model
+#'     evaluations.
+#'   \code{select_LDA}: \code{list} of selected models' \code{list}s.
 #' 
 #' @references 
 #'   Blei, D. M., A. Y. Ng, and M. I. Jordan. 2003. Latent Dirichlet
@@ -42,274 +112,217 @@
 #'   \strong{3}:993-1022.
 #'   \href{http://jmlr.csail.mit.edu/papers/v3/blei03a.html}{link}.
 #'
+#'   Christensen, E., D. J. Harris, and S. K. M. Ernest. 2018.
+#'   Long-term community change through multiple rapid transitions in a 
+#'   desert rodent community. \emph{Ecology} \strong{99}:1523-1529. 
+#'   \href{https://doi.org/10.1002/ecy.2373}{link}.
+#'
 #'   Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
 #'   Models. \emph{Journal of Statistical Software} \strong{40}:13.
 #'   \href{https://www.jstatsoft.org/article/view/v040i13}{link}.
 #'
-#' @examples 
-#'   data(rodents)
-#'   lda_data <- rodents$document_term_table
-#'   r_LDA <- LDA_set(lda_data, topics = 2, nseeds = 2)                         
-#' 
+#' @name LDA
+#'
+#'
+
+
+#' @rdname LDA
+#'
 #' @export
 #'
-LDA_set <- function(document_term_table, topics = 2, nseeds = 1, 
-                    control = list()){
-  check_LDA_set_inputs(document_term_table, topics, nseeds, control)
-  control <- do.call("LDA_set_control", control)
-  mod_topics <- rep(topics, each = length(seq(2, nseeds * 2, 2)))
-  iseed <- control$iseed
-  mod_seeds <- rep(seq(iseed, iseed + (nseeds - 1)* 2, 2), length(topics))
-  nmods <- length(mod_topics)
-  mods <- vector("list", length = nmods)
-  for (i in 1:nmods){
-    LDA_msg(mod_topics[i], mod_seeds[i], control)
-    control_i <- prep_LDA_control(seed = mod_seeds[i], control = control)
-    mods[[i]] <- LDA(document_term_table, k = mod_topics[i], 
-                     control = control_i)
-  }
-  package_LDA_set(mods, mod_topics, mod_seeds)
+LDA <- function(data, topics = 2, replicates = 1, control = list()){
+  LDAs <- prepare_LDA(data = data, topics = topics, replicates = replicates, 
+                      control = control)
+  LDAs <- run_LDA(LDAs = LDAs)
+  LDAs <- package_LDA(LDAs = LDAs)
+  LDAs
 }
 
-#' @title Calculate the log likelihood of a VEM LDA model fit
+
+#' @rdname LDA
 #'
-#' @description Imported but updated calculations from topicmodels package, as
-#'   applied to Latent Dirichlet Allocation fit with Variational Expectation 
-#'   Maximization via \code{\link[topicmodels]{LDA}}. 
+#' @export
 #'
-#' @details The number of degrees of freedom is 1 (for alpha) plus the number
-#'   of entries in the document-topic matrix. The number of observations is 
-#'   the number of entries in the document-term matrix.
+prepare_LDA <- function(data, topics = 2, replicates = 1, control = list()){
+  control <- do.call("LDA_control", control)
+  messageq("----- Linguistic Decomposition Analyses -----", control$quiet)
+  data <- conform_data(data = data, control = control)
+  subsets <- names(data)
+  if(length(replicates) < length(topics)){
+    reps <- rep(replicates, length(topics))
+  }
+  LDA_topics <- rep(topics, replicates)
+  LDA_reps <- sequence(replicates)
+  LDA_subsets <- rep(subsets, each = length(LDA_reps))  
+  LDA_reps <- rep(LDA_reps, length(subsets))
+  LDA_topics <- rep(LDA_topics, length(subsets))
+  nLDA <- length(LDA_topics)
+  LDAs <- vector("list", length = nLDA)
+  for(i in 1:nLDA){
+    LDAs[[i]] <- list(data = data[[LDA_subsets[[i]]]], 
+                      data_subset = LDA_subsets[[i]],
+                      topics = LDA_topics[[i]], 
+                      replicate = LDA_reps[[i]],
+                      control = control)
+  }
+  names(LDAs) <- paste0("model_", 1:nLDA)
+  LDAs
+}
+
+
+
+#' @rdname LDA
 #'
-#' @param object A \code{LDA_VEM}-class object.
+#' @export
+#'
+run_LDA <- function(LDAs){
+  nLDA <- length(LDAs)
+  for (i in 1:nLDA){
+    LDAs[[i]] <- LDA_call(LDA = LDAs[[i]])
+  }
+  LDAs
+}
+
+
+#' @rdname LDA
+#'
+#' @export
+#'
+LDA_call <- function(LDA){
+  LDA_msg(LDA = LDA)
+  fun <- LDA$control$model
+  args <- update_list(LDA$control$model_args, LDA = LDA)
+  soft_call(fun = fun, args = args, soften = LDA$control$soften)
+}
+
+
+#' @rdname LDA
+#'
+#' @export
+#'
+LDA_msg <- function(LDA){
+  subset_msg <- paste0("  - data subset ", LDA$data_subset)
+  topic_msg <- paste0(", ", LDA$topics, " topics")
+  rep_msg <- paste0(", replicate ", LDA$rep)
+  messageq(paste0(subset_msg, topic_msg, rep_msg), LDA$control$quiet)
+}
+
+
+#' @rdname LDA
+#'
+#' @export
+#'
+package_LDA <- function(LDAs){
+  selected_LDAs <- select_LDA(LDAs = LDAs)
+  out <- list(selected_LDAs = selected_LDAs, LDAs = LDAs)
+  class(out) <- c("LDA_set", "list")
+  out
+}
+
+
+#' @rdname LDA
+#'
+#' @export
+#'
+select_LDA <- function(LDAs){
+  nLDAs <- length(LDAs)
+  maxtopics <- 0
+  for(i in 1:nLDAs){
+    maxtopics <- max(c(maxtopics, LDAs[[i]]$topics))
+  }
+  if(maxtopics == 1){
+    return(LDAs)
+  }
+  vals <- measure_LDA(LDAs = LDAs)
+  fun <- LDAs[[1]]$control$selector
+  args <- update_list(LDAs[[1]]$control$selector_args, x = vals)
+  args[names(args) == ""] <- NULL
+  selection <- do.call(what = fun, args = args)
+  LDAs[selection]  
+}
+
+#' @rdname LDA
+#'
+#' @export
+#'
+measure_LDA <- function(LDAs){
+  nLDAs <- length(LDAs)
+  vals <- rep(NA, nLDAs)
+  for(i in 1:nLDAs){
+    fun <- LDAs[[i]]$control$measurer
+    args <- LDAs[[i]]$control$measurer_args
+    args <- update_list(args, object = LDAs[[i]])
+    args[names(args) == ""] <- NULL
+    vals_i <- do.call(what = fun, args = args)
+    if(length(vals_i) != 0){
+      vals[i] <- vals_i
+    }
+  }
+  vals
+}
+
+
+#' @rdname LDA
+#'
+#' @export
+#'
+LDA_control <- function(model = topicmodels_LDA, 
+                        model_args = list(method = "VEM", seeded = TRUE),
+                        measurer = AIC,
+                        measurer_args = list(NULL),
+                        selector = which.min,
+                        selector_args = list(NULL), 
+                        nsubsets = 1,
+                        subset_rule = NULL,
+                        soften = TRUE, 
+                        quiet = FALSE, ...){
+  list(model = model,  model_args = model_args, 
+       measurer = measurer, measurer_args = measurer_args, 
+       selector = selector, selector_args = selector_args,
+       nsubsets = nsubsets, subset_rule = subset_rule,
+       soften = soften, quiet = quiet)
+}
+
+
+
+#' @title Determine the AIC of a Linguistic Decomposition Analysis
+#'   model
+#'
+#' @description Convenience function to extract and format the AIC
+#'   of a \code{LDA}-class object fit by \code{\link{LDA_call}}.
+#'
+#' @param object Class \code{LDA} object to be evaluated.
+#'
+#' @param ... Not used, simply included to maintain method compatibility.
+#'
+#' @param k Per-parameter numeric penalty.
+#'
+#' @return AIC of the model.
+#'
+#' @export
+#'
+AIC.LDA <- function(object, ..., k = 2){
+  lls <- logLik(object)
+  -2 * as.numeric(lls) + k * attr(lls, "df")
+}
+
+
+#' @title Determine the log likelihood of a Linguistic Decomposition Analysis
+#'   model
+#'
+#' @description Convenience function to extract and format the log likelihood
+#'   of a \code{LDA}-class object fit by \code{\link{LDA_call}}.
+#'
+#' @param object Class \code{LDA} object to be evaluated.
 #'
 #' @param ... Not used, simply included to maintain method compatibility.
 #'
 #' @return Log likelihood of the model \code{logLik}, also with \code{df}
 #'   (degrees of freedom) and \code{nobs} (number of observations) values.
 #'
-#' @references 
-#'   Buntine, W. 2002. Variational extensions to EM and multinomial PCA. 
-#'   \emph{European Conference on Machine Learning, Lecture Notes in Computer 
-#'   Science} \strong{2430}:23-34. \href{https://bit.ly/327sltH}{link}.
-#'
-#'   Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
-#'   Models. \emph{Journal of Statistical Software} \strong{40}:13.
-#'   \href{https://www.jstatsoft.org/article/view/v040i13}{link}.
-#'
-#'   Hoffman, M. D., D. M. Blei, and F. Bach. 2010. Online learning for 
-#'   latent Dirichlet allocation. \emph{Advances in Neural Information 
-#'   Processing Systems} \strong{23}:856-864.
-#'   \href{https://bit.ly/2LEr5sb}{link}.
-#'
-#' @examples 
-#'   data(rodents)
-#'   lda_data <- rodents$document_term_table
-#'   r_LDA <- LDA_set(lda_data, topics = 2)   
-#'   logLik(r_LDA[[1]])
-#'
 #' @export
 #'
-logLik.LDA_VEM <- function(object, ...){
-  val <- sum(object@loglikelihood)
-  df <- as.integer(object@control@estimate.alpha) + length(object@beta)
-  attr(val, "df") <- df
-  attr(val, "nobs") <- object@Dim[1] * object@Dim[2]
-  class(val) <- "logLik"
-  val
+logLik.LDA <- function(object, ...){
+  object$log_likelihood
 }
 
-#' @rdname LDA_set
-#'   
-#' @export
-#'
-check_LDA_set_inputs <- function(document_term_table, topics, nseeds, 
-                                 control){
-  check_document_term_table(document_term_table)
-  check_topics(topics)
-  check_seeds(nseeds)
-  check_control(control)
-}
-
-#' @title Set the control inputs to include the seed
-#' 
-#' @description Update the control list for the LDA model with the specific
-#'   seed as indicated. And remove controls not used within the LDA itself.
-#'   
-#' @param seed \code{integer} used to set the seed of the specific model. 
-#'
-#' @param control Named list of control parameters to be used in 
-#'   \code{\link[topicmodels]{LDA}} Note that if \code{control} has an 
-#'   element named \code{seed} it will be overwritten by the \code{seed} 
-#'   argument of \code{prep_LDA_control}.
-#'
-#' @return \code{list} of controls to be used in the LDA. 
-#'
-#' @examples
-#'   prep_LDA_control(seed = 1) 
-#'
-#' @export
-#'
-prep_LDA_control <- function(seed, control = list()){
-  control$quiet <- NULL
-  control$measurer <- NULL
-  control$selector <- NULL
-  control$iseed <- NULL
-  control$seed <- seed
-  control
-}
-
-#' @title Select the best LDA model(s) for use in time series
-#'
-#' @description Select the best model(s) of interest from an
-#'   \code{LDA_set} object, based on a set of user-provided functions. The
-#'   functions default to choosing the model with the lowest AIC value.
-#'
-#' @param LDA_models An object of class \code{LDA_set} produced by
-#'   \code{\link{LDA_set}}.
-#'
-#' @param control A \code{list} of parameters to control the running and 
-#'   selecting of LDA models. Values not input assume default values set 
-#'   by \code{\link{LDA_set_control}}. Values for running the LDAs replace 
-#'   defaults in (\code{LDAcontol}, see \code{\link[topicmodels]{LDA}} (but if
-#'    \code{seed} is given, it will be overwritten; use \code{iseed} instead).
-#'
-#' @return A reduced version of \code{LDA_models} that only includes the 
-#'   selected LDA model(s). The returned object is still an object of
-#'   class \code{LDA_set}.
-#'
-#' @examples
-#'   data(rodents)
-#'   lda_data <- rodents$document_term_table
-#'   r_LDA <- LDA_set(lda_data, topics = 2, nseeds = 2)  
-#'   select_LDA(r_LDA)                       
-#'
-#' @export
-#'
-select_LDA <- function(LDA_models = NULL, control = list()){
-  if("LDA_set" %in% attr(LDA_models, "class") == FALSE){
-    stop("LDA_models must be of class LDA_set")
-  }
-  control <- do.call("LDA_set_control", control)
-  measurer <- control$measurer
-  selector <- control$selector  
-  lda_measured <- vapply(LDA_models, measurer, 0) %>%
-                  matrix(ncol = 1)
-  lda_selected <- apply(lda_measured, 2, selector) 
-  which_selected <- which(lda_measured %in% lda_selected)
-  out <- LDA_models[which_selected]
-  class(out)  <- c("LDA_set", "list") 
-  out
-}
-
-#' @title Package the output from LDA_set
-#'
-#' @description Name the elements (LDA models) and set the class 
-#'   (\code{LDA_set}) of the models returned by \code{\link{LDA_set}}.
-#'
-#' @param mods Fitted models returned from \code{\link[topicmodels]{LDA}}.
-#'
-#' @param mod_topics Vector of \code{integer} values corresponding to the 
-#'   number of topics in each model.
-#' 
-#' @param mod_seeds Vector of \code{integer} values corresponding to the 
-#'   seed used for each model.
-#'
-#' @return \code{lis} (class: \code{LDA_set}) of LDA models (class: 
-#'   \code{LDA_VEM}).
-#'
-#' @examples 
-#' \donttest{
-#'   data(rodents)
-#'   document_term_table <- rodents$document_term_table
-#'   topics <- 2
-#'   nseeds <- 2
-#'   control <- LDA_set_control()
-#'   mod_topics <- rep(topics, each = length(seq(2, nseeds * 2, 2)))
-#'   iseed <- control$iseed
-#'   mod_seeds <- rep(seq(iseed, iseed + (nseeds - 1)* 2, 2), length(topics))
-#'   nmods <- length(mod_topics)
-#'   mods <- vector("list", length = nmods)
-#'   for (i in 1:nmods){
-#'     LDA_msg(mod_topics[i], mod_seeds[i], control)
-#'     control_i <- prep_LDA_control(seed = mod_seeds[i], control = control)
-#'     mods[[i]] <- topicmodels::LDA(document_term_table, k = mod_topics[i], 
-#'                      control = control_i)
-#'   }
-#'   package_LDA_set(mods, mod_topics, mod_seeds)
-#' }
-#' 
-#' @export
-#'
-package_LDA_set <- function(mods, mod_topics, mod_seeds){
-  if (!("LDA_VEM" %in% class(mods[[1]]))){
-    stop("mods not of class LDA_VEM")
-  }
-  check_topics(mod_topics)
-  if (!is.numeric(mod_seeds) || any(mod_seeds%% 1 != 0)){
-    stop("mod_seeds must be integers")
-  }
-  names(mods) <- paste0("k: ", mod_topics, ", seed: ", mod_seeds)
-  class(mods) <- c("LDA_set", "list")  
-  mods
-}
-
-#' @title Create the model-running-message for an LDA
-#'
-#' @description Produce and print the message for a given LDA model.
-#'
-#' @param mod_topics \code{integer} value corresponding to the number of 
-#'   topics in the model.
-#' 
-#' @param mod_seeds \code{integer} value corresponding to the seed used for 
-#'   the model.
-#'
-#' @param control Class \code{LDA_controls} list of control parameters to be
-#'   used in \code{LDA} (note that "seed" will be overwritten).
-#'
-#' @examples
-#'   LDA_msg(mod_topics = 4, mod_seeds = 2)
-#'
-#' @export
-#'
-LDA_msg <- function(mod_topics, mod_seeds, control = list()){
-  control <- do.call("LDA_set_control", control)
-  check_topics(mod_topics)
-  check_seeds(mod_seeds)
-  topic_msg <- paste0("Running LDA with ", mod_topics, " topics ")
-  seed_msg <- paste0("(seed ", mod_seeds, ")")
-  messageq(paste0(topic_msg, seed_msg), control$quiet)
-}
-
-#' @title Create control list for set of LDA models
-#'
-#' @description This function provides a simple creation and definition of 
-#'   the list used to control the set of LDA models. It is set up to be easy
-#'   to work with the existing control capacity of 
-#'   \code{\link[topicmodels]{LDA}}.
-#'
-#' @param quiet \code{logical} indicator of whether the model should run 
-#'   quietly.
-#'
-#' @param measurer,selector Function names for use in evaluation of the LDA
-#'   models. \code{measurer} is used to create a value for each model
-#'   and \code{selector} operates on the values to choose the model(s) to 
-#'   pass on. 
-#'
-#' @param iseed \code{integer} initial seed for the model set. 
-#'
-#' @param ... Additional arguments to be passed to 
-#'   \code{\link[topicmodels]{LDA}} as a \code{control} input.
-#'
-#' @return \code{list} for controlling the LDA model fit.
-#'
-#' @examples
-#'   LDA_set_control()
-#'
-#' @export
-#'
-LDA_set_control <- function(quiet = FALSE, measurer = AIC, selector = min,
-                            iseed = 2, ...){
-  list(quiet = quiet, measurer = measurer, selector = selector, 
-       iseed = iseed, ...)
-}

@@ -36,12 +36,14 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     coda,
+    compositions,
     digest,
     extraDistr,
     graphics,
     grDevices,
     lubridate,
     magrittr,
+    mcmc,
     memoise,
     methods,
     mvtnorm,
