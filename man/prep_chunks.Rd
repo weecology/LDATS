@@ -11,14 +11,14 @@ prep_chunks(data, changepoints = NULL, timename = "time")
 response variables, but specifically here containing the column indicated
 by the \code{timename} input.}
 
+\item{changepoints}{Numeric vector indicating locations of the change 
+points. Must be conformable to \code{integer} values.}
+
 \item{timename}{\code{character} element indicating the time variable
 used in the time series. Defaults to \code{"time"}. The variable must be
 integer-conformable or a \code{Date}. If the variable named
 is a \code{Date}, the input is converted to an integer, resulting in the
 timestep being 1 day, which is often not desired behavior.}
-
-\item{change}{points Numeric vector indicating locations of the change 
-points. Must be conformable to \code{integer} values.}
 }
 \value{
 \code{data.frame} of \code{start} and \code{end} times (columns)
@@ -27,7 +27,7 @@ points. Must be conformable to \code{integer} values.}
 \description{
 Creates the table containing the start and end times for each
   chunk within a time series, based on the change points (used to break up
-  the time series) and the range of the time series. If there are no 
-  change points (i.e. \code{change points} is \code{NULL}, there is still a
-  single chunk defined by the start and end of the time series.
+  the time series) and the range of the time series. \cr \cr
+  If there are no change points (i.e. \code{changepoints = NULL}, there is
+  still a single chunk defined by the start and end of the time series.
 }

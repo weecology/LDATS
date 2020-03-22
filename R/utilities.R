@@ -29,12 +29,12 @@ time_order_data <- function(x, timename = "time"){
 #' @param control A \code{list} of parameters to control the fitting of the
 #'   iterative model.
 #'
-#' @param bar_type \code{character} value of possible types of progress bars.
+#' @param type \code{character} value of possible types of progress bars.
 #'   Currently available options are "rho" (for change point locations) and
 #'   "eta" (for time series regressors).
 #'
 #' @param nr \code{integer} number of unique realizations, needed when
-#'   \code{bar_type} = "eta".
+#'   \code{type} = "eta".
 #'
 #' @param pbar The progress bar object returned from \code{prep_pbar}.
 #'
@@ -44,9 +44,9 @@ time_order_data <- function(x, timename = "time"){
 #'
 #' @export
 #'
-prep_pbar <- function(control = list(), bar_type = "rho", nr = NULL){
-  if (!(bar_type %in% c("eta", "rho"))){
-    stop("bar_type must be eta or rho")
+prep_pbar <- function(control = list(), type = "rho", nr = NULL){
+  if (!(type %in% c("eta", "rho"))){
+    stop("type must be eta or rho")
   }
   if (!is.null(nr)){
     if (!is.numeric(nr) || any(nr %% 1 != 0)){
@@ -54,11 +54,11 @@ prep_pbar <- function(control = list(), bar_type = "rho", nr = NULL){
     }
   }
   form <- "  [:bar] :percent eta: :eta"
-  if (bar_type == "rho"){
+  if (type == "rho"){
     msg <- "    - estimating change point distribution"
     out <- progress_bar$new(form, control$nit, width = 60)
   }
-  if (bar_type == "eta"){
+  if (type == "eta"){
     msg <- "    - estimating regressor distribution"
     out <- progress_bar$new(form, nr, width = 60)
   }

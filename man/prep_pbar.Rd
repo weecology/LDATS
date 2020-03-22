@@ -5,7 +5,7 @@
 \alias{update_pbar}
 \title{Initialize and tick through the progress bar}
 \usage{
-prep_pbar(control = list(), bar_type = "rho", nr = NULL)
+prep_pbar(control = list(), type = "rho", nr = NULL)
 
 update_pbar(pbar, control = list())
 }
@@ -13,12 +13,12 @@ update_pbar(pbar, control = list())
 \item{control}{A \code{list} of parameters to control the fitting of the
 iterative model.}
 
-\item{bar_type}{\code{character} value of possible types of progress bars.
+\item{type}{\code{character} value of possible types of progress bars.
 Currently available options are "rho" (for change point locations) and
 "eta" (for time series regressors).}
 
 \item{nr}{\code{integer} number of unique realizations, needed when
-\code{bar_type} = "eta".}
+\code{type} = "eta".}
 
 \item{pbar}{The progress bar object returned from \code{prep_pbar}.}
 }

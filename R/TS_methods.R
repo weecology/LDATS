@@ -1,7 +1,8 @@
 #' @title Estimate changepoints using the LDATS classic ptMCMC method
 #'
-#' @description Uses the LDATS classic ptMCMC method to fit a changepoint
-#'  model. 
+#' @description Uses the LDATS classic parallel tempering Markov Chain Monte 
+#'  Carlo (ptMCMC) methods (Earl and Deem 2005) to fit a changepoint
+#'  model, following Christensen \emph{et al.} (2018).
 #'
 #' @param TS \code{list} time series model object. 
 #'
@@ -11,20 +12,31 @@
 #'
 #' @return \code{list} of changepoint locations, log likelihoods, and model
 #'  diagnostics.
+#' 
+#' @references 
+#'
+#'   Christensen, E., D. J. Harris, and S. K. M. Ernest. 2018.
+#'   Long-term community change through multiple rapid transitions in a 
+#'   desert rodent community. \emph{Ecology} \strong{99}:1523-1529. 
+#'   \href{https://doi.org/10.1002/ecy.2373}{link}.
+#'
+#'   Earl, D. J. and M. W. Deem. 2005. Parallel tempering: theory, 
+#'   applications, and new perspectives. \emph{Physical Chemistry Chemical 
+#'   Physics} \strong{7}: 3910-3916.
+#'   \href{https://doi.org/10.1039/B509983H}{link}.
 #'
 #' @export
 #'
 ldats_classic <- function(TS, control = list()){
-  control <- do.call("ldats_classic_control", control)
-  saves <- prep_saves(TS = TS, control = control)
-
-  inputs <- prep_ptMCMC_inputs(TS = TS, control = control)
-  cpts <- prep_cpts(TS = TS, control = control)
-  ids <- prep_ids(TS = TS, control)
-  pbar <- prep_pbar(control = control, bar_type = "rho")
+  TS$control$method_args$control <- do.call("ldats_classic_control", control)
+  saves <- prep_saves(TS = TS)
+  inputs <- prep_ptMCMC_inputs(TS = TS)
+  cpts <- prep_cpts(TS = TS)
+  ids <- prep_ids(TS = TS)
+  pbar <- prep_pbar(control = TS$control$method_args$control, type = "rho")
 
   for(i in 1:control$nit){
-    update_pbar(pbar = pbar, control = control)
+    update_pbar(pbar = pbar, control = TS$control$method_args$control)
     steps <- step_chains(TS = TS, i = i, cpts = cpts, inputs = inputs)
     swaps <- swap_chains(chainsin = steps, inputs = inputs, ids = ids)
     saves <- update_saves(i = i, saves = saves, steps = steps, swaps = swaps)
@@ -32,7 +44,7 @@ ldats_classic <- function(TS, control = list()){
     ids <- update_ids(ids = ids, swaps = swaps)
   }
 
-  process_saves(saves = saves, control = control)
+  process_saves(saves = saves, TS = TS)
 
 }
 
@@ -243,10 +255,6 @@ swap_chains <- function(chainsin, inputs, ids){
 #'
 #' @param TS \code{list} time series model object. 
 #'
-#' @param control A \code{list} of parameters to control the fitting of the
-#'   time series model via the LDATS classic ptMCMC method. Values not input 
-#'   assume defaults set by \code{\link{ldats_classic_control}}.
-#'
 #' @param cpts The existing matrix of change points.
 #'
 #' @param swaps Chain configuration after among-temperature swaps.
@@ -258,10 +266,9 @@ swap_chains <- function(chainsin, inputs, ids){
 #'
 #' @export
 #'
-prep_cpts <- function(TS, control = list()){
-  control <- do.call("ldats_classic_control", control)
+prep_cpts <- function(TS){
   data <- TS$data$train$ts_data
-  temps <- prep_temp_sequence(TS = TS, control = control)
+  temps <- prep_temp_sequence(TS = TS)
   ntemps <- length(temps)
   min_time <- min(data[ , timename])
   max_time <- max(data[ , timename])
@@ -278,7 +285,7 @@ prep_cpts <- function(TS, control = list()){
     fun <- memoise_fun(fun, TS$control$memoise)
     args <- list(data = data, formula = TS$formula, changepoints = cps[ , i], 
                  timename = TS$timename, weights = TS$weights, 
-                 control = control)
+                 control = TS$control$response_args$control)
     modfit <- soft_call(fun, args, TRUE)
     lls[i] <- modfit$logLik
   }  
@@ -310,10 +317,6 @@ update_cpts <- function(cpts, swaps){
 #'   and would work with any ptMCMC model as long as \code{control}
 #'   includes the relevant control parameters.
 #'
-#' @param control A \code{list} of parameters to control the fitting of the
-#'   time series model via the LDATS classic ptMCMC method. Values not input 
-#'   assume defaults set by \code{\link{ldats_classic_control}}.
-#'
 #' @param TS \code{list} time series model object. 
 #'
 #' @return \code{vector} of temperatures.
@@ -323,12 +326,11 @@ update_cpts <- function(cpts, swaps){
 #'
 #' @export
 #'
-prep_temp_sequence <- function(TS, control = list()){
-  control <- do.call("ldats_classic_control", control)
-  ntemps <- control$ntemps
-  penultimate_temp <- control$penultimate_temp
-  ultimate_temp <- control$ultimate_temp
-  q <- control$q
+prep_temp_sequence <- function(TS){
+  ntemps <- TS$control$method_args$control$ntemps
+  penultimate_temp <- TS$control$method_args$control$penultimate_temp
+  ultimate_temp <- TS$control$method_args$control$ultimate_temp
+  q <- TS$control$method_args$control$q
   sequence <- seq(0, log2(penultimate_temp), length.out = ntemps - 1)
   log_temps <- sequence^(1 + q) / log2(penultimate_temp)^q
   c(2^(log_temps), ultimate_temp) 
@@ -351,10 +353,6 @@ prep_temp_sequence <- function(TS, control = list()){
 #'
 #' @param TS \code{list} time series model object. 
 #'
-#' @param control A \code{list} of parameters to control the fitting of the
-#'   time series model via the LDATS classic ptMCMC method. Values not input 
-#'   assume defaults set by \code{\link{ldats_classic_control}}.
-#'
 #' @param i \code{integer} iteration index. 
 #'
 #' @param saves The existing list of saved data objects.
@@ -367,14 +365,12 @@ prep_temp_sequence <- function(TS, control = list()){
 #'   log-likelihoods (\code{$lls}), chain ids (\code{$ids}), step acceptances
 #'   (\code{$step_accepts}), and swap acceptances (\code{$swap_accepts}).
 #'
-#'
 #' @export
 #'
-prep_saves <- function(TS, control = list()){
-  control <- do.call("ldats_classic_control", control)
+prep_saves <- function(TS){
   nchangepoints <- TS$nchangepoints
-  ntemps <- control$ntemps
-  nit <- control$nit
+  ntemps <- TS$control$method_args$control$ntemps
+  nit <- TS$control$method_args$control$nit
   cpts <- array(NA, c(nchangepoints, ntemps, nit))
   lls <- matrix(NA, ntemps, nit)
   ids <- matrix(NA, ntemps, nit)
@@ -401,15 +397,14 @@ update_saves <- function(i, saves, steps, swaps){
 #'
 #' @export
 #'
-process_saves <- function(saves, control = list()){
-  control <- do.call("ldats_classic_control", control)
-  nit <- control$nit
+process_saves <- function(saves, TS){
+  nit <- TS$control$method_args$control$nit
   iters <- 1:nit
-  if (control$burnin > 0){
-    iters <- iters[-(1:control$burnin)]
+  if (TS$control$method_args$control$burnin > 0){
+    iters <- iters[-(1:TS$control$method_args$control$burnin)]
   }
   niters <- length(iters)
-  thin_interval <- ceiling(1/control$thin_frac)
+  thin_interval <- ceiling(1/TS$control$method_args$control$thin_frac)
   iters_thinned <- seq(1, niters, by = thin_interval)
   dims <- c(dim(saves$cpts)[1:2], length(iters_thinned))
 
@@ -428,7 +423,6 @@ process_saves <- function(saves, control = list()){
 
   saves$diagnostics <- diagnostics
 
-
   saves
 }
 
@@ -445,22 +439,17 @@ process_saves <- function(saves, control = list()){
 #'
 #' @param TS \code{list} time series model object. 
 #'
-#' @param control A \code{list} of parameters to control the fitting of the
-#'   time series model via the LDATS classic ptMCMC method. Values not input 
-#'   assume defaults set by \code{\link{ldats_classic_control}}.
-#'
 #' @return \code{list} containing the static 
 #'   inputs for use within the ptMCMC algorithm for estimating change points. 
 #'
 #' @export
 #'
-prep_ptMCMC_inputs <- function(TS, control = list()){
-  control <- do.call("ldats_classic_control", control)
+prep_ptMCMC_inputs <- function(TS){
   fun <- TS$control$response
-  fun <- memoise_fun(fun, control$memoise)
-  list(control = control, 
-              temps = prep_temp_sequence(TS = TS, control = control), 
-              pdist = prep_proposal_dist(TS = TS, control = control),
+  fun <- memoise_fun(fun, TS$control$method_args$control$memoise)
+  list(control = TS$control$method_args$control, 
+              temps = prep_temp_sequence(TS = TS), 
+              pdist = prep_proposal_dist(TS = TS),
               formula = TS$formula, 
               weights = TS$weights, 
               data = TS$data$train$ts_data, 
@@ -484,10 +473,6 @@ prep_ptMCMC_inputs <- function(TS, control = list()){
 #'
 #' @param TS \code{list} time series model object. 
 #'
-#' @param control A \code{list} of parameters to control the fitting of the
-#'   time series model via the LDATS classic ptMCMC method. Values not input 
-#'   assume defaults set by \code{\link{ldats_classic_control}}.
-#'
 #' @return \code{list} of two \code{matrix} elements: [1] the size of the 
 #'   proposed step for each iteration of each chain and [2] the identity of 
 #'   the change point location to be shifted by the step for each iteration of
@@ -495,16 +480,15 @@ prep_ptMCMC_inputs <- function(TS, control = list()){
 #'
 #' @export
 #'
-prep_proposal_dist <- function(TS, control = list()){
-  control <- do.call("ldats_classic_control", control)
+prep_proposal_dist <- function(TS){
   nchangepoints <- TS$nchangepoints
-  ntemps <- control$ntemps
-  nit <- control$nit
+  ntemps <- TS$control$method_args$control$ntemps
+  nit <- TS$control$method_args$control$nit
   if(nchangepoints == 0){
     steps <- matrix(0, nrow = nit, ncol = ntemps)
     which_steps <- matrix(numeric(0), nrow = nit, ncol = ntemps)
   } else{
-    magnitude <- control$magnitude 
+    magnitude <- TS$control$method_args$control$magnitude 
     step_signs <- sample(c(-1, 1), nit * ntemps, replace = TRUE)
     step_magnitudes <- 1 + rgeom(nit * ntemps, 1 / magnitude)
     steps <- matrix(step_signs * step_magnitudes, nrow = nit)
@@ -530,10 +514,6 @@ prep_proposal_dist <- function(TS, control = list()){
 #'
 #' @param TS \code{list} time series model object. 
 #'
-#' @param control A \code{list} of parameters to control the fitting of the
-#'   time series model via the LDATS classic ptMCMC method. Values not input 
-#'   assume defaults set by \code{\link{ldats_classic_control}}.
-#'
 #' @param ids The existing vector of chain ids.
 #'
 #' @param swaps Chain configuration after among-temperature swaps.
@@ -542,12 +522,12 @@ prep_proposal_dist <- function(TS, control = list()){
 #'
 #' @export
 #'
-prep_ids <- function(TS, control = list()){
-  control <- do.call("ldats_classic_control", control)
-  if (!is.numeric(control$ntemps) || any(control$ntemps %% 1 != 0)){
+prep_ids <- function(TS){
+  ntemps <- TS$control$method_args$control$ntemps
+  if (!is.numeric(ntemps) || any(ntemps %% 1 != 0)){
     stop("ntemps must be integer-valued")
   }
-  1:control$ntemps
+  1:ntemps
 }
 
 

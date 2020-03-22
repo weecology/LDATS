@@ -81,7 +81,8 @@
 #'   Time Series model. Values not input assume defaults set by 
 #'   \code{\link{TS_control}}.
 #'  
-#' @param TSs \code{list} of  time series model \code{list}s.
+#' @param TS,TSs time series model \code{list} (\code{TS}) or a \code{list} 
+#'   of many time series model \code{list}s (\code{TSs}).
 #'
 #' @param selected_TSs \code{list} of selected time series model \code{list}s.
 #'
@@ -102,6 +103,39 @@
 #'     run of a \code{<model>} function, such as 
 #'     \code{\link{sequential_TS}}. \cr \cr
 #'   \code{TS_msg}: a message is produced.
+#'
+#' @references 
+#'   Bishop, C. M. 2006. \emph{Pattern Recognition and Machine Learning}. 
+#'    Springer, New York, NY, USA.
+#'
+#'   Christensen, E., D. J. Harris, and S. K. M. Ernest. 2018.
+#'   Long-term community change through multiple rapid transitions in a 
+#'   desert rodent community. \emph{Ecology} \strong{99}:1523-1529. 
+#'   \href{https://doi.org/10.1002/ecy.2373}{link}.
+#'
+#'   Earl, D. J. and M. W. Deem. 2005. Parallel tempering: theory, 
+#'   applications, and new perspectives. \emph{Physical Chemistry Chemical 
+#'   Physics} \strong{7}: 3910-3916.
+#'   \href{https://doi.org/10.1039/B509983H}{link}.
+#'
+#'   McCullagh, P. and J. A. Nelder. 1989. \emph{Generalized Linear Models}.
+#'   2nd Edition. Chapman and Hall, New York, NY, USA.
+#'
+#'   Ripley, B. D. 1996. \emph{Pattern Recognition and Neural Networks}. 
+#'   Cambridge University Press, Cambridge, UK.
+#'
+#'   Ruggieri, E. 2013. A Bayesian approach to detecting change points in 
+#'   climactic records. \emph{International Journal of Climatology}
+#'   \strong{33}:520-528.
+#'   \href{https://doi.org/10.1002/joc.3447}{link}.
+#'
+#'   Venables, W. N. and B. D. Ripley. 2002. \emph{Modern and Applied
+#'   Statistics with S}. Fourth Edition. Springer, New York, NY, USA.
+#'
+#'   Western, B. and M. Kleykamp. 2004. A Bayesian change point model for 
+#'   historical time series analysis. \emph{Political Analysis}
+#'   \strong{12}:354-374.
+#'   \href{https://doi.org/10.1093/pan/mph023}{link}.
 #'
 #' @name TS
 #'
@@ -281,9 +315,8 @@ measure_TS <- function(TSs){
 
 #' @title Create the controls list for the Time Series model
 #'
-#' @description This function provides a simple creation and definition of a
-#'   list used to control the time series model fit occurring within 
-#'   \code{\link{TS}}. 
+#' @description Creation and definition of a \code{list} to control the 
+#'   time series model fit occurring within \code{\link{TS}}. 
 #'
 #' @param response \code{character} element indicating the response variable 
 #'   used in the time series. \cr \cr
@@ -409,15 +442,15 @@ logLik.TS <- function(object, ...){
 #'
 #' @description Creates the table containing the start and end times for each
 #'   chunk within a time series, based on the change points (used to break up
-#'   the time series) and the range of the time series. If there are no 
-#'   change points (i.e. \code{change points} is \code{NULL}, there is still a
-#'   single chunk defined by the start and end of the time series.
+#'   the time series) and the range of the time series. \cr \cr
+#'   If there are no change points (i.e. \code{changepoints = NULL}, there is
+#'   still a single chunk defined by the start and end of the time series.
 #'
 #' @param data Class \code{data.frame} object including the predictor and 
 #'   response variables, but specifically here containing the column indicated
 #'   by the \code{timename} input. 
 #'
-#' @param change points Numeric vector indicating locations of the change 
+#' @param changepoints Numeric vector indicating locations of the change 
 #'   points. Must be conformable to \code{integer} values. 
 #'
 #' @param timename \code{character} element indicating the time variable
@@ -446,7 +479,7 @@ prep_chunks <- function(data, changepoints = NULL, timename = "time"){
 #' @param data Class \code{data.frame} object including the predictor and 
 #'   response variables.
 #'
-#' @param change points Numeric vector indicating locations of the change 
+#' @param changepoints Numeric vector indicating locations of the change 
 #'   points. Must be conformable to \code{integer} values. 
 #'
 #' @param timename \code{character} element indicating the time variable

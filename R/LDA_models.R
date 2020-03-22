@@ -24,7 +24,21 @@
 #'   \code{\link[topicmodels]{topicmodels::LDA}}. Currenlty, only
 #'   \code{"VEM"} and \code{"Gibbs"} are supported.
 #'
-#' @return \code{LDA} \code{list}.
+#' @return \code{LDA} \code{list} with components
+#'  \describe{
+#'    \item{alpha}{parameter estimate.}
+#'    \item{beta}{parameter estimate.}
+#'    \item{document_topic_matrix}{estimated latent topic compositions.}
+#'    \item{test_document_topic_matrox}{estimated latent topic compositions 
+#'      of the test data (not presently available for usage).}
+#'    \item{log_likelihood}{model log likelihood.}
+#'    \item{data}{data object used to fit the LDA model.}
+#'    \item{data_subset}{number of the data subset from the whole data set.}
+#'    \item{topics}{\code{integer} number of topics in the model.}
+#'    \item{replicat}{\code{integer} replicate number.}
+#'    \item{control}{\code{list} of controls used to fit the model. See
+#'      \code{\link{LDA_control}}.}
+#'  }
 #' 
 #' @references 
 #'   Blei, D. M., A. Y. Ng, and M. I. Jordan. 2003. Latent Dirichlet
@@ -77,7 +91,22 @@ topicmodels_LDA <- function(LDA, method = "VEM", seeded = TRUE, ...){
 #' @param LDA A prepared (via \code{\link{prep_LDA_models}} LDA model
 #'   \code{list}.
 #'
-#' @return \code{LDA} \code{list} with most components as placeholders.
+#' @return \code{LDA} \code{list} with components (many of which are 
+#'  placeholders):
+#'  \describe{
+#'    \item{alpha}{parameter estimate.}
+#'    \item{beta}{parameter estimate.}
+#'    \item{document_topic_matrix}{estimated latent topic compositions.}
+#'    \item{test_document_topic_matrox}{estimated latent topic compositions 
+#'      of the test data (not presently available for usage).}
+#'    \item{log_likelihood}{model log likelihood.}
+#'    \item{data}{data object used to fit the LDA model.}
+#'    \item{data_subset}{number of the data subset from the whole data set.}
+#'    \item{topics}{\code{integer} number of topics in the model.}
+#'    \item{replicat}{\code{integer} replicate number.}
+#'    \item{control}{\code{list} of controls used to fit the model. See
+#'      \code{\link{LDA_control}}.}
+#'  }
 #' 
 #' @export
 #'

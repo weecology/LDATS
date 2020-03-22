@@ -80,10 +80,9 @@ LDATS model. Values not input assume defaults set by
   }
 }
 \description{
-The main interface function for analyzing compositional 
-  time series using the LDATS application of Linguistic Decomposition 
-  Analysis and Time Series modeling generally following Christensen 
-  \emph{et al.} (2018).
+Analyze compositional time series using the Linguistic 
+  Decomposition Analysis coupled to Bayesian Time Series models 
+  generally following Christensen \emph{et al.} (2018).
 }
 \details{
 For a (potentially subset) dataset consisting of counts of words 

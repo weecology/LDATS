@@ -76,7 +76,8 @@ most appropriate, and this is accomplished using \code{document_weights}.}
 Time Series model. Values not input assume defaults set by 
 \code{\link{TS_control}}.}
 
-\item{TSs}{\code{list} of  time series model \code{list}s.}
+\item{TS, TSs}{time series model \code{list} (\code{TS}) or a \code{list} 
+of many time series model \code{list}s (\code{TSs}).}
 
 \item{selected_TSs}{\code{list} of selected time series model \code{list}s.}
 }
@@ -133,4 +134,37 @@ For a (potentially subset) dataset consisting of proportions of
       the whole model, and
     \item Package the results.
   }
+}
+\references{
+Bishop, C. M. 2006. \emph{Pattern Recognition and Machine Learning}. 
+   Springer, New York, NY, USA.
+
+  Christensen, E., D. J. Harris, and S. K. M. Ernest. 2018.
+  Long-term community change through multiple rapid transitions in a 
+  desert rodent community. \emph{Ecology} \strong{99}:1523-1529. 
+  \href{https://doi.org/10.1002/ecy.2373}{link}.
+
+  Earl, D. J. and M. W. Deem. 2005. Parallel tempering: theory, 
+  applications, and new perspectives. \emph{Physical Chemistry Chemical 
+  Physics} \strong{7}: 3910-3916.
+  \href{https://doi.org/10.1039/B509983H}{link}.
+
+  McCullagh, P. and J. A. Nelder. 1989. \emph{Generalized Linear Models}.
+  2nd Edition. Chapman and Hall, New York, NY, USA.
+
+  Ripley, B. D. 1996. \emph{Pattern Recognition and Neural Networks}. 
+  Cambridge University Press, Cambridge, UK.
+
+  Ruggieri, E. 2013. A Bayesian approach to detecting change points in 
+  climactic records. \emph{International Journal of Climatology}
+  \strong{33}:520-528.
+  \href{https://doi.org/10.1002/joc.3447}{link}.
+
+  Venables, W. N. and B. D. Ripley. 2002. \emph{Modern and Applied
+  Statistics with S}. Fourth Edition. Springer, New York, NY, USA.
+
+  Western, B. and M. Kleykamp. 2004. A Bayesian change point model for 
+  historical time series analysis. \emph{Political Analysis}
+  \strong{12}:354-374.
+  \href{https://doi.org/10.1093/pan/mph023}{link}.
 }

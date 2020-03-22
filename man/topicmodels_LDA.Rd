@@ -22,7 +22,21 @@ replicate.}
 \code{\link[topicmodels]{topicmodels::LDA}} as a \code{control} input.}
 }
 \value{
-\code{LDA} \code{list}.
+\code{LDA} \code{list} with components
+ \describe{
+   \item{alpha}{parameter estimate.}
+   \item{beta}{parameter estimate.}
+   \item{document_topic_matrix}{estimated latent topic compositions.}
+   \item{test_document_topic_matrox}{estimated latent topic compositions 
+     of the test data (not presently available for usage).}
+   \item{log_likelihood}{model log likelihood.}
+   \item{data}{data object used to fit the LDA model.}
+   \item{data_subset}{number of the data subset from the whole data set.}
+   \item{topics}{\code{integer} number of topics in the model.}
+   \item{replicat}{\code{integer} replicate number.}
+   \item{control}{\code{list} of controls used to fit the model. See
+     \code{\link{LDA_control}}.}
+ }
 }
 \description{
 Fit the standard LDATS LDA model (a true Latent Dirichlet

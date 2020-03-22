@@ -33,6 +33,8 @@
 #'   Time Series model. Values not input assume defaults set by 
 #'   \code{\link{sequential_TS_control}}.
 #'
+#' @param TS Time series model \code{list}.
+#'
 #' @details The general approach follows that of Western and Kleykamp
 #'   (2004), although we note some important differences. Our regression
 #'   models are fit independently for each chunk (segment of time), and 
@@ -106,52 +108,52 @@
 #'                      including the change point locations and regressors.}
 #'     }
 #'
+#' @name sequential_TS
+#'
+
+#' @rdname sequential_TS
+#'
 #' @export
 #'
 sequential_TS <- function(TS, control = list()){
-  control <- do.call("sequential_TS_control", control)
-  rho_dist <- est_changepoints(TS = TS, control = control)
-  eta_dist <- est_regressors(rho_dist = rho_dist, TS = TS, control = control)
-  package_sequential_TS(TS = TS, rho_dist = rho_dist, eta_dist = eta_dist, 
-                        control = control)
+  TS$control$model_args$control <- do.call("sequential_TS_control", control)
+  rho_dist <- est_changepoints(TS = TS)
+  eta_dist <- est_regressors(rho_dist = rho_dist, TS = TS)
+  package_sequential_TS(TS = TS, rho_dist = rho_dist, eta_dist = eta_dist)
 }
 
 #' @rdname sequential_TS
 #'
 #' @export
 #'
-package_sequential_TS <- function(TS, rho_dist, eta_dist, control = list()){
-  control <- do.call("sequential_TS_control", control)
+package_sequential_TS <- function(TS, rho_dist, eta_dist){
   if(is.null(rho_dist)){
-    focal_rho_dist <- NULL
+    focal_rhos <- NULL
     data <- TS$data$train$ts_data
-    fun <- TS$response
+    fun <- TS$control$response
     args <- list(data = data, formula = TS$formula, changepoints = NULL, 
                  timename = TS$timename, weights = TS$weights, 
-                 control = control$method_args)
+                 control = TS$control$response_args$control)
     mod <- soft_call(fun, args, TRUE)
     lls <- as.numeric(logLik(mod))
-
-
 
   } else{
     vals <- rho_dist$cpts[ , 1, , drop = FALSE]
     dims <- dim(rho_dist$cpts)[c(1, 3)]
     lls <- rho_dist$lls[1, ]
-    focal_rho_dist <- t(array(vals, dim = dims))
+    focal_rhos <- t(array(vals, dim = dims))
   }
 
-
-  rho_summary <- summarize_rhos(rhos = focal_rho_dist, control = control)
-  rho_vcov <- measure_rho_vcov(rhos = focal_rho_dist)
-  eta_summary <- summarize_etas(etas = eta_dist, control = control)
+  rho_summary <- summarize_rhos(rhos = focal_rhos, TS = TS)
+  rho_vcov <- measure_rho_vcov(rhos = focal_rhos)
+  eta_summary <- summarize_etas(etas = eta_dist, TS = TS)
   eta_vcov <- measure_eta_vcov(etas = eta_dist)
 
   logLik <- mean(lls)
   ncoefs <- ncol(eta_dist)
   nparams <- TS$nchangepoints + ncoefs 
 
-  out <- update_list(TS, focal_rhos = focal_rho_dist, rhos = rho_dist,
+  out <- update_list(TS, focal_rhos = focal_rhos, rhos = rho_dist,
                      etas = eta_dist, rho_summary = rho_summary,
                      rho_vcov = rho_vcov, eta_summary = eta_summary,
                      eta_vcov = eta_vcov, logLik = logLik, nparams = nparams)
@@ -169,8 +171,7 @@ package_sequential_TS <- function(TS, rho_dist, eta_dist, control = list()){
 #'
 #' @export
 #'
-est_changepoints <- function(TS, control = list()){
-  control <- do.call("sequential_TS_control", control)
+est_changepoints <- function(TS){
   if (TS$nchangepoints == 0){
     return(NULL)
   }
@@ -183,8 +184,7 @@ est_changepoints <- function(TS, control = list()){
 #'
 #' @export
 #'
-est_regressors <- function(rho_dist, TS, control = list()){
-  control <- do.call("sequential_TS_control", control)
+est_regressors <- function(rho_dist, TS){
   data <- TS$data$train$ts_data
   if(is.null(rho_dist)){
 
@@ -194,7 +194,7 @@ est_regressors <- function(rho_dist, TS, control = list()){
     fun <- TS$control$response
     args <- list(data = data, formula = TS$formula, changepoints = NULL, 
                  timename = TS$timename, weights = TS$weights, 
-                 control = control$method_args)
+                 control = TS$control$response_args$control)
     mod <- soft_call(fun, args, TRUE)
 
     mod <- mod[[1]][[1]]
@@ -226,19 +226,20 @@ est_regressors <- function(rho_dist, TS, control = list()){
   n_eta <- n_eta_segment * n_segment 
   n_iter <- dim(rho_dist$cpts)[3]
   eta <- matrix(NA, nrow = n_iter, ncol = n_eta)
-  pbar <- prep_pbar(control = control, bar_type = "eta", nr = nr)
+  pbar <- prep_pbar(control = TS$control$model_args$control, 
+                    type = "eta", nr = nr)
 
   for(i in 1:nr){
-    update_pbar(pbar = pbar, control = control)
+    update_pbar(pbar = pbar, control = TS$control$model_args$control)
     cpts <- as.numeric(strsplit(unique_r[i], "_")[[1]])
 
 
     data <- TS$data$train$ts_data
     fun <- TS$control$response
-    fun <- memoise_fun(fun, TS$control$method_args$memoise)
+    fun <- memoise_fun(fun, TS$control$method_args$control$memoise)
     args <- list(data = data, formula = TS$formula, changepoints = cpts, 
                  timename = TS$timename, weights = TS$weights, 
-                 control = TS$control$method_args)
+                 control = TS$control$response_args$control)
     mod <- soft_call(fun, args, TRUE)
 
 
@@ -311,36 +312,54 @@ sequential_TS_control <- function(method = ldats_classic,
         summary_prob = summary_prob, soften = soften, quiet = quiet)
 }
 
-#' @title Summarize the regressor (eta) distributions of a time series model
+#' @title Summarize the change point (rho) and regressor (eta) distributions 
+#'   of a sequential time series model
 #'
-#' @description \code{summarize_etas} calculates summary statistics for each
-#'   of the chunk-level regressors. 
-#'   \cr \cr
+#' @description 
+#'   \code{summarize_etas} calculates summary statistics for each
+#'     of the chunk-level regressors. \cr \cr
 #'   \code{measure_ets_vcov} generates the variance-covariance matrix for 
-#'   the regressors.
+#'     the regressors. \cr \cr
+#'  \code{summarize_rho} calculates summary statistics for each
+#'     of the change point locations. \cr \cr
+#'   \code{measure_rho_vcov} generates the variance-covariance matrix for the 
+#'     change point locations.
 #'
-#' @param etas Matrix of regressors (columns) across iterations of the 
+#' @param etas \code{matrix} of regressors (columns) across iterations of the 
 #'   sampler (rows), as returned from \code{\link{est_regressors}}.
 #'
-#' @param control A \code{list} of parameters to control the fitting of the
-#'   Time Series model. Values not input assume defaults set by 
-#'   \code{\link{sequential_TS_control}}.
+#' @param rhos \code{matrix} of change point locations (columns) across
+#'   iterations of the sampler (rows) or \code{NULL} if no change points are 
+#'   in the model, as returned from \code{\link{est_change points}}.
 #'
-#' @return \code{summarize_etas}: table of summary statistics for chunk-level
-#'   regressors including mean, median, mode, posterior interval, standard
-#'   deviation, MCMC error, autocorrelation, and effective sample size for 
-#'   each regressor. \cr \cr
+#' @param TS Time series model \code{list}.
+#'
+#' @return 
+#'   \code{summarize_etas}: table of summary statistics for chunk-level
+#'     regressors including mean, median, mode, posterior interval, standard
+#'     deviation, MCMC error, autocorrelation, and effective sample size for 
+#'     each regressor. \cr \cr
 #'   \code{measure_eta_vcov}: variance-covariance matrix for chunk-level
-#'   regressors.
+#'     regressors. \cr \cr
+#'  \code{summarize_rhos}: table of summary statistics for change point
+#'     locations including mean, median, mode, posterior interval, standard
+#'     deviation, MCMC error, autocorrelation, and effective sample size for 
+#'     each change point location. \cr \cr
+#'   \code{measure_rho_vcov}: variance-covariance matrix for change 
+#'     point locations.
+#' 
+#' @name summarize_sequential_TS
+#'
+
+#' @rdname summarize_sequential_TS
 #'
 #' @export 
 #'
-summarize_etas <- function(etas, control = list()){
-  control <- do.call("sequential_TS_control", control)
+summarize_etas <- function(etas, TS){
   if (!is.matrix(etas)){
     stop("etas should be a matrix")
   }
-  prob <- control$summary_prob
+  prob <- TS$control$summary_prob
   Mean <- round(apply(etas, 2, mean), 4)
   Median <- round(apply(etas, 2, median), 4)
   SD <- round(apply(etas, 2, sd), 4)
@@ -358,7 +377,7 @@ summarize_etas <- function(etas, control = list()){
   out
 }
 
-#' @rdname summarize_etas
+#' @rdname summarize_sequential_TS
 #'
 #' @export 
 #'
@@ -372,37 +391,17 @@ measure_eta_vcov <- function(etas){
   out
 }
 
-#' @title Summarize the rho distributions
+
+
+#' @rdname summarize_sequential_TS
 #'
-#' @description \code{summarize_rho} calculates summary statistics for each
-#'   of the change point locations.
-#'   \cr \cr
-#'   \code{measure_rho_vcov} generates the variance-covariance matrix for the 
-#'   change point locations.
-#'
-#' @param rhos Matrix of change point locations (columns) across iterations of 
-#'   the sampler (rows) or \code{NULL} if no change points are in the model,
-#'   as returned from \code{\link{est_change points}}.
-#'
-#' @param control A \code{list} of parameters to control the fitting of the
-#'   Time Series model. Values not input assume defaults set by 
-#'   \code{\link{sequential_TS_control}}.
-#'
-#' @return \code{summarize_rhos}: table of summary statistics for change point
-#'   locations including mean, median, mode, posterior interval, standard
-#'   deviation, MCMC error, autocorrelation, and effective sample size for 
-#'   each change point location. \cr \cr
-#'   \code{measure_rho_vcov}: variance-covariance matrix for change 
-#'   point locations.
-#' 
 #' @export 
 #'
-summarize_rhos <- function(rhos, control = list()){
-  control <- do.call("sequential_TS_control", control)
+summarize_rhos <- function(rhos, TS){
   if (is.null(rhos)) {
     return()
   }
-  prob <- control$summary_prob
+  prob <- TS$control$summary_prob
   Mean <- round(apply(rhos, 2, mean), 2)
   Median <- apply(rhos, 2, median)
   Mode <- apply(rhos, 2, modalvalue)
@@ -420,7 +419,7 @@ summarize_rhos <- function(rhos, control = list()){
   out
 }
 
-#' @rdname summarize_rhos
+#' @rdname summarize_sequential_TS
 #'
 #' @export 
 #'
