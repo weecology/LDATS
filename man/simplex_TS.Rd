@@ -68,11 +68,11 @@ quietly (if \code{FALSE}, a progress bar and notifications are printed).}
 automated removal of unneeded controls.}
 }
 \value{
-\code{simplex_TS}: \code{list} of [1] chunk-level model fits 
-    (\code{"chunk models"}), [2] the total log likelihood combined across 
+\code{simplex_TS}: \code{TS_fit} \code{list} of [1] chunk-level model 
+    fits (\code{"chunk models"}), [2] the total log likelihood across 
     all chunks (\code{"logLik"}), and [3] a \code{data.frame} of chunk 
-    beginning and ending times (\code{"logLik"} with columns 
-    \code{"start"} and \code{"end"}). \cr \cr
+    beginning and ending times (with columns \code{"start"} and 
+    \code{"end"}). \cr \cr
   \code{simplex_TS_chunk}: fitted model object for the chunk, 
     of class \code{lm}. \cr \cr
   \code{simplex_TS_control}: \code{list}, with named elements 

@@ -1,41 +1,11 @@
-#' @title Plot a set of LDATS TS models
-#'
-#' @description Generalization of the \code{\link[graphics]{plot}} function to 
-#'   work on a list of TS topic models (class \code{TS_set}). 
-#' 
-#' @param x An \code{TS_set} object of TS topic models.
-#'
-#' @param ... Not used, retained for alignment with base function.
-#' 
-#' @param selected \code{logical} indicator of if only the selected TSs
-#'   (the first element in \code{x}) should be plotted or if all the TSs
-#'   (the second element in \code{x}) should be plotted.
-#'
-#' @return \code{NULL}.
-#'
-#' @export 
-#'
-plot.TS_set <- function(x, ..., selected = TRUE){
-  if(selected){
-    x <- x[[1]]
-  } else{
-    x <- x[[2]]
-  }
-  on.exit(devAskNewPage(FALSE))
-  if (length(x) > 1){
-    devAskNewPage(TRUE)
-  }
-  y <- lapply(x, plot, ...)
-  y <- NULL
-}
-
-
 #' @title Plot an LDATS Time Series model
 #'
 #' @description 
 #'   \code{plot.TS} is a generalization of the \code{\link[graphics]{plot}}
 #'     function to work on fitted TS model objects (class \code{TS}) 
 #'     returned from \code{\link{TS}}. \cr \cr
+#'   \code{plot.TS_set} plots a \code{TS_set} of \code{TS} models, either 
+#'     just the \code{selected} models or all. \cr \cr
 #'   \code{TS_diagnostics_plot} makes the 4-panel figures (showing trace 
 #'     plots, posterior ECDF, posterior density, and iteration 
 #'     autocorrelation) for each of the parameters (change point locations 
@@ -82,11 +52,16 @@ plot.TS_set <- function(x, ..., selected = TRUE){
 #'     \code{\link{set_gamma_colors}} and \code{\link{set_rho_hist_colors}} 
 #'     for specific details on usage.
 #' 
-#' @param x A \code{TS_fit} object of a multinomial time series model fit by
-#'   \code{\link{TS}}.
+#' @param x In \code{plot.TS}, a \code{TS_fit} object of a multinomial time
+#'   series model fit by \code{\link{TS}}. In \code{plot.TS_set}, a 
+#'   \code{TS_set} \code{list} of \code{TS} objects.
 #' 
 #' @param ... Additional arguments to be passed to subfunctions. Not currently
 #'   used, just retained for alignment with \code{\link[graphics]{plot}}.
+#'
+#' @param selected \code{logical} indicator of if only the selected TSs
+#'   (the first element in \code{x}) should be plotted or if all the TSs
+#'   (the second element in \code{x}) should be plotted.
 #'
 #' @param spec_rhos \code{numeric} vector indicating the locations along the
 #'   x axis where the specific change points being used are located.
@@ -148,11 +123,11 @@ plot.TS_set <- function(x, ..., selected = TRUE){
 #'   \code{\link[grDevices]{rgb}}.
 #' 
 #' @return 
-#'   \code{plot.TS},\code{TS_diagnostics_plot},\code{eta_diagnostics_plots},
-#'     \code{rho_diagnostics_plots},\code{trace_plot},\code{posterior_plot},
-#'     \code{autocorr_plot},\code{ecdf_plot},\code{TS_summary_plot},
-#'     \code{pred_gamma_TS_plot},\code{rho_hist},\code{rho_lines}:
-#'     \code{NULL}. \cr \cr
+#'   \code{plot.TS},\code{plot.TS_set},\code{TS_diagnostics_plot},
+#'     \code{eta_diagnostics_plots},\code{rho_diagnostics_plots},
+#'     \code{trace_plot},\code{posterior_plot},\code{autocorr_plot},
+#'     \code{ecdf_plot},\code{TS_summary_plot},\code{pred_gamma_TS_plot},
+#'     \code{rho_hist},\code{rho_lines}:\code{NULL}. \cr \cr
 #'   \code{set_rho_hist_cols},\code{set_gamma_colors}: \code{vector} of 
 #'     \code{character} hex codes indicating colors to use.
 #'   \code{set_TS_summary_plot_cols}: \code{list} of elements used to define
@@ -178,6 +153,24 @@ plot.TS <- function(x, ..., plot_type = "summary", interactive = FALSE,
   } else if (plot_type == "summary"){
     TS_summary_plot(x, cols, bin_width, xname, border, selection, LDATS)
   }
+}
+
+#' @rdname plot.TS
+#'
+#' @export 
+#'
+plot.TS_set <- function(x, ..., selected = TRUE){
+  if(selected){
+    x <- x[[1]]
+  } else{
+    x <- x[[2]]
+  }
+  on.exit(devAskNewPage(FALSE))
+  if (length(x) > 1){
+    devAskNewPage(TRUE)
+  }
+  y <- lapply(x, plot, ...)
+  y <- NULL
 }
 
 #' @rdname plot.TS

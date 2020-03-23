@@ -21,10 +21,10 @@ LDA_TS_control(LDA_model = topicmodels_LDA,
   sequential_TS_control()), TS_response = multinom_TS,
   TS_response_args = list(control = multinom_TS_control()),
   TS_method = ldats_classic, TS_method_args = list(control =
-  ldats_classic_control()), nsubsets = 1, subset_rule = NULL,
-  summary_prob = 0.95, soften = TRUE, quiet = FALSE,
-  TS_measurer = AIC, TS_measurer_args = list(NULL),
-  TS_selector = which.min, TS_selector_args = list(NULL), ...)
+  ldats_classic_control()), TS_measurer = AIC,
+  TS_measurer_args = list(NULL), TS_selector = which.min,
+  TS_selector_args = list(NULL), summary_prob = 0.95, nsubsets = 1,
+  subset_rule = NULL, soften = TRUE, quiet = FALSE, ...)
 }
 \arguments{
 \item{data}{Any of the data structures allowable for LDATS analyses:
@@ -127,20 +127,6 @@ Current pre-built options include \code{\link{ldats_classic}}.}
 Could be managed via a \code{<method>_control} function like
 \code{\link{ldats_classic_control}}.}
 
-\item{nsubsets}{Number of data subsets.}
-
-\item{subset_rule}{\code{function} used to subset the data.}
-
-\item{summary_prob}{Probability used for summarizing the posterior 
-distributions (via the highest posterior density interval, see
-\code{\link[coda]{HPDinterval}}).}
-
-\item{soften}{\code{logical} indicator of whether the model should error 
-softly or if errors should trigger a full-stop to the pipeline.}
-
-\item{quiet}{\code{logical} indicator of whether the model should run 
-quietly (if \code{FALSE}, a progress bar and notifications are printed).}
-
 \item{TS_measurer}{\code{function} used in evaluation of the TS
 models; \code{measurer} creates a value for each model.}
 
@@ -152,6 +138,20 @@ models; \code{TS_selector} operates on the values to choose the models.}
 
 \item{TS_selector_args}{\code{list} of (named) arguments to be used in 
 \code{TS_selector} via \code{\link{do.call}}.}
+
+\item{summary_prob}{Probability used for summarizing the posterior 
+distributions (via the highest posterior density interval, see
+\code{\link[coda]{HPDinterval}}).}
+
+\item{nsubsets}{Number of data subsets.}
+
+\item{subset_rule}{\code{function} used to subset the data.}
+
+\item{soften}{\code{logical} indicator of whether the model should error 
+softly or if errors should trigger a full-stop to the pipeline.}
+
+\item{quiet}{\code{logical} indicator of whether the model should run 
+quietly (if \code{FALSE}, a progress bar and notifications are printed).}
 
 \item{...}{Not passed along to the output, rather included to allow for
 automated removal of unneeded controls.}

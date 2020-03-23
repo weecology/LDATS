@@ -1,33 +1,3 @@
-#' @title Plot a set of LDATS LDA models
-#'
-#' @description Generalization of the \code{\link[graphics]{plot}} function to 
-#'   work on a list of LDA topic models (class \code{LDA_set}). 
-#' 
-#' @param x An \code{LDA_set} object of LDA topic models.
-#'
-#' @param ... Not used, retained for alignment with base function.
-#' 
-#' @param selected \code{logical} indicator of if only the selected LDAs
-#'   (the first element in \code{x}) should be plotted or if all the LDAs
-#'   (the second element in \code{x}) should be plotted.
-#'
-#' @return \code{NULL}.
-#'
-#' @export 
-#'
-plot.LDA_set <- function(x, ..., selected = TRUE){
-  if(selected){
-    x <- x[[1]]
-  } else{
-    x <- x[[2]]
-  }
-  on.exit(devAskNewPage(FALSE))
-  if (length(x) > 1){
-    devAskNewPage(TRUE)
-  }
-  y <- lapply(x, plot, ...)
-  y <- NULL
-}
 
 #' @title Plot the results of an LDATS LDA model
 #'
@@ -35,6 +5,8 @@ plot.LDA_set <- function(x, ..., selected = TRUE){
 #'   \code{plot.LDA} creates an LDATS LDA summary plot, with a top panel 
 #'     showing the topic proportions for each word and a bottom panel showing
 #'     the topic proportions of each document/over time. \cr \cr
+#'   \code{plot.LDA_set} plots either the \code{selected} model results or
+#'     all of them from a \code{LDA_set} of \code{LDA} models.
 #'   \code{LDA_plot_top_panel} creates an LDATS LDA summary plot 
 #'     top panel showing the topic proportions word-by-word. \cr \cr
 #'   \code{LDA_plot_bottom_panel} creates an LDATS LDA summary plot
@@ -73,9 +45,13 @@ plot.LDA_set <- function(x, ..., selected = TRUE){
 #'
 #' @param ... Not used, retained for alignment with base function.
 #' 
+#' @param selected \code{logical} indicator of if only the selected LDAs
+#'   (the first element in \code{x}) should be plotted or if all the LDAs
+#'   (the second element in \code{x}) should be plotted.
+#' 
 #' @return 
-#'   \code{plot.LDA},\code{LDA_plot_top_panel},\code{LDA_plot_bottom_panel}: 
-#'     \code{NULL}. \cr \cr
+#'   \code{plot.LDA},\code{plot.LDA_set},\code{LDA_plot_top_panel},
+#'     \code{LDA_plot_bottom_panel}: \code{NULL}. \cr \cr
 #'   \code{set_LDA_plot_colors}: \code{vector} of \code{character} hex codes
 #'     indicating colors to use.
 #'
@@ -94,6 +70,24 @@ plot.LDA <- function(x, ..., xtime = NULL, xname = NULL, cols = NULL,
   LDA_plot_bottom_panel(x, xtime, xname, cols, option, alpha, TRUE, LDATS)
 }
 
+
+#' @rdname plot.LDA
+#'
+#' @export
+#'
+plot.LDA_set <- function(x, ..., selected = TRUE){
+  if(selected){
+    x <- x[[1]]
+  } else{
+    x <- x[[2]]
+  }
+  on.exit(devAskNewPage(FALSE))
+  if (length(x) > 1){
+    devAskNewPage(TRUE)
+  }
+  y <- lapply(x, plot, ...)
+  y <- NULL
+}
 #' @rdname plot.LDA 
 #' 
 #' @export 

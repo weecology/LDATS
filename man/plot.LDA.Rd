@@ -2,6 +2,7 @@
 % Please edit documentation in R/LDA_plots.R
 \name{plot.LDA}
 \alias{plot.LDA}
+\alias{plot.LDA_set}
 \alias{LDA_plot_top_panel}
 \alias{LDA_plot_bottom_panel}
 \alias{set_LDA_plot_colors}
@@ -9,6 +10,8 @@
 \usage{
 \method{plot}{LDA}(x, ..., xtime = NULL, xname = NULL, cols = NULL,
   option = "C", alpha = 0.8, LDATS = FALSE)
+
+\method{plot}{LDA_set}(x, ..., selected = TRUE)
 
 LDA_plot_top_panel(x, cols = NULL, option = "C", alpha = 0.8,
   together = FALSE, LDATS = FALSE)
@@ -47,12 +50,16 @@ colors used. Supported only on some devices, see
 \item{LDATS}{\code{logical} indicating if the LDA plot is part of a larger 
 LDATS plot output.}
 
+\item{selected}{\code{logical} indicator of if only the selected LDAs
+(the first element in \code{x}) should be plotted or if all the LDAs
+(the second element in \code{x}) should be plotted.}
+
 \item{together}{\code{logical} indicating if the subplots are part of a 
 larger LDA plot output.}
 }
 \value{
-\code{plot.LDA},\code{LDA_plot_top_panel},\code{LDA_plot_bottom_panel}: 
-    \code{NULL}. \cr \cr
+\code{plot.LDA},\code{plot.LDA_set},\code{LDA_plot_top_panel},
+    \code{LDA_plot_bottom_panel}: \code{NULL}. \cr \cr
   \code{set_LDA_plot_colors}: \code{vector} of \code{character} hex codes
     indicating colors to use.
 }
@@ -60,6 +67,8 @@ larger LDA plot output.}
 \code{plot.LDA} creates an LDATS LDA summary plot, with a top panel 
     showing the topic proportions for each word and a bottom panel showing
     the topic proportions of each document/over time. \cr \cr
+  \code{plot.LDA_set} plots either the \code{selected} model results or
+    all of them from a \code{LDA_set} of \code{LDA} models.
   \code{LDA_plot_top_panel} creates an LDATS LDA summary plot 
     top panel showing the topic proportions word-by-word. \cr \cr
   \code{LDA_plot_bottom_panel} creates an LDATS LDA summary plot

@@ -10,7 +10,6 @@ tests
 
 what is up with lda_ts_controls...
   ...oh thats how its always been because of the splitting?
-where do the ts_fit functions go? ldats_classic?
 
 
 devtools::load_all()
@@ -38,12 +37,16 @@ LDATSs <- LDA_TS(data = data, topics = topics, replicates = replicates,
           weights = weights, control = list(TS_method_args = 
                           list(control = ldats_classic_control(nit=100))))
 
+plot(LDAs)
+plot(TSs)
+plot(LDATSs)
 names(LDATSs)
 
 cc<-TS_control(method_args = list(control = ldats_classic_control(nit = 100)))
 $method_args$control$nit
 
-cc<-LDA_TS_control(TS_method_args = list(control = ldats_classic_control(nit = 100)))
+cc<-LDA_TS_control(TS_method_args = 
+                     list(control = ldats_classic_control(nit = 100)))
 
 names(cc)
 names(formals(TS_control))

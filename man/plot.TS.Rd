@@ -2,6 +2,7 @@
 % Please edit documentation in R/TS_plots.R
 \name{plot.TS}
 \alias{plot.TS}
+\alias{plot.TS_set}
 \alias{TS_diagnostics_plot}
 \alias{eta_diagnostics_plots}
 \alias{rho_diagnostics_plots}
@@ -21,6 +22,8 @@
 \method{plot}{TS}(x, ..., plot_type = "summary", interactive = FALSE,
   cols = set_TS_summary_plot_cols(), bin_width = 1, xname = NULL,
   border = NA, selection = "median", LDATS = FALSE)
+
+\method{plot}{TS_set}(x, ..., selected = TRUE)
 
 TS_diagnostics_plot(x, interactive = TRUE)
 
@@ -56,8 +59,9 @@ set_rho_hist_colors(x = NULL, cols = NULL, option = "D", alpha = 1)
 set_gamma_colors(x, cols = NULL, option = "D", alpha = 1)
 }
 \arguments{
-\item{x}{A \code{TS_fit} object of a multinomial time series model fit by
-\code{\link{TS}}.}
+\item{x}{In \code{plot.TS}, a \code{TS_fit} object of a multinomial time
+series model fit by \code{\link{TS}}. In \code{plot.TS_set}, a 
+\code{TS_set} \code{list} of \code{TS} objects.}
 
 \item{...}{Additional arguments to be passed to subfunctions. Not currently
 used, just retained for alignment with \code{\link[graphics]{plot}}.}
@@ -100,6 +104,10 @@ summary plot. Currently only defined for \code{"median"} and
 \item{LDATS}{\code{logical} indicating if the plot is part of a larger 
 LDATS plot output.}
 
+\item{selected}{\code{logical} indicator of if only the selected TSs
+(the first element in \code{x}) should be plotted or if all the TSs
+(the second element in \code{x}) should be plotted.}
+
 \item{draw}{\code{vector} of parameter values drawn from the posterior 
 distribution, indexed to the iteration by the order of the vector.}
 
@@ -121,11 +129,11 @@ transparency of the colors used. Supported only on some devices, see
 \code{\link[grDevices]{rgb}}.}
 }
 \value{
-\code{plot.TS},\code{TS_diagnostics_plot},\code{eta_diagnostics_plots},
-    \code{rho_diagnostics_plots},\code{trace_plot},\code{posterior_plot},
-    \code{autocorr_plot},\code{ecdf_plot},\code{TS_summary_plot},
-    \code{pred_gamma_TS_plot},\code{rho_hist},\code{rho_lines}:
-    \code{NULL}. \cr \cr
+\code{plot.TS},\code{plot.TS_set},\code{TS_diagnostics_plot},
+    \code{eta_diagnostics_plots},\code{rho_diagnostics_plots},
+    \code{trace_plot},\code{posterior_plot},\code{autocorr_plot},
+    \code{ecdf_plot},\code{TS_summary_plot},\code{pred_gamma_TS_plot},
+    \code{rho_hist},\code{rho_lines}:\code{NULL}. \cr \cr
   \code{set_rho_hist_cols},\code{set_gamma_colors}: \code{vector} of 
     \code{character} hex codes indicating colors to use.
   \code{set_TS_summary_plot_cols}: \code{list} of elements used to define
@@ -138,6 +146,8 @@ transparency of the colors used. Supported only on some devices, see
 \code{plot.TS} is a generalization of the \code{\link[graphics]{plot}}
     function to work on fitted TS model objects (class \code{TS}) 
     returned from \code{\link{TS}}. \cr \cr
+  \code{plot.TS_set} plots a \code{TS_set} of \code{TS} models, either 
+    just the \code{selected} models or all. \cr \cr
   \code{TS_diagnostics_plot} makes the 4-panel figures (showing trace 
     plots, posterior ECDF, posterior density, and iteration 
     autocorrelation) for each of the parameters (change point locations 

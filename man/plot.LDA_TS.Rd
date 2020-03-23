@@ -5,7 +5,7 @@
 \alias{set_LDA_TS_plot_colors}
 \title{Plot the key results from a full LDATS analysis}
 \usage{
-\method{plot}{LDA_TS}(x, ..., cols = set_LDA_TS_plot_color(),
+\method{plot}{LDA_TS}(x, ..., cols = set_LDA_TS_plot_colors(),
   bin_width = 1, xname = NULL, border = NA, selection = "median")
 
 set_LDA_TS_plot_colors(rho_cols = NULL, rho_option = "D",

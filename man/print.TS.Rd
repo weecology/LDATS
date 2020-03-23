@@ -7,7 +7,7 @@
 \method{print}{TS}(x, ...)
 }
 \arguments{
-\item{x}{Class \code{TS_fit} object to be printed.}
+\item{x}{Class \code{TS} object to be printed.}
 
 \item{...}{Not used, simply included to maintain method compatibility.}
 }

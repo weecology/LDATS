@@ -409,7 +409,7 @@ TS_control <- function(model = sequential_TS,
 #'   components of a \code{TS}-class object fit by 
 #'   \code{\link{sequential_TS}}.
 #'
-#' @param x Class \code{TS_fit} object to be printed.
+#' @param x Class \code{TS} object to be printed.
 #'
 #' @param ... Not used, simply included to maintain method compatibility.
 #'

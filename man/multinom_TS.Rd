@@ -69,12 +69,11 @@ quietly (if \code{FALSE}, a progress bar and notifications are printed).}
 automated removal of unneeded controls.}
 }
 \value{
-\code{multinom_TS}: Object of class \code{multinom_TS_fit}, which is a 
+\code{multinom_TS}: Object of class \code{TS_fit}, which is a 
     \code{list} of [1] chunk-level model fits (\code{"chunk models"}), 
     [2] the total log likelihood combined across all chunks 
     (\code{"logLik"}), and [3] a \code{data.frame} of chunk beginning and
-    ending times (\code{"logLik"} with columns \code{"start"} and 
-    \code{"end"}). \cr \cr
+    ending times (with columns \code{"start"} and \code{"end"}). \cr \cr
   \code{multinom_TS_chunk}: fitted model object for the chunk, 
     of classes \code{multinom} and \code{nnet}. \cr \cr
   \code{multinom_TS_control}: \code{list}, with named elements 
