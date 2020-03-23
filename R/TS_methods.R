@@ -347,7 +347,7 @@ prep_cpts <- function(TS){
     args <- list(data = data, formula = TS$formula, changepoints = cps[ , i], 
                  timename = TS$timename, weights = TS$weights, 
                  control = TS$control$response_args$control)
-    modfit <- soft_call(fun, args, TRUE)
+    modfit <- soft_call(what = fun, args = args, soften = TRUE)
     lls[i] <- modfit$logLik
   }  
   cps <- cps[ , order(lls, decreasing = TRUE), drop = FALSE]
@@ -575,7 +575,7 @@ proposed_step_mods <- function(TS, prop_changepts, inputs){
                  changepoints = prop_changepts[ , i], 
                  timename = TS$timename, weights = TS$weights, 
                  control = control)
-    out[[i]] <- soft_call(fun, args, TRUE)
+    out[[i]] <- soft_call(what = fun, args = args, soften = TRUE)
   }
   out
 }

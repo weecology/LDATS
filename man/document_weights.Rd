@@ -8,9 +8,8 @@ document_weights(document_term_table)
 }
 \arguments{
 \item{document_term_table}{Table of observation count data (rows: 
-documents, columns: terms. May be a class \code{matrix} or 
-\code{data.frame} but must be conformable to a matrix of integers,
-as verified by \code{\link{check_document_term_table}}.}
+documents, columns: terms. May be a \code{matrix} or 
+\code{data.frame} but must be conformable to a matrix of integers.}
 }
 \value{
 Vector of weights, one for each document, with the average sample

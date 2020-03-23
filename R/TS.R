@@ -8,6 +8,12 @@
 #'     \emph{et al.} 2018). \cr \cr
 #'   \code{prepare_TS} pre-prepares the TS model objects for simpler 
 #'     use within the subfunctions. \cr \cr
+#'   \code{check_TS} ensures that the inputs are proper. 
+#'     See \code{\link{check_LDAs}}, 
+#'     \code{\link{check_document_covariate_table}}, 
+#'     code{\link{check_formulas}}, \code{\link{check_nchangepoints}}, 
+#'     \code{\link{check_timename}}, \code{\link{check_weights}}, 
+#'     and \code{\link{check_control}} for specifics. \cr \cr
 #'   \code{TS_control} defines and creates the control \code{list} for the TS
 #'     model running. \cr \cr
 #'   \code{run_TS} runs (via \code{\link{TS_call}}) all TS models
@@ -36,15 +42,6 @@
 #'       the whole model, and
 #'     \item Package the results.
 #'   }
-#'
-#' @param data \code{data.frame} including [1] the time variable (indicated 
-#'   in \code{timename}), [2] the predictor variables (required by
-#'   \code{formula}) and [3], the compositional response variable (indicated
-#'   in \code{formula}). \cr \cr
-#'   Note that the response variables should be formatted as a 
-#'   \code{data.frame} object named as indicated by the \code{response} entry
-#'   in the \code{control} list, such as \code{gamma} for a standard TS 
-#'   analysis on LDA output. 
 #'
 #' @param formulas Vector of \code{\link[stats]{formula}}(s) defining the 
 #'   regression between the change points. Any predictor variable included 
@@ -141,6 +138,8 @@
 #'     used to fit the model. \cr \cr
 #'   \code{prepare_TS}: \code{list} of \code{list}s, each of which is a
 #'     preliminary model object for a Time Series model fit. \cr \cr
+#'   \code{check_TS}: an error message is thrown if any input is improper, 
+#'     otherwise \code{NULL}.
 #'   \code{TS_control}: \code{list} of named control elements for
 #'     model fitting.
 #'   \code{measure_TS}: \code{vector} of values corresponding to the model
@@ -195,9 +194,9 @@
 #'
 #' @export
 #'
-TS <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0, 
+TS <- function(LDAs, formulas = ~ 1, nchangepoints = 0, 
                timename = "time", weights = NULL, control = list()){
-  TSs <- prepare_TS(LDAs = LDAs, data = data, formulas = formulas,
+  TSs <- prepare_TS(LDAs = LDAs, formulas = formulas,
                     nchangepoints = nchangepoints, timename = timename,
                     weights = weights, control = control)
   TSs <- run_TS(TSs = TSs)
@@ -205,6 +204,20 @@ TS <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0,
   TSs
 }
 
+#' @rdname TS
+#'
+#' @export
+#'
+check_TS <- function(LDAs, formulas = ~ 1, nchangepoints = 0, 
+               timename = "time", weights = NULL, control = list()){
+  check_LDAs(LDAs = LDAs)
+  check_document_covariate_table(LDAs = LDAs)
+  check_formulas(LDAs = LDAs, formulas = formulas)
+  check_nchangepoints(nchangepoints = nchangepoints)
+  check_timename(LDAs = LDAs, timename = timename)
+  check_weights(weights = weights)
+  check_control(control = control)
+}
 
 #' @rdname TS
 #'
@@ -227,7 +240,7 @@ TS_call <- function(TS){
   TS_msg(TS = TS)
   fun <- TS$control$model
   args <- update_list(TS$control$model_args, TS = TS)
-  soft_call(fun = fun, args = args, soften = TS$control$soften)
+  soft_call(what = fun, args = args, soften = TS$control$soften)
 }
 
 
@@ -254,9 +267,11 @@ TS_msg <- function(TS){
 #'
 #' @export
 #'
-prepare_TS <- function(LDAs, data, formulas = ~ 1, nchangepoints = 0, 
+prepare_TS <- function(LDAs, formulas = ~ 1, nchangepoints = 0, 
                            timename = "time", weights = NULL, 
                            control = list()){
+  check_TS(LDAs = LDAs, formulas = formulas, nchangepoints = nchangepoints , 
+           timename = timename, weights = weights, control = control)
   control <- do.call("TS_control", control)
   messageq("----- Time Series Analyses -----", control$quiet)
   if (!is(formulas, "list")) {

@@ -8,9 +8,9 @@ conform_data(data, control = list())
 }
 \arguments{
 \item{data}{A document term table, \code{list} of document term and 
-covariate tables, a list of training and test sets of the two tables,
-or a list of multiple replicate splits of training and test sets of
-the two tables.}
+covariate tables, a \code{list} of training and test sets of the two 
+tables, or a \code{list} of multiple replicate splits of training and
+test sets of the two tables.}
 
 \item{control}{\code{list} of control options for the data conforming.}
 }
@@ -19,28 +19,31 @@ the two tables.}
 }
 \description{
 Given any of a variety of possible data input types 
- (\code{data.frame}/\code{matrix}, \code{list}, \code{list} of 
- \code{list}s, or \code{list} of \code{list} of \code{list}s) and 
- controls, this produces a properly formatted set of data (sets) for 
- LDATS modeling.
+  (\code{data.frame}/\code{matrix}, \code{list}, \code{list} of 
+  \code{list}s, or \code{list} of \code{list} of \code{list}s) and 
+  controls, this produces a properly formatted set of data (sets) for 
+  LDATS modeling.
 }
 \details{
 This function makes use of the \code{\link{list_depth}}
- utility that recursively works through an object to tell you
- how nested a lists is. Working up from the most elemental version
- possible, if it's not a \code{list}, but the data are a term table, the
- covariate table is added with assumed equispersed data like before and
- the data are now a \code{list}. Then, if it is a \code{list} but only a 
- of depth 1 (a \code{list} of two tables), we need to wrap it in a 
- \code{list} to make it depth-2, functionally a 1-subset data set. Then, 
- for a \code{list} of depth two, we need to potentially expand to a 
- multiple-subset data set, to allow for cross validtion methods, for 
- example. So, the \code{list} of depth 2 is replicated out to create a 
- longer \code{list} that is still depth 2 but is now of length 
- \code{control$nsubsets}. Then, the subsetting of the data occurs 
- according to the \code{control$subset_rule}, and each depth-2 \code{list}
- is actually split to a final level of train and test subsets of the data,
- making the \code{list} depth 3. \cr \cr
- The training and testing data are saved as trimmed versions of the 
- two tables.
+  utility that recursively works through an object to tell you
+  how nested a lists is. \cr \cr
+  Working up from the most elemental version of \code{data} possible,
+  if it's not a \code{list}, but the data are a term table, the
+  covariate table is added with assumed equispersed data and
+  the data are now a \code{list}. \cr
+  Then, if it is a \code{list} but only a of depth 1 (a \code{list} of two
+  tables), it is wrapped in a \code{list} to make it depth-2, 
+  functionally a 1-subset data set. \cr
+  Then, if it is a \code{list} of depth two, it may need to be expanded to 
+  a multiple-subset data set, to allow for cross validtion methods, for 
+  example. So, the \code{list} of depth 2 is replicated out to create a 
+  longer \code{list} that is still depth 2 but is now of length 
+  \code{control$nsubsets}. \cr
+  Then, the subsetting of the data occurs according to the 
+  \code{control$subset_rule}, and each depth-2 \code{list} is split to a 
+  final level of training and testing subsets of the data, making the 
+  \code{list} depth 3. \cr \cr
+  The training and testing data are constructed as trimmed versions of the 
+  two tables, even if no data are required for testing.
 }

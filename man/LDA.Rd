@@ -2,6 +2,7 @@
 % Please edit documentation in R/LDA.R
 \name{LDA}
 \alias{LDA}
+\alias{check_LDA}
 \alias{prepare_LDA}
 \alias{run_LDA}
 \alias{LDA_call}
@@ -13,6 +14,8 @@
 \title{Run a set of Linguistic Decomposition Analysis models}
 \usage{
 LDA(data, topics = 2, replicates = 1, control = list())
+
+check_LDA(topics = 2, replicates = 1, control = list())
 
 prepare_LDA(data, topics = 2, replicates = 1, control = list())
 
@@ -94,6 +97,8 @@ automated removal of unneeded controls.}
     used to fit the model. \cr \cr
   \code{prepare_LDA}: \code{list} of \code{list}s, each of which is a
     preliminary model object for an LDA model fit. \cr \cr
+  \code{check_LDA}: an error message is thrown if any input is improper, 
+    otherwise \code{NULL}.
   \code{LDA_control}: \code{list} of controls for the LDA model, with
     named elements corresponding to the arguments.
   \code{run_LDA}: \code{LDA_set} \code{list} of model results from all
@@ -103,7 +108,7 @@ automated removal of unneeded controls.}
     run of a \code{<model>} function, such as 
     \code{\link{topicmodels_LDA}}. \cr \cr
   \code{measure_LDA}: \code{vector} of values corresponding to the model
-    evaluations.
+    evaluations. \cr \cr
   \code{select_LDA}: \code{list} of selected models' \code{list}s.
 }
 \description{
@@ -113,6 +118,9 @@ Conduct Linguistic Decomposition Analyses. \cr \cr
     \emph{et al.} 2018). \cr \cr
   \code{prepare_LDA} pre-prepares the LDA model objects for simpler 
     use within the subfunctions. \cr \cr 
+  \code{check_LDA} ensures that the inputs are proper. 
+    See \code{\link{check_topics}}, \code{\link{check_replicates}},
+    and \code{\link{check_control}} for specifics. \cr \cr
   \code{LDA_control} defines and creates the control list used to fit 
     the LDA model. \cr \cr 
   \code{run_LDA} runs (via \code{\link{LDA_call}}) all LDA models

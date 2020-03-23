@@ -117,10 +117,11 @@ identity_LDA <- function(LDA){
   document_topic_table <- data$train$document_term_table 
   document_topic_table <- document_topic_table / rowSums(document_topic_table)
   colnames(document_topic_table) <- NULL
-  out <- list(params = list(), document_topic_table = document_topic_table, 
-              log_likelihood = NULL, data = data,
-              topics = 1, rep = rep, data_subset = data_subset,
-              test_document_topic_matrix = NULL) #not yet available
+  out <- update_list(LDA,  params = list(), 
+                           document_topic_table = document_topic_table, 
+                           log_likelihood = NULL, data = data,
+                           topics = 1, rep = rep, data_subset = data_subset,
+                           test_document_topic_matrix = NULL) #not available
   class(out) <- c("LDA", "list")
   out
 }

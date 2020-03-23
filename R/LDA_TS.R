@@ -227,11 +227,11 @@
 #'
 #' @export
 #'
-LDA_TS <- function(data, topics = 2, reps = 1, formulas = ~ 1, 
+LDA_TS <- function(data, topics = 2, replicates = 1, formulas = ~ 1, 
                    nchangepoints = 0, timename = "time", weights = TRUE, 
                    control = list()){
   control <- do.call("LDA_TS_control", control)
-  LDAs <- LDA(data = data, topics = topics, reps = reps, 
+  LDAs <- LDA(data = data, topics = topics, replicates = replicates, 
               control = control$LDA_control)
   TSs <- TS(LDAs = LDAs, data = data, formulas = formulas, 
             nchangepoints = nchangepoints, timename = timename, 

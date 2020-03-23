@@ -7,6 +7,9 @@
 #'     \emph{et al.} 2018). \cr \cr
 #'   \code{prepare_LDA} pre-prepares the LDA model objects for simpler 
 #'     use within the subfunctions. \cr \cr 
+#'   \code{check_LDA} ensures that the inputs are proper. 
+#'     See \code{\link{check_topics}}, \code{\link{check_replicates}},
+#'     and \code{\link{check_control}} for specifics. \cr \cr
 #'   \code{LDA_control} defines and creates the control list used to fit 
 #'     the LDA model. \cr \cr 
 #'   \code{run_LDA} runs (via \code{\link{LDA_call}}) all LDA models
@@ -94,6 +97,8 @@
 #'     used to fit the model. \cr \cr
 #'   \code{prepare_LDA}: \code{list} of \code{list}s, each of which is a
 #'     preliminary model object for an LDA model fit. \cr \cr
+#'   \code{check_LDA}: an error message is thrown if any input is improper, 
+#'     otherwise \code{NULL}.
 #'   \code{LDA_control}: \code{list} of controls for the LDA model, with
 #'     named elements corresponding to the arguments.
 #'   \code{run_LDA}: \code{LDA_set} \code{list} of model results from all
@@ -103,7 +108,7 @@
 #'     run of a \code{<model>} function, such as 
 #'     \code{\link{topicmodels_LDA}}. \cr \cr
 #'   \code{measure_LDA}: \code{vector} of values corresponding to the model
-#'     evaluations.
+#'     evaluations. \cr \cr
 #'   \code{select_LDA}: \code{list} of selected models' \code{list}s.
 #' 
 #' @references 
@@ -143,7 +148,18 @@ LDA <- function(data, topics = 2, replicates = 1, control = list()){
 #'
 #' @export
 #'
+check_LDA <- function(topics = 2, replicates = 1, control = list()){
+  check_topics(topics = topics)
+  check_replicates(replicates = replicates)
+  check_control(control = control)
+}
+
+#' @rdname LDA
+#'
+#' @export
+#'
 prepare_LDA <- function(data, topics = 2, replicates = 1, control = list()){
+  check_LDA(topics = topics, replicates = replicates, control = control)
   control <- do.call("LDA_control", control)
   messageq("----- Linguistic Decomposition Analyses -----", control$quiet)
   data <- conform_data(data = data, control = control)
@@ -192,7 +208,7 @@ LDA_call <- function(LDA){
   LDA_msg(LDA = LDA)
   fun <- LDA$control$model
   args <- update_list(LDA$control$model_args, LDA = LDA)
-  soft_call(fun = fun, args = args, soften = LDA$control$soften)
+  soft_call(what = fun, args = args, soften = LDA$control$soften)
 }
 
 

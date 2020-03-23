@@ -2,6 +2,7 @@
 % Please edit documentation in R/TS.R
 \name{TS}
 \alias{TS}
+\alias{check_TS}
 \alias{run_TS}
 \alias{TS_call}
 \alias{TS_msg}
@@ -12,7 +13,10 @@
 \alias{TS_control}
 \title{Conduct a Bayesian compositional Time Series analysis}
 \usage{
-TS(LDAs, data, formulas = ~1, nchangepoints = 0, timename = "time",
+TS(LDAs, formulas = ~1, nchangepoints = 0, timename = "time",
+  weights = NULL, control = list())
+
+check_TS(LDAs, formulas = ~1, nchangepoints = 0, timename = "time",
   weights = NULL, control = list())
 
 run_TS(TSs)
@@ -21,8 +25,8 @@ TS_call(TS)
 
 TS_msg(TS)
 
-prepare_TS(LDAs, data, formulas = ~1, nchangepoints = 0,
-  timename = "time", weights = NULL, control = list())
+prepare_TS(LDAs, formulas = ~1, nchangepoints = 0, timename = "time",
+  weights = NULL, control = list())
 
 package_TS(TSs)
 
@@ -39,15 +43,6 @@ TS_control(model = sequential_TS, model_args = list(control =
   selector_args = list(NULL), soften = TRUE, quiet = FALSE, ...)
 }
 \arguments{
-\item{data}{\code{data.frame} including [1] the time variable (indicated 
-in \code{timename}), [2] the predictor variables (required by
-\code{formula}) and [3], the compositional response variable (indicated
-in \code{formula}). \cr \cr
-Note that the response variables should be formatted as a 
-\code{data.frame} object named as indicated by the \code{response} entry
-in the \code{control} list, such as \code{gamma} for a standard TS 
-analysis on LDA output.}
-
 \item{formulas}{Vector of \code{\link[stats]{formula}}(s) defining the 
 regression between the change points. Any predictor variable included 
 must also be a column in \code{data} and any (compositional) response 
@@ -143,6 +138,8 @@ automated removal of unneeded controls.}
     used to fit the model. \cr \cr
   \code{prepare_TS}: \code{list} of \code{list}s, each of which is a
     preliminary model object for a Time Series model fit. \cr \cr
+  \code{check_TS}: an error message is thrown if any input is improper, 
+    otherwise \code{NULL}.
   \code{TS_control}: \code{list} of named control elements for
     model fitting.
   \code{measure_TS}: \code{vector} of values corresponding to the model
@@ -164,6 +161,12 @@ Analyze compositional Time Series models using Bayesian
     \emph{et al.} 2018). \cr \cr
   \code{prepare_TS} pre-prepares the TS model objects for simpler 
     use within the subfunctions. \cr \cr
+  \code{check_TS} ensures that the inputs are proper. 
+    See \code{\link{check_LDAs}}, 
+    \code{\link{check_document_covariate_table}}, 
+    code{\link{check_formulas}}, \code{\link{check_nchangepoints}}, 
+    \code{\link{check_timename}}, \code{\link{check_weights}}, 
+    and \code{\link{check_control}} for specifics. \cr \cr
   \code{TS_control} defines and creates the control \code{list} for the TS
     model running. \cr \cr
   \code{run_TS} runs (via \code{\link{TS_call}}) all TS models

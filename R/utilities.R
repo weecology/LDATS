@@ -1,30 +1,67 @@
-soft_call <- function(fun = function(x){invisible(NULL)}, args = list(NULL), 
-                      soften = FALSE){
+#' @title Soften a flexible function call to errors 
+#'
+#' @description Wrapping around \code{\link{do.call}}, this function allows
+#'   for a simple "softening" where errors are returned as text, rather
+#'   than causing a break in the encompassing pipeline.
+#'
+#' @details As this is a basic wrapper on \code{\link{do.call}}, the basic 
+#'   rules of its usage still apply: \cr
+#'   If \code{quote = FALSE} (the default), then the arguments are evaluated
+#'     in the calling environment and not in \code{envir}. \cr
+#'   If \code{quote = TRUE}, each argument is \code{\link{quote}}d 
+#'     so that the effect of argument evaluation is to remove the quotes
+#'     leaving the original arguments unevaluated when the call is built. \cr
+#'   The behavior of some functions, such as \code{\link{substitute}}, will 
+#'     not be the same for functions evaluated using \code{\link{do.call}}
+#'     and thus \code{soft_call} as if they were evaluated from the 
+#'     interpreter. The precise semantics are currently undefined and subject 
+#'     to change.
+#'
+#' @param what \code{function} or a non-empty \code{character} string 
+#'   naming the \code{function} to be called. \cr
+#'   See \code{\link{do.call}}.
+#'
+#' @param args \code{list} of arguments to the \code{what} call. The names
+#'   attribute of the \code{list} gives the argument names.\cr
+#'   See \code{\link{do.call}}.
+#'
+#' @param quote \code{logical} value indicating whether to quote the 
+#'   arguments. \cr
+#'   See \code{\link{do.call}}.
+#'
+#' @param envir \code{environment} within which to evaluate the call. This 
+#'   argument will be most useful if \code{what} is a \code{character} 
+#'   string and the arguments are symbols or \code{quote}d expressions.\cr
+#'   See \code{\link{do.call}}.
+#'
+#' @param soften \code{logical} value indicating whether to soften any errors 
+#'   in the running of \code{what}. \cr
+#'
+#' @return Either the result of the (evaluated) call of \code{what} or a
+#'   \code{list} of the error message that resulted (if \code{soften = TRUE}). 
+#'
+#' @export
+#'
+soft_call <- function(what = function(x){invisible(NULL)}, args = list(NULL),
+                      quote = FALSE, envir = parent.frame(), soften = FALSE){
   if(list_depth(args) == 0){
     args <- list(args)
   }
   if(soften){
-    tryCatch(do.call(what = fun, args = args), 
+    tryCatch(do.call(what = what, args = args, quote = quote, envir = envir), 
              warning = function(x){eval(x$call)}, 
              error = function(x = list()){list(error = x$message)})
   } else{
-    do.call(what = fun, args = args)
+    do.call(what = what, args = args, quote = quote, envir = envir)
   }
 }
 
-
-
-
-time_order_data <- function(x, timename = "time"){
-  time_order <- order(x[ , timename])
-  x[time_order , ]
-}
 
 
 #' @title Initialize and tick through the progress bar
 #'
 #' @description \code{prep_pbar} creates and \code{update_pbar} steps
-#'   through the progress bars (if desired) in, e.g., \code{\link{TS}}
+#'   through the progress bars (if desired) in, e.g., \code{\link{TS}}.
 #'
 #' @param control A \code{list} of parameters to control the fitting of the
 #'   iterative model.
@@ -297,9 +334,8 @@ modalvalue <- function(x){
 #'   number of words in a document within the corpus (mean value = 1).
 #'
 #' @param document_term_table Table of observation count data (rows: 
-#'   documents, columns: terms. May be a class \code{matrix} or 
-#'   \code{data.frame} but must be conformable to a matrix of integers,
-#'   as verified by \code{\link{check_document_term_table}}.   
+#'   documents, columns: terms. May be a \code{matrix} or 
+#'   \code{data.frame} but must be conformable to a matrix of integers.   
 #'
 #' @return Vector of weights, one for each document, with the average sample
 #'   receiving a weight of 1.0.
@@ -345,7 +381,8 @@ messageq <- function(msg = NULL, quiet = FALSE){
 #' @title Create a properly symmetric variance covariance matrix
 #'
 #' @description A wrapper on \code{\link[stats]{vcov}} to produce a symmetric
-#'   matrix. If the default matrix returned by \code{\link[stats]{vcov}} is
+#'   matrix. \cr
+#'   If the default matrix returned by \code{\link[stats]{vcov}} is
 #'   symmetric it is returned simply. If it is not, in fact, symmetric
 #'   (as occurs occasionally with \code{\link[nnet]{multinom}} applied to 
 #'   proportions), the matrix is made symmetric by averaging the lower and
@@ -441,6 +478,6 @@ memoise_fun <- function(fun, memoise_tf = TRUE){
 
 # provides a functionality that can be used in testing for non-symmetric
 # vcov matrix
-vcov.dummy <- function(object, ...){
+vcov.test <- function(object, ...){
   matrix(c(1, 2, 2.1, 3), 2, 2)
 }

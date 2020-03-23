@@ -7,7 +7,7 @@
 \title{Run a set of Linguistic Decomposition Analysis models coupled to
   Bayesian Time Series models}
 \usage{
-LDA_TS(data, topics = 2, reps = 1, formulas = ~1,
+LDA_TS(data, topics = 2, replicates = 1, formulas = ~1,
   nchangepoints = 0, timename = "time", weights = TRUE,
   control = list())
 
@@ -37,6 +37,10 @@ validity for the desired model.}
 
 \item{topics}{\code{integer}-conformable \code{vector} of the number of 
 topics to evaluate for each model. \cr
+(See \code{\link{LDA}}.)}
+
+\item{replicates}{\code{integer}-conformable number of replicate starts to
+use for each value of \code{topics}. \cr
 (See \code{\link{LDA}}.)}
 
 \item{formulas}{Vector of \code{\link[stats]{formula}}(s) defining the 
@@ -151,10 +155,6 @@ models; \code{TS_selector} operates on the values to choose the models.}
 
 \item{...}{Not passed along to the output, rather included to allow for
 automated removal of unneeded controls.}
-
-\item{replicates}{\code{integer}-conformable number of replicate starts to
-use for each value of \code{topics}. \cr
-(See \code{\link{LDA}}.)}
 
 \item{response_args}{\code{list} of (named) arguments to be used in 
 \code{TS_response} via \code{\link{do.call}}. 

@@ -2,7 +2,43 @@
 
 Version numbers follow [Semantic Versioning](https://semver.org/).
 
-# LDATS 0.2.5(https://github.com/weecology/ldats/releases/tag/v0.2.5)
+# LDATS 0.3.0
+*Ongoing* 
+
+## Generalization of "LDA"
+* The phrase "LDA" could be any of the Linquistic Decomposition Analyses including any of a number of true Latent Dirichlet Allocation functions or models, so  LDA is no longer fully imported from topicmodels but keeping topicmodels the package imported to allow calling of topicmodels::LDA from inside LDA as the default.
+* Existing functionality allows a simple switching to the Gibbs sampler version of the topicmodels LDA or an entirely different modeling function.
+
+## Additional renamings and small things
+* seed is now replicate
+
+## Function renamings/restructuring
+* LDA_set is now LDA and TS_on_LDA is now TS
+* LDA and TS are both structured similarly (see pipeline doc) with "prepare", "run", "package" as the workflow.
+
+## Introduction of soften logical variable
+* Designed to help soften errors in pipelines through wrapping in tryCatch.
+
+
+## Expansion of control lists
+* The functions that can be toggled via control list is expanded (from measuror and selector) to now include base LDA and TS model functions, TS response and method functions, and arguments for all functions.
+
+## Allowance of single-topic models
+* As a placeholder/identity model for comparison to models that include decomposition.
+
+## Data conforming
+* Data can come into LDA_TS LDA TS in a variety of forms, and depending on usages, might take a variety of different forms. 
+* The purpose of this the new conform_data function is to generalize and extract the code used to shuddle between data formats from functions and replace it with a single line.
+* Currently its not saving the test/train split explicitly, just implicitly via the data encoding that exists. 
+
+## Data subsetting
+* New facilities for subsetting the data for purposes such as cross validation
+* Generalized functions for random and systematic leave-outs, with flexible number left out and (potentially) asymmetric buffers.
+* Specific functions for typical use (systematic leave 1 out with no buffer, e.g.). 
+
+
+
+# [LDATS 0.2.5](https://github.com/weecology/ldats/releases/tag/v0.2.5)
 *2019-12-22* 
 
 ## General editing of simulation functions

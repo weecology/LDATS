@@ -28,5 +28,5 @@ Currently available options are "rho" (for change point locations) and
 }
 \description{
 \code{prep_pbar} creates and \code{update_pbar} steps
-  through the progress bars (if desired) in, e.g., \code{\link{TS}}
+  through the progress bars (if desired) in, e.g., \code{\link{TS}}.
 }

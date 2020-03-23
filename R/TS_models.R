@@ -193,7 +193,7 @@ package_sequential_TS <- function(TS, rho_dist, eta_dist){
     args <- list(data = data, formula = TS$formula, changepoints = NULL, 
                  timename = TS$timename, weights = TS$weights, 
                  control = TS$control$response_args$control)
-    mod <- soft_call(fun, args, TRUE)
+    mod <- soft_call(what = fun, args = args, soften = TRUE)
     lls <- as.numeric(logLik(mod))
 
   } else{
@@ -236,7 +236,7 @@ est_changepoints <- function(TS){
   }
   fun <- TS$control$method
   args <- update_list(TS$control$method_args, TS = TS)
-  soft_call(fun = fun, args = args, soften = TS$control$soften)
+  soft_call(what = fun, args = args, soften = TS$control$soften)
 }
 
 #' @rdname sequential_TS
@@ -254,7 +254,7 @@ est_regressors <- function(rho_dist, TS){
     args <- list(data = data, formula = TS$formula, changepoints = NULL, 
                  timename = TS$timename, weights = TS$weights, 
                  control = TS$control$response_args$control)
-    mod <- soft_call(fun, args, TRUE)
+    mod <- soft_call(what = fun, args = args, soften = TRUE)
 
     mod <- mod[[1]][[1]]
     mv <- as.vector(t(coef(mod)))
@@ -299,7 +299,7 @@ est_regressors <- function(rho_dist, TS){
     args <- list(data = data, formula = TS$formula, changepoints = cpts, 
                  timename = TS$timename, weights = TS$weights, 
                  control = TS$control$response_args$control)
-    mod <- soft_call(fun, args, TRUE)
+    mod <- soft_call(what = fun, args = args, soften = TRUE)
 
 
     ndraws <- freq_r[i]
