@@ -67,7 +67,7 @@ used, just retained for alignment with \code{\link[graphics]{plot}}.}
 \item{interactive}{\code{logical} input, should be \code{TRUE} unless
 testing.}
 
-\item{cols, rho_cols_gamma_cols}{In \code{plot.TS}, \code{cols} is a \code{list} of elements used to
+\item{cols, rho_cols, gamma_cols}{In \code{plot.TS}, \code{cols} is a \code{list} of elements used to
   define the colors for the two panels of the summary plot, as generated 
   simply using \code{\link{set_TS_summary_plot_cols}}. 
   \code{cols} has two elements \code{rho} and \code{gamma}, each
@@ -80,7 +80,7 @@ For \code{rho_cols} and \code{gamma_cols} always and for \code{cols} in
   \code{\link[grDevices]{colors}}, \code{\link[grDevices]{rgb}}) can be 
   input as with a standard plot. The default (\code{NULL}) triggers use 
   of \code{\link[viridis]{viridis}} color options (see 
-  \code{rho_option}).}
+  \code{option},\code{rho_option},\code{gamma_option}).}
 
 \item{bin_width}{Width of the bins used in the histograms of the summary 
 time series plot, in units of the x-axis (the time variable used to fit 

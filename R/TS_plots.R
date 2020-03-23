@@ -108,7 +108,7 @@ plot.TS_set <- function(x, ..., selected = TRUE){
 #'   summary plot. Currently only defined for \code{"median"} and 
 #'   \code{"mode"}.
 #'
-#' @param cols,rho_cols_gamma_cols 
+#' @param cols,rho_cols,gamma_cols 
 #'   In \code{plot.TS}, \code{cols} is a \code{list} of elements used to
 #'     define the colors for the two panels of the summary plot, as generated 
 #'     simply using \code{\link{set_TS_summary_plot_cols}}. 
@@ -122,7 +122,7 @@ plot.TS_set <- function(x, ..., selected = TRUE){
 #'     \code{\link[grDevices]{colors}}, \code{\link[grDevices]{rgb}}) can be 
 #'     input as with a standard plot. The default (\code{NULL}) triggers use 
 #'     of \code{\link[viridis]{viridis}} color options (see 
-#'     \code{rho_option}).
+#'     \code{option},\code{rho_option},\code{gamma_option}).
 #'
 #' @param LDATS \code{logical} indicating if the plot is part of a larger 
 #'   LDATS plot output.

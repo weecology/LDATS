@@ -2,10 +2,15 @@
 % Please edit documentation in R/LDA_TS_plots.R
 \name{plot.LDA_TS}
 \alias{plot.LDA_TS}
+\alias{set_LDA_TS_plot_colors}
 \title{Plot the key results from a full LDATS analysis}
 \usage{
-\method{plot}{LDA_TS}(x, ..., cols = set_LDA_TS_plot_cols(),
+\method{plot}{LDA_TS}(x, ..., cols = set_LDA_TS_plot_color(),
   bin_width = 1, xname = NULL, border = NA, selection = "median")
+
+set_LDA_TS_plot_colors(rho_cols = NULL, rho_option = "D",
+  rho_alpha = 0.4, gamma_cols = NULL, gamma_option = "C",
+  gamma_alpha = 0.8)
 }
 \arguments{
 \item{x}{A \code{LDA_TS} object of a full LDATS model fit by
@@ -40,21 +45,46 @@ no label printed, set \code{xname = ""}.}
 \item{selection}{Indicator of the change points to use in the time series
 summary plot. Currently only defined for \code{"median"} and
 \code{"mode"}.}
+
+\item{rho_cols, gamma_cols}{Colors to be used in the specific plot. Any 
+valid color values (\emph{e.g.}, see
+\code{\link[grDevices]{colors}}, \code{\link[grDevices]{rgb}}) can be 
+input as with a standard plot. The default (\code{NULL}) triggers use 
+of \code{\link[viridis]{viridis}} color options (see
+\code{rho_option},\code{gamma_option}).}
+
+\item{rho_option, gamma_option}{A \code{character} string indicating
+the color option from \code{\link[viridis]{viridis}} to use if
+"cols == NULL". Four options are available: "magma" (or "A"), 
+"inferno" (or "B"), "plasma" (or "C"), "viridis" (or "D", the default 
+option) and "cividis" (or "E").}
+
+\item{rho_alpha, gamma_alpha}{Numeric value [0,1] that indicates the 
+transparency of the colors used. Supported only on some devices, see 
+\code{\link[grDevices]{rgb}}.}
 }
 \value{
-\code{NULL}.
+\code{plot.LDA_TS}: \code{NULL}. \cr \cr
+  \code{set_LDA_TS_plot_colors}: \code{list} of elements used to define 
+    the colors for the summary plots, which has two
+    elements: \code{LDA} and \code{TS}, each corresponding the set of 
+    plots for its stage in the full model. \code{LDA} contains entries 
+    \code{cols} and \code{options} (see \code{\link{set_LDA_plot_colors}}). 
+    \code{TS} contains two entries, \code{rho} and \code{gamma}, each 
+    corresponding to the related panel, and each containing default values
+    for entries named \code{cols}, \code{option}, and \code{alpha} (see
+    \code{\link{set_TS_summary_plot_cols}}, \code{\link{set_gamma_colors}},
+    and \code{\link{set_rho_hist_colors}}).
 }
 \description{
-Generalization of the \code{\link[graphics]{plot}} function to
-  work on fitted LDA_TS model objects (class \code{LDA_TS}) returned by
-  \code{\link{LDA_TS}}).
-}
-\examples{
-\donttest{
-  data(rodents)
-  mod <- LDA_TS(data = rodents, topics = 2, nseeds = 1, formulas = ~1,
-                nchangepoints = 1, timename = "newmoon")
-  plot(mod, binwidth = 5, xlab = "New moon")
-}
-
+\code{plot.LDA_TS} generalizes the \code{\link[graphics]{plot}} function
+    to work on fitted LDA_TS model objects (class \code{LDA_TS}) returned 
+    by \code{\link{LDA_TS}}). \cr \cr
+  \code{set_LDA_TS_plot_colors} produces the options for the colors 
+    controlling the panels of the LDATS summary plots, needed because 
+    the change point histogram panel should be in a different color scheme
+    than the LDA and fitted time series model panels, which should be
+    in a matching color scheme. See \code{\link{set_LDA_plot_colors}},
+    \code{\link{set_TS_summary_plot_cols}}, \code{\link{set_gamma_colors}},
+    and \code{\link{set_rho_hist_colors}} for specific details on usage.
 }

@@ -233,9 +233,9 @@ LDA_TS <- function(data, topics = 2, replicates = 1, formulas = ~ 1,
   control <- do.call("LDA_TS_control", control)
   LDAs <- LDA(data = data, topics = topics, replicates = replicates, 
               control = control$LDA_control)
-  TSs <- TS(LDAs = LDAs, data = data, formulas = formulas, 
-            nchangepoints = nchangepoints, timename = timename, 
-            weights = weights, control = control$TS_control) 
+  TSs <- TS(LDAs = LDAs, formulas = formulas, nchangepoints = nchangepoints, 
+            timename = timename, weights = weights, 
+            control = control$TS_control) 
   package_LDA_TS(LDAs = LDAs, TSs = TSs, control = control)
 }
 
@@ -246,6 +246,7 @@ LDA_TS <- function(data, topics = 2, replicates = 1, formulas = ~ 1,
 package_LDA_TS <- function(LDAs, TSs, control){
   out <- list("LDA models" = LDAs, "TS models" = TSs, control = control)
   class(out) <- c("LDA_TS", "list")
+  out
 }
 
 #' @rdname LDA_TS
@@ -268,15 +269,15 @@ LDA_TS_control <- function(LDA_model = topicmodels_LDA,
                            TS_method = ldats_classic,
                            TS_method_args = 
                              list(control = ldats_classic_control()),
-                           nsubsets = 1,
-                           subset_rule = NULL,
-                           summary_prob = 0.95,
-                           soften = TRUE, 
-                           quiet = FALSE,
                            TS_measurer = AIC,
                            TS_measurer_args = list(NULL),
                            TS_selector = which.min,
-                           TS_selector_args = list(NULL), ...){
+                           TS_selector_args = list(NULL),
+                           summary_prob = 0.95,
+                           nsubsets = 1,
+                           subset_rule = NULL,
+                           soften = TRUE, 
+                           quiet = FALSE, ...){
 
   LDA_control <- LDA_control(model = LDA_model, model_args = LDA_model_args, 
                              measurer = LDA_measurer, 
@@ -285,7 +286,6 @@ LDA_TS_control <- function(LDA_model = topicmodels_LDA,
                              selector_args = LDA_selector_args,
                              nsubsets = nsubsets, subset_rule = subset_rule,
                              soften = soften, quiet = quiet)
-
   TS_control <- TS_control(model = TS_model, 
                            model_args = TS_model_args, 
                            response = TS_response, 
