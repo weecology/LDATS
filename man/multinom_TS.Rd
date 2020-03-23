@@ -42,7 +42,7 @@ timestep being 1 day, which is often not desired behavior.}
 
 \item{weights}{Optional class \code{numeric} vector of weights for each 
 document. Defaults to \code{NULL}, translating to an equal weight for
-each document. When using \code{ilr_TS} in a standard LDATS 
+each document. When using \code{multinom_TS} in a standard LDATS 
 analysis, it is advisable to weight the documents by their total size,
 as the result of \code{\link{topicmodels_LDA}} is a matrix of 
 proportions, which does not account for size differences among documents.
@@ -93,6 +93,9 @@ automated removal of unneeded controls.}
     for fitting.
 }
 \references{
-Venables, W. N. and B. D. Ripley. 2002. \emph{Modern and Applied
+Ripley, B. D. 1996. \emph{Pattern Recognition and Neural Networks}. 
+  Cambridge University Press, Cambridge, UK.
+
+  Venables, W. N. and B. D. Ripley. 2002. \emph{Modern and Applied
   Statistics with S}. Fourth Edition. Springer, New York, NY, USA.
 }

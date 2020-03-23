@@ -4,22 +4,23 @@
 #'   work on a list of LDA topic models (class \code{LDA_set}). 
 #' 
 #' @param x An \code{LDA_set} object of LDA topic models.
-#' 
-#' @param ... Additional arguments to be passed to subfunctions.
-#' 
-#' @return \code{NULL}.
 #'
-#' @examples 
-#' \donttest{
-#'   data(rodents)
-#'   lda_data <- rodents$document_term_table
-#'   r_LDA <- LDA_set(lda_data, topics = 2, nseeds = 2) 
-#'   plot(r_LDA)
-#' }
+#' @param ... Not used, retained for alignment with base function.
+#' 
+#' @param selected \code{logical} indicator of if only the selected LDAs
+#'   (the first element in \code{x}) should be plotted or if all the LDAs
+#'   (the second element in \code{x}) should be plotted.
+#'
+#' @return \code{NULL}.
 #'
 #' @export 
 #'
-plot.LDA_set <- function(x, ...){
+plot.LDA_set <- function(x, ..., selected = TRUE){
+  if(selected){
+    x <- x[[1]]
+  } else{
+    x <- x[[2]]
+  }
   on.exit(devAskNewPage(FALSE))
   if (length(x) > 1){
     devAskNewPage(TRUE)
@@ -30,17 +31,18 @@ plot.LDA_set <- function(x, ...){
 
 #' @title Plot the results of an LDATS LDA model
 #'
-#' @description Create an LDATS LDA summary plot, with a top panel showing
-#'   the topic proportions for each word and a bottom panel showing the topic
-#'   proportions of each document/over time. The plot function is defined for
-#'   class \code{LDA_VEM} specifically (see \code{\link[topicmodels]{LDA}}).
-#'   \cr \cr
+#' @description 
+#'   \code{plot.LDA} creates an LDATS LDA summary plot, with a top panel 
+#'     showing the topic proportions for each word and a bottom panel showing
+#'     the topic proportions of each document/over time. \cr \cr
 #'   \code{LDA_plot_top_panel} creates an LDATS LDA summary plot 
-#'   top panel showing the topic proportions word-by-word. \cr \cr
+#'     top panel showing the topic proportions word-by-word. \cr \cr
 #'   \code{LDA_plot_bottom_panel} creates an LDATS LDA summary plot
-#'   bottom panel showing the topic proportions over time/documents. 
+#'     bottom panel showing the topic proportions over time/documents. \cr \cr
+#'   \code{set_LDA_plot_colors} creates the set of colors to be used in
+#'     the LDA plots based on the variety of argument options.
 #' 
-#' @param x Object of class \code{LDA_VEM}.
+#' @param x Object of class \code{LDA}.
 #'
 #' @param xtime Optional x values used to plot the topic proportions according
 #'   to a specific time value (rather than simply the order of observations).
@@ -71,28 +73,28 @@ plot.LDA_set <- function(x, ...){
 #'
 #' @param ... Not used, retained for alignment with base function.
 #' 
-#' @return \code{NULL}.
-#' 
-#' @examples 
-#' \donttest{
-#'   data(rodents)
-#'   lda_data <- rodents$document_term_table
-#'   r_LDA <- LDA_set(lda_data, topics = 4, nseeds = 10) 
-#'   best_lda <- select_LDA(r_LDA)[[1]]
-#'   plot(best_lda, option = "cividis")
-#'   LDA_plot_top_panel(best_lda, option = "cividis")
-#'   LDA_plot_bottom_panel(best_lda, option = "cividis")
-#' }
+#' @return 
+#'   \code{plot.LDA},\code{LDA_plot_top_panel},\code{LDA_plot_bottom_panel}: 
+#'     \code{NULL}. \cr \cr
+#'   \code{set_LDA_plot_colors}: \code{vector} of \code{character} hex codes
+#'     indicating colors to use.
 #'
-#' @export 
+#' @name plot.LDA 
 #'
-plot.LDA_VEM <- function(x, ..., xtime = NULL, xname = NULL, cols = NULL, 
+
+
+
+#' @rdname plot.LDA
+#'
+#' @export
+#'
+plot.LDA <- function(x, ..., xtime = NULL, xname = NULL, cols = NULL, 
                      option = "C", alpha = 0.8, LDATS = FALSE){
   LDA_plot_top_panel(x, cols, option, alpha, TRUE, LDATS)
   LDA_plot_bottom_panel(x, xtime, xname, cols, option, alpha, TRUE, LDATS)
 }
 
-#' @rdname plot.LDA_VEM 
+#' @rdname plot.LDA 
 #' 
 #' @export 
 #'
@@ -101,13 +103,17 @@ LDA_plot_top_panel <- function(x, cols = NULL, option = "C", alpha = 0.8,
   oldpar <- par(no.readonly = TRUE)
   on.exit(par(oldpar))
   cols <- set_LDA_plot_colors(x, cols, option, alpha)
-  gamma <- x@gamma
-  beta <- exp(x@beta)
+  gamma <- x$document_topic_table
+  beta <- exp(x$params$beta)
   nobs <- nrow(gamma)
   ntopics <- ncol(gamma)
   nwords <- ncol(beta)
   beta_order <- apply(beta, 2, order)
   beta_sorted <- apply(beta, 2, sort)
+  if(length(dim(beta_sorted)) == 0){
+    beta_order <- matrix(beta_order, nrow = 1)
+    beta_sorted <- matrix(beta_sorted, nrow = 1)
+  }
 
   counter <- 1
   rect_mat <- matrix(NA, nrow = nwords * ntopics, ncol = 4)
@@ -143,7 +149,7 @@ LDA_plot_top_panel <- function(x, cols = NULL, option = "C", alpha = 0.8,
          col = rect_col[i])
   }
   axis(2, at = seq(0, max_y, 0.1), labels = FALSE, tck = -0.02)
-  mtext(side = 1, at = seq(1, nwords, 1), text = x@terms, tck = 0, 
+  mtext(side = 1, at = seq(1, nwords, 1), text = x$terms, tck = 0, 
        cex = 0.5, line = 0)
 
   if (LDATS){
@@ -165,7 +171,7 @@ LDA_plot_top_panel <- function(x, cols = NULL, option = "C", alpha = 0.8,
   }
 }
 
-#' @rdname plot.LDA_VEM
+#' @rdname plot.LDA
 #' 
 #' @export 
 #'
@@ -175,7 +181,7 @@ LDA_plot_bottom_panel <- function(x, xtime = NULL, xname = NULL, cols = NULL,
   oldpar <- par(no.readonly = TRUE)
   on.exit(par(oldpar))
   cols <- set_LDA_plot_colors(x, cols, option, alpha)
-  gamma <- x@gamma
+  gamma <- x$document_topic_table
   ntopics <- ncol(gamma)
 
   if (is.null(xtime)){
@@ -202,44 +208,13 @@ LDA_plot_bottom_panel <- function(x, xtime = NULL, xname = NULL, cols = NULL,
   }
 }
 
-#' @title Prepare the colors to be used in the LDA plots
+#' @rdname plot.LDA
 #'
-#' @description Based on the inputs, create the set of colors to be used in
-#'   the LDA plots made by \code{\link{plot.LDA_TS}}.
-#' 
-#' @param x Object of class \code{LDA}.
-#'
-#' @param cols Colors to be used to plot the topics.
-#'   Any valid color values (\emph{e.g.}, see \code{\link[grDevices]{colors}},
-#'   \code{\link[grDevices]{rgb}}) can be input as with a standard plot. 
-#'   The default (\code{cols = NULL}) triggers use of 
-#'   \code{\link[viridis]{viridis}} color options (see \code{option}).
-#'
-#' @param option A \code{character} string indicating the color option
-#'   from \code{\link[viridis]{viridis}} to use if `cols == NULL`. Four 
-#'   options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
-#'   (or "C", the default option), "viridis" (or "D") and "cividis" (or "E").
-#'
-#' @param alpha Numeric value [0,1] that indicates the transparency of the 
-#'   colors used. Supported only on some devices, see 
-#'   \code{\link[grDevices]{rgb}}.
-#'
-#' @return \code{vector} of \code{character} hex codes indicating colors to 
-#'   use.
-#'
-#' @examples
-#' \donttest{
-#'   data(rodents)
-#'   lda_data <- rodents$document_term_table
-#'   r_LDA <- LDA_set(lda_data, topics = 4, nseeds = 10) 
-#'   set_LDA_plot_colors(r_LDA[[1]])
-#' }
-#'
-#' @export 
+#' @export
 #'
 set_LDA_plot_colors <- function(x, cols = NULL, option = "C", alpha = 0.8){
 
-  gamma <- x@gamma
+  gamma <- x$document_topic_table
   ntopics <- ncol(gamma)
   if (length(cols) == 0){
     cols <- viridis(ntopics, option = option, alpha = alpha, end = 0.9)

@@ -218,7 +218,8 @@ LDA_call <- function(LDA){
 #'
 LDA_msg <- function(LDA){
   subset_msg <- paste0("  - data subset ", LDA$data_subset)
-  topic_msg <- paste0(", ", LDA$topics, " topics")
+  topic_word <- ifelse(LDA$topics == 1, " topic", " topics")
+  topic_msg <- paste0(", ", LDA$topics, topic_word)
   rep_msg <- paste0(", replicate ", LDA$rep)
   messageq(paste0(subset_msg, topic_msg, rep_msg), LDA$control$quiet)
 }

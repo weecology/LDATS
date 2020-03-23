@@ -79,13 +79,35 @@ automated removal of unneeded controls.}
     corresponding to response function controls.
 }
 \description{
-\code{simplex_TS} fits a set of simplex regression models to a time 
+\code{simplex_TS} fits a set of simplex regression models 
+    (Aitchison 1986, Aitchison \emph{et al.} 2002) to a time 
     series of compositional data divided into multiple segments (a.k.a. 
     chunks) based on given locations for a set of change points, using
-    e.g., the isometric log ratio (ILR) transformation. \cr \cr
+    e.g., the isometric log ratio (ILR) transformation
+    (Egozcue \emph{et al.} 2003, Pawlowsky-Glahn 2003. \cr \cr
   \code{simplex_TS_chunk} fits a simplex regression model using, e.g., the
     ILR transformation to a defined chunk of time (a.k.a. segment)
     \code{[chunk$start, chunk$end]} within a time series. \cr \cr 
   \code{simplex_TS_control} defines and creates the control \code{list} for
     fitting.
+}
+\references{
+Aitchison, J. 1986. \emph{The Statistical Analysis of Compositional
+  Data}. Monographs on Statistics and Applied Probability. Chapman & Hall
+  Ltd., London, UK.
+
+  Aitchison, J, C. Barcelo-Vidal, J.J. Egozcue, and V. Pawlowsky-Glahn.
+  2002. A consise guide to the algebraic geometric structure of the 
+  simplex, the sample space for compositional data analysis, Terra Nostra, 
+  Schriften der Alfred Wegener-Stiftung, 03/2003.
+
+  Egozcue J.J., V. Pawlowsky-Glahn, G. Mateu-Figueras and C. Barcelo-Vidal.
+  2003. Isometric logratio transformations for compositional data analysis. 
+  \emph{Mathematical Geology}, \strong{35}:279-300.
+
+  Pawlowsky-Glahn, V. 2003. Statistical modelling on coordinates. In: 
+  Thio-Henestrosa, S. and J. A. Martin-Fernandez, Eds. 
+  \emph{Proceedings of the 1st International Workshop on Compositional Data
+   Analysis}, Universitat de Girona, ISBN 84-8458-111-X.
+  \href{link}{http://ima.udg.es/Activitats/CoDaWork03}.
 }

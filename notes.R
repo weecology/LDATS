@@ -1,12 +1,11 @@
-known to dos
-NEWS
 plotting functions
+  -TS and LDA_TS
 simulate
+  -just generalize TS 
 predict
 tidying check functions
 tempering
 examples
-"1 topics" -> "1 topic" in lda msg
 
 devtools::load_all()
    data(rodents)

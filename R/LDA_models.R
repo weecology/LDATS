@@ -28,6 +28,7 @@
 #'  \describe{
 #'    \item{alpha}{parameter estimate.}
 #'    \item{beta}{parameter estimate.}
+#'    \item{terms}{\code{character} \code{vector} of term names.}
 #'    \item{document_topic_matrix}{estimated latent topic compositions.}
 #'    \item{test_document_topic_matrox}{estimated latent topic compositions 
 #'      of the test data (not presently available for usage).}
@@ -74,7 +75,8 @@ topicmodels_LDA <- function(LDA, method = "VEM", seeded = TRUE, ...){
     attr(mod_ll, "nobs") <- mod@Dim[1] * mod@Dim[2]
     class(mod_ll) <- "logLik"
     out <- update_list(LDA, params = list(alpha = mod@alpha, beta = mod@beta),
-                            document_topic_matrix = mod@gamma, 
+                            document_topic_table = mod@gamma, 
+                            terms = mod@terms,
                             test_document_topic_matrix = NULL, #not available
                             log_likelihood = mod_ll)
     class(out) <- c("LDA", "list")
@@ -96,6 +98,7 @@ topicmodels_LDA <- function(LDA, method = "VEM", seeded = TRUE, ...){
 #'  \describe{
 #'    \item{alpha}{parameter estimate.}
 #'    \item{beta}{parameter estimate.}
+#'    \item{terms}{\code{character} \code{vector} of term names.}
 #'    \item{document_topic_matrix}{estimated latent topic compositions.}
 #'    \item{test_document_topic_matrox}{estimated latent topic compositions 
 #'      of the test data (not presently available for usage).}
@@ -114,13 +117,16 @@ identity_LDA <- function(LDA){
   data <- LDA$data
   rep <- LDA$rep
   data_subset <- LDA$data_subset
-  document_topic_table <- data$train$document_term_table 
-  document_topic_table <- document_topic_table / rowSums(document_topic_table)
-  colnames(document_topic_table) <- NULL
-  out <- update_list(LDA,  params = list(), 
+  document_topic_table <- matrix(1, ncol = 1,
+                                 nrow = NROW(data$train$document_term_table))
+  beta <- apply(data$train$document_term_table, 2, sum)
+  beta <- log(beta/sum(beta))
+  beta <- matrix(beta, nrow = 1)
+  out <- update_list(LDA,  params = list(alpha = 1, beta = beta), 
                            document_topic_table = document_topic_table, 
                            log_likelihood = NULL, data = data,
                            topics = 1, rep = rep, data_subset = data_subset,
+                           terms = colnames(data$train$document_term_table),
                            test_document_topic_matrix = NULL) #not available
   class(out) <- c("LDA", "list")
   out
