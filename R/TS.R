@@ -298,8 +298,8 @@ prepare_TS <- function(LDAs, formulas = ~ 1, nchangepoints = 0,
   formulas <- formulas2
   nmods <- length(LDAs[[1]])
   mods <- 1:nmods
-  tab <- expand.grid(mods, formulas, nchangepoints, stringsAsFactors = FALSE)
-  colnames(tab) <- c("LDA", "formula", "nchangepoints") 
+  tab <- expand.grid(LDA = mods, formulas = formulas, 
+                     nchangepoints = nchangepoints, stringsAsFactors = FALSE)
   
   nTSs <- NROW(tab)
   TSs <- vector("list", length = nTSs)

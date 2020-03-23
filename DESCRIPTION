@@ -38,20 +38,16 @@ Imports:
     coda,
     compositions,
     digest,
-    dplyr,
     extraDistr,
     graphics,
     grDevices,
-    here,
     lubridate,
-    magrittr,
     mcmc,
     memoise,
     methods,
     mvtnorm,
     nnet,
     progress,
-    reshape,
     stats,
     topicmodels,
     viridis
@@ -60,10 +56,7 @@ Suggests:
     pkgdown,
     rmarkdown,
     testthat, 
-    vdiffr, 
-    clue, 
-    RCurl, 
-    tidyr
+    vdiffr
 VignetteBuilder:
     knitr
 RoxygenNote: 6.1.1

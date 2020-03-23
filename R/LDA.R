@@ -163,7 +163,7 @@ prepare_LDA <- function(data, topics = 2, replicates = 1, control = list()){
   data <- conform_data(data = data, control = control)
   subsets <- names(data)
   if(length(replicates) < length(topics)){
-    reps <- rep(replicates, length(topics))
+    replicates <- rep(replicates, length(topics))
   }
   LDA_topics <- rep(topics, replicates)
   LDA_reps <- sequence(replicates)
@@ -172,14 +172,20 @@ prepare_LDA <- function(data, topics = 2, replicates = 1, control = list()){
   LDA_topics <- rep(LDA_topics, length(subsets))
   nLDA <- length(LDA_topics)
   LDAs <- vector("list", length = nLDA)
+  topicword <- rep(NA, nLDA)
   for(i in 1:nLDA){
-    LDAs[[i]] <- list(data = data[[LDA_subsets[[i]]]], 
-                      data_subset = LDA_subsets[[i]],
-                      topics = LDA_topics[[i]], 
-                      replicate = LDA_reps[[i]],
+    LDAs[[i]] <- list(data = data[[LDA_subsets[i]]], 
+                      data_subset = LDA_subsets[i],
+                      topics = LDA_topics[i], 
+                      replicate = LDA_reps[i],
                       control = control)
+    topicword[i] <- ifelse(LDA_topics[i] == 1, "topic", "topics")
   }
-  names(LDAs) <- paste0("model_", 1:nLDA)
+  name_tab <- data.frame(paste("data subset", LDA_subsets), 
+                         paste(",", LDA_topics, topicword),
+                         paste(", replicate", LDA_reps))
+  names(LDAs) <- apply(name_tab, 1, paste0, collapse = "")
+
   LDAs
 }
 

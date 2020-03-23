@@ -255,7 +255,7 @@ est_regressors <- function(rho_dist, TS){
     mod <- mod[[1]][[1]]
     mv <- as.vector(t(coef(mod)))
     vcv <- mirror_vcov(mod)
-    eta <- rmvnorm(TS$control$method_args$nit, mv, vcv)
+    eta <- rmvnorm(TS$control$method_args$control$nit, mv, vcv)
     seg_names <- rep(1, ncol(vcv))
     coef_names <- colnames(vcv)
     colnames(eta) <- paste(seg_names, coef_names, sep = "_")

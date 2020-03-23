@@ -5,7 +5,6 @@
 #' @importFrom graphics abline axis hist mtext par plot points rect text
 #' @importFrom grDevices devAskNewPage rgb
 #' @importFrom lubridate is.Date
-#' @importFrom magrittr %>%
 #' @importFrom mcmc temper
 #' @importFrom memoise memoise
 #' @importFrom methods is
