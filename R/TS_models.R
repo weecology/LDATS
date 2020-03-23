@@ -48,13 +48,9 @@
 #'
 #' @param rhos \code{matrix} of change point locations (columns) across
 #'   iterations of the sampler (rows) or \code{NULL} if no change points are 
-#'   in the model, as returned from \code{\link{est_change points}}.
+#'   in the model, as returned from \code{\link{est_changepoints}}.
 #'
 #' @param TS Time series model \code{list}.
-#'
-#' @param response \code{character} element indicating the response variable 
-#'   used in the time series. \cr \cr
-#'   Must have a corresponding \code{<response>_TS} function.
 #'
 #' @param summary_prob Probability used for summarizing the posterior 
 #'   distributions (via the highest posterior density interval, see
@@ -121,7 +117,7 @@
 #'       \item{timename}{\code{timename} input to the function.}
 #'       \item{control}{\code{control} input to the function.}
 #'       \item{lls}{Iteration-by-iteration 
-#'                  \link[=logLik.multinom_TS_fit]{logLik} values for the
+#'                  \link[=logLik.TS_fit]{logLik} values for the
 #'                   full time series fit by \code{\link{multinom_TS}}.}
 #'       \item{rhos}{Iteration-by-iteration change point estimates from
 #'                   \code{\link{est_changepoints}} and diagnostics.}
@@ -160,7 +156,7 @@
 #'     each regressor. \cr \cr
 #'   \code{measure_eta_vcov}: variance-covariance matrix for chunk-level
 #'     regressors. \cr \cr
-#'  \code{summarize_rhos}: table of summary statistics for change point
+#'   \code{summarize_rhos}: table of summary statistics for change point
 #'     locations including mean, median, mode, posterior interval, standard
 #'     deviation, MCMC error, autocorrelation, and effective sample size for 
 #'     each change point location. \cr \cr
@@ -259,7 +255,7 @@ est_regressors <- function(rho_dist, TS){
     mod <- mod[[1]][[1]]
     mv <- as.vector(t(coef(mod)))
     vcv <- mirror_vcov(mod)
-    eta <- rmvnorm(control$method_args$nit, mv, vcv)
+    eta <- rmvnorm(TS$control$method_args$nit, mv, vcv)
     seg_names <- rep(1, ncol(vcv))
     coef_names <- colnames(vcv)
     colnames(eta) <- paste(seg_names, coef_names, sep = "_")

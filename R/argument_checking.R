@@ -44,8 +44,6 @@
 #'     variables are all included in \code{LDAs} data sets. \cr \cr
 #'   \code{check_nchangepoints} checks that the \code{vector} of numbers of 
 #'     changepoints is conformable to non-negative \code{integers}.\cr \cr
-#'
-#' @details
 #' 
 #' @param object An object whose class should be checked against 
 #'   \code{eclass}.

@@ -1,10 +1,25 @@
 
-#' @title Simulate LDA data from an LDA structure given parameters
+#' @title Simulate LDA_TS data from LDA and TS model structures and parameters
 #'
-#' @description For a given set of parameters \code{alpha} and \code{Beta} and
-#'   document-specific total word counts, simulate a document-by-term matrix.
-#'   Additional structuring variables (the numbers of topics (k),
-#'   documents (M), terms (V)) are inferred from input objects.
+#' @description 
+#'   \code{simulate_LDA_data} for a given set of parameters \code{alpha} and
+#'     \code{Beta} and document-specific total word counts, simulate a 
+#'     document-by-term matrix. \cr
+#'     Additional structuring variables (the numbers of topics (k),
+#'     documents (M), terms (V)) are inferred from input objects. \cr \cr
+#'   \code{simulate_TS_data} for a given set of covariates \code{X};
+#'     parameters \code{Eta}, \code{rho}, and \code{err}; and
+#'     document-specific time stamps \code{tD}, simulate a document-by-topic
+#'     matrix. Additional structuring variables (numbers of topics (k), 
+#'     documents (M), segments (S), and covariates per segment (C)) are 
+#'     inferred from input objects.
+#'   \code{simulate_LDA_TS_data} for a given set of covariates \code{X}; 
+#'     parameters  \code{Beta}, \code{Eta}, \code{rho}, and \code{err}; and 
+#'     document-specific time stamps \code{tD} and lengths \code{N}),
+#'     simulate a document-by-topic matrix. \cr
+#'     Additional structuring variables (the numbers of topics (k), terms (V), 
+#'     documents (M), segments (S), and covariates per segment (C))
+#'     are inferred from input objects.
 #'
 #' @param N A vector of document sizes (total word counts). Must be integer
 #'   conformable. Is used to infer the total number of documents.
@@ -13,7 +28,28 @@
 #'   terms within topics. Dimension: k x V (number of topics x number of 
 #'   terms). Used to infer both (k) and (V). Must be non-negative and sum to 
 #'   1 within topics.
+#'
+#' @param X \code{matrix} of covariates, dimension M (number of documents) x 
+#'   C (number of covariates, including the intercept) (a.k.a the design
+#'   matrix).
 #' 
+#' @param Eta \code{matrix} of regression parameters across the segments,
+#'   dimension: SC (number of segments x number of covariates, including the
+#'   intercept) x k (number of topics).
+#' 
+#' @param rho Vector of integer-conformable time locations of changepoints or 
+#'   \code{NULL} if no changepoints. Used to determine the number of 
+#'   segments. Must exist within the bounds of the times of the documents,
+#'   \code{tD}.
+#'
+#' @param tD Vector of integer-conformable times of the documents. Must be
+#'   of length M (as determined by \code{X}). 
+#' 
+#' @param err Additive error on the link-scale. Must be a non-negative 
+#'   \code{numeric} value. Default value of \code{0} indicates no error.
+#' 
+#' @param seed Input to \code{\link{set.seed}}.
+#'
 #' @param alpha Single positive numeric value for the Dirichlet distribution
 #'   parameter defining topics within documents. To specifically define
 #'   document topic probabilities, use \code{Theta}.
@@ -22,23 +58,32 @@
 #'   documents. Dimension: M x k (documents x topics). Must be non-negative 
 #'   and sum to 1 within documents. To generally define document topic 
 #'   probabilities, use \code{alpha}.
-#' 
-#' @param seed Input to \code{\link{set.seed}}.
 #'
-#' @return A document-by-term \code{matrix} of counts (dim: M x V).
+#' @param invlink \code{function} name for the inverse link function. 
+#'   Currently available are \code{\link{softmax}} and the inverses of 
+#'   the ILR, ALR, and CLR transforms (\code{\link[compositions]{ilrInv}},
+#'   \code{\link[compositions]{alrInv}}, and
+#'   \code{\link[compositions]{clrInv}}).
 #' 
-#' @examples
-#'   N <- c(10, 22, 15, 31)
-#'   alpha <- 1.2
-#'   Beta <- matrix(c(0.1, 0.1, 0.8, 0.2, 0.6, 0.2), 2, 3, byrow = TRUE)
-#'   sim_LDA_data(N, Beta, alpha = alpha)
-#'   Theta <- matrix(c(0.2, 0.8, 0.8, 0.2, 0.5, 0.5, 0.9, 0.1), 4, 2, 
-#'                byrow = TRUE)
-#'   sim_LDA_data(N, Beta, Theta = Theta)
+#' @return 
+#'   \code{simulate_LDA}: A document-by-term \code{matrix} of counts
+#'    (dim: M x V). \cr \cr
+#'   \code{simulate_TS}:  document-by-topic \code{matrix} of 
+#'    proportions (dim: M x k). \cr \cr
+#'   \code{simulate_LDA_TS}: A document-by-term \code{matrix} of counts
+#'    (dim: M x V). 
+#'
+#' @name simulate_data
+#'
+
+
+
+#' @rdname simulate_data
 #'
 #' @export
 #'
-sim_LDA_data <- function(N, Beta, alpha = NULL, Theta = NULL, seed = NULL){
+simulate_LDA_data <- function(N, Beta, alpha = NULL, Theta = NULL, 
+                              seed = NULL){
   if (length(dim(N)) > 1 | !is.numeric(N) || !all(N %% 1 == 0)){
     stop("N must be a vector of integer conformable values")
   }
@@ -88,47 +133,14 @@ sim_LDA_data <- function(N, Beta, alpha = NULL, Theta = NULL, seed = NULL){
   w
 }
 
-#' @title Simulate TS data from a TS model structure given parameters
+
+
+#' @rdname simulate_data
 #'
-#' @description For a given set of covariates \code{X}; parameters \code{Eta},
-#'   \code{rho}, and \code{err}; and document-specific time stamps \code{tD},
-#'   simulate a document-by-topic matrix. Additional structuring variables 
-#'   (numbers of topics (k), documents (M), segments (S), and 
-#'   covariates per segment (C)) are inferred from input objects.
-#'
-#' @param X \code{matrix} of covariates, dimension M (number of documents) x 
-#'   C (number of covariates, including the intercept) (a.k.a. the design
-#'   matrix).
-#' 
-#' @param Eta \code{matrix} of regression parameters across the segments,
-#'   dimension: SC (number of segments x number of covariates, including the
-#'   intercept) x k (number of topics).
-#' 
-#' @param rho Vector of integer-conformable time locations of changepoints or 
-#'   \code{NULL} if no changepoints. Used to determine the number of 
-#'   segments. Must exist within the bounds of the times of the documents,
-#'   \code{tD}.
-#'
-#' @param tD Vector of integer-conformable times of the documents. Must be
-#'   of length M (as determined by \code{X}). 
-#' 
-#' @param err Additive error on the link-scale. Must be a non-negative 
-#'   \code{numeric} value. Default value of \code{0} indicates no error.
-#' 
-#' @param seed Input to \code{\link{set.seed}}.
-#'
-#' @return A document-by-topic \code{matrix} of probabilities (dim: M x k).
-#' 
-#' @examples
-#'   tD <- c(1, 3, 4, 6)
-#'   rho <- 3
-#'   X <- cbind(rep(1, 4), 1:4)
-#'   Eta <- cbind(c(0.5, 0.3, 0.9, 0.5), c(1.2, 1.1, 0.1, 0.5))
-#'   sim_TS_data(X, Eta, rho, tD, err = 1)
-#'   
 #' @export
 #'
-sim_TS_data <- function(X, Eta, rho, tD, err = 0, seed = NULL){
+simulate_TS_data <- function(X, Eta, rho, tD, err = 0, seed = NULL, 
+                             invlink = softmax){
 
   if (length(dim(tD)) > 1 | !is.numeric(tD) || !all(tD %% 1 == 0)){
     stop("tD must be a vector of integer conformable values")
@@ -152,74 +164,34 @@ sim_TS_data <- function(X, Eta, rho, tD, err = 0, seed = NULL){
   C <- nrow(Eta) / S
   s_start <- c(min(tD), rho + 1)
   s_end <- c(rho, max(tD))
-  EGamma <- matrix(NA, nrow = nrow(X), ncol = ncol(Eta))
+
+  in1 <- which(tD >= s_start[1] & tD <= s_end[1])
+  in2 <- (C * (1 - 1) + 1):(C * 1)
+  X_Eta <- matrix(data = X[in1, ], nrow = length(in1)) %*% Eta[in2,] 
+  eps <- rnorm(length(X_Eta), 0, err)
+  val <- X_Eta + eps
+  tester <- do.call(invlink, list(val))
+  EGamma <- matrix(NA, nrow = nrow(X), ncol = ncol(tester))
   for(s in 1:S){
     in1 <- which(tD >= s_start[s] & tD <= s_end[s])
     in2 <- (C * (s - 1) + 1):(C * s)
     X_Eta <- matrix(data = X[in1, ], nrow = length(in1)) %*% Eta[in2,] 
     eps <- rnorm(length(X_Eta), 0, err)
-    EGamma[in1,] <- softmax(X_Eta + eps) 
+    val <- X_Eta + eps
+    EGamma[in1,] <- do.call(invlink, list(val))
   }
   EGamma
 }
 
-
-#' @title Simulate LDA_TS data from LDA and TS model structures and parameters
+#' @rdname simulate_data
 #'
-#' @description For a given set of covariates \code{X}; parameters 
-#'   \code{Beta}, \code{Eta}, \code{rho}, and \code{err}; and 
-#'   document-specific time stamps \code{tD} and lengths \code{N}),
-#'   simulate a document-by-topic matrix.
-#'   Additional structuring variables (the numbers of topics (k), terms (V), 
-#'   documents (M), segments (S), and covariates per segment (C))
-#'   are inferred from input objects.
-#'
-#' @param N A vector of document sizes (total word counts). Must be integer
-#'   conformable. Is used to infer the total number of documents.
-#' 
-#' @param Beta \code{matrix} of categorical distribution parameters defining
-#'   terms within topics. Dimension: k x V (number of topics x number of 
-#'   terms). Used to infer both (k) and (V). Must be non-negative and sum to 
-#'   1 within topics.
-#'
-#' @param X \code{matrix} of covariates, dimension M (number of documents) x 
-#'   C (number of covariates, including the intercept) (a.k.a the design
-#'   matrix).
-#' 
-#' @param Eta \code{matrix} of regression parameters across the segments,
-#'   dimension: SC (number of segments x number of covariates, including the
-#'   intercept) x k (number of topics).
-#' 
-#' @param rho Vector of integer-conformable time locations of changepoints or 
-#'   \code{NULL} if no changepoints. Used to determine the number of 
-#'   segments. Must exist within the bounds of the times of the documents,
-#'   \code{tD}.
-#'
-#' @param tD Vector of integer-conformable times of the documents. Must be
-#'   of length M (as determined by \code{X}). 
-#' 
-#' @param err Additive error on the link-scale. Must be a non-negative 
-#'   \code{numeric} value. Default value of \code{0} indicates no error.
-#' 
-#' @param seed Input to \code{\link{set.seed}}.
-#'
-#' @return A document-by-term \code{matrix} of counts (dim: M x V).
-#' 
-#' @examples
-#'   N <- c(10, 22, 15, 31)
-#'   tD <- c(1, 3, 4, 6)
-#'   rho <- 3
-#'   X <- cbind(rep(1, 4), 1:4)
-#'   Eta <- cbind(c(0.5, 0.3, 0.9, 0.5), c(1.2, 1.1, 0.1, 0.5))
-#'   Beta <- matrix(c(0.1, 0.1, 0.8, 0.2, 0.6, 0.2), 2, 3, byrow = TRUE)
-#'   err <- 1
-#'   sim_LDA_TS_data(N, Beta, X, Eta, rho, tD, err)
-#'   
 #' @export
 #'
-sim_LDA_TS_data <- function(N, Beta, X, Eta, rho, tD, err = 0, seed = NULL){
-  EGamma <- sim_TS_data(X, Eta, rho, tD, err, seed)
-  sim_LDA_data(N, Beta, Theta = EGamma, seed = seed)
+simulate_LDA_TS_data <- function(N, Beta, X, Eta, rho, tD, err = 0, 
+                                 seed = NULL, invlink = softmax){
+  EGamma <- simulate_TS_data(X = X, Eta = Eta, rho = rho, tD = tD, err = err, 
+                             seed = seed, invlink = invlink)
+  simulate_LDA_data(N = N, Beta = Beta, Theta = EGamma, seed = seed)
 }
 
 

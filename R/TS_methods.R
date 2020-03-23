@@ -331,8 +331,8 @@ prep_cpts <- function(TS){
   data <- TS$data$train$ts_data
   temps <- prep_temp_sequence(TS = TS)
   ntemps <- length(temps)
-  min_time <- min(data[ , timename])
-  max_time <- max(data[ , timename])
+  min_time <- min(data[ , TS$timename])
+  max_time <- max(data[ , TS$timename])
   times <- seq(min_time, max_time, 1)
   avail_times <- times[-c(1, length(times))]
   cps <- matrix(NA, nrow = TS$nchangepoints, ncol = ntemps)
@@ -502,6 +502,11 @@ prep_ids <- function(TS){
 update_ids <- function(ids, swaps){
   swaps$ids
 }
+
+#' @rdname ldats_classic
+#'
+#' @export
+#'
 step_chains <- function(TS, i, cpts, inputs){
   prop_step <- propose_step(TS = TS, i = i, cpts = cpts, inputs = inputs)
   accept_step <- eval_step(i = i, cpts = cpts, prop_step = prop_step, 

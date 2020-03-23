@@ -83,6 +83,9 @@
 #'   summary plot. Currently only defined for \code{"median"} and 
 #'   \code{"mode"}.
 #'
+#' @param together \code{logical} indicating if the subplots are part of a 
+#'   larger plot output. 
+#'
 #' @param cols,rho_cols,gamma_cols 
 #'   In \code{plot.TS}, \code{cols} is a \code{list} of elements used to
 #'     define the colors for the two panels of the summary plot, as generated 
@@ -352,16 +355,14 @@ pred_gamma_TS_plot <- function(x, selection = "median",
   }
   x$control$timename <- NULL # to remove from v0.1.0 model fits
 
-#
-# NEEDS TO BE GENERALIZED
-#
-  seg_mods <- multinom_TS(x$data$train$ts_data, x$formula, spec_rhos,  
-                          x$timename, x$weights, x$control)
-#
-#
-#
+  fun <- x$control$response
+  args <- list(data = x$data$train$ts_data, formula = x$formula,
+               changepoints = spec_rhos, timename = x$timename, 
+               weights = x$weights, 
+               control = x$control$response_args$control)
+  mod <- soft_call(what = fun, args = args, soften = TRUE)
 
-  nsegs <- length(seg_mods[[1]])
+  nsegs <- length(mod[[1]])
   t1 <- min(x$data$train$ts_data[, x$timename])
   t2 <- max(x$data$train$ts_data[, x$timename])
 
@@ -383,7 +384,7 @@ pred_gamma_TS_plot <- function(x, selection = "median",
   pred_vals <- matrix(NA, nrow(x$data$train$ts_data), ntopics)
   sp1 <- 1
   for (i in 1:nsegs){
-    mod_i <- seg_mods[[1]][[i]]
+    mod_i <- mod[[1]][[i]]
     spec_vals <- sp1:(sp1 + nrow(mod_i$fitted.values) - 1)
     pred_vals[spec_vals, ] <- mod_i$fitted.values
     time_obs[spec_vals] <- mod_i$timevals

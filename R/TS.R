@@ -80,10 +80,11 @@
 #'   Time Series model. Values not input assume defaults set by 
 #'   \code{\link{TS_control}}.
 #'  
+#' @param LDAs Class \code{LDA_set} \code{list} of both selected and all 
+#'   results from \code{\link{LDA}}.
+#'
 #' @param TS,TSs time series model \code{list} (\code{TS}) or a \code{list} 
 #'   of many time series model \code{list}s (\code{TSs}).
-#'
-#' @param selected_TSs \code{list} of selected time series model \code{list}s.
 #'
 #' @param response \code{character} element indicating the response variable 
 #'   used in the time series. \cr \cr
@@ -104,6 +105,11 @@
 #'
 #' @param soften \code{logical} indicator of whether the model should error 
 #'   softly or if errors should trigger a full-stop to the pipeline.
+#'
+#' @param model Main Time Series \code{function}.
+#'
+#' @param model_args \code{list} of (named) arguments to be used in 
+#'   \code{model} via \code{\link{TS_call}}. 
 #'
 #' @param method \code{function} used to drive the sampler of the TS
 #'   models; \code{method} defines and operates the computational procedure.
@@ -147,7 +153,7 @@
 #'   \code{select_TS}: \code{list} of selected models' \code{list}s. \cr \cr
 #'   \code{run_TS}: \code{TS_set} \code{list} of model results from all
 #'     runs of a \code{<model>} function, such as 
-#'     \code{\link{topicmodels_TS}}. \cr \cr
+#'     \code{\link{topicmodels_LDA}}. \cr \cr
 #'   \code{TS_call}: \code{TS} \code{list} of model results from a single
 #'     run of a \code{<model>} function, such as 
 #'     \code{\link{sequential_TS}}. \cr \cr

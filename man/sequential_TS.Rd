@@ -76,11 +76,7 @@ sampler (rows), as returned from \code{\link{est_regressors}}.}
 
 \item{rhos}{\code{matrix} of change point locations (columns) across
 iterations of the sampler (rows) or \code{NULL} if no change points are 
-in the model, as returned from \code{\link{est_change points}}.}
-
-\item{response}{\code{character} element indicating the response variable 
-used in the time series. \cr \cr
-Must have a corresponding \code{<response>_TS} function.}
+in the model, as returned from \code{\link{est_changepoints}}.}
 }
 \value{
 \code{sequential_TS} and \code{package_sequential_TS}: 
@@ -94,7 +90,7 @@ Must have a corresponding \code{<response>_TS} function.}
       \item{timename}{\code{timename} input to the function.}
       \item{control}{\code{control} input to the function.}
       \item{lls}{Iteration-by-iteration 
-                 \link[=logLik.multinom_TS_fit]{logLik} values for the
+                 \link[=logLik.TS_fit]{logLik} values for the
                   full time series fit by \code{\link{multinom_TS}}.}
       \item{rhos}{Iteration-by-iteration change point estimates from
                   \code{\link{est_changepoints}} and diagnostics.}
@@ -133,7 +129,7 @@ Must have a corresponding \code{<response>_TS} function.}
     each regressor. \cr \cr
   \code{measure_eta_vcov}: variance-covariance matrix for chunk-level
     regressors. \cr \cr
- \code{summarize_rhos}: table of summary statistics for change point
+  \code{summarize_rhos}: table of summary statistics for change point
     locations including mean, median, mode, posterior interval, standard
     deviation, MCMC error, autocorrelation, and effective sample size for 
     each change point location. \cr \cr

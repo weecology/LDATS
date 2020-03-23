@@ -7,7 +7,7 @@
 identity_LDA(LDA)
 }
 \arguments{
-\item{LDA}{A prepared (via \code{\link{prep_LDA_models}} LDA model
+\item{LDA}{A prepared (via \code{\link{prepare_LDA}} LDA model
 \code{list}.}
 }
 \value{

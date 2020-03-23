@@ -58,8 +58,6 @@
 #' @param LDA,LDAs model \code{list} (\code{LDA}) or a \code{list} of LDA 
 #'   model \code{list}s (\code{LDAs}).
 #'
-#' @param selected_LDAs \code{list} of selected LDA model \code{list}s.
-#'
 #' @param model Main LDA \code{function}.
 #'
 #' @param model_args \code{list} of (named) arguments to be used in 

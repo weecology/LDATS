@@ -134,6 +134,3 @@ Verify the class, structure, and values of inputted arguments
   \code{check_nchangepoints} checks that the \code{vector} of numbers of 
     changepoints is conformable to non-negative \code{integers}.\cr \cr
 }
-\details{
-
-}

@@ -15,6 +15,7 @@
 \alias{prep_proposal_dist}
 \alias{prep_ids}
 \alias{update_ids}
+\alias{step_chains}
 \alias{propose_step}
 \alias{eval_step}
 \alias{take_step}
@@ -50,6 +51,8 @@ prep_proposal_dist(TS)
 prep_ids(TS)
 
 update_ids(ids, swaps)
+
+step_chains(TS, i, cpts, inputs)
 
 propose_step(TS, i, cpts, inputs)
 

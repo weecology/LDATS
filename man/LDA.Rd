@@ -87,8 +87,6 @@ quietly (if \code{FALSE}, a progress bar and notifications are printed).}
 
 \item{...}{Not passed along to the output, rather included to allow for
 automated removal of unneeded controls.}
-
-\item{selected_LDAs}{\code{list} of selected LDA model \code{list}s.}
 }
 \value{
 \code{LDA},\code{pacakage_LDA}: class \code{LDA_set} \code{list} of 

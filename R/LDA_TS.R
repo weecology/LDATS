@@ -105,7 +105,7 @@
 #' @param TS_response \code{function} used to model the compositional 
 #'   response.
 #'
-#' @param response_args \code{list} of (named) arguments to be used in 
+#' @param TS_response_args \code{list} of (named) arguments to be used in 
 #'   \code{TS_response} via \code{\link{do.call}}. 
 #'   \cr \cr
 #'   Could be managed via a \code{<reponse>_TS_control} function like

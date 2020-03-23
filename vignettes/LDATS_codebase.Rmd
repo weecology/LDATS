@@ -53,8 +53,37 @@ LDA_TS
         TS$control$model with TS$control$model_args
           sequential_TS_control
           est_changepoints
+            TS$control$method with TS$control$method_args
+              ldats_classic_control
+              prep_saves
+              prep_ptMCMC_inputs
+                prep_temp_sequence
+                prep_proposal_dist
+              prep_cpts
+                prep_temp_sequence
+                TS$control$response with TS$control$response_args
+              prep_ids
+              prep_pbar
+              update_pbar
+              step_chains
+                propose_step
+                  proposed_step_mods
+                    TS$control$response with TS$control$response_args
+                eval_step
+                accept_step
+              swap_chains
+              update_saves
+              update_cpts
+              update_ids
+              process_saves
+                count_trips
           est_regressors
+            TS$control$response with TS$control$response_args
           package_sequential_TS
+            summarize_rhos
+            measure_rho_vcov
+            summarize_eta
+            measure_eta_vcov
     package_TS
       select_TS
         TS$control$selector with TS$control$selector_args

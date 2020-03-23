@@ -21,7 +21,7 @@ used, just retained for alignment with \code{plot}.}
 
 \item{cols}{\code{list} of elements used to define the colors for the two
 panels of the summary plot, as generated simply using
-\code{\link{set_LDA_TS_plot_cols}}. \code{cols} has two elements:
+\code{\link{set_LDA_TS_plot_colors}}. \code{cols} has two elements:
 \code{LDA} and \code{TS}, each corresponding the set of plots for
 its stage in the full model. \code{LDA} contains entries \code{cols}
 and \code{option} (see \code{\link{set_LDA_plot_colors}}). \code{TS}

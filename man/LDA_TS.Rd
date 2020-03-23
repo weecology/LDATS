@@ -116,6 +116,12 @@ models; \code{LDA_selector} operates on the values to choose the models.}
 \item{TS_response}{\code{function} used to model the compositional 
 response.}
 
+\item{TS_response_args}{\code{list} of (named) arguments to be used in 
+\code{TS_response} via \code{\link{do.call}}. 
+\cr \cr
+Could be managed via a \code{<reponse>_TS_control} function like
+\code{\link{multinom_TS_control}}.}
+
 \item{TS_method}{\code{function} used to drive the sampler of the TS
 models; \code{TS_method} defines and operates the computational 
 procedure. \cr \cr
@@ -155,12 +161,6 @@ quietly (if \code{FALSE}, a progress bar and notifications are printed).}
 
 \item{...}{Not passed along to the output, rather included to allow for
 automated removal of unneeded controls.}
-
-\item{response_args}{\code{list} of (named) arguments to be used in 
-\code{TS_response} via \code{\link{do.call}}. 
-\cr \cr
-Could be managed via a \code{<reponse>_TS_control} function like
-\code{\link{multinom_TS_control}}.}
 }
 \value{
 \code{LDA_TS},\code{package_LDA_TS}: class-\code{LDA_TS} \code{list} 

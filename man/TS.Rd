@@ -43,6 +43,9 @@ TS_control(model = sequential_TS, model_args = list(control =
   selector_args = list(NULL), soften = TRUE, quiet = FALSE, ...)
 }
 \arguments{
+\item{LDAs}{Class \code{LDA_set} \code{list} of both selected and all 
+results from \code{\link{LDA}}.}
+
 \item{formulas}{Vector of \code{\link[stats]{formula}}(s) defining the 
 regression between the change points. Any predictor variable included 
 must also be a column in \code{data} and any (compositional) response 
@@ -82,6 +85,11 @@ Time Series model. Values not input assume defaults set by
 
 \item{TS, TSs}{time series model \code{list} (\code{TS}) or a \code{list} 
 of many time series model \code{list}s (\code{TSs}).}
+
+\item{model}{Main Time Series \code{function}.}
+
+\item{model_args}{\code{list} of (named) arguments to be used in 
+\code{model} via \code{\link{TS_call}}.}
 
 \item{response}{\code{character} element indicating the response variable 
 used in the time series. \cr \cr
@@ -128,8 +136,6 @@ quietly (if \code{FALSE}, a progress bar and notifications are printed).}
 
 \item{...}{Not passed along to the output, rather included to allow for
 automated removal of unneeded controls.}
-
-\item{selected_TSs}{\code{list} of selected time series model \code{list}s.}
 }
 \value{
 \code{TS},\code{pacakage_TS}: class \code{TS_set} \code{list} of both 
@@ -147,7 +153,7 @@ automated removal of unneeded controls.}
   \code{select_TS}: \code{list} of selected models' \code{list}s. \cr \cr
   \code{run_TS}: \code{TS_set} \code{list} of model results from all
     runs of a \code{<model>} function, such as 
-    \code{\link{topicmodels_TS}}. \cr \cr
+    \code{\link{topicmodels_LDA}}. \cr \cr
   \code{TS_call}: \code{TS} \code{list} of model results from a single
     run of a \code{<model>} function, such as 
     \code{\link{sequential_TS}}. \cr \cr

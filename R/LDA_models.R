@@ -3,26 +3,24 @@
 #'   as conducted via the topicmodels package
 #'
 #' @description Fit the standard LDATS LDA model (a true Latent Dirichlet
-#'   Allocation) using \code{\link[topicmodels]{topicmodels::LDA}}
-#'   (Grun and Hornik 2011). \cr 
-#'   Default methodology is the Variational
-#'   Expectation Maximization routine (VEM) as described by 
-#'   Blei \emph{et al.} (2003) and implemented by Grun and Hornik (2011). \cr
+#'   Allocation) using \code{\link[topicmodels]{LDA}} (Grun and Hornik 2011).
+#'   Default methodology is the Variational Expectation Maximization routine 
+#'   (VEM) as described by Blei \emph{et al.} (2003) and implemented by 
+#'   Grun and Hornik (2011). \cr \cr
 #'   If the model is defined to only fit one topic, \code{\link{identity_LDA}}
 #'   is used by default.
 #'
-#' @param LDA A prepared (via \code{\link{prep_LDA_models}} LDA model
+#' @param LDA A prepared (via \code{\link{prepare_LDA}} LDA model
 #'   \code{list}.
 #'
 #' @param ... Additional arguments to be passed to 
-#'   \code{\link[topicmodels]{topicmodels::LDA}} as a \code{control} input.
+#'   \code{\link[topicmodels]{LDA}} as a \code{control} input.
 #'
 #' @param seeded \code{logical} indicator of if the LDA should be a seeded
 #'   replicate. 
 #'
-#' @param method Fitting routine used in 
-#'   \code{\link[topicmodels]{topicmodels::LDA}}. Currenlty, only
-#'   \code{"VEM"} and \code{"Gibbs"} are supported.
+#' @param method Fitting routine used in \code{\link[topicmodels]{LDA}}.
+#'   Currenlty, only \code{"VEM"} and \code{"Gibbs"} are supported.
 #'
 #' @return \code{LDA} \code{list} with components
 #'  \describe{
@@ -90,7 +88,7 @@ topicmodels_LDA <- function(LDA, method = "VEM", seeded = TRUE, ...){
 #'   output is functionally the input. This allows for "single-topic" models
 #'   that do not actually decompose the data to be included in the model set.
 #'
-#' @param LDA A prepared (via \code{\link{prep_LDA_models}} LDA model
+#' @param LDA A prepared (via \code{\link{prepare_LDA}} LDA model
 #'   \code{list}.
 #'
 #' @return \code{LDA} \code{list} with components (many of which are 

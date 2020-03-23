@@ -1,58 +1,29 @@
-plotting functions
-  -generalize pred_gamma_TS_plot
-simulate
-  -just generalize TS 
 predict
-tidying check functions
-tempering
+tidying check functions and general usage
 examples
 tests
-
 what is up with lda_ts_controls...
-  ...oh thats how its always been because of the splitting?
-
+  ...oh is that how its always been because of the splitting?
+tempering
+vignettes
 
 devtools::load_all()
    data(rodents)
-data <- rodents
-topics = 1:2 
-replicates = c(2,5)
-formulas = ~ 1
-nchangepoints = 1
-timename = "newmoon"
-weights = TRUE
-control = 
-LDAs <- LDA(data = data, topics = topics, replicates = replicates, 
-              control = list())
-control$TS_control$method_args$control$nit <- 100
-TSs <- TS(LDAs = LDAs, formulas = formulas, 
-          nchangepoints = nchangepoints, timename = timename, 
-          weights = weights, control = 
-list(method_args = list(control = ldats_classic_control(nit = 100))))
-
-
-LDATSs <- LDA_TS(data = data, topics = topics, replicates = replicates,
-                 formulas = formulas, 
-          nchangepoints = nchangepoints, timename = timename, 
-          weights = weights, control = list(TS_method_args = 
-                          list(control = ldats_classic_control(nit=100))))
+LDAs <- LDA(data = rodents, topics = 1:2, replicates = c(1, 4))
+TSs <- TS(LDAs = LDAs, formulas = ~ 1, nchangepoints = 1, 
+          timename = "newmoon", weights = TRUE,
+          control = list(method_args = 
+                         list(control = ldats_classic_control(nit = 100))))
+LDATSs <- LDA_TS(data = rodents, topics = 1:2, replicates = c(1, 4),
+                 formulas = ~ 1, nchangepoints = 1, timename = "newmoon",
+                 weights = TRUE,
+                 control = list(TS_method_args = 
+                           list(control = ldats_classic_control(nit = 100))))
 
 plot(LDAs)
 plot(TSs)
+plot(TSs, plot_type="diagnostic")
 plot(LDATSs)
-names(LDATSs)
-
-cc<-TS_control(method_args = list(control = ldats_classic_control(nit = 100)))
-$method_args$control$nit
-
-cc<-LDA_TS_control(TS_method_args = 
-                     list(control = ldats_classic_control(nit = 100)))
-
-names(cc)
-names(formals(TS_control))
-
-$TS_control$method_args$control$nit
-
 
 
 not sure if needed:

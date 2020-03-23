@@ -6,7 +6,7 @@
 #'     showing the topic proportions for each word and a bottom panel showing
 #'     the topic proportions of each document/over time. \cr \cr
 #'   \code{plot.LDA_set} plots either the \code{selected} model results or
-#'     all of them from a \code{LDA_set} of \code{LDA} models.
+#'     all of them from a \code{LDA_set} of \code{LDA} models. \cr \cr
 #'   \code{LDA_plot_top_panel} creates an LDATS LDA summary plot 
 #'     top panel showing the topic proportions word-by-word. \cr \cr
 #'   \code{LDA_plot_bottom_panel} creates an LDATS LDA summary plot

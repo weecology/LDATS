@@ -115,6 +115,9 @@ distribution, indexed to the iteration by the order of the vector.}
 
 \item{xlab}{\code{character} value used to label the x axis.}
 
+\item{together}{\code{logical} indicating if the subplots are part of a 
+larger plot output.}
+
 \item{spec_rhos}{\code{numeric} vector indicating the locations along the
 x axis where the specific change points being used are located.}
 
