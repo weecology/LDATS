@@ -302,10 +302,10 @@ prepare_TS <- function(LDAs, formulas = ~ 1, nchangepoints = 0,
  
     ts_data <- lda$data
     ts_data$train$ts_data <- lda$data$train$document_covariate_table
-    ts_data$train$ts_data$gamma <- lda$document_topic_matrix
+    ts_data$train$ts_data$gamma <- lda$document_topic_table
 
     ts_data$test$ts_data <- lda$data$test$document_covariate_table
-    ts_data$test$ts_data$gamma <- lda$test_document_topic_matrix
+    ts_data$test$ts_data$gamma <- lda$test_document_topic_table
 
     weights <- iftrue(weights, 
                       document_weights(lda$data$train$document_term_table))

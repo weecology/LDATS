@@ -26,6 +26,7 @@ replicate.}
  \describe{
    \item{alpha}{parameter estimate.}
    \item{beta}{parameter estimate.}
+   \item{terms}{\code{character} \code{vector} of term names.}
    \item{document_topic_matrix}{estimated latent topic compositions.}
    \item{test_document_topic_matrox}{estimated latent topic compositions 
      of the test data (not presently available for usage).}

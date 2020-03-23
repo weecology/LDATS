@@ -1,14 +1,95 @@
-#' @title Plot an LDATS TS model
+#' @title Plot a set of LDATS TS models
 #'
 #' @description Generalization of the \code{\link[graphics]{plot}} function to 
-#'   work on fitted TS model objects (class \code{TS_fit}) returned from 
-#'   \code{\link{TS}}. 
+#'   work on a list of TS topic models (class \code{TS_set}). 
+#' 
+#' @param x An \code{TS_set} object of TS topic models.
+#'
+#' @param ... Not used, retained for alignment with base function.
+#' 
+#' @param selected \code{logical} indicator of if only the selected TSs
+#'   (the first element in \code{x}) should be plotted or if all the TSs
+#'   (the second element in \code{x}) should be plotted.
+#'
+#' @return \code{NULL}.
+#'
+#' @export 
+#'
+plot.TS_set <- function(x, ..., selected = TRUE){
+  if(selected){
+    x <- x[[1]]
+  } else{
+    x <- x[[2]]
+  }
+  on.exit(devAskNewPage(FALSE))
+  if (length(x) > 1){
+    devAskNewPage(TRUE)
+  }
+  y <- lapply(x, plot, ...)
+  y <- NULL
+}
+
+
+#' @title Plot an LDATS Time Series model
+#'
+#' @description 
+#'   \code{plot.TS} is a generalization of the \code{\link[graphics]{plot}}
+#'     function to work on fitted TS model objects (class \code{TS}) 
+#'     returned from \code{\link{TS}}. \cr \cr
+#'   \code{TS_diagnostics_plot} makes the 4-panel figures (showing trace 
+#'     plots, posterior ECDF, posterior density, and iteration 
+#'     autocorrelation) for each of the parameters (change point locations 
+#'     and regressors) fitted within a compositional time series model (fit
+#'     by \code{\link{TS}}). \cr \cr
+#'   \code{eta_diagnostics_plots} creates the diagnostic plots
+#'     for the regressors (etas) of a time series model. \cr \cr
+#'   \code{rho_diagnostics_plots} creates the diagnostic plots
+#'     for the change point locations (rho) of a time series model. \cr \cr
+#'   \code{trace_plot} produces a trace plot for the parameter of interest 
+#'     (rho or eta) as part of \code{\link{TS_diagnostics_plot}}. A 
+#'     horizontal line is added to show the median of the posterior. \cr \cr
+#'   \code{ecdf_plot} makes a vanilla ECDF (empirical cumulative distribution
+#'     function) plot using \code{\link[stats]{ecdf}} for the parameter of 
+#'     interest (rho or eta) as part of \code{\link{TS_diagnostics_plot}}.
+#'     A horizontal line is added to show the median of the posterior. \cr \cr
+#'   \code{autocorr_plot} produces a vanilla ACF plot using 
+#'     \code{\link[stats]{acf}} for the parameter of interest (rho or eta)
+#'     as part of \code{\link{TS_diagnostics_plot}}.\cr \cr
+#'   \code{posterior_plot} makes a vanilla histogram plot using 
+#'     \code{\link[graphics]{hist}} for the parameter of interest (rho or eta)
+#'     as part of \code{\link{TS_diagnostics_plot}}. A vertical line is added 
+#'     to show the median of the posterior. \cr \cr
+#'   \code{TS_summary_plot} produces a two-panel figure of [1] the change 
+#'     point distributions as histograms over time and [2] the time series of 
+#'     the fitted topic proportions over time, based on a selected set of 
+#'     change point locations. \cr \cr
+#'   \code{pred_gamma_TS_plot} produces a time series of the 
+#'     fitted topic proportions over time, based on a selected set of change 
+#'     point locations. \cr \cr
+#'   \code{rho_hist}: make a plot of the change point distributions as 
+#'     histograms over time. \cr \cr
+#'   \code{rho_lines} adds vertical lines to the plot of the time series of 
+#'     fitted proportions associated with the change points of interest.
+#'     \cr \cr
+#'   \code{set_gamma_colors} creates the set of colors to be used in
+#'     the time series of the fitted gamma (topic proportion) values. \cr \cr
+#'   \code{set_rho_hist_colors} creates the set of colors to be used in
+#'     the change point histogram. \cr \cr
+#'   \code{set_TS_summary_plot_cols} acts as a default \code{list} 
+#'     generator function that produces the options for the colors 
+#'     controlling the panels of the TS summary plots, so needed
+#'     because the panels should be in different color schemes. See 
+#'     \code{\link{set_gamma_colors}} and \code{\link{set_rho_hist_colors}} 
+#'     for specific details on usage.
 #' 
 #' @param x A \code{TS_fit} object of a multinomial time series model fit by
 #'   \code{\link{TS}}.
 #' 
 #' @param ... Additional arguments to be passed to subfunctions. Not currently
 #'   used, just retained for alignment with \code{\link[graphics]{plot}}.
+#'
+#' @param spec_rhos \code{numeric} vector indicating the locations along the
+#'   x axis where the specific change points being used are located.
 #'
 #' @param plot_type "diagnostic" or "summary".
 #'
@@ -27,38 +108,68 @@
 #'   summary plot. Currently only defined for \code{"median"} and 
 #'   \code{"mode"}.
 #'
-#' @param cols \code{list} of elements used to define the colors for the two
-#'   panels of the summary plot, as generated simply using 
-#'   \code{\link{set_TS_summary_plot_cols}}. \code{cols} has two elements 
-#'   \code{rho} and \code{gamma}, each corresponding to the related panel, 
-#'   and each containing default values for entries named \code{cols},
-#'   \code{option}, and \code{alpha}. See \code{\link{set_gamma_colors}} and 
-#'   \code{\link{set_rho_hist_colors}} for details on usage.
+#' @param cols,rho_cols_gamma_cols 
+#'   In \code{plot.TS}, \code{cols} is a \code{list} of elements used to
+#'     define the colors for the two panels of the summary plot, as generated 
+#'     simply using \code{\link{set_TS_summary_plot_cols}}. 
+#'     \code{cols} has two elements \code{rho} and \code{gamma}, each
+#'     corresponding to the related panel, and each containing default values
+#'     for entries named \code{cols}, \code{option}, and \code{alpha}. \cr
+#'   For \code{rho_cols} and \code{gamma_cols} always and for \code{cols} in 
+#'     \code{set_rho_hist_colors}, \code{set_gamma_colors}, 
+#'     \code{rho_hist}, and \code{pred_gamma_TS_plot}, colors to be used in 
+#'     the specific plot. Any valid color values (\emph{e.g.}, see
+#'     \code{\link[grDevices]{colors}}, \code{\link[grDevices]{rgb}}) can be 
+#'     input as with a standard plot. The default (\code{NULL}) triggers use 
+#'     of \code{\link[viridis]{viridis}} color options (see 
+#'     \code{rho_option}).
 #'
 #' @param LDATS \code{logical} indicating if the plot is part of a larger 
 #'   LDATS plot output.
 #'
-#' @param interactive \code{logical} input, should be code{TRUE} unless
+#' @param interactive \code{logical} input, should be \code{TRUE} unless
 #'   testing.
+#'
+#' @param ylab \code{character} value used to label the y axis.
+#'
+#' @param draw \code{vector} of parameter values drawn from the posterior 
+#'   distribution, indexed to the iteration by the order of the vector.
+#'
+#' @param xlab \code{character} value used to label the x axis.
 #' 
-#' @return \code{NULL}.
+#' @param option,rho_option,gamma_option A \code{character} string indicating
+#'   the color option from \code{\link[viridis]{viridis}} to use if
+#'   "cols == NULL". Four options are available: "magma" (or "A"), 
+#'   "inferno" (or "B"), "plasma" (or "C"), "viridis" (or "D", the default 
+#'   option) and "cividis" (or "E").
+#'
+#' @param alpha,rho_alpha,gamma_alpha Numeric value [0,1] that indicates the 
+#'   transparency of the colors used. Supported only on some devices, see 
+#'   \code{\link[grDevices]{rgb}}.
 #' 
-#' @examples 
-#' \donttest{
-#'   data(rodents)
-#'   document_term_table <- rodents$document_term_table
-#'   document_covariate_table <- rodents$document_covariate_table
-#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
-#'   data <- document_covariate_table
-#'   data$gamma <- LDA_models@gamma
-#'   weights <- document_weights(document_term_table)
-#'   TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, "newmoon", weights)
-#'   plot(TSmod)
-#' }
+#' @return 
+#'   \code{plot.TS},\code{TS_diagnostics_plot},\code{eta_diagnostics_plots},
+#'     \code{rho_diagnostics_plots},\code{trace_plot},\code{posterior_plot},
+#'     \code{autocorr_plot},\code{ecdf_plot},\code{TS_summary_plot},
+#'     \code{pred_gamma_TS_plot},\code{rho_hist},\code{rho_lines}:
+#'     \code{NULL}. \cr \cr
+#'   \code{set_rho_hist_cols},\code{set_gamma_colors}: \code{vector} of 
+#'     \code{character} hex codes indicating colors to use.
+#'   \code{set_TS_summary_plot_cols}: \code{list} of elements used to define
+#'     the colors for the two panels. Contains two elements \code{rho} and 
+#'     \code{gamma}, each corresponding to the related panel, and each 
+#'     containing default values for entries named \code{cols}, 
+#'     \code{option}, and \code{alpha}. 
+#'
+#' @name plot.TS 
+#'
+
+
+#' @rdname plot.TS
 #'
 #' @export 
 #'
-plot.TS_fit <- function(x, ..., plot_type = "summary", interactive = FALSE,
+plot.TS <- function(x, ..., plot_type = "summary", interactive = FALSE,
                         cols = set_TS_summary_plot_cols(), bin_width = 1, 
                         xname = NULL, border = NA, selection = "median", 
                         LDATS = FALSE){
@@ -69,37 +180,7 @@ plot.TS_fit <- function(x, ..., plot_type = "summary", interactive = FALSE,
   }
 }
 
-#' @title Plot the diagnostics of the parameters fit in a TS model
-#'
-#' @description Plot 4-panel figures (showing trace plots, posterior ECDF, 
-#'   posterior density, and iteration autocorrelation) for each of the 
-#'   parameters (change point locations and regressors) fitted within a 
-#'   multinomial time series model (fit by \code{\link{TS}}). \cr \cr
-#'   \code{eta_diagnostics_plots} creates the diagnostic plots
-#'   for the regressors (etas) of a time series model. \cr \cr
-#'   \code{rho_diagnostics_plots} creates the diagnostic plots
-#'   for the change point locations (rho) of a time series model.
-#'
-#' @param interactive \code{logical} input, should be code{TRUE} unless
-#'   testing.
-#'
-#' @param x Object of class \code{TS_fit}, generated by \code{\link{TS}} to
-#'   have its diagnostics plotted.
-#' 
-#' @return \code{NULL}.
-#' 
-#' @examples 
-#' \donttest{
-#'   data(rodents)
-#'   document_term_table <- rodents$document_term_table
-#'   document_covariate_table <- rodents$document_covariate_table
-#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
-#'   data <- document_covariate_table
-#'   data$gamma <- LDA_models@gamma
-#'   weights <- document_weights(document_term_table)
-#'   TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, "newmoon", weights)
-#'   TS_diagnostics_plot(TSmod)
-#' }
+#' @rdname plot.TS
 #'
 #' @export 
 #'
@@ -108,7 +189,7 @@ TS_diagnostics_plot <- function(x, interactive = TRUE){
   eta_diagnostics_plots(x, interactive)
 }
 
-#' @rdname TS_diagnostics_plot
+#' @rdname plot.TS
 #'
 #' @export 
 #'
@@ -138,7 +219,7 @@ eta_diagnostics_plots <- function(x, interactive){
   }  
 }
 
-#' @rdname TS_diagnostics_plot
+#' @rdname plot.TS
 #'
 #' @export 
 #'
@@ -146,7 +227,7 @@ rho_diagnostics_plots <- function(x, interactive){
   on.exit(devAskNewPage(FALSE))
   oldpar <- par(no.readonly = TRUE)
   on.exit(par(oldpar))
-  rhos <- x$rhos
+  rhos <- x$focal_rhos
   if (is.null(rhos)){
     return()
   }
@@ -162,155 +243,59 @@ rho_diagnostics_plots <- function(x, interactive){
   }
 }
 
-#' @title Produce the trace plot panel for the TS diagnostic plot of a 
-#'   parameter
-#' 
-#' @description Produce a trace plot for the parameter of interest (rho or 
-#'   eta) as part of \code{\link{TS_diagnostics_plot}}. A horizontal line 
-#'   is added to show the median of the posterior.
+
+
+#' @rdname plot.TS
 #'
-#' @param x Vector of parameter values drawn from the posterior distribution,
-#'   indexed to the iteration by the order of the vector.
+#' @export 
 #'
-#' @param ylab \code{character} value used to label the y axis.
-#' 
-#' @return \code{NULL}.
-#'
-#' @examples
-#'  trace_plot(rnorm(100, 0, 1))
-#'
-#' @export
-#'
-trace_plot <- function(x, ylab = "parameter value"){
-  plot(x, type = "l", lwd = 1, col = 0,
+trace_plot <- function(draw, ylab = "parameter value"){
+  plot(draw, type = "l", lwd = 1, col = 0,
        xlab = "Iteration", ylab = ylab, las = 1, bty = "L")
-  ext <- 0.01 * length(x)
-  points(c(-ext, length(x) + ext), rep(median(x), 2), type = "l", lwd = 2, 
-        lty = 2)
-  points(seq_along(x), x, type = "l", col = rgb(0.4, 0.4, 0.4, alpha = 0.9))
+  ext <- 0.01 * length(draw)
+  points(c(-ext, length(draw) + ext), rep(median(draw), 2), 
+        type = "l", lwd = 2, lty = 2)
+  points(seq_along(draw), draw, type = "l", col = rgb(0.4, 0.4, 0.4, 
+         alpha = 0.9))
 }
 
-#' @title Produce the posterior distribution ECDF panel for the TS 
-#'   diagnostic plot of a parameter
-#' 
-#' @description Produce a vanilla ECDF (empirical cumulative distribution
-#'   function) plot using \code{ecdf} for the parameter of interest (rho or 
-#'   eta) as part of \code{\link{TS_diagnostics_plot}}. A horizontal line 
-#'   is added to show the median of the posterior.
+
+#' @rdname plot.TS
 #'
-#' @param x Vector of parameter values drawn from the posterior distribution,
-#'   indexed to the iteration by the order of the vector.
+#' @export 
 #'
-#' @param xlab \code{character} value used to label the x axis.
-#' 
-#' @return \code{NULL}.
-#'
-#' @examples
-#'  ecdf_plot(rnorm(100, 0, 1))
-#'
-#' @export
-#'
-ecdf_plot <- function(x, xlab = "parameter value"){
-  ECDF <- ecdf(x)
+ecdf_plot <- function(draw, xlab = "parameter value"){
+  ECDF <- ecdf(draw)
   plot(ECDF, main = "", xlab = xlab, ylab = "%", las = 1, bty = "L")
   abline(a = 0.5, b = 0, lwd = 2, lty = 2)
 }
 
-#' @title Produce the posterior distribution histogram panel for the TS 
-#'   diagnostic plot of a parameter
-#' 
-#' @description Produce a vanilla histogram plot using \code{hist} for the 
-#'   parameter of interest (rho or eta) as part of 
-#'   \code{\link{TS_diagnostics_plot}}. A vertical line is added to show the 
-#'   median of the posterior.
+
+
+#' @rdname plot.TS
 #'
-#' @param x Vector of parameter values drawn from the posterior distribution,
-#'   indexed to the iteration by the order of the vector.
+#' @export 
 #'
-#' @param xlab \code{character} value used to label the x axis.
-#' 
-#' @return \code{NULL}.
-#'
-#' @examples
-#'  posterior_plot(rnorm(100, 0, 1))
-#'
-#' @export
-#'
-posterior_plot <- function(x, xlab = "parameter value"){
-  hist(x, las = 1, main = "", xlab = xlab)
-  points(rep(median(x), 2), c(0, 1e5), type = "l", lwd = 2, lty = 2)
+posterior_plot <- function(draw, xlab = "parameter value"){
+  hist(draw, las = 1, main = "", xlab = xlab)
+  points(rep(median(draw), 2), c(0, 1e5), type = "l", lwd = 2, lty = 2)
 }
 
-#' @title Produce the autocorrelation panel for the TS diagnostic plot of
-#'   a parameter
-#' 
-#' @description Produce a vanilla ACF plot using \code{\link[stats]{acf}} for
-#'   the parameter of interest (rho or eta) as part of 
-#'   \code{\link{TS_diagnostics_plot}}.
+
+
+#' @rdname plot.TS
 #'
-#' @param x Vector of parameter values drawn from the posterior distribution,
-#'   indexed to the iteration by the order of the vector.
-#' 
-#' @return \code{NULL}.
+#' @export 
 #'
-#' @examples
-#'  autocorr_plot(rnorm(100, 0, 1))
-#'
-#' @export
-#'
-autocorr_plot <- function(x){
-  acf(x, las = 1, ylab = "Autocorrelation")
+autocorr_plot <- function(draw){
+  acf(draw, las = 1, ylab = "Autocorrelation")
 }
 
-#' @title Create the list of colors for the TS summary plot
+
+
+#' @rdname plot.TS
 #'
-#' @description A default list generator function that produces the options
-#'   for the colors controlling the panels of the TS summary plots, so needed
-#'   because the panels should be in different color schemes. See 
-#'   \code{\link{set_gamma_colors}} and \code{\link{set_rho_hist_colors}} for
-#'   specific details on usage.
-#'
-#' @param rho_cols Colors to be used to plot the histograms of change points.
-#'   Any valid color values (\emph{e.g.}, see \code{\link[grDevices]{colors}},
-#'   \code{\link[grDevices]{rgb}}) can be input as with a standard plot. 
-#'   The default (\code{rho_cols = NULL}) triggers use of 
-#'   \code{\link[viridis]{viridis}} color options (see \code{rho_option}).
-#'
-#' @param rho_option A \code{character} string indicating the color option
-#'   from \code{\link[viridis]{viridis}} to use if `rho_cols == NULL`. Four 
-#'   options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
-#'   (or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").
-#'
-#' @param rho_alpha Numeric value [0,1] that indicates the transparency of the 
-#'   colors used. Supported only on some devices, see 
-#'   \code{\link[grDevices]{rgb}}.
-#'
-#' @param gamma_cols Colors to be used to plot the LDA topic proportions,
-#'   time series of observed topic proportions, and time series of fitted 
-#'   topic proportions. Any valid color values (\emph{e.g.}, see 
-#'   \code{\link[grDevices]{colors}}, \code{\link[grDevices]{rgb}}) can be 
-#'   input as with a standard plot. The default (\code{gamma_cols = NULL})
-#'   triggers use of \code{\link[viridis]{viridis}} color options (see 
-#'   \code{gamma_option}).
-#'
-#' @param gamma_option A \code{character} string indicating the color option
-#'   from \code{\link[viridis]{viridis}} to use if gamma_cols == NULL`. Four 
-#'   options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
-#'   (or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").
-#'
-#' @param gamma_alpha Numeric value [0,1] that indicates the transparency of 
-#'   the colors used. Supported only on some devices, see 
-#'   \code{\link[grDevices]{rgb}}.
-#'
-#' @return \code{list} of elements used to define the colors for the two
-#'   panels. Contains two elements \code{rho} and \code{gamma}, each 
-#'   corresponding to the related panel, and each containing default values 
-#'   for entries named \code{cols}, \code{option}, and \code{alpha}. 
-#'
-#' @examples
-#'   set_TS_summary_plot_cols()
-#'
-#' @export
+#' @export 
 #'
 set_TS_summary_plot_cols <- function(rho_cols = NULL, rho_option = "D", 
                                      rho_alpha = 0.4, gamma_cols = NULL, 
@@ -322,80 +307,30 @@ set_TS_summary_plot_cols <- function(rho_cols = NULL, rho_option = "D",
   )
 }
 
-#' @title Create the summary plot for a TS fit to an LDA model
+
+
+#' @rdname plot.TS
 #'
-#' @description Produces a two-panel figure of [1] the change point 
-#'   distributions as histograms over time and [2] the time series of the 
-#'   fitted topic proportions over time, based on a selected set of 
-#'   change point locations. \cr \cr
-#'   \code{pred_gamma_TS_plot} produces a time series of the 
-#'   fitted topic proportions over time, based on a selected set of change 
-#'   point locations. \cr \cr
-#'   \code{rho_hist}: make a plot of the change point 
-#'   distributions as histograms over time.
-#'
-#' @param x Object of class \code{TS_fit} produced by \code{\link{TS}}.
-#'
-#' @param cols \code{list} of elements used to define the colors for the two
-#'   panels, as generated simply using \code{\link{set_TS_summary_plot_cols}}. 
-#'   Has two elements \code{rho} and \code{gamma}, each corresponding to the
-#'   related panel, and each containing default values for entries named
-#'   \code{cols}, \code{option}, and \code{alpha}. See
-#'   \code{\link{set_gamma_colors}} and \code{\link{set_rho_hist_colors}} for
-#'   details on usage.
-#'
-#' @param bin_width Width of the bins used in the histograms, in units of the
-#'   x-axis (the time variable used to fit the model).
-#'
-#' @param xname Label for the x-axis in the summary time series plot. Defaults
-#'   to \code{NULL}, which results in usage of the \code{timename} element
-#'   of the control list (held in\code{control$TS_control$timename}). To have
-#'   no label printed, set \code{xname = ""}.
-#'
-#' @param border Border for the histogram, default is \code{NA}.
-#'
-#' @param selection Indicator of the change points to use. Currently only
-#'   defined for "median" and "mode".
-#'
-#' @param together \code{logical} indicating if the subplots are part of a 
-#'   larger LDA plot output. 
-#'
-#' @param LDATS \code{logical} indicating if the plot is part of a larger 
-#'   LDATS plot output.
-#' 
-#' @return \code{NULL}.
-#' 
-#' @examples 
-#' \donttest{
-#'   data(rodents)
-#'   document_term_table <- rodents$document_term_table
-#'   document_covariate_table <- rodents$document_covariate_table
-#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
-#'   data <- document_covariate_table
-#'   data$gamma <- LDA_models@gamma
-#'   weights <- document_weights(document_term_table)
-#'   TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, "newmoon", weights)
-#'   TS_summary_plot(TSmod)
-#'   pred_gamma_TS_plot(TSmod)
-#'   rho_hist(TSmod)
-#' }
-#'
-#' @export
+#' @export 
 #'
 TS_summary_plot <- function(x, cols = set_TS_summary_plot_cols(), 
                             bin_width = 1, xname = NULL, border = NA, 
                             selection = "median", LDATS = FALSE){
-  rc <- cols$rho
-  rho_cols <- set_rho_hist_colors(x$rhos, rc$cols, rc$option, rc$alpha)
-  rho_hist(x, rho_cols, bin_width, xname, border, TRUE, LDATS)
-  gc <- cols$gamma
-  gamma_cols <- set_gamma_colors(x, gc$cols, gc$option, gc$alpha)
-  pred_gamma_TS_plot(x, selection, gamma_cols, xname, TRUE, LDATS)
+  rho_cols <- set_rho_hist_colors(x = x, cols = cols$rho$cols, 
+                                  option = cols$rho$option, 
+                                  alpha = cols$rho$alpha)
+  rho_hist(x = x, cols = rho_cols, bin_width = bin_width, xname = xname, 
+           border = border, together = TRUE, LDATS = LDATS)
+  gamma_cols <- set_gamma_colors(x = x, cols = cols$gamma$cols, 
+                                 option = cols$gamma$option, 
+                                 alpha = cols$gamma$alpha)
+  pred_gamma_TS_plot(x = x, selection = selection, cols = gamma_cols, 
+                     xname = xname, together = TRUE, LDATS = LDATS)
 }
 
-#' @rdname TS_summary_plot
+#' @rdname plot.TS
 #'
-#' @export
+#' @export 
 #'
 pred_gamma_TS_plot <- function(x, selection = "median", 
                                cols = set_gamma_colors(x),
@@ -409,7 +344,7 @@ pred_gamma_TS_plot <- function(x, selection = "median",
   } else{
     par(fig = c(0, 1, 0, 1))
   }    
-  rhos <- x$rhos
+  rhos <- x$focal_rhos
   nrhos <- ncol(rhos)
   if (!is.null(nrhos)){
     if (selection == "median"){
@@ -423,11 +358,19 @@ pred_gamma_TS_plot <- function(x, selection = "median",
     spec_rhos <- NULL
   }
   x$control$timename <- NULL # to remove from v0.1.0 model fits
-  seg_mods <- multinom_TS(x$data, x$formula, spec_rhos,  
+
+#
+# NEEDS TO BE GENERALIZED
+#
+  seg_mods <- multinom_TS(x$data$train$ts_data, x$formula, spec_rhos,  
                           x$timename, x$weights, x$control)
+#
+#
+#
+
   nsegs <- length(seg_mods[[1]])
-  t1 <- min(x$data[, x$timename])
-  t2 <- max(x$data[, x$timename])
+  t1 <- min(x$data$train$ts_data[, x$timename])
+  t2 <- max(x$data$train$ts_data[, x$timename])
 
   if (is.null(xname)){
     xname <- x$timename
@@ -440,11 +383,11 @@ pred_gamma_TS_plot <- function(x, selection = "median",
   axis(1)
   mtext(side = 2, line = 3.5, cex = 1.25, "Proportion")
   mtext(side = 1, line = 2.5, cex = 1.25, xname)
-  ntopics <- ncol(as.matrix(x$data[[x$control$response]]))
+  ntopics <- ncol(as.matrix(x$data$train$ts_data$gamma))
   seg1 <- c(0, spec_rhos[-length(rhos)])
   seg2 <- c(spec_rhos, t2)
-  time_obs <- rep(NA, nrow(x$data))
-  pred_vals <- matrix(NA, nrow(x$data), ntopics)
+  time_obs <- rep(NA, nrow(x$data$train$ts_data))
+  pred_vals <- matrix(NA, nrow(x$data$train$ts_data), ntopics)
   sp1 <- 1
   for (i in 1:nsegs){
     mod_i <- seg_mods[[1]][[i]]
@@ -461,29 +404,9 @@ pred_gamma_TS_plot <- function(x, selection = "median",
   }
 }
 
-#' @title Add change point location lines to the time series plot
+#' @rdname plot.TS
 #'
-#' @description Adds vertical lines to the plot of the time series of fitted
-#'   proportions associated with the change points of interest.
-#'
-#' @param spec_rhos \code{numeric} vector indicating the locations along the
-#'   x axis where the specific change points being used are located.
-#' 
-#' @examples 
-#' \donttest{
-#'   data(rodents)
-#'   document_term_table <- rodents$document_term_table
-#'   document_covariate_table <- rodents$document_covariate_table
-#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
-#'   data <- document_covariate_table
-#'   data$gamma <- LDA_models@gamma
-#'   weights <- document_weights(document_term_table)
-#'   TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, "newmoon", weights)
-#'   pred_gamma_TS_plot(TSmod)
-#'   rho_lines(200)
-#' }
-#'
-#' @export
+#' @export 
 #'
 rho_lines <- function(spec_rhos) {
   if(is.null(spec_rhos)) {
@@ -495,9 +418,10 @@ rho_lines <- function(spec_rhos) {
   }
 }
 
-#' @rdname TS_summary_plot
+
+#' @rdname plot.TS
 #'
-#' @export
+#' @export 
 #'
 rho_hist <- function(x, cols = set_rho_hist_colors(x$rhos), bin_width = 1, 
                      xname = NULL, border = NA, together = FALSE, 
@@ -511,10 +435,10 @@ rho_hist <- function(x, cols = set_rho_hist_colors(x$rhos), bin_width = 1,
   } else{
     par(fig = c(0, 1, 0, 1), mar = c(4, 5, 1, 1))
   } 
-  rhos <- x$rhos
+  rhos <- x$focal_rhos
   nrhos <- ncol(rhos)
   niter <- nrow(rhos)
-  timeobs <- x$data[, x$timename]
+  timeobs <- x$data$train$ts_data[, x$timename]
   timerange <- range(timeobs)
   timevals <- seq(timerange[1], timerange[2], 1)
   ntimes <- length(timevals) 
@@ -557,44 +481,9 @@ rho_hist <- function(x, cols = set_rho_hist_colors(x$rhos), bin_width = 1,
   }
 }
 
-#' @title Prepare the colors to be used in the change point histogram
-#'
-#' @description Based on the inputs, create the set of colors to be used in
-#'   the change point histogram.
-#' 
-#' @param x \code{matrix} of change point locations (element \code{rhos}) 
-#'   from an object of class \code{TS_fit}, fit by \code{\link{TS}}.
-#'
-#' @param cols Colors to be used to plot the histograms of change points.
-#'   Any valid color values (\emph{e.g.}, see \code{\link[grDevices]{colors}},
-#'   \code{\link[grDevices]{rgb}}) can be input as with a standard plot. 
-#'   The default (\code{rho_cols = NULL}) triggers use of 
-#'   \code{\link[viridis]{viridis}} color options (see \code{rho_option}).
-#' 
-#' @param option A \code{character} string indicating the color option
-#'   from \code{\link[viridis]{viridis}} to use if "cols == NULL". Four 
-#'   options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
-#'   (or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").
-#'
-#' @param alpha Numeric value [0,1] that indicates the transparency of the 
-#'   colors used. Supported only on some devices, see 
-#'   \code{\link[grDevices]{rgb}}.
-#'
-#' @return Vector of \code{character} hex codes indicating colors to use.
-#'
-#' 
-#' @examples 
-#' \donttest{
-#'   data(rodents)
-#'   document_term_table <- rodents$document_term_table
-#'   document_covariate_table <- rodents$document_covariate_table
-#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
-#'   data <- document_covariate_table
-#'   data$gamma <- LDA_models@gamma
-#'   weights <- document_weights(document_term_table)
-#'   TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, "newmoon", weights)
-#'   set_rho_hist_colors(TSmod$rhos)
-#' }
+
+
+#' @rdname plot.TS
 #'
 #' @export 
 #'
@@ -604,7 +493,7 @@ set_rho_hist_colors <- function(x = NULL, cols = NULL, option = "D",
     return(NULL)
   }
 
-  nrhos <- ncol(x)
+  nrhos <- ncol(x$focal_rhos)
   if (length(cols) == 0){
     cols <- viridis(nrhos, option = option, alpha = alpha, end = 0.9)
   }
@@ -630,39 +519,10 @@ set_rho_hist_colors <- function(x = NULL, cols = NULL, option = "D",
   cols
 }
 
-#' @title Prepare the colors to be used in the gamma time series
-#'
-#' @description Based on the inputs, create the set of colors to be used in
-#'   the time series of the fitted gamma (topic proportion) values.
-#' 
-#' @param x Object of class \code{TS_fit}, fit by \code{\link{TS}}.
-#'
-#' @param cols Colors to be used to plot the time series of fitted topic 
-#'   proportions.
-#' 
-#' @param option A \code{character} string indicating the color option
-#'   from \code{\link[viridis]{viridis}} to use if "cols == NULL". Four 
-#'   options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
-#'   (or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").
-#'
-#' @param alpha Numeric value [0,1] that indicates the transparency of the 
-#'   colors used. Supported only on some devices, see 
-#'   \code{\link[grDevices]{rgb}}.
-#'
-#' @return Vector of \code{character} hex codes indicating colors to use.
-#' 
-#' @examples 
-#' \donttest{
-#'   data(rodents)
-#'   document_term_table <- rodents$document_term_table
-#'   document_covariate_table <- rodents$document_covariate_table
-#'   LDA_models <- LDA_set(document_term_table, topics = 2)[[1]]
-#'   data <- document_covariate_table
-#'   data$gamma <- LDA_models@gamma
-#'   weights <- document_weights(document_term_table)
-#'   TSmod <- TS(data, gamma ~ 1, nchangepoints = 1, "newmoon", weights)
-#'   set_gamma_colors(TSmod)
-#' }
+
+
+
+#' @rdname plot.TS
 #'
 #' @export 
 #'
@@ -671,7 +531,7 @@ set_gamma_colors <- function(x, cols = NULL, option = "D", alpha = 1){
     return(NULL)
   }
 
-  ntopics <- ncol(as.matrix(x$data[x$control$response]))
+  ntopics <- ncol(as.matrix(x$data$train$ts_data$gamma))
   if (length(cols) == 0){
     cols <- viridis(ntopics, option = option, alpha = alpha, end = 0.9)
   }

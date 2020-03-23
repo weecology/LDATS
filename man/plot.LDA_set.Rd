@@ -9,7 +9,11 @@
 \arguments{
 \item{x}{An \code{LDA_set} object of LDA topic models.}
 
-\item{...}{Additional arguments to be passed to subfunctions.}
+\item{...}{Not used, retained for alignment with base function.}
+
+\item{selected}{\code{logical} indicator of if only the selected LDAs
+(the first element in \code{x}) should be plotted or if all the LDAs
+(the second element in \code{x}) should be plotted.}
 }
 \value{
 \code{NULL}.

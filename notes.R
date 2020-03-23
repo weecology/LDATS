@@ -1,11 +1,16 @@
 plotting functions
-  -TS and LDA_TS
+  -LDA_TS
+  -generalize pred_gamma_TS_plot
 simulate
   -just generalize TS 
 predict
 tidying check functions
 tempering
 examples
+tests
+
+
+where do the ts_fit functions go? ldats_classic?
 
 devtools::load_all()
    data(rodents)

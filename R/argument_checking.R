@@ -326,7 +326,7 @@ check_document_covariate_table <- function(LDAs){
     stop("document_covariate_table is not conformable to a data frame")
   }
   if (!is.null(LDAs)){
-    if (nrow(data.frame(dct)) != nrow(LDAs[[1]][[1]]$document_topic_matrix)){
+    if (nrow(data.frame(dct)) != nrow(LDAs[[1]][[1]]$document_topic_table)){
       stop("number of documents in covariate table is not equal to number of 
         documents observed")
     }
