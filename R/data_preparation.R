@@ -45,7 +45,6 @@
 #' @export
 #'
 conform_data <- function(data, control = list()){
-
   depth <- list_depth(data)
   if(depth == 0){  
     if(inherits(data, "data.frame") | inherits(data, "matrix")){
@@ -128,10 +127,11 @@ conform_data <- function(data, control = list()){
         test_train <- do.call(what = rule, args = args)
         in_train <- test_train == "train"
         in_test <- test_train == "test"
-        train <- list(document_term_table = dtt[in_train, ],
-                      document_covariate_table = dct[in_train, ])
-        test <- list(document_term_table = dtt[in_test, ],
-                     document_covariate_table = dct[in_test, ])
+        train <- list(document_term_table = dtt[in_train, , drop = FALSE],
+                      document_covariate_table = 
+                        dct[in_train, , drop = FALSE])
+        test <- list(document_term_table = dtt[in_test, , drop = FALSE],
+                     document_covariate_table = dct[in_test, , drop = FALSE])
         data[[i]] <- list(test = test, train = train)
       }
       names(data) <- 1:nsubsets_out
