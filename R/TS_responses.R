@@ -110,6 +110,7 @@ simplex_TS <- function(data, formula, changepoints = NULL,
   control <- do.call("simplex_TS_control", control)
   if (!verify_changepoint_locations(data, changepoints, timename)){
     out <- list("chunk models" = NA, "logLik" = -Inf, "chunks" = NA)
+    class(out) <- c("TS_fit", "list")
     return(out)
   }
 
