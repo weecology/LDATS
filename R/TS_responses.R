@@ -136,7 +136,7 @@ simplex_TS_chunk <- function(data, formula, chunk, timename = "time",
   chunk_start <- as.numeric(chunk["start"])
   chunk_end <- as.numeric(chunk["end"])
   in_chunk <- time_obs >= chunk_start & time_obs <= chunk_end
-  simplex_data <- data[ , !grepl("gamma", colnames(data))]
+  simplex_data <- data[ , !grepl("gamma", colnames(data)), drop = FALSE]
   simplex_data$gamma <- do.call(control$transformation, 
                                 list(x = acomp(data$gamma)))
 
@@ -322,7 +322,9 @@ package_chunk_fits <- function(chunks, fits){
   nchunks <- nrow(chunks)
   chunk_times <- paste0("(", chunks[ , "start"], " - ", chunks[ , "end"], ")")
   names(fits) <- paste("chunk", 1:nchunks, chunk_times, "model")
-  ll <- sum(vapply(fits, logLik, 0))
+  ll <- (vapply(fits, logLik, 0))
+  ll[ll == Inf] <- -Inf
+  ll <- sum(ll)
   out <- list("chunk models" = fits, "logLik" = ll, "chunks" = chunks)
   class(out) <- c("TS_fit", "list")
   out
