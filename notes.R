@@ -1,13 +1,5 @@
-VCV
- what about fitting the lm models using nnet.default but with softmax = F
-	oh whoa you get a block diag hessian...because uncor responses??
-		yeah, looks like this is legit and ok
-		when you run stuff without weights, you get nearly identical vcovs
-		but the off diag 0s aren't truly 0
-      yeah this is all v interesting, even in lm things align but with more
-        actual noise among the response variables (still block diag tho)
-	think that's likely the place to go for now
- will using the Hessian in the regular situation avoid the mirror issue?
+to-do
+
 predict
 tidying check functions and general usage
 examples
@@ -18,31 +10,19 @@ vignettes
 
 devtools::load_all()
    data(rodents)
-LDAs <- LDA(data = rodents, topics = 3, replicates = c(1))
-
-Y <- (LDAs[[1]][[1]]$document_topic_table)
-Y2 <- ilr(Y)
-X <- rodents$document_covariate_table[,"newmoon",drop=F]
-weights <- document_weights(rodents$document_term_table)
-
-mod_wlm_ilr <- lm(Y2~X$newmoon, weights = weights)
-
-round(vcov(mod_lm_ilr), 6)
-round(vcov(summary(mod_wlm_ilr)[[1]]), 6)
-round(vcov(summary(mod_wlm_ilr)[[2]]), 6)
+LDAs <- LDA(data = rodents, topics = 2:3, replicates = c(1,4))
 
 
-
-TSs <- TS(LDAs = LDAs, formulas = ~ newmoon, nchangepoints = 0, 
+TS(LDAs = LDAs, formulas = ~ newmoon, nchangepoints = 1, 
           timename = "newmoon", weights = TRUE,
           control = list(response = simplex_TS, 
                          method_args = 
                          list(control = ldats_classic_control(nit = 100)),
                                 response_args = 
                            list(control = 
-                            simplex_TS_control(transformation = "ilr"))))
+                            simplex_TS_control(transformation = "clr"))))
 
-
+TSs2
 
 
 
@@ -99,7 +79,7 @@ TSs <- TS(LDAs = LDAs, formulas = ~ newmoon, nchangepoints = 0:1,
                          list(control = ldats_classic_control(nit = 100)),
                                 response_args = 
                            list(control = 
-                            simplex_TS_control(transformation = "alr"))))
+                            simplex_TS_control(transformation = "ilr"))))
 
 
 LDATSs <- LDA_TS(data = rodents, topics = 2:3, replicates = c(1, 4),

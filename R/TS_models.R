@@ -236,48 +236,6 @@ est_changepoints <- function(TS){
 }
 
 
-
-
-# working in here to make this simple, given the lm issue
-
-draw_eta <- function(TS, mod){
-  mod <- mod[[1]][[1]]
-  mod_class <- class(mod)
-  coefs <- coef(mod)
-  weighted <- !all(mod$weights == 1)
-  if(all(c("multinom", "nnet") %in% mod_class)){
-    coefs <- t(coefs)
-    vcv <- mirror_vcov(mod)
-  } else if(all(c("mlm", "lm") %in% mod_class) & weighted){
-    nresps <- length(summary(mod))
-    resp_vcv_dim <- dim(vcov(summary(mod)[[1]]))
-    full_vcv <- matrix(0, resp_vcv_dim[1] * nresps, resp_vcv_dim[1] * nresps)
-    for(i in 1:nresps){
-      in_row <- (1 + (i - 1) * resp_vcv_dim[1]):(i * resp_vcv_dim[1])
-      in_col <- in_row
-      full_vcv[in_row, in_col] <- vcov(summary(mod)[[i]])
-    }
-    vcv <- full_vcv
-    coef_names <- rep(row.names(coef(summary(mod)[[1]])), nresps)
-    resp_names <- rep(1:nresps, each = NROW(coef(summary(mod)[[1]])))
-    colnames(vcv) <- paste(resp_names, coef_names, sep =":")
-  } else{
-    vcv <- mirror_vcov(mod)
-  }
-
-  mv <- as.vector(coefs)
-
-  eta <- rmvnorm(TS$control$method_args$control$nit, mv, vcv)
-  seg_names <- rep(1, ncol(vcv))
-  coef_names <- colnames(vcv)
-  colnames(eta) <- paste(seg_names, coef_names, sep = "_")
-  eta
-
-}
-
-
-
-
 #' @rdname sequential_TS
 #'
 #' @export
@@ -295,7 +253,38 @@ est_regressors <- function(rho_dist, TS){
                  control = TS$control$response_args$control)
     mod <- soft_call(what = fun, args = args, soften = TRUE)
 
-    eta <- draw_eta(TS = TS, mod = mod)
+    seg_mod <- mod[[1]][[1]]
+    mod_class <- class(seg_mod)
+    coefs <- coef(seg_mod)
+    weighted <- !all(seg_mod$weights == 1)
+    if(all(c("multinom", "nnet") %in% mod_class)){
+      coefs <- t(coefs)
+      vcv <- mirror_vcov(seg_mod)
+    } else if(all(c("mlm", "lm") %in% mod_class) & weighted){
+      nresps <- length(summary(seg_mod))
+      resp_vcv_dim <- dim(vcov(summary(seg_mod)[[1]]))
+      full_vcv <- matrix(0, resp_vcv_dim[1] * nresps, 
+                            resp_vcv_dim[1] * nresps)
+      for(i in 1:nresps){
+        in_row <- (1 + (i - 1) * resp_vcv_dim[1]):(i * resp_vcv_dim[1])
+        in_col <- in_row
+        full_vcv[in_row, in_col] <- vcov(summary(seg_mod)[[i]])
+      }
+      vcv <- full_vcv
+      coef_names <- rep(row.names(coef(summary(seg_mod)[[1]])), nresps)
+      resp_names <- rep(1:nresps, each = NROW(coef(summary(seg_mod)[[1]])))
+      colnames(vcv) <- paste(resp_names, coef_names, sep =":")
+    } else{
+      vcv <- mirror_vcov(seg_mod)
+    }
+
+    mv <- as.vector(coefs)
+
+    eta <- rmvnorm(TS$control$method_args$control$nit, mv, vcv)
+    seg_names <- rep(1, ncol(vcv))
+    coef_names <- colnames(vcv)
+    colnames(eta) <- paste(seg_names, coef_names, sep = "_")
+
     return(eta)
   }
 
@@ -312,7 +301,23 @@ est_regressors <- function(rho_dist, TS){
   nr <- length(unique_r)
   n_topic <- ncol(data$gamma)
   n_covar <- length(attr(terms(TS$formula), "term.labels"))
-  n_eta_segment <- (n_topic - 1) * (n_covar + 1)
+
+  fun <- TS$control$response
+  fun <- memoise_fun(fun, TS$control$method_args$control$memoise)
+  args <- list(data = data, formula = TS$formula, changepoints = NULL, 
+               timename = TS$timename, weights = TS$weights, 
+               control = TS$control$response_args$control)
+  mod <- soft_call(what = fun, args = args, soften = TRUE)
+  mod_class <- class(mod[[1]][[1]])
+
+
+  if(all(c("mlm", "lm") %in% mod_class) && 
+     TS$control$response_args$control$transformation == "clr"){
+    n_eta_segment <- (n_topic) * (n_covar + 1)
+  } else{
+    n_eta_segment <- (n_topic - 1) * (n_covar + 1)
+  }
+
   n_changept <- dim(rho_dist$cpts)[1]
   n_segment <- n_changept + 1
   n_eta <- n_eta_segment * n_segment 
@@ -342,12 +347,33 @@ est_regressors <- function(rho_dist, TS){
       seg_mod <- mod[[1]][[j]]
 
       coefs <- coef(seg_mod)
-      if(identical(fun, multinom_TS)){
+      mod_class <- class(seg_mod)
+      weighted <- !all(seg_mod$weights == 1)
+ 
+      if(all(c("multinom", "nnet") %in% mod_class)){
         coefs <- t(coefs)
-      }
-      mv <- as.vector(coefs)
-      vcv <- mirror_vcov(seg_mod)
+        vcv <- mirror_vcov(seg_mod)
 
+      } else if(all(c("mlm", "lm") %in% mod_class) & weighted){
+        nresps <- length(summary(seg_mod))
+        resp_vcv_dim <- dim(vcov(summary(seg_mod)[[1]]))
+        full_vcv <- matrix(0, resp_vcv_dim[1] * nresps, 
+                              resp_vcv_dim[1] * nresps)
+        for(k in 1:nresps){
+          in_row <- (1 + (k - 1) * resp_vcv_dim[1]):(k * resp_vcv_dim[1])
+          in_col <- in_row
+          full_vcv[in_row, in_col] <- vcov(summary(seg_mod)[[k]])
+        }
+        vcv <- full_vcv
+        coef_names <- rep(row.names(coef(summary(seg_mod)[[1]])), nresps)
+        resp_names <- rep(1:nresps, each = NROW(coef(summary(seg_mod)[[1]])))
+        colnames(vcv) <- paste(resp_names, coef_names, sep =":")
+      } else{
+        vcv <- mirror_vcov(seg_mod)
+      }
+
+
+      mv <- as.vector(coefs)
       drawn <- rmvnorm(ndraws, mv, vcv)    
       rows_in <- which(collapsedrho == unique_r[i])
       cols_in <- colindex1:colindex2

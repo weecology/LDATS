@@ -325,9 +325,10 @@ prepare_TS <- function(LDAs, formulas = ~ 1, nchangepoints = 0,
                      control = control,
                      topics = lda$topics, replicate = lda$replicate)
   }
+  cp_text <- ifelse(tab[, 3] == 1 , "change point", "change points")
   name_tab <- data.frame(paste("LDA", tab[ , 1]), 
                          paste(",", tab[ , 2]),
-                         paste(",", tab[ , 3], "change points"))
+                         paste(",", tab[ , 3], cp_text))
   names(TSs) <- apply(name_tab, 1, paste0, collapse = "")
   TSs
 
