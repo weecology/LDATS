@@ -8,7 +8,7 @@
 #' @importFrom mcmc temper
 #' @importFrom memoise memoise
 #' @importFrom methods is
-#' @importFrom mvtnorm rmvnorm
+#' @importFrom mvtnorm rmvnorm dmvnorm
 #' @importFrom nnet multinom
 #' @importFrom progress progress_bar
 #' @importFrom stats acf AIC as.formula coef ecdf lm logLik median rgeom rnorm

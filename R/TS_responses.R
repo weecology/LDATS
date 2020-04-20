@@ -143,7 +143,7 @@ simplex_TS_chunk <- function(data, formula, chunk, timename = "time",
 
   fit <- lm(formula, simplex_data, weights, subset = in_chunk)
   fit$timevals <- time_obs[which(in_chunk)]
-  fit 
+  fit
 }
 
 
@@ -155,6 +155,55 @@ simplex_TS_control <- function(transformation = ilr, quiet = FALSE, ...){
   list(transformation = transformation, quiet = quiet)
 }
 
+
+#' Log-likelihood of multivariate linear regression model
+#' 
+#' @method logLik mlm
+#' @param object multivariate linear regression model fit with 
+#'   \code{\link{lm}}.
+#'  of class \code{mlm}
+#' @param ... not used.
+#' @return log-lik at (unrestricted) maximum with df as attribute.
+#' @author Andi Boeck
+#' @import mvtnorm 
+#' @export
+#' @examples y <- cbind(rnorm(10), rnorm(10)); x <- 1:10;
+#' mod <- lm(y~x)
+#' logLik(mod)
+
+
+#' @title Determine the log likelihood of a multivariate linear regression
+#'   model
+#'
+#' @description Convenience function to extract and format the log likelihood
+#'   of a multivariate linear regression, such as fitted by the 
+#'   \code{\link{simplex_TS}} models.
+#'
+#' @details Adapted from the function contained in the old R-Forge Atools
+#'   package (href{https://rdrr.io/rforge/Atools/src/R/logLik.mlm.R}{see}).
+#'
+#' @param object multivariate linear regression model fit using 
+#'   \code{\link[stats]{lm}} and of class \code{mlm}
+#'
+#' @param ... Not used, simply included to maintain method compatibility.
+#'
+#' @return Log likelihood of the model \code{logLik}, also with \code{df}
+#'   (degrees of freedom) and \code{nobs} (number of observations) values.
+#'
+#' @export
+#'
+logLik.mlm <- function(object, ...){
+  resids <- residuals(object)
+  n <- nrow(resids)
+  Sigma_ML <- crossprod(resids) / n
+  ans <- sum(dmvnorm(resids, sigma = Sigma_ML, log = TRUE))
+  
+  df <- length(coef(object)) + nrow(Sigma_ML) * (nrow(Sigma_ML) + 1) / 2
+  attr(ans, "nobs") <- n
+  attr(ans, "df") <- df
+  class(ans) <- "logLik"
+  ans
+}
 
 #' @title Fit a multinomial change point Time Series model
 #'
