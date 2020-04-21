@@ -1,0 +1,147 @@
+---
+title: "Latent Dirichlet Allocation Time Series (LDATS)"
+author: "Juniper L. Simonis"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{LDATScodebase}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r, include=FALSE}
+library(LDATS)
+vers <- packageVersion("LDATS")
+today <- Sys.Date()
+```
+
+## Overview 
+
+This vignette outlines the code base for the **LDATS** package. 
+It was constructed using **LDATS** version `r vers` on `r today`.
+
+## Installation
+
+To obtain the most recent version of **LDATS**, install the most recent version from GitHub:
+
+```{r, eval=FALSE}
+install.packages("devtools")
+devtools::install_github("weecology/LDATS")
+```
+
+## Analytical Pipeline
+
+The full LDATS analysis can be executed using the `LDA_TS` function, which is the top-level of the coding pipeline's hierarchy of functions.
+Each component model's function (`LDA()` and `TS()`) can be run independently, as well as many of the deeper component functions. 
+However, most users should only need to interact with the code at the top levels of the codebase.
+
+* `LDA_TS()`
+  * `LDA_TS_control()`
+    * `LDA_control()`
+    * `TS_control()`
+  * `LDA()`
+    * `prepare_LDA()`
+      * `check_LDA()`
+      * `LDA_control()`
+      * `conform_data()`
+    * `run_LDA()`
+      * `LDA_call()` (replicated for each model)
+        * `LDA_msg()`
+        * `soft_call()` using `LDA$control$model` with `LDA$control$model_args`
+          * `topicmodels::LDA()` (*default*) 
+      * `package_LDA()`
+        * `select_LDA()`
+          * `soft_call()` using `LDA$control$selector` with LDA$control$selector_args`
+            * `min()` (*default*) 
+            * `measure_LDA()` (replicated for each model)
+              * `soft_call()` using `LDA$control$measurer` with `LDA$control$measurer_args`
+              * `AIC()` (*default*) 
+  * `TS()`
+    * `prepare_TS()`
+      * `check_TS()`
+      * `TS_control()`
+    * `run_TS()`
+      * `TS_call()` (replicated for each model)
+        * `TS_msg()`
+        * `soft_call()` using `TS$control$model with TS$control$model_args
+            * `sequential_TS()` (*default*) 
+              * `sequential_TS_control()`
+              * `est_changepoints()`
+                * `soft_call()` using `TS$control$method` with `TS$control$method_args`
+                  * `ldats_classic()` (*default*) 
+                    * `ldats_classic_control()` 
+                    * `prep_saves()`
+                    * `prep_ptMCMC_inputs()`
+                      * `prep_temp_sequence()`
+                      * `prep_proposal_dist()`
+                    * `prep_cpts()`
+                      * `prep_temp_sequence()`
+                      * `soft_call()` using `TS$control$response` with `TS$control$response_args`
+                        * `multinom_TS()` (*default*)
+                          * `multinom_TS_control()`
+                          * `prep_chunks()` 
+                          * `multinom_TS_chunk()`
+                            * `nnet::multinom()`
+                          * `package_chunk_fits()` 
+                    * `prep_ids()`
+                    * `prep_pbar()`
+                    * `for` each iteration
+                      * `update_pbar()`
+                      * `step_chains()`
+                        * `propose_step()`
+                          * `proposed_step_mods()`
+                          * `soft_call()` using `TS$control$response` with  `TS$control$response_args`
+                            * `multinom_TS()` (*default*)
+                              * `multinom_TS_control()`
+                              * `prep_chunks()` 
+                              * `multinom_TS_chunk()`
+                                * `nnet::multinom()`
+                              * `package_chunk_fits()`    
+                        * `eval_step()`
+                        * `take_step()`
+                      * `swap_chains()`
+                      * `update_saves()`
+                      * `update_cpts()`
+                      * `update_ids()`
+                    * `process_saves()`
+                      * `count_trips()`
+              * `est_regressors()`
+                * `soft_call()` using `TS$control$response` with `TS$control$response_args`
+                  * `multinom_TS()` (*default*)
+                    * `multinom_TS_control()`
+                    * `prep_chunks()` 
+                    * `multinom_TS_chunk()`
+                      * `nnet::multinom()`
+                    * `package_chunk_fits()` 
+              * `package_sequential_TS()`
+                * `summarize_rhos()`
+                * `measure_rho_vcov()`
+                * `summarize_etas()`
+                * `measure_eta_vcov()`
+    * `package_TS()`
+      * `select_TS()`
+        * `measure_TS()`
+          * `soft_call()` using `TS$control$measurer` with `TS$control$measurer_args`
+        * `soft_call()` using `TS$control$selector` with `TS$control$selector_args`
+  * `package_LDA_TS()`
+
+*default* indicates that the specified function and its subfunctions are defined by the default arguments, but can be swapped-out with alternatives using the control lists (see below).
+Presently, the only function which has LDATS-based alternatives is the `response`, which can be also set to `simplex_TS` to use the simplex-based response models within an otherwise idential LDATS setup.
+In addition, the `measurer` and `selector` functions have defaults (`AIC()` and `min()`, respectively), which can be swapped (e.g., to `logLik()` and `max()`) based on algorithmic choices; method-functions like `AIC()` and `logLik()` have specifics defined as needed for LDATS model objects.
+
+
+
+## Controls Lists
+
+To minimize the length of argument lists and facilitate simple default usage throughout the pipeline, we implement an options/controls list approach, where each of the main functions (`LDA_TS`, `LDA`, and `TS`) and their subfunctions have a `control` argument that takes a `list` to replace the defaults returned by its `_control` function:
+
+* `LDA_TS_control()`
+* `LDA_control()`
+* `TS_control()`
+

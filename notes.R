@@ -4,8 +4,11 @@ predict
 tidying check functions and general usage
 examples
 tests
+softcall message handling
 tempering
 vignettes
+   data 
+   simplex response
   
 
 devtools::load_all()
@@ -13,21 +16,16 @@ devtools::load_all()
 LDAs <- LDA(data = rodents, topics = 2:3, replicates = c(1,4))
 
 
-TS(LDAs = LDAs, formulas = ~ newmoon, nchangepoints = 1, 
+TSs <- TS(LDAs = LDAs, formulas = ~ newmoon, nchangepoints = 1, 
           timename = "newmoon", weights = TRUE,
           control = list(response = simplex_TS, 
-                         method_args = 
-                         list(control = ldats_classic_control(nit = 100)),
-                                response_args = 
-                           list(control = 
-                            simplex_TS_control(transformation = "ilr"))))
+                         response_args = list(control = 
+                                              list(transformation = "ilr")),
+                         method_args = list(control = list(nit = 100))))
 
-TS(LDAs = LDAs, formulas = ~ newmoon, nchangepoints = 1, 
+TSs <- TS(LDAs = LDAs, formulas = ~ newmoon, nchangepoints = 1, 
           timename = "newmoon", weights = TRUE,
-          control = list(method_args = 
-                         list(control = ldats_classic_control(nit = 100))))
-
-
+          control = list(method_args = list(control = list(nit = 100))))
 
 plot(LDAs)
 plot(TSs)

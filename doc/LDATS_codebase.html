@@ -310,7 +310,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <div id="overview" class="section level2">
 <h2>Overview</h2>
-<p>This vignette outlines the code base for the <strong>LDATS</strong> package. It was constructed using <strong>LDATS</strong> version 0.3.0 on 2019-10-12.</p>
+<p>This vignette outlines the code base for the <strong>LDATS</strong> package. It was constructed using <strong>LDATS</strong> version 0.2.5 on 2020-04-21.</p>
 </div>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
@@ -324,145 +324,75 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <ul>
 <li><code>LDA_TS()</code>
 <ul>
-<li><code>check_LDA_TS_inputs()</code>
+<li><code>LDA_TS_control()</code>
 <ul>
-<li><code>check_timename()</code></li>
-<li><code>check_formulas()</code></li>
-<li><code>check_nchangepoints()</code></li>
-<li><code>check_weights()</code></li>
-<li><code>check_control()</code></li>
-<li><code>check_document_term_table()</code></li>
-<li><code>check_document_covariate_table()</code><br />
-</li>
-<li><code>check_topics()</code></li>
-<li><code>check_seeds()</code></li>
+<li><code>LDA_control()</code></li>
+<li><code>TS_control()</code></li>
 </ul></li>
-<li><code>LDA_set()</code>
+<li><code>LDA()</code>
 <ul>
-<li><code>check_LDA_TS_inputs()</code>
+<li><code>prepare_LDA()</code>
 <ul>
-<li><code>check_control()</code></li>
-<li><code>check_document_term_table()</code></li>
-<li><code>check_topics()</code></li>
-<li><code>check_seeds()</code></li>
+<li><code>check_LDA()</code></li>
+<li><code>LDA_control()</code></li>
+<li><code>conform_data()</code></li>
 </ul></li>
-<li>loop over models
+<li><code>run_LDA()</code>
 <ul>
-<li><code>prep_LDA_control()</code></li>
-<li><code>LDA()</code></li>
+<li><code>LDA_call()</code> (replicated for each model)
+<ul>
+<li><code>LDA_msg()</code></li>
+<li><code>soft_call()</code> using <code>LDA$control$model</code> with <code>LDA$control$model_args</code>
+<ul>
+<li><code>topicmodels::LDA()</code> (<em>default</em>)</li>
 </ul></li>
 </ul></li>
+<li><code>package_LDA()</code>
+<ul>
 <li><code>select_LDA()</code>
 <ul>
-<li>applies the <code>measurer</code> and <code>selector</code> functions supplied via <code>LDA_controls_list()</code></li>
+<li><code>soft_call()</code> using <code>LDA$control$selector with LDA$control$selector_args *</code>min()<code>(*default*)  *</code>measure_LDA()<code>(replicated for each model)   *</code>soft_call()<code>using</code>LDA<span class="math inline">\(control\)</span>measurer<code>with</code>LDA<span class="math inline">\(control\)</span>measurer_args<code>*</code>AIC()` (<em>default</em>)</li>
 </ul></li>
-<li><code>TS_on_LDA()</code>
-<ul>
-<li><code>check_LDA_TS_inputs()</code>
-<ul>
-<li><code>check_LDA_models()</code></li>
-<li><code>check_formulas()</code></li>
-<li><code>check_nchangepoints()</code></li>
-<li><code>check_timename()</code></li>
-<li><code>check_control()</code></li>
-<li><code>check_weights()</code></li>
-<li><code>check_document_covariate_table()</code><br />
-</li>
 </ul></li>
-<li><code>expand_TS()</code></li>
-<li>loop over models
-<ul>
-<li><code>prep_TS_data()</code></li>
+</ul></li>
+</ul></li>
 <li><code>TS()</code>
 <ul>
-<li><code>check_TS_inputs()</code>
+<li><code>prepare_TS()</code>
 <ul>
-<li><code>check_formulas()</code></li>
-<li><code>check_nchangepoints()</code></li>
-<li><code>check_control()</code></li>
-<li><code>check_weights()</code></li>
-</ul></li>
-<li><code>est_changepoints()</code>
+<li><code>TS_control()</code></li>
+<li><code>run_TS()</code>
 <ul>
-<li><code>prep_saves()</code></li>
-<li><code>prep_ptMCMC_inputs()</code></li>
-<li><code>prep_cpts()</code>
+<li><code>TS_call()</code> (replicated for each model)
 <ul>
-<li>loop over chains
+<li><code>TS_msg()</code></li>
+<li><code>TS$control$model with TS$control$model_args *</code>sequential_TS_control()<code>*</code>est_changepoints()<code>*</code>TS<span class="math inline">\(control\)</span>method<code>with</code>TS<span class="math inline">\(control\)</span>method_args<code>*</code>ldats_classic_control()<code>*</code>prep_saves()<code>*</code>prep_ptMCMC_inputs()<code>*</code>prep_temp_sequence()<code>*</code>prep_proposal_dist()<code>*</code>prep_cpts()<code>*</code>prep_temp_sequence()<code>*</code>TS<span class="math inline">\(control\)</span>response<code>with</code>TS<span class="math inline">\(control\)</span>response_args<code>*</code>prep_ids()<code>*</code>prep_pbar()<code>*</code>update_pbar()<code>*</code>step_chains()<code>*</code>propose_step()<code>*</code>proposed_step_mods()<code>*</code>TS<span class="math inline">\(control\)</span>response<code>with</code>TS<span class="math inline">\(control\)</span>response_args<code>*</code>eval_step()<code>*</code>accept_step()<code>*</code>swap_chains()<code>*</code>update_saves()<code>*</code>update_cpts()<code>*</code>update_ids()<code>*</code>process_saves()<code>*</code>count_trips()<code>*</code>est_regressors()<code>*</code>TS<span class="math inline">\(control\)</span>response<code>with</code>TS<span class="math inline">\(control\)</span>response_args<code>*</code>package_sequential_TS()<code>*</code>summarize_rhos()<code>*</code>measure_rho_vcov()<code>*</code>summarize_eta()<code>*</code>measure_eta_vcov()`</li>
+</ul></li>
+</ul></li>
+<li><code>package_TS()</code>
 <ul>
-<li><code>multinom_TS()</code></li>
-</ul></li>
-</ul></li>
-<li><code>prep_ids()</code></li>
-<li><code>prep_pbar()</code></li>
-<li>loop over iterations
-<ul>
-<li><code>update_pbar()</code></li>
-<li><code>step_chains()</code>
-<ul>
-<li><code>propose_step()</code>
-<ul>
-<li><code>proposed_step_mods()</code>
-<ul>
-<li>loop over chains
-<ul>
-<li><code>multinom_TS()</code></li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li><code>eval_step()</code></li>
-<li><code>take_step()</code></li>
-</ul></li>
-<li><code>swap_chains()</code>
-<ul>
-<li>loop over chain neighbors</li>
-</ul></li>
-<li><code>update_saves()</code></li>
-<li><code>update_cpts()</code></li>
-<li><code>update_ids()</code></li>
-</ul></li>
-</ul></li>
-<li><code>est_regressors()</code>
-<ul>
-<li>loop over unique realizations of change point locations
-<ul>
-<li><code>multinom_TS()</code></li>
-<li>loop over chunks
-<ul>
-<li><code>mirror_vcov()</code></li>
-<li><code>rmvnorm()</code></li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li><code>summarize_TS()</code>
-<ul>
-<li><code>diagnose_ptMCMC()</code>
-<ul>
-<li><code>count_trips()</code></li>
-</ul></li>
-<li><code>summarize_rhos()</code></li>
-<li><code>measure_rho_vcov()</code></li>
-<li><code>summarize_etas()</code></li>
-<li><code>measure_eta_vcov()</code></li>
-</ul></li>
-</ul></li>
-</ul></li>
 <li><code>select_TS()</code>
 <ul>
-<li>applies the <code>measurer</code> and <code>selector</code> functions supplied via <code>TS_controls_list()</code></li>
+<li><code>TS$control$selector</code> with <code>TS$control$selector_args</code></li>
+<li><code>measure_TS()</code> (replicated for each model)
+<ul>
+<li><code>TS$control$measurer</code> with <code>TS$control$measurer_args</code></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
 </ul></li>
 <li><code>package_LDA_TS()</code></li>
 </ul></li>
-</ul></li>
 </ul>
-<p>Each component model’s function (<code>LDA_set()</code> and <code>TS()</code>) can be run independently, as well.</p>
+<p>Each component model’s function (<code>LDA()</code> and <code>TS()</code>) can be run independently, as well.</p>
 </div>
 <div id="controls-lists" class="section level2">
 <h2>Controls Lists</h2>
-<p>To minimize the length of argument lists and facilitate simple default usage throughout the pipeline, we implement an options/controls list approach, where each of the main functions (<code>LDA_TS</code>, <code>LDA_set</code>, and <code>TS</code>) and its subfunctions have a <code>control</code> argument that takes a <code>list</code> to replace the defaults returned by its <code>_control</code> function:</p>
+<p>To minimize the length of argument lists and facilitate simple default usage throughout the pipeline, we implement an options/controls list approach, where each of the main functions (<code>LDA_TS</code>, <code>LDA</code>, and <code>TS</code>) and their subfunctions have a <code>control</code> argument that takes a <code>list</code> to replace the defaults returned by its <code>_control</code> function:</p>
 <ul>
 <li><code>LDA_TS_control()</code></li>
-<li><code>LDA_set_control()</code></li>
+<li><code>LDA_control()</code></li>
 <li><code>TS_control()</code></li>
 </ul>
 </div>

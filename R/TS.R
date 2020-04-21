@@ -353,6 +353,8 @@ package_TS <- function(TSs){
 #'
 select_TS <- function(TSs){
 
+# use softcall!
+
   vals <- measure_TS(TSs = TSs)
   fun <- TSs[[1]]$control$selector
   args <- update_list(TSs[[1]]$control$selector_args, x = vals)
@@ -366,6 +368,8 @@ select_TS <- function(TSs){
 #' @export
 #'
 measure_TS <- function(TSs){
+
+# use softcall!
 
   nTSs <- length(TSs)
   vals <- rep(NA, nTSs)
