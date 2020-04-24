@@ -260,20 +260,28 @@ est_regressors <- function(rho_dist, TS){
     if(all(c("multinom", "nnet") %in% mod_class)){
       coefs <- t(coefs)
       vcv <- mirror_vcov(seg_mod)
-    } else if(all(c("mlm", "lm") %in% mod_class) & weighted){
+    } else if(all(c("mlm", "lm") %in% mod_class)){
       nresps <- length(summary(seg_mod))
-      resp_vcv_dim <- dim(vcov(summary(seg_mod)[[1]]))
-      full_vcv <- matrix(0, resp_vcv_dim[1] * nresps, 
-                            resp_vcv_dim[1] * nresps)
-      for(i in 1:nresps){
-        in_row <- (1 + (i - 1) * resp_vcv_dim[1]):(i * resp_vcv_dim[1])
-        in_col <- in_row
-        full_vcv[in_row, in_col] <- vcov(summary(seg_mod)[[i]])
+
+      if(weighted){
+        resp_vcv_dim <- dim(vcov(summary(seg_mod)[[1]]))
+        full_vcv <- matrix(0, resp_vcv_dim[1] * nresps, 
+                              resp_vcv_dim[1] * nresps)
+        for(i in 1:nresps){
+          in_row <- (1 + (i - 1) * resp_vcv_dim[1]):(i * resp_vcv_dim[1])
+          in_col <- in_row
+          full_vcv[in_row, in_col] <- vcov(summary(seg_mod)[[i]])
+        }
+        vcv <- full_vcv
+        coef_names <- rep(row.names(coef(summary(seg_mod)[[1]])), nresps)
+        resp_names <- rep(1:nresps, each = NROW(coef(summary(seg_mod)[[1]])))
+        colnames(vcv) <- paste(resp_names, coef_names, sep =":")
+      } else{
+        vcv <- vcov(seg_mod)
+        resp_names <- rep(1:nresps, each = NROW(coef(summary(seg_mod)[[1]])))
+        colnames(vcv) <- paste(resp_names, colnames(vcv), sep ="")
+        rownames(vcv) <- paste(resp_names, rownames(vcv), sep ="")
       }
-      vcv <- full_vcv
-      coef_names <- rep(row.names(coef(summary(seg_mod)[[1]])), nresps)
-      resp_names <- rep(1:nresps, each = NROW(coef(summary(seg_mod)[[1]])))
-      colnames(vcv) <- paste(resp_names, coef_names, sep =":")
     } else{
       vcv <- mirror_vcov(seg_mod)
     }
@@ -354,20 +362,29 @@ est_regressors <- function(rho_dist, TS){
         coefs <- t(coefs)
         vcv <- mirror_vcov(seg_mod)
 
-      } else if(all(c("mlm", "lm") %in% mod_class) & weighted){
+      } else if(all(c("mlm", "lm") %in% mod_class)){
         nresps <- length(summary(seg_mod))
-        resp_vcv_dim <- dim(vcov(summary(seg_mod)[[1]]))
-        full_vcv <- matrix(0, resp_vcv_dim[1] * nresps, 
-                              resp_vcv_dim[1] * nresps)
-        for(k in 1:nresps){
-          in_row <- (1 + (k - 1) * resp_vcv_dim[1]):(k * resp_vcv_dim[1])
-          in_col <- in_row
-          full_vcv[in_row, in_col] <- vcov(summary(seg_mod)[[k]])
+        if(weighted){
+          resp_vcv_dim <- dim(vcov(summary(seg_mod)[[1]]))
+          full_vcv <- matrix(0, resp_vcv_dim[1] * nresps, 
+                                resp_vcv_dim[1] * nresps)
+          for(k in 1:nresps){
+            in_row <- (1 + (k - 1) * resp_vcv_dim[1]):(k * resp_vcv_dim[1])
+            in_col <- in_row
+            full_vcv[in_row, in_col] <- vcov(summary(seg_mod)[[k]])
+          }
+          vcv <- full_vcv
+          coef_names <- rep(row.names(coef(summary(seg_mod)[[1]])), nresps)
+          resp_names <- rep(1:nresps, 
+                            each = NROW(coef(summary(seg_mod)[[1]])))
+          colnames(vcv) <- paste(resp_names, coef_names, sep =":")
+        } else{
+          vcv <- vcov(seg_mod)
+          resp_names <- rep(1:nresps, 
+                            each = NROW(coef(summary(seg_mod)[[1]])))
+          colnames(vcv) <- paste(resp_names, colnames(vcv), sep ="")
+          rownames(vcv) <- paste(resp_names, rownames(vcv), sep ="")
         }
-        vcv <- full_vcv
-        coef_names <- rep(row.names(coef(summary(seg_mod)[[1]])), nresps)
-        resp_names <- rep(1:nresps, each = NROW(coef(summary(seg_mod)[[1]])))
-        colnames(vcv) <- paste(resp_names, coef_names, sep =":")
       } else{
         vcv <- mirror_vcov(seg_mod)
       }

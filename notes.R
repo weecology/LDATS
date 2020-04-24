@@ -13,14 +13,14 @@ vignettes
 
 devtools::load_all()
    data(rodents)
-LDAs <- LDA(data = rodents, topics = 2:3, replicates = c(1,4))
+LDAs <- LDA(data = rodents, topics = 2, replicates = c(1))
 
 
-TSs <- TS(LDAs = LDAs, formulas = ~ newmoon, nchangepoints = 1, 
-          timename = "newmoon", weights = TRUE,
+TSs <- TS(LDAs = LDAs, formulas = ~ 1, nchangepoints = 0:1, 
+          timename = "newmoon", #weights = TRUE,
           control = list(response = simplex_TS, 
                          response_args = list(control = 
-                                              list(transformation = "ilr")),
+                                              list(transformation = "clr")),
                          method_args = list(control = list(nit = 100))))
 
 TSs <- TS(LDAs = LDAs, formulas = ~ newmoon, nchangepoints = 1, 
