@@ -144,4 +144,6 @@ To minimize the length of argument lists and facilitate simple default usage thr
 * `LDA_TS_control()`
 * `LDA_control()`
 * `TS_control()`
-
+  * `sequential_TS_control()`
+  * `multinom_TS_control()`, `simplex_TS_control()`
+  * `ldats_classic_control()`

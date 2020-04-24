@@ -350,6 +350,42 @@ prep_cpts <- function(TS){
     modfit <- soft_call(what = fun, args = args, soften = TRUE)
     lls[i] <- modfit$logLik
   }  
+
+  if(any(lls == -Inf)){
+    iter <- 1
+    while(all(lls == -Inf)){
+
+      cps <- matrix(NA, nrow = TS$nchangepoints, ncol = ntemps)
+      for (i in 1:ntemps){
+        cp_times <- sort(sample(avail_times, TS$nchangepoints, 
+                         replace = FALSE))
+        cps[ , i] <- cp_times
+      }
+      lls <- rep(NA, ntemps)
+      for (i in 1:ntemps){
+        fun <- TS$control$response
+        fun <- memoise_fun(fun, TS$control$memoise)
+        args <- list(data = data, formula = TS$formula, 
+                     changepoints = cps[ , i], 
+                     timename = TS$timename, weights = TS$weights, 
+                     control = TS$control$response_args$control)
+        modfit <- soft_call(what = fun, args = args, soften = TRUE)
+        lls[i] <- modfit$logLik
+      }  
+      iter <- iter + 1
+      if(iter > 10){
+        stop("max number of starts tried with all -Inf LogLiks")
+      }
+    }
+    to_replace <- which(lls == -Inf)
+    to_use <- which(lls != -Inf)
+    for(i in 1:length(to_replace)){
+      to_use_i <- sample(to_use, 1)
+      lls[to_replace[i]] <- lls[to_use_i]
+      cps[, to_replace[i]] <- cps[ , to_use_i]
+    }
+  }
+
   cps <- cps[ , order(lls, decreasing = TRUE), drop = FALSE]
   lls <- sort(lls, decreasing = TRUE)
 
