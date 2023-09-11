@@ -72,7 +72,7 @@ We're going to download analysis scripts, data files, and model objects, so we u
 
 
 ```r
-vignette_files <- "."
+vignette_files <- tempdir()
 ```
 
 To replicate the Christensen et al. 2018 analysis, we download some of the original scripts & data files from [Extreme-events-LDA repo](https://github.com/emchristensen/Extreme-events-LDA), as well as some raw data files from the [PortalData repo](https://github.com/weecology/PortalData), which are stored in the [LDATS-replications repo](https://github.com/weecology/LDATS-replications):
@@ -223,7 +223,7 @@ if (!file.exists(test_file)){
   }
 }
 ```
-
+stop("poooooop")
 
 # Data Comparison
 
@@ -445,9 +445,8 @@ saveRDS(ldamodel, file = file.path(vignette_files, "paper_ldamodel.RDS"))
 
 ```r
 knitr::include_graphics(file.path(vignette_files, "output", "lda_distances.png"))
+#> Error in knitr::include_graphics(file.path(vignette_files, "output", "lda_distances.png")): Cannot find the file(s): "../../../../../../AppData/Local/Temp/RtmpAZBlAs/output/lda_distances.png"
 ```
-
-![plot of chunk unnamed-chunk-10](./output/lda_distances.png)
 
 ## Plots
 
@@ -464,7 +463,7 @@ How the paper LDA model assigns species to topics:
 plot(ldamodel, cols = NULL, option = "D")
 ```
 
-![plot of chunk plot paper LDA](figure/plot paper LDA-1.png)
+![plot of chunk plot paper LDA](.plot paper LDA-1.png)
 
 How the LDATS LDA model assigns species to topics:
 
@@ -472,7 +471,7 @@ How the LDATS LDA model assigns species to topics:
 plot(ldats_ldamodel, cols = NULL, option = "D")
 ```
 
-![plot of chunk plot LDATS LDA](figure/plot LDATS LDA-1.png)
+![plot of chunk plot LDATS LDA](.plot LDATS LDA-1.png)
 
 The paper method finds 4 topics and LDATS finds 6. This is because of an update to the model selection procedure. The paper conservatively overestimates the number of parameters (by counting all of the variational parameters) and therefore overpenalizes the AIC for models with more topics. Comparatively, the LDATS method now uses the number of parameters remaining after the variational approximation, as returned by the LDA object. For this vignette, we will compare the results from using both LDA models.
 
@@ -700,7 +699,7 @@ All of the models find four changepoints.
 plot(paper_ldats_cpt)
 ```
 
-![plot of chunk plot paper LDA and LDATS cpts](figure/plot paper LDA and LDATS cpts-1.png)
+![plot of chunk plot paper LDA and LDATS cpts](.plot paper LDA and LDATS cpts-1.png)
 
 ### LDATS LDA and LDATS changepoint
 
@@ -708,7 +707,7 @@ plot(paper_ldats_cpt)
 plot(ldats_ldats_cpt)
 ```
 
-![plot of chunk plot ldats LDA and LDATS cpt](figure/plot ldats LDA and LDATS cpt-1.png)
+![plot of chunk plot ldats LDA and LDATS cpt](.plot ldats LDA and LDATS cpt-1.png)
 
 
 ```r
@@ -732,14 +731,13 @@ dev.off()
 paper_paper_hist <- annual_hist(paper_paper_cpt, paper_covariates$year_continuous)
 ```
 
-![plot of chunk plot paper LDA and LDATS cpts2](figure/plot paper LDA and LDATS cpts2-1.png)
+![plot of chunk plot paper LDA and LDATS cpts2](.plot paper LDA and LDATS cpts2-1.png)
 
 
 ```r
 knitr::include_graphics(file.path(vignette_files, "output", "paper_paper_cpt_plot.png"))
+#> Error in knitr::include_graphics(file.path(vignette_files, "output", "paper_paper_cpt_plot.png")): Cannot find the file(s): "../../../../../../AppData/Local/Temp/RtmpAZBlAs/output/paper_paper_cpt_plot.png"
 ```
-
-![plot of chunk unnamed-chunk-19](./output/paper_paper_cpt_plot.png)
 
 
 ### LDATS LDA and paper changepoint
@@ -759,14 +757,13 @@ dev.off()
 ldats_paper_hist <- annual_hist(ldats_paper_cpt, paper_covariates$year_continuous)
 ```
 
-![plot of chunk plot LDATS lda and paper cpt2](figure/plot LDATS lda and paper cpt2-1.png)
+![plot of chunk plot LDATS lda and paper cpt2](.plot LDATS lda and paper cpt2-1.png)
 
 
 ```r
 knitr::include_graphics(file.path(vignette_files, "output", "ldats_paper_cpt_plot.png"))
+#> Error in knitr::include_graphics(file.path(vignette_files, "output", "ldats_paper_cpt_plot.png")): Cannot find the file(s): "../../../../../../AppData/Local/Temp/RtmpAZBlAs/output/ldats_paper_cpt_plot.png"
 ```
-
-![plot of chunk unnamed-chunk-20](./output/ldats_paper_cpt_plot.png)
 
 The results of the changepoint model appear robust to both choice of LDA model and choice of changepoint model.
 
