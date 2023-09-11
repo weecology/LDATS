@@ -36,19 +36,6 @@ jobs:
       - uses: actions/checkout@v3
 
       - uses: r-lib/actions/setup-pandoc@v2
-      
-      - name: Install system dependencies on MacOS
-        if: runner.os == 'macOS'
-        run: |
-          sudo curl --location https://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Mac%20OS%20X/JAGS-4.3.1.pkg -o /usr/local/JAGS-4.3.1.pkg
-          sudo installer -pkg /usr/local/JAGS-4.3.1.pkg -target /usr/local/bin/
-
-      - name: Install system dependencies on Windows
-        if: runner.os == 'Windows'
-        run: |
-          curl --location https://sourceforge.net/projects/mcmc-jags/files/latest/download -o C:\JAGS-latest.exe
-          C:\JAGS-latest.exe /S
-        shell: cmd
 
       - uses: r-lib/actions/setup-r@v2
         with:
