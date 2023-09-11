@@ -1,0 +1,68 @@
+# R package checking
+# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+name: R-CMD-check
+
+jobs:
+  R-CMD-check:
+    runs-on: ${{ matrix.config.os }}
+
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }}) 
+
+    strategy:
+      max-parallel: 3
+      fail-fast: false
+      matrix:
+        config:
+          - {os: windows-latest, r: 'release', rtools: '43'}
+          - {os: ubuntu-latest,  r: 'devel', http-user-agent: 'release', rtools: ''}
+          - {os: ubuntu-latest,  r: 'release', rtools: ''}
+          - {os: ubuntu-latest,  r: 'oldrel-1', rtools: ''}
+          - {os: macOS-latest,   r: 'release', rtools: ''} 
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: r-lib/actions/setup-pandoc@v2
+      
+      - name: Install system dependencies on MacOS
+        if: runner.os == 'macOS'
+        run: |
+          sudo curl --location https://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Mac%20OS%20X/JAGS-4.3.1.pkg -o /usr/local/JAGS-4.3.1.pkg
+          sudo installer -pkg /usr/local/JAGS-4.3.1.pkg -target /usr/local/bin/
+
+      - name: Install system dependencies on Windows
+        if: runner.os == 'Windows'
+        run: |
+          curl --location https://sourceforge.net/projects/mcmc-jags/files/latest/download -o C:\JAGS-latest.exe
+          C:\JAGS-latest.exe /S
+        shell: cmd
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.config.r }}
+          rtools-version: ${{ matrix.config.rtools }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck
+          needs: check
+
+      - uses: r-lib/actions/check-r-package@v2
+        with:
+          error-on: '"error"'
+          upload-snapshots: true

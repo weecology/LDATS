@@ -1,9 +1,9 @@
 # Latent Dirichlet Allocation coupled with Bayesian Time Series analyses 
 
-[![Build Status](https://travis-ci.org/weecology/LDATS.svg?branch=master)](https://travis-ci.org/weecology/LDATS)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/weecology/LDATS/master/LICENSE)
+[![Build Status](https://travis-ci.org/weecology/LDATS.svg?branch=main)](https://travis-ci.org/weecology/LDATS)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/weecology/LDATS/main/LICENSE)
 [![Lifecycle:maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
-[![Codecov test coverage](https://img.shields.io/codecov/c/github/weecology/LDATS/master.svg)](https://codecov.io/github/weecology/LDATS/branch/master)
+[![Codecov test coverage](https://img.shields.io/codecov/c/github/weecology/LDATS/main.svg)](https://codecov.io/github/weecology/LDATS/branch/main)
 [![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/LDATS)](https://CRAN.R-project.org/package=LDATS)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3286617.svg)](https://doi.org/10.5281/zenodo.3286617)
 
@@ -11,7 +11,7 @@
 
 The **`LDATS`** package provides functionality for analyzing time series of high-dimensional data using a two-stage approach comprised of Latent Dirichlet Allocation (LDA) and Bayesian time series (TS) analyses.
 
-For a full description of the math underlying the **`LDATS`** package, see the [technical document](https://github.com/weecology/LDATS/blob/master/LDATS_model.pdf).
+For a full description of the math underlying the **`LDATS`** package, see the [technical document](https://github.com/weecology/LDATS/blob/main/LDATS_model.pdf).
 
 ## Status: Stable Version Available, Continuing Development
 
