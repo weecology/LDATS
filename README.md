@@ -1,6 +1,6 @@
 # Latent Dirichlet Allocation coupled with Bayesian Time Series analyses 
 
-[![Build Status](https://travis-ci.org/weecology/LDATS.svg?branch=main)](https://travis-ci.org/weecology/LDATS)
+[![R-CMD-check](https://github.com/weecology/LDATS/actions/workflows/r-cmd-check.yaml/badge.svg)](https://github.com/weecology/LDATS/actions/workflows/r-cmd-check.yaml) 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/weecology/LDATS/main/LICENSE)
 [![Lifecycle:maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![Codecov test coverage](https://img.shields.io/codecov/c/github/weecology/LDATS/main.svg)](https://codecov.io/github/weecology/LDATS/branch/main)
