@@ -12,5 +12,5 @@
 ^LICENSE\.md$
 ^cran-comments\.md$
 ^\.zenodo\.json$
-
 ^\.github$
+^paper_comparison$
