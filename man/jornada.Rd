@@ -28,6 +28,6 @@ Lightfoot, D. C., A. D. Davidson, D. G. Parker, L. Hernandez, and J. W.
   Laundre. 2012. Bottom-up regulation of desert grassland and shrubland 
   rodent communities: implications of species-specific reproductive
   potentials. \emph{Journal of Mammalogy} \strong{93}:1017-1028.
-  \href{https://doi.org/10.1644/11-MAMM-A-391.1}{link}.
+  \href{https://academic.oup.com/jmammal/article/93/4/1017/957927}{link}.
 }
 \keyword{datasets}

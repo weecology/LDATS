@@ -36,12 +36,12 @@ Brown, J. H. 1998.
   Christensen, E., D. J. Harris, and S. K. M. Ernest. 2018.
   Long-term community change through multiple rapid transitions in a 
   desert rodent community. \emph{Ecology} \strong{99}:1523-1529. 
-  \href{https://doi.org/10.1002/ecy.2373}{link}.
+  \href{https://esajournals.onlinelibrary.wiley.com/doi/epdf/10.1002/ecy.2373}{link}.
 
   Ernest, S. K. M., \emph{et al}. 2016. 
   Long-term monitoring and experimental manipulation of a Chihuahuan desert
     ecosystem near Portal, Arizona ({1977-2013}).
   \emph{Ecology} \strong{97}:1082. 
-  \href{https://doi.org/10.1890/15-2115.1}{link}.
+  \href{https://esajournals.onlinelibrary.wiley.com/doi/10.1890/15-2115.1}{link}.
 }
 \keyword{datasets}

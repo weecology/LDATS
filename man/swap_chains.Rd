@@ -69,7 +69,7 @@ Earl, D. J. and M. W. Deem. 2005. Parallel tempering: theory,
   Falcioni, M. and M. W. Deem. 1999. A biased Monte Carlo scheme for 
   zeolite structure solution.  \emph{Journal of Chemical Physics}
   \strong{110}: 1754-1766.
-  \href{https://aip.scitation.org/doi/10.1063/1.477812}{link}.
+  \href{https://pubs.aip.org/aip/jcp/article/110/3/1754/475486/A-biased-Monte-Carlo-scheme-for-zeolite-structure}{link}.
 
   Geyer, C. J. 1991. Markov Chain Monte Carlo maximum likelihood. \emph{In
   Computing Science and Statistics: Proceedings of the 23rd Symposium on 

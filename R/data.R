@@ -26,13 +26,13 @@
 #'   Christensen, E., D. J. Harris, and S. K. M. Ernest. 2018.
 #'   Long-term community change through multiple rapid transitions in a 
 #'   desert rodent community. \emph{Ecology} \strong{99}:1523-1529. 
-#'   \href{https://doi.org/10.1002/ecy.2373}{link}.
+#'   \href{https://esajournals.onlinelibrary.wiley.com/doi/epdf/10.1002/ecy.2373}{link}.
 #'
 #'   Ernest, S. K. M., \emph{et al}. 2016. 
 #'   Long-term monitoring and experimental manipulation of a Chihuahuan desert
 #'     ecosystem near Portal, Arizona ({1977-2013}).
 #'   \emph{Ecology} \strong{97}:1082. 
-#'   \href{https://doi.org/10.1890/15-2115.1}{link}.
+#'   \href{https://esajournals.onlinelibrary.wiley.com/doi/10.1890/15-2115.1}{link}.
 #'  
 "rodents"
 
@@ -57,7 +57,7 @@
 #'   Laundre. 2012. Bottom-up regulation of desert grassland and shrubland 
 #'   rodent communities: implications of species-specific reproductive
 #'   potentials. \emph{Journal of Mammalogy} \strong{93}:1017-1028.
-#'   \href{https://doi.org/10.1644/11-MAMM-A-391.1}{link}.
+#'   \href{https://academic.oup.com/jmammal/article/93/4/1017/957927}{link}.
 #'  
 "jornada"
 

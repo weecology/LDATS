@@ -103,5 +103,5 @@ Bishop, C. M. 2006. \emph{Pattern Recognition and Machine Learning}.
   Western, B. and M. Kleykamp. 2004. A Bayesian change point model for 
   historical time series analysis. \emph{Political Analysis}
   \strong{12}:354-374.
-  \href{https://doi.org/10.1093/pan/mph023}{link}.
+  \href{https://www.cambridge.org/core/journals/political-analysis/article/abs/bayesian-change-point-model-for-historical-time-series-analysis/F7D2EDBBC211278EC6C6CB43FE170812}{link}.
 }

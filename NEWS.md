@@ -3,7 +3,16 @@
 Version numbers follow [Semantic Versioning](https://semver.org/).
 
 
-# LDATS 0.2.7(https://github.com/weecology/ldats/releases/tag/v0.2.7)
+# LDATS 0.3.0
+*2023-09-16* 
+
+## Patching CRAN issues with vignette building
+* The paper comparison vignette is now pre-computed to avoid needing to access internet resources during cran build (see https://ropensci.org/blog/2019/12/08/precompute-vignettes/). 
+
+## Converting from travis ci to github actions
+* Travis CI no longer works, so shifting to github actions for builds
+
+# [LDATS 0.2.7](https://github.com/weecology/ldats/releases/tag/v0.2.7)
 *2020-03-18* 
 
 ## Patching CRAN issues with vignette building
@@ -11,14 +20,14 @@ Version numbers follow [Semantic Versioning](https://semver.org/).
 * For the paper comparison vignette, all of the code is pre-run and saved in the LDATS-replications repository
 * Allows removal of otherwise unused packages from this package's dependency list
 
-# LDATS 0.2.6(https://github.com/weecology/ldats/releases/tag/v0.2.6)
+# [LDATS 0.2.6](https://github.com/weecology/ldats/releases/tag/v0.2.6)
 *2020-03-02* 
 
 ## Patching a bug in tests for r-devel
 * `straingsAsFactors` update
 * only involved patching one test
 
-# LDATS 0.2.5(https://github.com/weecology/ldats/releases/tag/v0.2.5)
+# [LDATS 0.2.5](https://github.com/weecology/ldats/releases/tag/v0.2.5)
 *2019-12-22* 
 
 ## General editing of simulation functions
