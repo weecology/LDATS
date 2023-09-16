@@ -3,11 +3,12 @@ title: "Comparison to Christensen et al. 2018"
 author: "Renata Diaz, Juniper Simonis, and Hao Ye"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{paper-comparison}
+  %\VignetteIndexEntry{Comparison to Christensen et al. 2018}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 params:
   run_models: FALSE
+  rmarkdown.html_vignette.check_title: FALSE
 ---
   
 ```{r setup, include=FALSE}
@@ -76,7 +77,7 @@ rmarkdown::render("paper-comparison.Rmd", params = list(run_models = TRUE))
 
 We're going to download analysis scripts, data files, and model objects, so we use a temporary location for storage:
 
-```{r set download location}
+```{r set_download_location}
 vignette_files <- "."
 ```
 
@@ -124,7 +125,7 @@ Figure scripts:
 * `LDA_figure_scripts.R`
 - contains functions for making main plots in manuscript (Fig 1). Called from rodent_LDA_analysis.R
 
-```{r download scripts and data}
+```{r download_scripts_and_data}
 test_file <- file.path(vignette_files, "scripts", "rodent_LDA_analysis.r")
 
 if (!file.exists(test_file)){
@@ -200,7 +201,7 @@ Figures
   - function for making histogram of change points over years
 
 
-```{r download pre-generated model outputs}
+```{r download_pre-generated_model_outputs}
 test_file <- file.path(vignette_files, "output", "ldats_ldamodel.RDS")
 
 if (!file.exists(test_file)){
@@ -232,7 +233,7 @@ if (!file.exists(test_file)){
 
 The dataset of Portal rodents on control plots is included in the LDATS package:
 
-```{r LDATS data}
+```{r LDATS_data}
 data(rodents)
 
 head(rodents[[1]])
@@ -240,7 +241,7 @@ head(rodents[[1]])
 
 We can compare this against the data used in Christensen et al:
 
-```{r Paper data, eval = params$run_models}
+```{r Paper_data, eval = params$run_models}
 # parameters for subsetting the full Portal rodents data
 periods <- 1:436
 control_plots <- c(2, 4, 8, 11, 12, 14, 17, 22)
@@ -273,7 +274,7 @@ paper_covariates <- data.frame(
   )
 ```
 
-```{r Paper data2, eval = !params$run_models, include = FALSE}
+```{r Paper_data2, eval = !params$run_models, include = FALSE}
   moondat <- read.csv(file.path(vignette_files, "data", "moon_dates.csv"), stringsAsFactors = FALSE)
   paper_dat <- read.csv(file.path(vignette_files, "data", "paper_dat.csv"), stringsAsFactors = FALSE)
   paper_dates <- read.csv(file.path(vignette_files, "data", "paper_dates.csv"), stringsAsFactors = FALSE)
@@ -282,7 +283,7 @@ paper_covariates <- data.frame(
 
 ## Compare the data from Christensen et al. with the included data in `LDATS`
 
-```{r rodent data comparison}
+```{r rodent_data_comparison}
 compare <- rodents[[1]] == paper_dat
 
 length(which(rowSums(compare) < ncol(compare)))
@@ -292,7 +293,7 @@ There are 16 rows where the data included in LDATS differs from the paper data. 
 
 To confirm this, refer to lines 36-46 in `rodent_data_for_LDA.r`:
 
-```{r Data adjustment eval, eval = FALSE}
+```{r Data_adjustment_eval, eval = FALSE}
   # retrieve data on number of plots trapped per month
   trap_table = read.csv('https://raw.githubusercontent.com/weecology/PortalData/master/Rodents/Portal_rodent_trapping.csv')
   trap_table_controls = filter(trap_table, plot %in% selected_plots)
@@ -308,7 +309,7 @@ To confirm this, refer to lines 36-46 in `rodent_data_for_LDA.r`:
 
 We can run the same procedure on the LDATS data to verify that we obtain a data.frame that matches.
 
-```{r adjust LDATS data after Christensen et al, eval = params$run_models}
+```{r adjust_LDATS_data_after_Christensen_et_al, eval = params$run_models}
 # get the trapping effort for each sample
 trap_table <- read.csv(file.path(vignette_files, "data", "Portal_rodent_trapping.csv"))
 trap_table_controls <- dplyr::filter(trap_table, plot %in% control_plots)
@@ -332,7 +333,7 @@ Now we can compare the adjusted LDATS dataset with both the original ldats datas
 ```{r eval = !params$run_models, include = FALSE}
 ldats_rodents_adjusted <- readRDS(file.path(vignette_files, "output", "ldats_rodents_adjusted.RDS"))
 ```
-```{r dataset comparisons, eval = params$run_models}
+```{r dataset_comparisons, eval = params$run_models}
 compare_raw <- rodents[[1]] == ldats_rodents_adjusted
 length(which(rowSums(compare_raw) < ncol(compare_raw)))
 
@@ -342,21 +343,21 @@ length(which(rowSums(compare_adjusted) < ncol(compare_adjusted)))
 
 Because the LDA procedure weights the information from documents (census periods) according to the number of words (rodents captured), we now believe it is most appropriate to run the LDA on _unadjusted_ trapping data, and we recommend that users of LDATS do so. However, to maintain consistency with Christensen et al 2018, we will proceed using the _adjusted_ rodent table in this vignette.
 
-```{r switch to adjusted rodents}
+```{r switch_to_adjusted_rodents}
 rodents[[1]] <- paper_dat
 ```
 
 The LDATS rodent data comes with a `document_covariate_table`, which we will use later as the predictor variables for the changepoint models. In this table, time is expressed as new moon numbers. Later we will want to be able to interpret the results in terms of census dates. We will add a column to the `document_covariate_table` to convert new moon numbers to census dates. We will not reference this column in any of the formulas we pass to the changepoint models, so it will be ignored until we need it.
 
 
-```{r show covariate table}
+```{r show_covariate_table}
 head(rodents$document_covariate_table)
 ```
 
 ```{r eval = params$run_models, include = FALSE}
 "%>%" <- dplyr::"%>%"
 ```
-```{r add dates to covariate table, eval = params$run_models}
+```{r add_dates_to_covariate_table, eval = params$run_models}
 new_cov_table <- dplyr::left_join(rodents$document_covariate_table, 
                                   dplyr::select(moondat, newmoonnumber, censusdate), 
                                   by = c("newmoon" = "newmoonnumber")) %>%
@@ -374,7 +375,7 @@ While LDATS can run start-to-finish with `LDATS::LDA_TS`, here we will work thro
 
 First, we run the LDA models from LDATS to identify the number of topics:
 
-```{r LDATS LDAs, eval = params$run_models}
+```{r LDATS_LDAs, eval = params$run_models}
 ldats_ldas <- LDATS::LDA_set(document_term_table = rodents$document_term_table, 
                              topics = 2:6, nseeds = nseeds)
 ldats_ldamodel <- LDATS::select_LDA(LDA_models = ldats_ldas)[[1]]
@@ -384,7 +385,7 @@ saveRDS(ldats_ldamodel, file = file.path(vignette_files, "ldats_ldamodel.RDS"))
 
 Second, we run the LDA models from Christensen et al. to do the same task:
 
-```{r paper LDAs, eval = params$run_models}
+```{r paper_LDAs, eval = params$run_models}
 source(file.path(vignette_files, "scripts", "AIC_model_selection.R"))
 source(file.path(vignette_files, "scripts", "LDA-distance.R"))
 
@@ -445,12 +446,12 @@ ldats_ldamodel <- readRDS(file.path(vignette_files, "output", "ldats_ldamodel.RD
 ```
 
 How the paper LDA model assigns species to topics:
-```{r plot-paper-LDA, fig.width = 7, fig.height = 6}
+```{r plot_paper_LDA, fig.width = 7, fig.height = 6}
 plot(ldamodel, cols = NULL, option = "D")
 ```
 
 How the LDATS LDA model assigns species to topics:
-```{r plot-LDATS-LDA, fig.width = 7, fig.height = 6}
+```{r plot_LDATS_LDA, fig.width = 7, fig.height = 6}
 plot(ldats_ldamodel, cols = NULL, option = "D")
 ```
 
@@ -471,7 +472,7 @@ Having divided the data to generate catch-per-effort, the paper changepoint mode
 
 We define a few helper functions for running the changepoints model of Christensen et al. and processing the output to obtain the dates:
 
-```{r paper changepoint models, eval = params$run_models}
+```{r paper_changepoint_models, eval = params$run_models}
 #### Run changepoint ####
 source(file.path(vignette_files, "scripts", "changepointmodel.r"))
 
@@ -522,7 +523,7 @@ get_dates <- function(cpt, covariates = paper_covariates){
     dplyr::left_join(covariates, by = c("value" = "index"))
 }
 ```
-```{r save annual_hist, include = FALSE, eval = params$run_models}
+```{r save_annual_hist, include = FALSE, eval = params$run_models}
 saveRDS(annual_hist, file = file.path(vignette_files, "output", "annual_hist.RDS"))
 ```
 
@@ -530,14 +531,14 @@ saveRDS(annual_hist, file = file.path(vignette_files, "output", "annual_hist.RDS
 ### LDATS LDA and paper changepoint
 
 Run the Christensen et al. time series model to identify changepoints on the LDA topics selected by LDATS:
-```{r run LDATS LDA and paper cpt, eval = params$run_models}
+```{r run_LDATS_LDA_and_paper_cpt, eval = params$run_models}
 ldats_paper_results <- find_changepoints(ldats_ldamodel, paper_covariates)
 
 saveRDS(ldats_paper_results, file = file.path(vignette_files, "output", "ldats_paper.RDS"))
 ```
 
 Extract the dates of the changepoints:
-```{r compute changepoints for LDATS LDA and paper cpt, eval = params$run_models}
+```{r compute_changepoints_for_LDATS_LDA_and_paper_cpt, eval = params$run_models}
 ldats_paper_results <- readRDS(file.path(vignette_files, "output", "ldats_paper.RDS"))
 
 ldats_paper_cpt <- select_cpt_model(ldats_paper_results, 
@@ -552,14 +553,14 @@ saveRDS(ldats_paper_cpt_dates, file = file.path(vignette_files, "output", "ldats
 ### Paper LDA and paper changepoint
 
 Run the Christensen et al. time series model to identify changepoints on the LDA topics selected by Christensen et al.:
-```{r run paper LDA and paper cpt, eval = params$run_models}
+```{r run_paper_LDA_and_paper_cpt, eval = params$run_models}
 paper_paper_results <- find_changepoints(ldamodel, paper_covariates)
 
 saveRDS(paper_paper_results, file = file.path(vignette_files, "paper_paper.RDS"))
 ```
 
 Extract the dates of the changepoints:
-```{r compute changepoints for paper LDA and paper cpt, eval = params$run_models}
+```{r compute_changepoints_for_paper_LDA_and_paper_cpt, eval = params$run_models}
 paper_paper_results <- readRDS(file.path(vignette_files, "output", "paper_paper.RDS"))
 
 paper_paper_cpt <- select_cpt_model(paper_paper_results, 
@@ -577,7 +578,7 @@ saveRDS(paper_paper_cpt_dates, file = file.path(vignette_files, "output", "paper
 
 Run the LDATS time series model to identify changepoints on the LDA topics selected by LDATS:
 
-```{r run LDATS LDA and LDATS cpt, eval = params$run_models}
+```{r run_LDATS_LDA_and_LDATS_cpt, eval = params$run_models}
 ldats_ldats_results <- TS_on_LDA(LDA_models = ldats_ldamodel,
                                  document_covariate_table = rodents$document_covariate_table,
                                  formulas = ~ sin_year + cos_year,
@@ -591,7 +592,7 @@ saveRDS(ldats_ldats_results, file = file.path(vignette_files, "output", "ldats_l
 
 Unlike the paper changepoint model, LDATS can recognize that sampling periods may not be equidistant, and can place changepoint estimates at new moons if they fall between nonconsecutive sampling periods. We can estimate the dates corresponding to those new moons, extrapolating from the census dates for adjacent census periods.
 
-```{r construct lookup table for LDATS output for changepoint times, eval = params$run_models}
+```{r construct_lookup_table_for_LDATS_output_for_changepoint_times, eval = params$run_models}
 # make the full sequence of possible newmoon values
 full_index <- seq(min(rodents$document_covariate_table$newmoon), 
                   max(rodents$document_covariate_table$newmoon))
@@ -609,7 +610,7 @@ ldats_dates <- approx(rodents$document_covariate_table$newmoon,
 
 Select the best time series model and extract the dates of the changepoints:
 
-```{r compute changepoints for LDATS LDA and LDATS cpt, eval = params$run_models}
+```{r compute_changepoints_for_LDATS_LDA_and_LDATS_cpt, eval = params$run_models}
 ldats_ldats_results <- readRDS(file.path(vignette_files, "output", "ldats_ldats.RDS"))
   
 ldats_ldats_cpt <- select_TS(ldats_ldats_results)
@@ -628,7 +629,7 @@ saveRDS(ldats_ldats_cpt_dates, file = file.path(vignette_files,  "output", "ldat
 
 Run the LDATS time series model to identify changepoints on the LDA topics selected by Christensen et al.:
 
-```{r run paper LDA and LDATS cpt, eval = params$run_models}
+```{r run_paper_LDA_and_LDATS_cpt, eval = params$run_models}
 paper_ldats_results <- TS_on_LDA(LDA_models = ldamodel,
                              document_covariate_table = rodents$document_covariate_table,
                              formulas = ~ sin_year + cos_year,
@@ -644,7 +645,7 @@ saveRDS(paper_ldats_results, file = file.path(vignette_files, "output", "paper_l
 
 Select the best time series model and extract the dates of the changepoints:
 
-```{r select paper lda + ldats cpt, eval = params$run_models}
+```{r select_paper_lda_and_ldats_cpt, eval = params$run_models}
 paper_ldats_results <- readRDS(file.path(vignette_files, "output", "paper_ldats.RDS"))
   
 paper_ldats_cpt <- select_TS(paper_ldats_results)
@@ -683,12 +684,12 @@ All of the models find four changepoints.
 
 ### Paper LDA and LDATS changepoint
 
-```{r plot paper LDA and LDATS cpts, fig.width = 7, fig.height = 6}
+```{r plot_paper_LDA_and_LDATS_cpts, fig.width = 7, fig.height = 6}
 plot(paper_ldats_cpt)
 ```
 
 ### LDATS LDA and LDATS changepoint
-```{r plot ldats LDA and LDATS cpt, fig.width = 7, fig.height = 6}
+```{r plot_ldats_LDA_and_LDATS_cpt, fig.width = 7, fig.height = 6}
 plot(ldats_ldats_cpt)
 ```
 
@@ -697,7 +698,7 @@ annual_hist <- readRDS(file.path(vignette_files, "output", "annual_hist.RDS"))
 ```
 
 ### Paper LDA and paper changepoint
-```{r plot paper LDA and paper cpt, eval = params$run_models}
+```{r plot_paper_LDA_and_paper_cpt, eval = params$run_models}
 paper_cpts <- find_changepoint_location(paper_paper_cpt)
 ntopics <- ldamodel@k
 
@@ -707,7 +708,7 @@ get_ll_non_memoized_plot(ldamodel, paper_covariates, paper_cpts, make_plot = TRU
 dev.off()
 ```
 
-```{r plot paper LDA and LDATS cpts2, fig.width = 7, fig.height = 6}
+```{r plot_paper_LDA_and_LDATS_cpts2, fig.width = 7, fig.height = 6}
 paper_paper_hist <- annual_hist(paper_paper_cpt, paper_covariates$year_continuous)
 ```
 
@@ -717,7 +718,7 @@ knitr::include_graphics(file.path(vignette_files, "output", "paper_paper_cpt_plo
 
 
 ### LDATS LDA and paper changepoint
-```{r plot LDATS lda and paper cpt, eval = params$run_models}
+```{r plot_LDATS_lda_and_paper_cpt, eval = params$run_models}
 ldats_cpts <- find_changepoint_location(ldats_paper_cpt)
 ntopics <- ldats_ldamodel@k
 
@@ -727,7 +728,7 @@ get_ll_non_memoized_plot(ldats_ldamodel, paper_covariates, ldats_cpts, make_plot
 dev.off()
 ```
 
-```{r plot LDATS lda and paper cpt2, fig.width = 7, fig.height = 6}
+```{r plot_LDATS_lda_and_paper_cpt2, fig.width = 7, fig.height = 6}
 ldats_paper_hist <- annual_hist(ldats_paper_cpt, paper_covariates$year_continuous)
 ```
 
@@ -739,7 +740,7 @@ The results of the changepoint model appear robust to both choice of LDA model a
 
 ## Report changepoint dates
 
-```{r report cpt dates, include = FALSE, eval = params$run_models}
+```{r report_cpt_dates, include = FALSE, eval = params$run_models}
 paper_paper_cpt_dates$date <- as.Date(paper_paper_cpt_dates$date)
 ldats_paper_cpt_dates$date <- as.Date(ldats_paper_cpt_dates$date)
 
@@ -761,7 +762,7 @@ saveRDS(cpt_dates, file = file.path(vignette_files,  "output", "cpt_dates.RDS"))
 cpt_dates <- readRDS(file.path(vignette_files, "output", "cpt_dates.RDS"))
 ```
 
-```{r print cpt dates}
+```{r print_cpt_dates}
 knitr::kable(cpt_dates)
 ```
 

@@ -345,7 +345,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
 <p>This document provides a side-by-side comparison of
-<strong><code>LDATS</code></strong> (version 0.3.0) results with
+<strong><code>LDATS</code></strong> (version 0.2.7) results with
 analysis from <a href="https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2373">Christensen
 et al. 2018</a>. Due to the size and duration of model runs, we use
 pre-generated model output from the <a href="https://github.com/weecology/LDATS-replications">LDATS-replications
@@ -838,14 +838,14 @@ saved LDA models from previously:</p>
 <p>How the paper LDA model assigns species to topics:</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ldamodel, <span class="at">cols =</span> <span class="cn">NULL</span>, <span class="at">option =</span> <span class="st">&quot;D&quot;</span>)</span></code></pre></div>
 <div class="figure">
-<img src="figure/plot-paper-LDA-1.png" alt />
-<p class="caption">plot of chunk plot-paper-LDA</p>
+<img src="figure/plot_paper_LDA-1.png" alt />
+<p class="caption">plot of chunk plot_paper_LDA</p>
 </div>
 <p>How the LDATS LDA model assigns species to topics:</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ldats_ldamodel, <span class="at">cols =</span> <span class="cn">NULL</span>, <span class="at">option =</span> <span class="st">&quot;D&quot;</span>)</span></code></pre></div>
 <div class="figure">
-<img src="figure/plot-LDATS-LDA-1.png" alt />
-<p class="caption">plot of chunk plot-LDATS-LDA</p>
+<img src="figure/plot_LDATS_LDA-1.png" alt />
+<p class="caption">plot of chunk plot_LDATS_LDA</p>
 </div>
 <p>The paper method finds 4 topics and LDATS finds 6. This is because of
 an update to the model selection procedure. The paper conservatively
@@ -1051,16 +1051,16 @@ changepoints:</p>
 <h3>Paper LDA and LDATS changepoint</h3>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(paper_ldats_cpt)</span></code></pre></div>
 <div class="figure">
-<img src="figure/plot%20paper%20LDA%20and%20LDATS%20cpts-1.png" alt />
-<p class="caption">plot of chunk plot paper LDA and LDATS cpts</p>
+<img src="figure/plot_paper_LDA_and_LDATS_cpts-1.png" alt />
+<p class="caption">plot of chunk plot_paper_LDA_and_LDATS_cpts</p>
 </div>
 </div>
 <div id="ldats-lda-and-ldats-changepoint-1" class="section level3">
 <h3>LDATS LDA and LDATS changepoint</h3>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ldats_ldats_cpt)</span></code></pre></div>
 <div class="figure">
-<img src="figure/plot%20ldats%20LDA%20and%20LDATS%20cpt-1.png" alt />
-<p class="caption">plot of chunk plot ldats LDA and LDATS cpt</p>
+<img src="figure/plot_ldats_LDA_and_LDATS_cpt-1.png" alt />
+<p class="caption">plot of chunk plot_ldats_LDA_and_LDATS_cpt</p>
 </div>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>annual_hist <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(vignette_files, <span class="st">&quot;output&quot;</span>, <span class="st">&quot;annual_hist.RDS&quot;</span>))</span></code></pre></div>
 </div>
@@ -1075,8 +1075,8 @@ changepoints:</p>
 <span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>paper_paper_hist <span class="ot">&lt;-</span> <span class="fu">annual_hist</span>(paper_paper_cpt, paper_covariates<span class="sc">$</span>year_continuous)</span></code></pre></div>
 <div class="figure">
-<img src="figure/plot%20paper%20LDA%20and%20LDATS%20cpts2-1.png" alt />
-<p class="caption">plot of chunk plot paper LDA and LDATS cpts2</p>
+<img src="figure/plot_paper_LDA_and_LDATS_cpts2-1.png" alt />
+<p class="caption">plot of chunk plot_paper_LDA_and_LDATS_cpts2</p>
 </div>
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="fu">file.path</span>(vignette_files, <span class="st">&quot;output&quot;</span>, <span class="st">&quot;paper_paper_cpt_plot.png&quot;</span>))</span></code></pre></div>
 <div class="figure">
@@ -1095,8 +1095,8 @@ changepoints:</p>
 <span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>ldats_paper_hist <span class="ot">&lt;-</span> <span class="fu">annual_hist</span>(ldats_paper_cpt, paper_covariates<span class="sc">$</span>year_continuous)</span></code></pre></div>
 <div class="figure">
-<img src="figure/plot%20LDATS%20lda%20and%20paper%20cpt2-1.png" alt />
-<p class="caption">plot of chunk plot LDATS lda and paper cpt2</p>
+<img src="figure/plot_LDATS_lda_and_paper_cpt2-1.png" alt />
+<p class="caption">plot of chunk plot_LDATS_lda_and_paper_cpt2</p>
 </div>
 <div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="fu">file.path</span>(vignette_files, <span class="st">&quot;output&quot;</span>, <span class="st">&quot;ldats_paper_cpt_plot.png&quot;</span>))</span></code></pre></div>
 <div class="figure">
