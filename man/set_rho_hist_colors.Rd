@@ -7,22 +7,22 @@
 set_rho_hist_colors(x = NULL, cols = NULL, option = "D", alpha = 1)
 }
 \arguments{
-\item{x}{\code{matrix} of change point locations (element \code{rhos}) 
+\item{x}{\code{matrix} of change point locations (element \code{rhos})
 from an object of class \code{TS_fit}, fit by \code{\link{TS}}.}
 
 \item{cols}{Colors to be used to plot the histograms of change points.
 Any valid color values (\emph{e.g.}, see \code{\link[grDevices]{colors}},
-\code{\link[grDevices]{rgb}}) can be input as with a standard plot. 
-The default (\code{rho_cols = NULL}) triggers use of 
+\code{\link[grDevices]{rgb}}) can be input as with a standard plot.
+The default (\code{rho_cols = NULL}) triggers use of
 \code{\link[viridis]{viridis}} color options (see \code{rho_option}).}
 
 \item{option}{A \code{character} string indicating the color option
-from \code{\link[viridis]{viridis}} to use if "cols == NULL". Four 
-options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
+from \code{\link[viridis]{viridis}} to use if "cols == NULL". Four
+options are available: "magma" (or "A"), "inferno" (or "B"), "plasma"
 (or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").}
 
-\item{alpha}{Numeric value [0,1] that indicates the transparency of the 
-colors used. Supported only on some devices, see 
+\item{alpha}{Numeric value \link{0,1} that indicates the transparency of the
+colors used. Supported only on some devices, see
 \code{\link[grDevices]{rgb}}.}
 }
 \value{
@@ -30,7 +30,7 @@ Vector of \code{character} hex codes indicating colors to use.
 }
 \description{
 Based on the inputs, create the set of colors to be used in
-  the change point histogram.
+the change point histogram.
 }
 \examples{
 \donttest{

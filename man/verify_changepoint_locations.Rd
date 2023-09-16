@@ -4,14 +4,13 @@
 \alias{verify_changepoint_locations}
 \title{Verify the change points of a multinomial time series model}
 \usage{
-verify_changepoint_locations(data, changepoints = NULL,
-  timename = "time")
+verify_changepoint_locations(data, changepoints = NULL, timename = "time")
 }
 \arguments{
-\item{data}{Class \code{data.frame} object including the predictor and 
+\item{data}{Class \code{data.frame} object including the predictor and
 response variables.}
 
-\item{changepoints}{Numeric vector indicating locations of the change 
+\item{changepoints}{Numeric vector indicating locations of the change
 points. Must be conformable to \code{integer} values.}
 
 \item{timename}{\code{character} element indicating the time variable
@@ -22,11 +21,11 @@ timestep being 1 day, which is often not desired behavior.}
 }
 \value{
 Logical indicator of the check passing \code{TRUE} or failing
-  \code{FALSE}.
+\code{FALSE}.
 }
 \description{
-Verify that a time series can be broken into a set 
-  of chunks based on input change points.
+Verify that a time series can be broken into a set
+of chunks based on input change points.
 }
 \examples{
   data(rodents)

@@ -7,10 +7,10 @@
 LDA_msg(mod_topics, mod_seeds, control = list())
 }
 \arguments{
-\item{mod_topics}{\code{integer} value corresponding to the number of 
+\item{mod_topics}{\code{integer} value corresponding to the number of
 topics in the model.}
 
-\item{mod_seeds}{\code{integer} value corresponding to the seed used for 
+\item{mod_seeds}{\code{integer} value corresponding to the seed used for
 the model.}
 
 \item{control}{Class \code{LDA_controls} list of control parameters to be

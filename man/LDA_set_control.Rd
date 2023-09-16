@@ -4,31 +4,30 @@
 \alias{LDA_set_control}
 \title{Create control list for set of LDA models}
 \usage{
-LDA_set_control(quiet = FALSE, measurer = AIC, selector = min,
-  iseed = 2, ...)
+LDA_set_control(quiet = FALSE, measurer = AIC, selector = min, iseed = 2, ...)
 }
 \arguments{
-\item{quiet}{\code{logical} indicator of whether the model should run 
+\item{quiet}{\code{logical} indicator of whether the model should run
 quietly.}
 
 \item{measurer, selector}{Function names for use in evaluation of the LDA
 models. \code{measurer} is used to create a value for each model
-and \code{selector} operates on the values to choose the model(s) to 
+and \code{selector} operates on the values to choose the model(s) to
 pass on.}
 
 \item{iseed}{\code{integer} initial seed for the model set.}
 
-\item{...}{Additional arguments to be passed to 
+\item{...}{Additional arguments to be passed to
 \code{\link[topicmodels]{LDA}} as a \code{control} input.}
 }
 \value{
 \code{list} for controlling the LDA model fit.
 }
 \description{
-This function provides a simple creation and definition of 
-  the list used to control the set of LDA models. It is set up to be easy
-  to work with the existing control capacity of 
-  \code{\link[topicmodels]{LDA}}.
+This function provides a simple creation and definition of
+the list used to control the set of LDA models. It is set up to be easy
+to work with the existing control capacity of
+\code{\link[topicmodels]{LDA}}.
 }
 \examples{
   LDA_set_control()

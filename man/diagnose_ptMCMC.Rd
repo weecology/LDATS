@@ -7,40 +7,40 @@
 diagnose_ptMCMC(ptMCMCout)
 }
 \arguments{
-\item{ptMCMCout}{Named \code{list} of saved data objects from a ptMCMC 
-estimation including elements named \code{step_accepts} (matrix of 
+\item{ptMCMCout}{Named \code{list} of saved data objects from a ptMCMC
+estimation including elements named \code{step_accepts} (matrix of
 \code{logical} outcomes of each step; rows: chains, columns: iterations),
 \code{swap_accepts} (matrix of \code{logical} outcomes of each swap;
-rows: chain pairs, columns: iterations), and \code{ids} (matrix of 
-particle identifiers; rows: chains, columns: iterations). 
+rows: chain pairs, columns: iterations), and \code{ids} (matrix of
+particle identifiers; rows: chains, columns: iterations).
 \code{ptMCMCout = NULL} indicates no use of ptMCMC and so the function
 returns \code{NULL}.}
 }
 \value{
-\code{list} of [1] within-chain average step acceptance rates 
-  (\code{$step_acceptance_rate}), [2] average between-chain swap acceptance
-  rates (\code{$swap_acceptance_rate}), [3] within particle trip counts 
-  (\code{$trip_counts}), and [4] within-particle average trip rates 
-  (\code{$trip_rates}).
+\code{list} of \link{1} within-chain average step acceptance rates
+(\code{$step_acceptance_rate}), \link{2} average between-chain swap acceptance
+rates (\code{$swap_acceptance_rate}), \link{3} within particle trip counts
+(\code{$trip_counts}), and \link{4} within-particle average trip rates
+(\code{$trip_rates}).
 }
 \description{
 Summarize the step and swap acceptance rates as well as trip
-  metrics from the saved output of a ptMCMC estimation.
+metrics from the saved output of a ptMCMC estimation.
 }
 \details{
 Within-chain step acceptance rates are averaged for each of the
-  chains from the raw step acceptance histories 
-  (\code{ptMCMCout$step_accepts}) and between-chain swap acceptance rates
-  are similarly averaged for each of the neighboring pairs of chains from
-  the raw swap acceptance histories (\code{ptMCMCout$swap_accepts}).
-  Trips are defined as movement from one extreme chain to the other and
-  back again (Katzgraber \emph{et al.} 2006). Trips are counted and turned 
-  to per-iteration rates using \code{\link{count_trips}}.
-  \cr \cr 
-  This function was first designed to work within \code{\link{TS}} and 
-  process the output of \code{\link{est_changepoints}}, but has been 
-  generalized and would work with any output from a ptMCMC as long as 
-  \code{ptMCMCout} is formatted properly.
+chains from the raw step acceptance histories
+(\code{ptMCMCout$step_accepts}) and between-chain swap acceptance rates
+are similarly averaged for each of the neighboring pairs of chains from
+the raw swap acceptance histories (\code{ptMCMCout$swap_accepts}).
+Trips are defined as movement from one extreme chain to the other and
+back again (Katzgraber \emph{et al.} 2006). Trips are counted and turned
+to per-iteration rates using \code{\link{count_trips}}.
+\cr \cr
+This function was first designed to work within \code{\link{TS}} and
+process the output of \code{\link{est_changepoints}}, but has been
+generalized and would work with any output from a ptMCMC as long as
+\code{ptMCMCout} is formatted properly.
 }
 \examples{
 \donttest{
@@ -59,8 +59,8 @@ Within-chain step acceptance rates are averaged for each of the
 
 }
 \references{
-Katzgraber, H. G., S. Trebst, D. A. Huse. And M. Troyer. 2006. 
-  Feedback-optimized parallel tempering Monte Carlo. \emph{Journal of 
-  Statistical Mechanics: Theory and Experiment} \strong{3}:P03018
-  \href{https://bit.ly/2LICGXh}{link}.
+Katzgraber, H. G., S. Trebst, D. A. Huse. And M. Troyer. 2006.
+Feedback-optimized parallel tempering Monte Carlo. \emph{Journal of
+Statistical Mechanics: Theory and Experiment} \strong{3}:P03018
+\href{https://bit.ly/2LICGXh}{link}.
 }

@@ -7,18 +7,18 @@
 check_document_term_table(document_term_table)
 }
 \arguments{
-\item{document_term_table}{Table of observation count data (rows: 
-documents, columns: terms. May be a class \code{matrix} or 
+\item{document_term_table}{Table of observation count data (rows:
+documents, columns: terms. May be a class \code{matrix} or
 \code{data.frame} but must be conformable to a matrix of integers,
 as verified by \code{\link{check_document_term_table}}.}
 }
 \value{
-an error message is thrown if the input is improper, otherwise 
-  \code{NULL}.
+an error message is thrown if the input is improper, otherwise
+\code{NULL}.
 }
 \description{
 Check that the table of observations is conformable to
-  a matrix of integers.
+a matrix of integers.
 }
 \examples{
  data(rodents)

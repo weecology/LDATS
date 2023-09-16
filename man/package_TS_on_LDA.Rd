@@ -7,25 +7,25 @@
 package_TS_on_LDA(TSmods, LDA_models, models)
 }
 \arguments{
-\item{TSmods}{list of results from \code{\link{TS}} applied for each model 
+\item{TSmods}{list of results from \code{\link{TS}} applied for each model
 on each LDA model input.}
 
 \item{LDA_models}{List of LDA models (class \code{LDA_set}, produced by
 \code{\link{LDA_set}}) or a singular LDA model (class \code{LDA},
 produced by \code{\link[topicmodels]{LDA}}).}
 
-\item{models}{\code{data.frame} object returned from 
-\code{\link{expand_TS}} that contains the combinations of LDA models, 
+\item{models}{\code{data.frame} object returned from
+\code{\link{expand_TS}} that contains the combinations of LDA models,
 and formulas and nchangepoints used in the TS models.}
 }
 \value{
-Class \code{TS_on_LDA} list of results from \code{\link{TS}} 
-  applied for each model on each LDA model input.
+Class \code{TS_on_LDA} list of results from \code{\link{TS}}
+applied for each model on each LDA model input.
 }
 \description{
-Set the class and name the elements of the results list 
-  returned from applying \code{\link{TS}} to the combination of TS models
-  requested for the LDA model(s) input.
+Set the class and name the elements of the results list
+returned from applying \code{\link{TS}} to the combination of TS models
+requested for the LDA model(s) input.
 }
 \examples{
 \donttest{

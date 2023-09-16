@@ -11,13 +11,13 @@ check_LDA_models(LDA_models)
 }
 \value{
 An error message is thrown if \code{LDA_models} is not proper,
-  else \code{NULL}.
+else \code{NULL}.
 }
 \description{
-Check that the \code{LDA_models} input is either a set of 
-  LDA models (class \code{LDA_set}, produced by
-  \code{\link{LDA_set}}) or a singular LDA model (class \code{LDA},
-  produced by \code{\link[topicmodels]{LDA}}).
+Check that the \code{LDA_models} input is either a set of
+LDA models (class \code{LDA_set}, produced by
+\code{\link{LDA_set}}) or a singular LDA model (class \code{LDA},
+produced by \code{\link[topicmodels]{LDA}}).
 }
 \examples{
   data(rodents)

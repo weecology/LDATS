@@ -13,16 +13,16 @@ update_saves(i, saves, steps, swaps)
 process_saves(saves, control = list())
 }
 \arguments{
-\item{nchangepoints}{\code{integer} corresponding to the number of 
+\item{nchangepoints}{\code{integer} corresponding to the number of
 change points to include in the model. 0 is a valid input (corresponding
-to no change points, so a singular time series model), and the current 
-implementation can reasonably include up to 6 change points. The 
-number of change points is used to dictate the segmentation of the data  
+to no change points, so a singular time series model), and the current
+implementation can reasonably include up to 6 change points. The
+number of change points is used to dictate the segmentation of the data
 for each continuous model and each LDA model.}
 
 \item{control}{A \code{list} of parameters to control the fitting of the
-Time Series model including the parallel tempering Markov Chain 
-Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
+Time Series model including the parallel tempering Markov Chain
+Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 \code{\link{TS_control}}.}
 
 \item{i}{\code{integer} iteration index.}
@@ -34,21 +34,21 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 \item{swaps}{Chain configuration after among-temperature swaps.}
 }
 \value{
-\code{list} of ptMCMC objects: change points (\code{$cpts}), 
-  log-likelihoods (\code{$lls}), chain ids (\code{$ids}), step acceptances
-  (\code{$step_accepts}), and swap acceptances (\code{$swap_accepts}).
+\code{list} of ptMCMC objects: change points (\code{$cpts}),
+log-likelihoods (\code{$lls}), chain ids (\code{$ids}), step acceptances
+(\code{$step_accepts}), and swap acceptances (\code{$swap_accepts}).
 }
 \description{
-\code{prep_saves} creates the data structure used to save the 
-  output from each iteration of the ptMCMC algorithm, which is added via
-  \code{update_saves}. Once the ptMCMC is complete, the saved data objects
-  are then processed (burn-in iterations are dropped and the remaining
-  iterations are thinned) via \code{process_saves}.
-  \cr \cr
-  This set of functions was designed to work within \code{\link{TS}} and 
-  specifically \code{\link{est_changepoints}}. They are still hardcoded to
-  do so, but have the capacity to be generalized to work with any
-  estimation via ptMCMC with additional coding work.
+\code{prep_saves} creates the data structure used to save the
+output from each iteration of the ptMCMC algorithm, which is added via
+\code{update_saves}. Once the ptMCMC is complete, the saved data objects
+are then processed (burn-in iterations are dropped and the remaining
+iterations are thinned) via \code{process_saves}.
+\cr \cr
+This set of functions was designed to work within \code{\link{TS}} and
+specifically \code{\link{est_changepoints}}. They are still hardcoded to
+do so, but have the capacity to be generalized to work with any
+estimation via ptMCMC with additional coding work.
 }
 \examples{
 \donttest{

@@ -20,7 +20,7 @@ take_step(cpts, prop_step, accept_step)
 
 \item{cpts}{\code{matrix} of change point locations across chains.}
 
-\item{inputs}{Class \code{ptMCMC_inputs} \code{list}, containing the 
+\item{inputs}{Class \code{ptMCMC_inputs} \code{list}, containing the
 static inputs for use within the ptMCMC algorithm.}
 
 \item{prop_step}{Proposed step output from \code{propose_step}.}
@@ -29,35 +29,35 @@ static inputs for use within the ptMCMC algorithm.}
 proposed step.}
 }
 \value{
-\code{step_chains}: \code{list} of change points, log-likelihoods, 
-  and logical indicators of acceptance for each chain. \cr \cr
-  \code{propose_step}: \code{list} of change points and 
-  log-likelihood values for the proposal. \cr \cr
-  \code{eval_step}: \code{logical} vector indicating if each 
-  chain's proposal was accepted. \cr \cr
-  \code{take_step}: \code{list} of change points, log-likelihoods, 
-  and logical indicators of acceptance for each chain.
+\code{step_chains}: \code{list} of change points, log-likelihoods,
+and logical indicators of acceptance for each chain. \cr \cr
+\code{propose_step}: \code{list} of change points and
+log-likelihood values for the proposal. \cr \cr
+\code{eval_step}: \code{logical} vector indicating if each
+chain's proposal was accepted. \cr \cr
+\code{take_step}: \code{list} of change points, log-likelihoods,
+and logical indicators of acceptance for each chain.
 }
 \description{
-This set of functions steps the chains forward one iteration 
-  of the within-chain component of the ptMCMC algorithm. \code{step_chains}
-  is the main function, comprised of a proposal (made by \code{prop_step}),
-  an evaluation of that proposal (made by \code{eval_step}), and then an 
-  update of the configuration (made by \code{take_step}). 
-  \cr \cr
-  This set of functions was designed to work within \code{\link{TS}} and 
-  specifically \code{\link{est_changepoints}}. They are still hardcoded to
-  do so, but have the capacity to be generalized to work with any 
-  estimation via ptMCMC with additional coding work.
+This set of functions steps the chains forward one iteration
+of the within-chain component of the ptMCMC algorithm. \code{step_chains}
+is the main function, comprised of a proposal (made by \code{prop_step}),
+an evaluation of that proposal (made by \code{eval_step}), and then an
+update of the configuration (made by \code{take_step}).
+\cr \cr
+This set of functions was designed to work within \code{\link{TS}} and
+specifically \code{\link{est_changepoints}}. They are still hardcoded to
+do so, but have the capacity to be generalized to work with any
+estimation via ptMCMC with additional coding work.
 }
 \details{
 For each iteration of the ptMCMC algorithm, all of the chains
-  have the potential to take a step. The possible step is proposed under
-  a proposal distribution (here for change points we use a symmetric
-  geometric distribution), the proposed step is then evaluated and either
-  accepted or not (following the Metropolis-Hastings rule; Metropolis,
-  \emph{et al.} 1953, Hasting 1960, Gupta \emph{et al.} 2018), and then
-  accordingly taken or not (the configurations are updated).
+have the potential to take a step. The possible step is proposed under
+a proposal distribution (here for change points we use a symmetric
+geometric distribution), the proposed step is then evaluated and either
+accepted or not (following the Metropolis-Hastings rule; Metropolis,
+\emph{et al.} 1953, Hasting 1960, Gupta \emph{et al.} 2018), and then
+accordingly taken or not (the configurations are updated).
 }
 \examples{
 \donttest{
@@ -91,17 +91,17 @@ For each iteration of the ptMCMC algorithm, all of the chains
 
 }
 \references{
-Gupta, S., L. Hainsworth, J. S. Hogg, R. E. C. Lee, and J. R. Faeder. 
-  2018. Evaluation of parallel tempering to accelerate Bayesian parameter
-  estimation in systems biology. 
-  \href{https://arxiv.org/abs/1801.09831}{link}.
+Gupta, S., L. Hainsworth, J. S. Hogg, R. E. C. Lee, and J. R. Faeder.
+2018. Evaluation of parallel tempering to accelerate Bayesian parameter
+estimation in systems biology.
+\href{https://arxiv.org/abs/1801.09831}{link}.
 
-  Hastings, W. K. 1970. Monte Carlo sampling methods using Markov Chains
-  and their applications. \emph{Biometrika} \strong{57}:97-109.
-  \href{https://doi.org/10.2307/2334940}{link}.
- 
-  Metropolis, N., A. W. Rosenbluth, M. N. Rosenbluth, A. H. Teller, and E.
-  Teller. 1953. Equations of state calculations by fast computing machines.
-  \emph{Journal of Chemical Physics} \strong{21}: 1087-1092.
-  \href{https://bayes.wustl.edu/Manual/EquationOfState.pdf}{link}.
+Hastings, W. K. 1970. Monte Carlo sampling methods using Markov Chains
+and their applications. \emph{Biometrika} \strong{57}:97-109.
+\href{https://doi.org/10.2307/2334940}{link}.
+
+Metropolis, N., A. W. Rosenbluth, M. N. Rosenbluth, A. H. Teller, and E.
+Teller. 1953. Equations of state calculations by fast computing machines.
+\emph{Journal of Chemical Physics} \strong{21}: 1087-1092.
+\href{https://bayes.wustl.edu/Manual/EquationOfState.pdf}{link}.
 }

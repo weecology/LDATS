@@ -11,17 +11,17 @@ sim_LDA_data(N, Beta, alpha = NULL, Theta = NULL, seed = NULL)
 conformable. Is used to infer the total number of documents.}
 
 \item{Beta}{\code{matrix} of categorical distribution parameters defining
-terms within topics. Dimension: k x V (number of topics x number of 
-terms). Used to infer both (k) and (V). Must be non-negative and sum to 
+terms within topics. Dimension: k x V (number of topics x number of
+terms). Used to infer both (k) and (V). Must be non-negative and sum to
 1 within topics.}
 
 \item{alpha}{Single positive numeric value for the Dirichlet distribution
 parameter defining topics within documents. To specifically define
 document topic probabilities, use \code{Theta}.}
 
-\item{Theta}{\code{matrix} of probabilities defining topics within 
-documents. Dimension: M x k (documents x topics). Must be non-negative 
-and sum to 1 within documents. To generally define document topic 
+\item{Theta}{\code{matrix} of probabilities defining topics within
+documents. Dimension: M x k (documents x topics). Must be non-negative
+and sum to 1 within documents. To generally define document topic
 probabilities, use \code{alpha}.}
 
 \item{seed}{Input to \code{\link{set.seed}}.}
@@ -31,9 +31,9 @@ A document-by-term \code{matrix} of counts (dim: M x V).
 }
 \description{
 For a given set of parameters \code{alpha} and \code{Beta} and
-  document-specific total word counts, simulate a document-by-term matrix.
-  Additional structuring variables (the numbers of topics (k),
-  documents (M), terms (V)) are inferred from input objects.
+document-specific total word counts, simulate a document-by-term matrix.
+Additional structuring variables (the numbers of topics (k),
+documents (M), terms (V)) are inferred from input objects.
 }
 \examples{
   N <- c(10, 22, 15, 31)

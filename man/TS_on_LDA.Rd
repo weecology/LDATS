@@ -5,13 +5,25 @@
 \alias{check_TS_on_LDA_inputs}
 \title{Conduct a set of Time Series analyses on a set of LDA models}
 \usage{
-TS_on_LDA(LDA_models, document_covariate_table, formulas = ~1,
-  nchangepoints = 0, timename = "time", weights = NULL,
-  control = list())
+TS_on_LDA(
+  LDA_models,
+  document_covariate_table,
+  formulas = ~1,
+  nchangepoints = 0,
+  timename = "time",
+  weights = NULL,
+  control = list()
+)
 
-check_TS_on_LDA_inputs(LDA_models, document_covariate_table,
-  formulas = ~1, nchangepoints = 0, timename = "time",
-  weights = NULL, control = list())
+check_TS_on_LDA_inputs(
+  LDA_models,
+  document_covariate_table,
+  formulas = ~1,
+  nchangepoints = 0,
+  timename = "time",
+  weights = NULL,
+  control = list()
+)
 }
 \arguments{
 \item{LDA_models}{List of LDA models (class \code{LDA_set}, produced by
@@ -20,25 +32,25 @@ produced by \code{\link[topicmodels]{LDA}}).}
 
 \item{document_covariate_table}{Document covariate table (rows: documents,
 columns: time index and covariate options). Every model needs a
-covariate to describe the time value for each document (in whatever 
+covariate to describe the time value for each document (in whatever
 units and whose name in the table is input in \code{timename})
-that dictates the application of the change points. 
+that dictates the application of the change points.
 In addition, all covariates named within specific models in
 \code{formula} must be included. Must be a conformable to a data table,
 as verified by \code{\link{check_document_covariate_table}}.}
 
-\item{formulas}{Vector of \code{\link[stats]{formula}}(s) for the 
-continuous (non-change point) component of the time series models. Any 
+\item{formulas}{Vector of \code{\link[stats]{formula}}(s) for the
+continuous (non-change point) component of the time series models. Any
 predictor variable included in a formula must also be a column in the
 \code{document_covariate_table}. Each element (formula) in the vector
 is evaluated for each number of change points and each LDA model.}
 
-\item{nchangepoints}{Vector of \code{integer}s corresponding to the number 
-of change points to include in the time series models. 0 is a valid input 
+\item{nchangepoints}{Vector of \code{integer}s corresponding to the number
+of change points to include in the time series models. 0 is a valid input
 corresponding to no change points (\emph{i.e.}, a singular time series
-model), and the current implementation can reasonably include up to 6 
-change points. Each element in the vector is the number of change points 
-used to segment the data for each formula (entry in \code{formulas}) 
+model), and the current implementation can reasonably include up to 6
+change points. Each element in the vector is the number of change points
+used to segment the data for each formula (entry in \code{formulas})
 component of the TS model, for each selected LDA model.}
 
 \item{timename}{\code{character} element indicating the time variable
@@ -47,38 +59,38 @@ integer-conformable or a \code{Date}. If the variable named
 is a \code{Date}, the input is converted to an integer, resulting in the
 timestep being 1 day, which is often not desired behavior.}
 
-\item{weights}{Optional class \code{numeric} vector of weights for each 
+\item{weights}{Optional class \code{numeric} vector of weights for each
 document. Defaults to \code{NULL}, translating to an equal weight for
-each document. When using \code{multinom_TS} in a standard LDATS 
+each document. When using \code{multinom_TS} in a standard LDATS
 analysis, it is advisable to weight the documents by their total size,
-as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
+as the result of \code{\link[topicmodels]{LDA}} is a matrix of
 proportions, which does not account for size differences among documents.
 For most models, a scaling of the weights (so that the average is 1) is
 most appropriate, and this is accomplished using \code{document_weights}.}
 
 \item{control}{A \code{list} of parameters to control the fitting of the
-Time Series model including the parallel tempering Markov Chain 
-Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
+Time Series model including the parallel tempering Markov Chain
+Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 \code{\link{TS_control}}.}
 }
 \value{
-\code{TS_on_LDA}: \code{TS_on_LDA}-class \code{list} of results 
-  from \code{\link{TS}} applied for each model on each LDA model input.
-  \cr \cr
-  \code{check_TS_inputs}: An error message is thrown if any input
-  is not proper, else \code{NULL}.
+\code{TS_on_LDA}: \code{TS_on_LDA}-class \code{list} of results
+from \code{\link{TS}} applied for each model on each LDA model input.
+\cr \cr
+\code{check_TS_inputs}: An error message is thrown if any input
+is not proper, else \code{NULL}.
 }
 \description{
 This is a wrapper function that expands the main Time Series
-  analyses function (\code{\link{TS}}) across the LDA models (estimated
-  using \code{\link[topicmodels]{LDA}} or \code{\link{LDA_set}} and the 
-  Time Series models, with respect to both continuous time formulas and the 
-  number of discrete changepoints. This function allows direct passage of
-  the control parameters for the parallel tempering MCMC through to the 
-  main Time Series function, \code{\link{TS}}, via the 
-  \code{ptMCMC_controls} argument. \cr \cr
-  \code{check_TS_on_LDA_inputs} checks that the inputs to 
-  \code{TS_on_LDA} are of proper classes for a full analysis.
+analyses function (\code{\link{TS}}) across the LDA models (estimated
+using \code{\link[topicmodels]{LDA}} or \code{\link{LDA_set}} and the
+Time Series models, with respect to both continuous time formulas and the
+number of discrete changepoints. This function allows direct passage of
+the control parameters for the parallel tempering MCMC through to the
+main Time Series function, \code{\link{TS}}, via the
+\code{ptMCMC_controls} argument. \cr \cr
+\code{check_TS_on_LDA_inputs} checks that the inputs to
+\code{TS_on_LDA} are of proper classes for a full analysis.
 }
 \examples{
 \donttest{

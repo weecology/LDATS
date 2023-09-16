@@ -12,8 +12,8 @@ check_control(control, eclass = "list")
 \item{eclass}{Expected class of the list to be evaluated.}
 }
 \value{
-an error message is thrown if the input is improper, otherwise 
-  \code{NULL}.
+an error message is thrown if the input is improper, otherwise
+\code{NULL}.
 }
 \description{
 Check that a list of controls is of the right class.

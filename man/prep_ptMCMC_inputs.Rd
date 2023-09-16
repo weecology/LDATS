@@ -2,28 +2,34 @@
 % Please edit documentation in R/ptMCMC.R
 \name{prep_ptMCMC_inputs}
 \alias{prep_ptMCMC_inputs}
-\title{Prepare the inputs for the ptMCMC algorithm estimation of 
-  change points}
+\title{Prepare the inputs for the ptMCMC algorithm estimation of
+change points}
 \usage{
-prep_ptMCMC_inputs(data, formula, nchangepoints, timename,
-  weights = NULL, control = list())
+prep_ptMCMC_inputs(
+  data,
+  formula,
+  nchangepoints,
+  timename,
+  weights = NULL,
+  control = list()
+)
 }
 \arguments{
-\item{data}{Class \code{data.frame} object including [1] the time variable
-(indicated in \code{control}), [2] the predictor variables (required by
-\code{formula}) and [3], the multinomial response variable (indicated
+\item{data}{Class \code{data.frame} object including \link{1} the time variable
+(indicated in \code{control}), \link{2} the predictor variables (required by
+\code{formula}) and \link{3}, the multinomial response variable (indicated
 in \code{formula}).}
 
-\item{formula}{\code{formula} describing the continuous change. Any 
+\item{formula}{\code{formula} describing the continuous change. Any
 predictor variable included must also be a column in the
 \code{data}.  Any (multinomial) response variable must also be a set of
 columns in \code{data}.}
 
-\item{nchangepoints}{Integer corresponding to the number of 
+\item{nchangepoints}{Integer corresponding to the number of
 change points to include in the model. 0 is a valid input (corresponding
-to no change points, so a singular time series model), and the current 
-implementation can reasonably include up to 6 change points. The 
-number of change points is used to dictate the segmentation of the data  
+to no change points, so a singular time series model), and the current
+implementation can reasonably include up to 6 change points. The
+number of change points is used to dictate the segmentation of the data
 for each continuous model and each LDA model.}
 
 \item{timename}{\code{character} element indicating the time variable
@@ -32,33 +38,33 @@ integer-conformable or a \code{Date}. If the variable named
 is a \code{Date}, the input is converted to an integer, resulting in the
 timestep being 1 day, which is often not desired behavior.}
 
-\item{weights}{Optional class \code{numeric} vector of weights for each 
+\item{weights}{Optional class \code{numeric} vector of weights for each
 document. Defaults to \code{NULL}, translating to an equal weight for
-each document. When using \code{multinom_TS} in a standard LDATS 
+each document. When using \code{multinom_TS} in a standard LDATS
 analysis, it is advisable to weight the documents by their total size,
-as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
+as the result of \code{\link[topicmodels]{LDA}} is a matrix of
 proportions, which does not account for size differences among documents.
 For most models, a scaling of the weights (so that the average is 1) is
-most appropriate, and this is accomplished using 
+most appropriate, and this is accomplished using
 \code{\link{document_weights}}.}
 
 \item{control}{A \code{list} of parameters to control the fitting of the
-Time Series model including the parallel tempering Markov Chain 
-Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
+Time Series model including the parallel tempering Markov Chain
+Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 \code{\link{TS_control}}.}
 }
 \value{
-Class \code{ptMCMC_inputs} \code{list}, containing the static 
-  inputs for use within the ptMCMC algorithm for estimating change points.
+Class \code{ptMCMC_inputs} \code{list}, containing the static
+inputs for use within the ptMCMC algorithm for estimating change points.
 }
 \description{
 Package the static inputs (controls and data structures) used
-  by the ptMCMC algorithm in the context of estimating change points. 
-  \cr \cr
-  This function was designed to work within \code{\link{TS}} and 
-  specifically \code{\link{est_changepoints}}. It is still hardcoded to do
-  so, but has the capacity to be generalized to work with any estimation
-  via ptMCMC with additional coding work.
+by the ptMCMC algorithm in the context of estimating change points.
+\cr \cr
+This function was designed to work within \code{\link{TS}} and
+specifically \code{\link{est_changepoints}}. It is still hardcoded to do
+so, but has the capacity to be generalized to work with any estimation
+via ptMCMC with additional coding work.
 }
 \examples{
 \donttest{

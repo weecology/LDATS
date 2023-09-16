@@ -4,12 +4,14 @@
 \name{jornada}
 \alias{jornada}
 \title{Jornada rodent data}
-\format{A \code{list} of two \code{data.frame}-class objects with rows 
-  corresponding to documents (sampling events). One element is the
-  document term table (called \code{document_term_table}), which contains
-  counts of the species (terms) in each sample (document), and the other is
-  the document covariate table (called \code{document_covariate_table}) 
-  with columns of covariates (time step, year, season).}
+\format{
+A \code{list} of two \code{data.frame}-class objects with rows
+corresponding to documents (sampling events). One element is the
+document term table (called \code{document_term_table}), which contains
+counts of the species (terms) in each sample (document), and the other is
+the document covariate table (called \code{document_covariate_table})
+with columns of covariates (time step, year, season).
+}
 \source{
 \url{https://jornada.nmsu.edu/lter/dataset/49798/view}
 }
@@ -17,15 +19,15 @@
 jornada
 }
 \description{
-Counts of 17 rodent species across 24 sampling events, 
-  with the count being the total number observed across three trapping webs
-  (146 traps in total) (Lightfoot \emph{et al.} 2012).
+Counts of 17 rodent species across 24 sampling events,
+with the count being the total number observed across three trapping webs
+(146 traps in total) (Lightfoot \emph{et al.} 2012).
 }
 \references{
-Lightfoot, D. C., A. D. Davidson, D. G. Parker, L. Hernandez, and J. W. 
-  Laundre. 2012. Bottom-up regulation of desert grassland and shrubland 
-  rodent communities: implications of species-specific reproductive
-  potentials. \emph{Journal of Mammalogy} \strong{93}:1017-1028.
-  \href{https://doi.org/10.1644/11-MAMM-A-391.1}{link}.
+Lightfoot, D. C., A. D. Davidson, D. G. Parker, L. Hernandez, and J. W.
+Laundre. 2012. Bottom-up regulation of desert grassland and shrubland
+rodent communities: implications of species-specific reproductive
+potentials. \emph{Journal of Mammalogy} \strong{93}:1017-1028.
+\href{https://doi.org/10.1644/11-MAMM-A-391.1}{link}.
 }
 \keyword{datasets}

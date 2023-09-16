@@ -14,7 +14,7 @@ The softmax of \code{x}.
 }
 \description{
 Calculate the softmax (normalized exponential) of a vector
- of values or a set of vectors stacked rowwise.
+of values or a set of vectors stacked rowwise.
 }
 \examples{
   dat <- matrix(runif(100, -1, 1), 25, 4)

@@ -11,11 +11,11 @@ check_changepoints(changepoints = NULL)
 }
 \value{
 An error message is thrown if \code{changepoints} are not proper,
-  else \code{NULL}.
+else \code{NULL}.
 }
 \description{
 Check that the change point locations are \code{numeric}
-  and conformable to \code{interger} values.
+and conformable to \code{interger} values.
 }
 \examples{
   check_changepoints(100)

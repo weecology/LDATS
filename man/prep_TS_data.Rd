@@ -3,16 +3,16 @@
 \name{prep_TS_data}
 \alias{prep_TS_data}
 \title{Prepare the model-specific data to be used in the TS analysis
-  of LDA output}
+of LDA output}
 \usage{
 prep_TS_data(document_covariate_table, LDA_models, mods, i = 1)
 }
 \arguments{
 \item{document_covariate_table}{Document covariate table (rows: documents,
 columns: time index and covariate options). Every model needs a
-covariate to describe the time value for each document (in whatever 
+covariate to describe the time value for each document (in whatever
 units and whose name in the table is input in \code{timename})
-that dictates the application of the change points. 
+that dictates the application of the change points.
 In addition, all covariates named within specific models in
 \code{formula} must be included. Must be a conformable to a data table,
 as verified by \code{\link{check_document_covariate_table}}.}
@@ -21,23 +21,23 @@ as verified by \code{\link{check_document_covariate_table}}.}
 \code{\link{LDA_set}}) or a singular LDA model (class \code{LDA},
 produced by \code{\link[topicmodels]{LDA}}).}
 
-\item{mods}{The \code{data.table} created by \code{\link{expand_TS}} that 
+\item{mods}{The \code{data.table} created by \code{\link{expand_TS}} that
 contains each of the models (defined by the LDA model to use and the and
-formula number of changepoints for the TS model). Indexed here by 
+formula number of changepoints for the TS model). Indexed here by
 \code{i}.}
 
 \item{i}{\code{integer} index referencing the row in \code{mods} to use.}
 }
 \value{
-Class \code{data.frame} object including [1] the time variable
-  (indicated in \code{control}), [2] the predictor variables (required by
-  \code{formula}) and [3], the multinomial response variable (indicated
-  in \code{formula}), ready for input into \code{TS}.
+Class \code{data.frame} object including \link{1} the time variable
+(indicated in \code{control}), \link{2} the predictor variables (required by
+\code{formula}) and \link{3}, the multinomial response variable (indicated
+in \code{formula}), ready for input into \code{TS}.
 }
 \description{
-Append the estimated topic proportions from a fitted LDA model 
-  to the document covariate table to create the data structure needed for 
-  \code{\link{TS}}.
+Append the estimated topic proportions from a fitted LDA model
+to the document covariate table to create the data structure needed for
+\code{\link{TS}}.
 }
 \examples{
 \donttest{

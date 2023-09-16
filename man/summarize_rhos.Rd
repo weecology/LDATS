@@ -10,29 +10,29 @@ summarize_rhos(rhos, control = list())
 measure_rho_vcov(rhos)
 }
 \arguments{
-\item{rhos}{Matrix of change point locations (columns) across iterations of 
+\item{rhos}{Matrix of change point locations (columns) across iterations of
 the ptMCMC (rows) or \code{NULL} if no change points are in the model,
 as returned from \code{\link{est_changepoints}}.}
 
 \item{control}{A \code{list} of parameters to control the fitting of the
-Time Series model including the parallel tempering Markov Chain 
-Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
+Time Series model including the parallel tempering Markov Chain
+Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 \code{\link{TS_control}}.}
 }
 \value{
 \code{summarize_rhos}: table of summary statistics for change point
-  locations including mean, median, mode, posterior interval, standard
-  deviation, MCMC error, autocorrelation, and effective sample size for 
-  each change point location. \cr \cr
-  \code{measure_rho_vcov}: variance-covariance matrix for change 
-  point locations.
+locations including mean, median, mode, posterior interval, standard
+deviation, MCMC error, autocorrelation, and effective sample size for
+each change point location. \cr \cr
+\code{measure_rho_vcov}: variance-covariance matrix for change
+point locations.
 }
 \description{
 \code{summarize_rho} calculates summary statistics for each
-  of the change point locations.
-  \cr \cr
-  \code{measure_rho_vcov} generates the variance-covariance matrix for the 
-  change point locations.
+of the change point locations.
+\cr \cr
+\code{measure_rho_vcov} generates the variance-covariance matrix for the
+change point locations.
 }
 \examples{
  rhos <- matrix(sample(80:100, 100, TRUE), 50, 2)

@@ -9,19 +9,19 @@ package_LDA_set(mods, mod_topics, mod_seeds)
 \arguments{
 \item{mods}{Fitted models returned from \code{\link[topicmodels]{LDA}}.}
 
-\item{mod_topics}{Vector of \code{integer} values corresponding to the 
+\item{mod_topics}{Vector of \code{integer} values corresponding to the
 number of topics in each model.}
 
-\item{mod_seeds}{Vector of \code{integer} values corresponding to the 
+\item{mod_seeds}{Vector of \code{integer} values corresponding to the
 seed used for each model.}
 }
 \value{
-\code{lis} (class: \code{LDA_set}) of LDA models (class: 
-  \code{LDA_VEM}).
+\code{lis} (class: \code{LDA_set}) of LDA models (class:
+\code{LDA_VEM}).
 }
 \description{
-Name the elements (LDA models) and set the class 
-  (\code{LDA_set}) of the models returned by \code{\link{LDA_set}}.
+Name the elements (LDA models) and set the class
+(\code{LDA_set}) of the models returned by \code{\link{LDA_set}}.
 }
 \examples{
 \donttest{

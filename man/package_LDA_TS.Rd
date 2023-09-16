@@ -7,31 +7,31 @@
 package_LDA_TS(LDAs, sel_LDA, TSs, sel_TSs)
 }
 \arguments{
-\item{LDAs}{List (class: \code{LDA_set}) of LDA models (class: 
+\item{LDAs}{List (class: \code{LDA_set}) of LDA models (class:
 \code{LDA}), as returned by \code{\link{LDA_set}}.}
 
-\item{sel_LDA}{A reduced version of \code{LDAs} that only includes the 
+\item{sel_LDA}{A reduced version of \code{LDAs} that only includes the
 LDA model(s) selected by \code{\link{select_LDA}}. Still should be of
 class \code{LDA_set}.}
 
-\item{TSs}{Class \code{TS_on_LDA} list of results from \code{\link{TS}} 
-applied for each model on each LDA model input, as returned by 
+\item{TSs}{Class \code{TS_on_LDA} list of results from \code{\link{TS}}
+applied for each model on each LDA model input, as returned by
 \code{\link{TS_on_LDA}}.}
 
 \item{sel_TSs}{A reduced version of \code{TSs} (of class \code{TS_fit})
 that only includes the TS model chosen via \code{\link{select_TS}}.}
 }
 \value{
-Class \code{LDA_TS}-class object including all fitted models and 
-  selected models specifically, ready to be returned from 
-  \code{\link{LDA_TS}}.
+Class \code{LDA_TS}-class object including all fitted models and
+selected models specifically, ready to be returned from
+\code{\link{LDA_TS}}.
 }
 \description{
 Combine the objects returned by \code{\link{LDA_set}},
-  \code{\link{select_LDA}}, \code{\link{TS_on_LDA}}, and
-  \code{\link{select_TS}}, name them as elements of the list, and
-  set the class of the list as \code{LDA_TS}, for the return from
-  \code{\link{LDA_TS}}.
+\code{\link{select_LDA}}, \code{\link{TS_on_LDA}}, and
+\code{\link{select_TS}}, name them as elements of the list, and
+set the class of the list as \code{LDA_TS}, for the return from
+\code{\link{LDA_TS}}.
 }
 \examples{
 \donttest{

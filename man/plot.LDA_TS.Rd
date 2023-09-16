@@ -4,8 +4,15 @@
 \alias{plot.LDA_TS}
 \title{Plot the key results from a full LDATS analysis}
 \usage{
-\method{plot}{LDA_TS}(x, ..., cols = set_LDA_TS_plot_cols(),
-  bin_width = 1, xname = NULL, border = NA, selection = "median")
+\method{plot}{LDA_TS}(
+  x,
+  ...,
+  cols = set_LDA_TS_plot_cols(),
+  bin_width = 1,
+  xname = NULL,
+  border = NA,
+  selection = "median"
+)
 }
 \arguments{
 \item{x}{A \code{LDA_TS} object of a full LDATS model fit by
@@ -46,8 +53,8 @@ summary plot. Currently only defined for \code{"median"} and
 }
 \description{
 Generalization of the \code{\link[graphics]{plot}} function to
-  work on fitted LDA_TS model objects (class \code{LDA_TS}) returned by
-  \code{\link{LDA_TS}}).
+work on fitted LDA_TS model objects (class \code{LDA_TS}) returned by
+\code{\link{LDA_TS}}).
 }
 \examples{
 \donttest{

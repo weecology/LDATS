@@ -6,20 +6,40 @@
 \alias{rho_hist}
 \title{Create the summary plot for a TS fit to an LDA model}
 \usage{
-TS_summary_plot(x, cols = set_TS_summary_plot_cols(), bin_width = 1,
-  xname = NULL, border = NA, selection = "median", LDATS = FALSE)
+TS_summary_plot(
+  x,
+  cols = set_TS_summary_plot_cols(),
+  bin_width = 1,
+  xname = NULL,
+  border = NA,
+  selection = "median",
+  LDATS = FALSE
+)
 
-pred_gamma_TS_plot(x, selection = "median", cols = set_gamma_colors(x),
-  xname = NULL, together = FALSE, LDATS = FALSE)
+pred_gamma_TS_plot(
+  x,
+  selection = "median",
+  cols = set_gamma_colors(x),
+  xname = NULL,
+  together = FALSE,
+  LDATS = FALSE
+)
 
-rho_hist(x, cols = set_rho_hist_colors(x$rhos), bin_width = 1,
-  xname = NULL, border = NA, together = FALSE, LDATS = FALSE)
+rho_hist(
+  x,
+  cols = set_rho_hist_colors(x$rhos),
+  bin_width = 1,
+  xname = NULL,
+  border = NA,
+  together = FALSE,
+  LDATS = FALSE
+)
 }
 \arguments{
 \item{x}{Object of class \code{TS_fit} produced by \code{\link{TS}}.}
 
 \item{cols}{\code{list} of elements used to define the colors for the two
-panels, as generated simply using \code{\link{set_TS_summary_plot_cols}}. 
+panels, as generated simply using \code{\link{set_TS_summary_plot_cols}}.
 Has two elements \code{rho} and \code{gamma}, each corresponding to the
 related panel, and each containing default values for entries named
 \code{cols}, \code{option}, and \code{alpha}. See
@@ -39,25 +59,25 @@ no label printed, set \code{xname = ""}.}
 \item{selection}{Indicator of the change points to use. Currently only
 defined for "median" and "mode".}
 
-\item{LDATS}{\code{logical} indicating if the plot is part of a larger 
+\item{LDATS}{\code{logical} indicating if the plot is part of a larger
 LDATS plot output.}
 
-\item{together}{\code{logical} indicating if the subplots are part of a 
+\item{together}{\code{logical} indicating if the subplots are part of a
 larger LDA plot output.}
 }
 \value{
 \code{NULL}.
 }
 \description{
-Produces a two-panel figure of [1] the change point 
-  distributions as histograms over time and [2] the time series of the 
-  fitted topic proportions over time, based on a selected set of 
-  change point locations. \cr \cr
-  \code{pred_gamma_TS_plot} produces a time series of the 
-  fitted topic proportions over time, based on a selected set of change 
-  point locations. \cr \cr
-  \code{rho_hist}: make a plot of the change point 
-  distributions as histograms over time.
+Produces a two-panel figure of \link{1} the change point
+distributions as histograms over time and \link{2} the time series of the
+fitted topic proportions over time, based on a selected set of
+change point locations. \cr \cr
+\code{pred_gamma_TS_plot} produces a time series of the
+fitted topic proportions over time, based on a selected set of change
+point locations. \cr \cr
+\code{rho_hist}: make a plot of the change point
+distributions as histograms over time.
 }
 \examples{
 \donttest{

@@ -10,28 +10,28 @@ summarize_etas(etas, control = list())
 measure_eta_vcov(etas)
 }
 \arguments{
-\item{etas}{Matrix of regressors (columns) across iterations of the 
+\item{etas}{Matrix of regressors (columns) across iterations of the
 ptMCMC (rows), as returned from \code{\link{est_regressors}}.}
 
 \item{control}{A \code{list} of parameters to control the fitting of the
-Time Series model including the parallel tempering Markov Chain 
-Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
+Time Series model including the parallel tempering Markov Chain
+Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 \code{\link{TS_control}}.}
 }
 \value{
 \code{summarize_etas}: table of summary statistics for chunk-level
-  regressors including mean, median, mode, posterior interval, standard
-  deviation, MCMC error, autocorrelation, and effective sample size for 
-  each regressor. \cr \cr
-  \code{measure_eta_vcov}: variance-covariance matrix for chunk-level
-  regressors.
+regressors including mean, median, mode, posterior interval, standard
+deviation, MCMC error, autocorrelation, and effective sample size for
+each regressor. \cr \cr
+\code{measure_eta_vcov}: variance-covariance matrix for chunk-level
+regressors.
 }
 \description{
 \code{summarize_etas} calculates summary statistics for each
-  of the chunk-level regressors. 
-  \cr \cr
-  \code{measure_ets_vcov} generates the variance-covariance matrix for 
-  the regressors.
+of the chunk-level regressors.
+\cr \cr
+\code{measure_ets_vcov} generates the variance-covariance matrix for
+the regressors.
 }
 \examples{
  etas <- matrix(rnorm(100), 50, 2)

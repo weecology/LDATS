@@ -7,7 +7,7 @@
 AICc(object)
 }
 \arguments{
-\item{object}{An object for which \code{\link{AIC}} and 
+\item{object}{An object for which \code{\link{AIC}} and
 \code{\link{logLik}} have defined methods.}
 }
 \value{
@@ -15,7 +15,7 @@ AICc(object)
 }
 \description{
 Calculate the small sample size correction of
-  \code{\link{AIC}} for the input object.
+\code{\link{AIC}} for the input object.
 }
 \examples{
   dat <- data.frame(y = rnorm(50), x = rnorm(50))

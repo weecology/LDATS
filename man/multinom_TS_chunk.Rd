@@ -4,18 +4,24 @@
 \alias{multinom_TS_chunk}
 \title{Fit a multinomial Time Series model chunk}
 \usage{
-multinom_TS_chunk(data, formula, chunk, timename = "time",
-  weights = NULL, control = list())
+multinom_TS_chunk(
+  data,
+  formula,
+  chunk,
+  timename = "time",
+  weights = NULL,
+  control = list()
+)
 }
 \arguments{
-\item{data}{Class \code{data.frame} object including the predictor and 
+\item{data}{Class \code{data.frame} object including the predictor and
 response variables.}
 
-\item{formula}{Formula as a \code{\link[stats]{formula}} or 
+\item{formula}{Formula as a \code{\link[stats]{formula}} or
 \code{\link[base]{character}} object describing the chunk.}
 
-\item{chunk}{Length-2 vector of times: [1] \code{start}, the start time 
-for the chunk and [2] \code{end}, the end time for the chunk.}
+\item{chunk}{Length-2 vector of times: \link{1} \code{start}, the start time
+for the chunk and \link{2} \code{end}, the end time for the chunk.}
 
 \item{timename}{\code{character} element indicating the time variable
 used in the time series. Defaults to \code{"time"}. The variable must be
@@ -23,29 +29,29 @@ integer-conformable or a \code{Date}. If the variable named
 is a \code{Date}, the input is converted to an integer, resulting in the
 timestep being 1 day, which is often not desired behavior.}
 
-\item{weights}{Optional class \code{numeric} vector of weights for each 
+\item{weights}{Optional class \code{numeric} vector of weights for each
 document. Defaults to \code{NULL}, translating to an equal weight for
-each document. When using \code{multinom_TS} in a standard LDATS 
+each document. When using \code{multinom_TS} in a standard LDATS
 analysis, it is advisable to weight the documents by their total size,
-as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
+as the result of \code{\link[topicmodels]{LDA}} is a matrix of
 proportions, which does not account for size differences among documents.
 For most models, a scaling of the weights (so that the average is 1) is
 most appropriate, and this is accomplished using \code{document_weights}.}
 
 \item{control}{A \code{list} of parameters to control the fitting of the
-Time Series model including the parallel tempering Markov Chain 
-Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
+Time Series model including the parallel tempering Markov Chain
+Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 \code{\link{TS_control}}.}
 }
 \value{
 Fitted model object for the chunk, of classes \code{multinom} and
-  \code{nnet}.
+\code{nnet}.
 }
 \description{
 Fit a multinomial regression model (via
-  \code{\link[nnet]{multinom}}, Ripley 1996, Venables and Ripley 2002)
-  to a defined chunk of time (a.k.a. segment)
-  \code{[chunk$start, chunk$end]} within a time series.
+\code{\link[nnet]{multinom}}, Ripley 1996, Venables and Ripley 2002)
+to a defined chunk of time (a.k.a. segment)
+\code{[chunk$start, chunk$end]} within a time series.
 }
 \examples{
   data(rodents)
@@ -62,6 +68,6 @@ Fit a multinomial regression model (via
 \references{
 Ripley, B. D. 1996. Pattern Recognition and Neural Networks. Cambridge.
 
-  Venables, W. N. and B. D. Ripley. 2002. Modern Applied Statistics with S.
-  Fourth edition. Springer.
+Venables, W. N. and B. D. Ripley. 2002. Modern Applied Statistics with S.
+Fourth edition. Springer.
 }

@@ -4,34 +4,33 @@
 \alias{prep_cpts}
 \alias{update_cpts}
 \title{Initialize and update the change point matrix used in the ptMCMC
-  algorithm}
+algorithm}
 \usage{
-prep_cpts(data, formula, nchangepoints, timename, weights,
-  control = list())
+prep_cpts(data, formula, nchangepoints, timename, weights, control = list())
 
 update_cpts(cpts, swaps)
 }
 \arguments{
-\item{data}{\code{data.frame} including [1] the time variable (indicated 
-in \code{timename}), [2] the predictor variables (required by
-\code{formula}) and [3], the multinomial response variable (indicated in
-\code{formula}) as verified by \code{\link{check_timename}} and 
+\item{data}{\code{data.frame} including \link{1} the time variable (indicated
+in \code{timename}), \link{2} the predictor variables (required by
+\code{formula}) and \link{3}, the multinomial response variable (indicated in
+\code{formula}) as verified by \code{\link{check_timename}} and
 \code{\link{check_formula}}. Note that the response variables should be
-formatted as a \code{data.frame} object named as indicated by the 
-\code{response} entry in the \code{control} list, such as \code{gamma} 
+formatted as a \code{data.frame} object named as indicated by the
+\code{response} entry in the \code{control} list, such as \code{gamma}
 for a standard TS analysis on LDA output.}
 
 \item{formula}{\code{formula} defining the regression relationship between
-the change points, see \code{\link[stats]{formula}}. Any 
-predictor variable included must also be a column in 
+the change points, see \code{\link[stats]{formula}}. Any
+predictor variable included must also be a column in
 \code{data} and any (multinomial) response variable must be a set of
 columns in \code{data}, as verified by \code{\link{check_formula}}.}
 
-\item{nchangepoints}{\code{integer} corresponding to the number of 
+\item{nchangepoints}{\code{integer} corresponding to the number of
 change points to include in the model. 0 is a valid input (corresponding
-to no change points, so a singular time series model), and the current 
-implementation can reasonably include up to 6 change points. The 
-number of change points is used to dictate the segmentation of the data  
+to no change points, so a singular time series model), and the current
+implementation can reasonably include up to 6 change points. The
+number of change points is used to dictate the segmentation of the data
 for each continuous model and each LDA model.}
 
 \item{timename}{\code{character} element indicating the time variable
@@ -40,19 +39,19 @@ integer-conformable or a \code{Date}. If the variable named
 is a \code{Date}, the input is converted to an integer, resulting in the
 timestep being 1 day, which is often not desired behavior.}
 
-\item{weights}{Optional class \code{numeric} vector of weights for each 
+\item{weights}{Optional class \code{numeric} vector of weights for each
 document. Defaults to \code{NULL}, translating to an equal weight for
-each document. When using \code{multinom_TS} in a standard LDATS 
+each document. When using \code{multinom_TS} in a standard LDATS
 analysis, it is advisable to weight the documents by their total size,
-as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
+as the result of \code{\link[topicmodels]{LDA}} is a matrix of
 proportions, which does not account for size differences among documents.
 For most models, a scaling of the weights (so that the average is 1) is
-most appropriate, and this is accomplished using 
+most appropriate, and this is accomplished using
 \code{\link{document_weights}}.}
 
 \item{control}{A \code{list} of parameters to control the fitting of the
-Time Series model including the parallel tempering Markov Chain 
-Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
+Time Series model including the parallel tempering Markov Chain
+Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 \code{\link{TS_control}}.}
 
 \item{cpts}{The existing matrix of change points.}
@@ -60,16 +59,16 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 \item{swaps}{Chain configuration after among-temperature swaps.}
 }
 \value{
-\code{list} of [1] \code{matrix} of change points (rows) for 
-  each temperature (columns) and [2] \code{vector} of log-likelihood 
-  values for each of the chains.
+\code{list} of \link{1} \code{matrix} of change points (rows) for
+each temperature (columns) and \link{2} \code{vector} of log-likelihood
+values for each of the chains.
 }
 \description{
-Each of the chains is initialized by \code{prep_cpts} using a 
-  draw from the available times (i.e. assuming a uniform prior), the best 
-  fit (by likelihood) draw is put in the focal chain with each subsequently 
-  worse fit placed into the subsequently hotter chain. \code{update_cpts}
-  updates the change points after every iteration in the ptMCMC algorithm.
+Each of the chains is initialized by \code{prep_cpts} using a
+draw from the available times (i.e. assuming a uniform prior), the best
+fit (by likelihood) draw is put in the focal chain with each subsequently
+worse fit placed into the subsequently hotter chain. \code{update_cpts}
+updates the change points after every iteration in the ptMCMC algorithm.
 }
 \examples{
 \donttest{

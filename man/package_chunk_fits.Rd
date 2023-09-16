@@ -3,29 +3,29 @@
 \name{package_chunk_fits}
 \alias{package_chunk_fits}
 \title{Package the output of the chunk-level multinomial models into a
-  multinom_TS_fit list}
+multinom_TS_fit list}
 \usage{
 package_chunk_fits(chunks, fits)
 }
 \arguments{
-\item{chunks}{Data frame of \code{start} and \code{end} times for each 
+\item{chunks}{Data frame of \code{start} and \code{end} times for each
 chunk (row).}
 
 \item{fits}{List of chunk-level fits returned by \code{TS_chunk_memo},
 the memoised version of \code{\link{multinom_TS_chunk}}.}
 }
 \value{
-Object of class \code{multinom_TS_fit}, which is a list of [1]
-  chunk-level model fits, [2] the total log likelihood combined across 
-  all chunks, and [3] the chunk time data table.
+Object of class \code{multinom_TS_fit}, which is a list of \link{1}
+chunk-level model fits, \link{2} the total log likelihood combined across
+all chunks, and \link{3} the chunk time data table.
 }
 \description{
 Takes the list of fitted chunk-level models returned from
-  \code{TS_chunk_memo} (the memoised version of 
-  \code{\link{multinom_TS_chunk}} and packages it as a 
-  \code{multinom_TS_fit} object. This involves naming the model fits based 
-  on the chunk time windows, combining the log likelihood values across the 
-  chunks, and setting the class of the output object.
+\code{TS_chunk_memo} (the memoised version of
+\code{\link{multinom_TS_chunk}} and packages it as a
+\code{multinom_TS_fit} object. This involves naming the model fits based
+on the chunk time windows, combining the log likelihood values across the
+chunks, and setting the class of the output object.
 }
 \examples{
   data(rodents)

@@ -23,14 +23,14 @@ testing.}
 \code{NULL}.
 }
 \description{
-Plot 4-panel figures (showing trace plots, posterior ECDF, 
-  posterior density, and iteration autocorrelation) for each of the 
-  parameters (change point locations and regressors) fitted within a 
-  multinomial time series model (fit by \code{\link{TS}}). \cr \cr
-  \code{eta_diagnostics_plots} creates the diagnostic plots
-  for the regressors (etas) of a time series model. \cr \cr
-  \code{rho_diagnostics_plots} creates the diagnostic plots
-  for the change point locations (rho) of a time series model.
+Plot 4-panel figures (showing trace plots, posterior ECDF,
+posterior density, and iteration autocorrelation) for each of the
+parameters (change point locations and regressors) fitted within a
+multinomial time series model (fit by \code{\link{TS}}). \cr \cr
+\code{eta_diagnostics_plots} creates the diagnostic plots
+for the regressors (etas) of a time series model. \cr \cr
+\code{rho_diagnostics_plots} creates the diagnostic plots
+for the change point locations (rho) of a time series model.
 }
 \examples{
 \donttest{

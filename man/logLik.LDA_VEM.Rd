@@ -13,17 +13,17 @@
 }
 \value{
 Log likelihood of the model \code{logLik}, also with \code{df}
-  (degrees of freedom) and \code{nobs} (number of observations) values.
+(degrees of freedom) and \code{nobs} (number of observations) values.
 }
 \description{
 Imported but updated calculations from topicmodels package, as
-  applied to Latent Dirichlet Allocation fit with Variational Expectation 
-  Maximization via \code{\link[topicmodels]{LDA}}.
+applied to Latent Dirichlet Allocation fit with Variational Expectation
+Maximization via \code{\link[topicmodels]{LDA}}.
 }
 \details{
 The number of degrees of freedom is 1 (for alpha) plus the number
-  of entries in the document-topic matrix. The number of observations is 
-  the number of entries in the document-term matrix.
+of entries in the document-topic matrix. The number of observations is
+the number of entries in the document-term matrix.
 }
 \examples{
   data(rodents)
@@ -33,16 +33,16 @@ The number of degrees of freedom is 1 (for alpha) plus the number
 
 }
 \references{
-Buntine, W. 2002. Variational extensions to EM and multinomial PCA. 
-  \emph{European Conference on Machine Learning, Lecture Notes in Computer 
-  Science} \strong{2430}:23-34. \href{https://bit.ly/327sltH}{link}.
+Buntine, W. 2002. Variational extensions to EM and multinomial PCA.
+\emph{European Conference on Machine Learning, Lecture Notes in Computer
+Science} \strong{2430}:23-34. \href{https://bit.ly/327sltH}{link}.
 
-  Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
-  Models. \emph{Journal of Statistical Software} \strong{40}:13.
-  \href{https://www.jstatsoft.org/article/view/v040i13}{link}.
+Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
+Models. \emph{Journal of Statistical Software} \strong{40}:13.
+\href{https://www.jstatsoft.org/article/view/v040i13}{link}.
 
-  Hoffman, M. D., D. M. Blei, and F. Bach. 2010. Online learning for 
-  latent Dirichlet allocation. \emph{Advances in Neural Information 
-  Processing Systems} \strong{23}:856-864.
-  \href{https://bit.ly/2LEr5sb}{link}.
+Hoffman, M. D., D. M. Blei, and F. Bach. 2010. Online learning for
+latent Dirichlet allocation. \emph{Advances in Neural Information
+Processing Systems} \strong{23}:856-864.
+\href{https://bit.ly/2LEr5sb}{link}.
 }

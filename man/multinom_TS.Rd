@@ -5,31 +5,42 @@
 \alias{check_multinom_TS_inputs}
 \title{Fit a multinomial change point Time Series model}
 \usage{
-multinom_TS(data, formula, changepoints = NULL, timename = "time",
-  weights = NULL, control = list())
+multinom_TS(
+  data,
+  formula,
+  changepoints = NULL,
+  timename = "time",
+  weights = NULL,
+  control = list()
+)
 
-check_multinom_TS_inputs(data, formula = gamma ~ 1,
-  changepoints = NULL, timename = "time", weights = NULL,
-  control = list())
+check_multinom_TS_inputs(
+  data,
+  formula = gamma ~ 1,
+  changepoints = NULL,
+  timename = "time",
+  weights = NULL,
+  control = list()
+)
 }
 \arguments{
-\item{data}{\code{data.frame} including [1] the time variable (indicated 
-in \code{timename}), [2] the predictor variables (required by
-\code{formula}) and [3], the multinomial response variable (indicated in
-\code{formula}) as verified by \code{\link{check_timename}} and 
+\item{data}{\code{data.frame} including \link{1} the time variable (indicated
+in \code{timename}), \link{2} the predictor variables (required by
+\code{formula}) and \link{3}, the multinomial response variable (indicated in
+\code{formula}) as verified by \code{\link{check_timename}} and
 \code{\link{check_formula}}. Note that the response variables should be
-formatted as a \code{data.frame} object named as indicated by the 
-\code{response} entry in the \code{control} list, such as \code{gamma} 
+formatted as a \code{data.frame} object named as indicated by the
+\code{response} entry in the \code{control} list, such as \code{gamma}
 for a standard TS analysis on LDA output. See \code{Examples}.}
 
 \item{formula}{\code{\link[stats]{formula}} defining the regression between
-relationship the change points. Any 
-predictor variable included must also be a column in 
+relationship the change points. Any
+predictor variable included must also be a column in
 \code{data} and any (multinomial) response variable must be a set of
 columns in \code{data}, as verified by \code{\link{check_formula}}.}
 
-\item{changepoints}{Numeric vector indicating locations of the change 
-points. Must be conformable to \code{integer} values. Validity 
+\item{changepoints}{Numeric vector indicating locations of the change
+points. Must be conformable to \code{integer} values. Validity
 checked by \code{\link{check_changepoints}} and
 \code{\link{verify_changepoint_locations}}.}
 
@@ -39,38 +50,38 @@ integer-conformable or a \code{Date}. If the variable named
 is a \code{Date}, the input is converted to an integer, resulting in the
 timestep being 1 day, which is often not desired behavior.}
 
-\item{weights}{Optional class \code{numeric} vector of weights for each 
+\item{weights}{Optional class \code{numeric} vector of weights for each
 document. Defaults to \code{NULL}, translating to an equal weight for
-each document. When using \code{multinom_TS} in a standard LDATS 
+each document. When using \code{multinom_TS} in a standard LDATS
 analysis, it is advisable to weight the documents by their total size,
-as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
+as the result of \code{\link[topicmodels]{LDA}} is a matrix of
 proportions, which does not account for size differences among documents.
 For most models, a scaling of the weights (so that the average is 1) is
-most appropriate, and this is accomplished using 
+most appropriate, and this is accomplished using
 \code{\link{document_weights}}.}
 
 \item{control}{A \code{list} of parameters to control the fitting of the
-Time Series model including the parallel tempering Markov Chain 
-Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
+Time Series model including the parallel tempering Markov Chain
+Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 \code{\link{TS_control}}.}
 }
 \value{
-\code{multinom_TS}: Object of class \code{multinom_TS_fit}, 
-  which is a list of [1]
-  chunk-level model fits (\code{"chunk models"}), [2] the total log 
-  likelihood combined across all chunks (\code{"logLik"}), and [3] a 
-  \code{data.frame} of chunk beginning and ending times (\code{"logLik"}
-  with columns \code{"start"} and \code{"end"}). \cr \cr
-  \code{check_multinom_TS_inputs}: an error message is thrown if any 
-  input is improper, otherwise \code{NULL}.
+\code{multinom_TS}: Object of class \code{multinom_TS_fit},
+which is a list of \link{1}
+chunk-level model fits (\code{"chunk models"}), \link{2} the total log
+likelihood combined across all chunks (\code{"logLik"}), and \link{3} a
+\code{data.frame} of chunk beginning and ending times (\code{"logLik"}
+with columns \code{"start"} and \code{"end"}). \cr \cr
+\code{check_multinom_TS_inputs}: an error message is thrown if any
+input is improper, otherwise \code{NULL}.
 }
 \description{
 Fit a set of multinomial regression models (via
-  \code{\link[nnet]{multinom}}, Venables and Ripley 2002) to a time series
-  of data divided into multiple segments (a.k.a. chunks) based on given 
-  locations for a set of change points. \cr \cr
-  \code{check_multinom_TS_inputs} checks that the inputs to 
-  \code{multinom_TS} are of proper classes for an analysis.
+\code{\link[nnet]{multinom}}, Venables and Ripley 2002) to a time series
+of data divided into multiple segments (a.k.a. chunks) based on given
+locations for a set of change points. \cr \cr
+\code{check_multinom_TS_inputs} checks that the inputs to
+\code{multinom_TS} are of proper classes for an analysis.
 }
 \examples{
   data(rodents)
@@ -86,5 +97,5 @@ Fit a set of multinomial regression models (via
 }
 \references{
 Venables, W. N. and B. D. Ripley. 2002. \emph{Modern and Applied
-  Statistics with S}. Fourth Edition. Springer, New York, NY, USA.
+Statistics with S}. Fourth Edition. Springer, New York, NY, USA.
 }

@@ -10,21 +10,21 @@ select_LDA(LDA_models = NULL, control = list())
 \item{LDA_models}{An object of class \code{LDA_set} produced by
 \code{\link{LDA_set}}.}
 
-\item{control}{A \code{list} of parameters to control the running and 
-selecting of LDA models. Values not input assume default values set 
-by \code{\link{LDA_set_control}}. Values for running the LDAs replace 
+\item{control}{A \code{list} of parameters to control the running and
+selecting of LDA models. Values not input assume default values set
+by \code{\link{LDA_set_control}}. Values for running the LDAs replace
 defaults in (\code{LDAcontol}, see \code{\link[topicmodels]{LDA}} (but if
- \code{seed} is given, it will be overwritten; use \code{iseed} instead).}
+\code{seed} is given, it will be overwritten; use \code{iseed} instead).}
 }
 \value{
-A reduced version of \code{LDA_models} that only includes the 
-  selected LDA model(s). The returned object is still an object of
-  class \code{LDA_set}.
+A reduced version of \code{LDA_models} that only includes the
+selected LDA model(s). The returned object is still an object of
+class \code{LDA_set}.
 }
 \description{
 Select the best model(s) of interest from an
-  \code{LDA_set} object, based on a set of user-provided functions. The
-  functions default to choosing the model with the lowest AIC value.
+\code{LDA_set} object, based on a set of user-provided functions. The
+functions default to choosing the model with the lowest AIC value.
 }
 \examples{
   data(rodents)

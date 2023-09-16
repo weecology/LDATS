@@ -7,7 +7,7 @@
 mirror_vcov(x)
 }
 \arguments{
-\item{x}{Model object that has a defined method for 
+\item{x}{Model object that has a defined method for
 \code{\link[stats]{vcov}}.}
 }
 \value{
@@ -15,12 +15,12 @@ Properly symmetric variance covariance \code{matrix}.
 }
 \description{
 A wrapper on \code{\link[stats]{vcov}} to produce a symmetric
-  matrix. If the default matrix returned by \code{\link[stats]{vcov}} is
-  symmetric it is returned simply. If it is not, in fact, symmetric
-  (as occurs occasionally with \code{\link[nnet]{multinom}} applied to 
-  proportions), the matrix is made symmetric by averaging the lower and
-  upper triangles. If the relative difference between the upper and lower 
-  triangles for any entry is more than 0.1% a warning is thrown.
+matrix. If the default matrix returned by \code{\link[stats]{vcov}} is
+symmetric it is returned simply. If it is not, in fact, symmetric
+(as occurs occasionally with \code{\link[nnet]{multinom}} applied to
+proportions), the matrix is made symmetric by averaging the lower and
+upper triangles. If the relative difference between the upper and lower
+triangles for any entry is more than 0.1\% a warning is thrown.
 }
 \examples{
   dat <- data.frame(y = rnorm(50), x = rnorm(50))

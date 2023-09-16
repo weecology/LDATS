@@ -2,8 +2,8 @@
 % Please edit documentation in R/TS_plots.R
 \name{ecdf_plot}
 \alias{ecdf_plot}
-\title{Produce the posterior distribution ECDF panel for the TS 
-  diagnostic plot of a parameter}
+\title{Produce the posterior distribution ECDF panel for the TS
+diagnostic plot of a parameter}
 \usage{
 ecdf_plot(x, xlab = "parameter value")
 }
@@ -18,9 +18,9 @@ indexed to the iteration by the order of the vector.}
 }
 \description{
 Produce a vanilla ECDF (empirical cumulative distribution
-  function) plot using \code{ecdf} for the parameter of interest (rho or 
-  eta) as part of \code{\link{TS_diagnostics_plot}}. A horizontal line 
-  is added to show the median of the posterior.
+function) plot using \code{ecdf} for the parameter of interest (rho or
+eta) as part of \code{\link{TS_diagnostics_plot}}. A horizontal line
+is added to show the median of the posterior.
 }
 \examples{
  ecdf_plot(rnorm(100, 0, 1))

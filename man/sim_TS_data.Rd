@@ -7,7 +7,7 @@
 sim_TS_data(X, Eta, rho, tD, err = 0, seed = NULL)
 }
 \arguments{
-\item{X}{\code{matrix} of covariates, dimension M (number of documents) x 
+\item{X}{\code{matrix} of covariates, dimension M (number of documents) x
 C (number of covariates, including the intercept) (a.k.a. the design
 matrix).}
 
@@ -15,15 +15,15 @@ matrix).}
 dimension: SC (number of segments x number of covariates, including the
 intercept) x k (number of topics).}
 
-\item{rho}{Vector of integer-conformable time locations of changepoints or 
-\code{NULL} if no changepoints. Used to determine the number of 
+\item{rho}{Vector of integer-conformable time locations of changepoints or
+\code{NULL} if no changepoints. Used to determine the number of
 segments. Must exist within the bounds of the times of the documents,
 \code{tD}.}
 
 \item{tD}{Vector of integer-conformable times of the documents. Must be
 of length M (as determined by \code{X}).}
 
-\item{err}{Additive error on the link-scale. Must be a non-negative 
+\item{err}{Additive error on the link-scale. Must be a non-negative
 \code{numeric} value. Default value of \code{0} indicates no error.}
 
 \item{seed}{Input to \code{\link{set.seed}}.}
@@ -33,10 +33,10 @@ A document-by-topic \code{matrix} of probabilities (dim: M x k).
 }
 \description{
 For a given set of covariates \code{X}; parameters \code{Eta},
-  \code{rho}, and \code{err}; and document-specific time stamps \code{tD},
-  simulate a document-by-topic matrix. Additional structuring variables 
-  (numbers of topics (k), documents (M), segments (S), and 
-  covariates per segment (C)) are inferred from input objects.
+\code{rho}, and \code{err}; and document-specific time stamps \code{tD},
+simulate a document-by-topic matrix. Additional structuring variables
+(numbers of topics (k), documents (M), segments (S), and
+covariates per segment (C)) are inferred from input objects.
 }
 \examples{
   tD <- c(1, 3, 4, 6)
