@@ -51,4 +51,3 @@ SystemRequirements: gsl
 VignetteBuilder:
     knitr
 RoxygenNote: 7.2.3
-Roxygen: list(markdown = TRUE)

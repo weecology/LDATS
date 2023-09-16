@@ -11,3 +11,4 @@ unlink(file.path("figure"), force = TRUE, recursive = TRUE)
 # Build checking
 
 devtools::build_vignettes( )
+
