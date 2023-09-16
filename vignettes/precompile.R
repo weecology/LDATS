@@ -1,12 +1,15 @@
 # Vignettes that depend on internet access have been precompiled:
 
-knitr::knit("vignettes/paper-comparison.Rmd.remote_needs", output = "vignettes/paper-comparison.Rmd")
+wd <- getwd()
+setwd(file.path(wd, "vignettes"))
+knitr::knit("paper-comparison.Rmd.remote_needs", output = "paper-comparison.Rmd")
 
-# Manually move figure files from /figure to /vignettes
+
+# Move figure files from /figure to /vignettes
 
 
 file.copy(from = list.files(file.path("figure"), full.names = TRUE),
-          to   = file.path("vignettes"))
+          to   = file.path("."))
 
 unlink(file.path("figure"), force = TRUE, recursive = TRUE)
 

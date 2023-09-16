@@ -8,13 +8,13 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 params:
   run_models: FALSE
-  rmarkdown.html_vignette.check_title: FALSE
 ---
   
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.path = ""
 )
 if(is.na(tryCatch(params, error = function(x){NA}))){
   params <- list(run_models = FALSE)
