@@ -13,7 +13,7 @@ A \code{list} of two \code{data.frame}-class objects with rows
   with columns of covariates (time step, year, season).
 }
 \source{
-\url{https://jornada.nmsu.edu/lter/dataset/49798/view}
+\url{https://lter.jornada.nmsu.edu/data-catalog/}
 }
 \usage{
 jornada

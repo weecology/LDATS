@@ -168,7 +168,7 @@ count_trips <- function(ids){
 #'   Earl, D. J. and M. W. Deem. 2005. Parallel tempering: theory, 
 #'   applications, and new perspectives. \emph{Physical Chemistry Chemical 
 #'   Physics} \strong{7}: 3910-3916.
-#'   \href{https://rsc.li/2XkxPCm}{link}.
+#'   \href{https://pubs.rsc.org/en/content/articlelanding/2005/cp/b509983h}{link}.
 #'
 #'   Falcioni, M. and M. W. Deem. 1999. A biased Monte Carlo scheme for 
 #'   zeolite structure solution.  \emph{Journal of Chemical Physics}

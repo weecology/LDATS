@@ -21,7 +21,7 @@ We now pre-compile the paper-comparison vignette following https://ropensci.org/
 * win-builder: 
 * win-builder: 
 
-* mac-builder:
+* mac-builder: macosx, macOS 13.3.1 (22E261), r-release-macosx-arm64, R 4.3.0
 
 * R-hub builder: 
 * R-hub builder: 

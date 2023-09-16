@@ -50,7 +50,7 @@
 #'   the document covariate table (called \code{document_covariate_table}) 
 #'   with columns of covariates (time step, year, season).
 #' 
-#' @source \url{https://jornada.nmsu.edu/lter/dataset/49798/view}
+#' @source \url{https://lter.jornada.nmsu.edu/data-catalog/}
 #'
 #' @references 
 #'   Lightfoot, D. C., A. D. Davidson, D. G. Parker, L. Hernandez, and J. W. 

@@ -91,7 +91,7 @@ LDA_set <- function(document_term_table, topics = 2, nseeds = 1,
 #' @references 
 #'   Buntine, W. 2002. Variational extensions to EM and multinomial PCA. 
 #'   \emph{European Conference on Machine Learning, Lecture Notes in Computer 
-#'   Science} \strong{2430}:23-34. \href{https://https://link.springer.com/chapter/10.1007/3-540-36755-1_3}{link}.
+#'   Science} \strong{2430}:23-34. \href{https://link.springer.com/chapter/10.1007/3-540-36755-1_3}{link}.
 #'
 #'   Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
 #'   Models. \emph{Journal of Statistical Software} \strong{40}:13.
