@@ -2,8 +2,8 @@
 % Please edit documentation in R/TS_plots.R
 \name{posterior_plot}
 \alias{posterior_plot}
-\title{Produce the posterior distribution histogram panel for the TS
-diagnostic plot of a parameter}
+\title{Produce the posterior distribution histogram panel for the TS 
+  diagnostic plot of a parameter}
 \usage{
 posterior_plot(x, xlab = "parameter value")
 }
@@ -17,10 +17,10 @@ indexed to the iteration by the order of the vector.}
 \code{NULL}.
 }
 \description{
-Produce a vanilla histogram plot using \code{hist} for the
-parameter of interest (rho or eta) as part of
-\code{\link{TS_diagnostics_plot}}. A vertical line is added to show the
-median of the posterior.
+Produce a vanilla histogram plot using \code{hist} for the 
+  parameter of interest (rho or eta) as part of 
+  \code{\link{TS_diagnostics_plot}}. A vertical line is added to show the 
+  median of the posterior.
 }
 \examples{
  posterior_plot(rnorm(100, 0, 1))

@@ -2,8 +2,8 @@
 % Please edit documentation in R/TS_on_LDA.R
 \name{check_formulas}
 \alias{check_formulas}
-\title{Check that formulas vector is proper and append the response
-variable}
+\title{Check that formulas vector is proper and append the response 
+  variable}
 \usage{
 check_formulas(formulas, document_covariate_table, control = list())
 }
@@ -14,18 +14,18 @@ check_formulas(formulas, document_covariate_table, control = list())
 the availability of the data required by the formula inputs.}
 
 \item{control}{A \code{list} of parameters to control the fitting of the
-Time Series model including the parallel tempering Markov Chain
-Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
+Time Series model including the parallel tempering Markov Chain 
+Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
 \code{\link{TS_control}}.}
 }
 \value{
-An error message is thrown if \code{formulas} is
-not proper, else \code{NULL}.
+An error message is thrown if \code{formulas} is 
+  not proper, else \code{NULL}.
 }
 \description{
 Check that the vector of formulas is actually formatted
-as a vector of \code{\link[stats]{formula}} objects and that the
-predictor variables are all included in the document covariate table.
+  as a vector of \code{\link[stats]{formula}} objects and that the 
+  predictor variables are all included in the document covariate table.
 }
 \examples{
   data(rodents)

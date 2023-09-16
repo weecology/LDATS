@@ -3,7 +3,7 @@
 \name{autocorr_plot}
 \alias{autocorr_plot}
 \title{Produce the autocorrelation panel for the TS diagnostic plot of
-a parameter}
+  a parameter}
 \usage{
 autocorr_plot(x)
 }
@@ -16,8 +16,8 @@ indexed to the iteration by the order of the vector.}
 }
 \description{
 Produce a vanilla ACF plot using \code{\link[stats]{acf}} for
-the parameter of interest (rho or eta) as part of
-\code{\link{TS_diagnostics_plot}}.
+  the parameter of interest (rho or eta) as part of 
+  \code{\link{TS_diagnostics_plot}}.
 }
 \examples{
  autocorr_plot(rnorm(100, 0, 1))

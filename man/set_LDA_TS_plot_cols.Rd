@@ -21,11 +21,11 @@ The default (\code{rho_cols = NULL}) triggers use of
 \code{\link[viridis]{viridis}} color options (see \code{rho_option}).}
 
 \item{rho_option}{A \code{character} string indicating the color option
-from \code{\link[viridis]{viridis}} to use if \code{rho_cols == NULL}. Four
+from \code{\link[viridis]{viridis}} to use if `rho_cols == NULL`. Four
 options are available: "magma" (or "A"), "inferno" (or "B"), "plasma"
 (or "C"), "viridis" (or "D", the default option) and "cividis" (or "E").}
 
-\item{rho_alpha}{Numeric value \link{0,1} that indicates the transparency of the
+\item{rho_alpha}{Numeric value [0,1] that indicates the transparency of the
 colors used. Supported only on some devices, see
 \code{\link[grDevices]{rgb}}.}
 
@@ -42,31 +42,31 @@ from \code{\link[viridis]{viridis}} to use if gamma_cols == NULL`. Four
 options are available: "magma" (or "A"), "inferno" (or "B"), "plasma"
 (or "C", the default option), "viridis" (or "D") and "cividis" (or "E").}
 
-\item{gamma_alpha}{Numeric value \link{0,1} that indicates the transparency of
+\item{gamma_alpha}{Numeric value [0,1] that indicates the transparency of
 the colors used. Supported only on some devices, see
 \code{\link[grDevices]{rgb}}.}
 }
 \value{
 \code{list} of elements used to define the colors for the two
-panels of the summary plot, as generated simply using
-\code{\link{set_LDA_TS_plot_cols}}. \code{cols} has two elements:
-\code{LDA} and \code{TS}, each corresponding the set of plots for
-its stage in the full model. \code{LDA} contains entries \code{cols}
-and \code{options} (see \code{\link{set_LDA_plot_colors}}). \code{TS}
-contains two entries, \code{rho} and \code{gamma}, each corresponding
-to the related panel, and each containing default values for entries
-named \code{cols}, \code{option}, and \code{alpha} (see
-\code{\link{set_TS_summary_plot_cols}}, \code{\link{set_gamma_colors}},
-and \code{\link{set_rho_hist_colors}}).
+  panels of the summary plot, as generated simply using
+  \code{\link{set_LDA_TS_plot_cols}}. \code{cols} has two elements:
+  \code{LDA} and \code{TS}, each corresponding the set of plots for
+  its stage in the full model. \code{LDA} contains entries \code{cols}
+  and \code{options} (see \code{\link{set_LDA_plot_colors}}). \code{TS}
+  contains two entries, \code{rho} and \code{gamma}, each corresponding
+  to the related panel, and each containing default values for entries
+  named \code{cols}, \code{option}, and \code{alpha} (see
+  \code{\link{set_TS_summary_plot_cols}}, \code{\link{set_gamma_colors}},
+  and \code{\link{set_rho_hist_colors}}).
 }
 \description{
 A default list generator function that produces the options
-for the colors controlling the panels of the LDATS summary plots, needed
-because the change point histogram panel should be in a different color
-scheme than the LDA and fitted time series model panels, which should be
-in a matching color scheme. See \code{\link{set_LDA_plot_colors}},
-\code{\link{set_TS_summary_plot_cols}}, \code{\link{set_gamma_colors}},
-and \code{\link{set_rho_hist_colors}} for specific details on usage.
+  for the colors controlling the panels of the LDATS summary plots, needed
+  because the change point histogram panel should be in a different color
+  scheme than the LDA and fitted time series model panels, which should be
+  in a matching color scheme. See \code{\link{set_LDA_plot_colors}},
+  \code{\link{set_TS_summary_plot_cols}}, \code{\link{set_gamma_colors}},
+  and \code{\link{set_rho_hist_colors}} for specific details on usage.
 }
 \examples{
   set_LDA_TS_plot_cols()

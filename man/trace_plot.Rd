@@ -2,8 +2,8 @@
 % Please edit documentation in R/TS_plots.R
 \name{trace_plot}
 \alias{trace_plot}
-\title{Produce the trace plot panel for the TS diagnostic plot of a
-parameter}
+\title{Produce the trace plot panel for the TS diagnostic plot of a 
+  parameter}
 \usage{
 trace_plot(x, ylab = "parameter value")
 }
@@ -17,9 +17,9 @@ indexed to the iteration by the order of the vector.}
 \code{NULL}.
 }
 \description{
-Produce a trace plot for the parameter of interest (rho or
-eta) as part of \code{\link{TS_diagnostics_plot}}. A horizontal line
-is added to show the median of the posterior.
+Produce a trace plot for the parameter of interest (rho or 
+  eta) as part of \code{\link{TS_diagnostics_plot}}. A horizontal line 
+  is added to show the median of the posterior.
 }
 \examples{
  trace_plot(rnorm(100, 0, 1))

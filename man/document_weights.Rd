@@ -7,18 +7,18 @@
 document_weights(document_term_table)
 }
 \arguments{
-\item{document_term_table}{Table of observation count data (rows:
-documents, columns: terms. May be a class \code{matrix} or
+\item{document_term_table}{Table of observation count data (rows: 
+documents, columns: terms. May be a class \code{matrix} or 
 \code{data.frame} but must be conformable to a matrix of integers,
 as verified by \code{\link{check_document_term_table}}.}
 }
 \value{
 Vector of weights, one for each document, with the average sample
-receiving a weight of 1.0.
+  receiving a weight of 1.0.
 }
 \description{
 Simple calculation of document weights based on the average
-number of words in a document within the corpus (mean value = 1).
+  number of words in a document within the corpus (mean value = 1).
 }
 \examples{
  data(rodents)

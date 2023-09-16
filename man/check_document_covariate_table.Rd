@@ -13,21 +13,21 @@ check_document_covariate_table(
 \arguments{
 \item{document_covariate_table}{Document covariate table to evaluate.}
 
-\item{LDA_models}{Reference LDA model list (class \code{LDA_set}) that
-includes as its first element a properly fitted \code{LDA} model with
+\item{LDA_models}{Reference LDA model list (class \code{LDA_set}) that 
+includes as its first element a properly fitted \code{LDA} model with 
 a \code{gamma} slot with the document-topic distribution.}
 
 \item{document_term_table}{Optional input for checking when
 \code{LDA_models} is \code{NULL}}
 }
 \value{
-An error message is thrown if \code{document_covariate_table} is
-not proper, else \code{NULL}.
+An error message is thrown if \code{document_covariate_table} is 
+  not proper, else \code{NULL}.
 }
 \description{
-Check that the table of document-level covariates is
-conformable to a data frame and of the right size (correct number of
-documents) for the document-topic output from the LDA models.
+Check that the table of document-level covariates is 
+  conformable to a data frame and of the right size (correct number of 
+  documents) for the document-topic output from the LDA models.
 }
 \examples{
   data(rodents)

@@ -24,27 +24,27 @@ check_TS_inputs(
 )
 }
 \arguments{
-\item{data}{\code{data.frame} including \link{1} the time variable (indicated
-in \code{timename}), \link{2} the predictor variables (required by
-\code{formula}) and \link{3}, the multinomial response variable (indicated in
-\code{formula}) as verified by \code{\link{check_timename}} and
+\item{data}{\code{data.frame} including [1] the time variable (indicated 
+in \code{timename}), [2] the predictor variables (required by
+\code{formula}) and [3], the multinomial response variable (indicated in
+\code{formula}) as verified by \code{\link{check_timename}} and 
 \code{\link{check_formula}}. Note that the response variables should be
-formatted as a \code{data.frame} object named as indicated by the
-\code{response} entry in the \code{control} list, such as \code{gamma}
+formatted as a \code{data.frame} object named as indicated by the 
+\code{response} entry in the \code{control} list, such as \code{gamma} 
 for a standard TS analysis on LDA output. See \code{Examples}.}
 
 \item{formula}{\code{\link[stats]{formula}} defining the regression between
-relationship the change points. Any
-predictor variable included must also be a column in
+relationship the change points. Any 
+predictor variable included must also be a column in 
 \code{data} and any (multinomial) response variable must be a set of
 columns in \code{data}, as verified by \code{\link{check_formula}}.}
 
-\item{nchangepoints}{\code{integer} corresponding to the number of
+\item{nchangepoints}{\code{integer} corresponding to the number of 
 change points to include in the model. 0 is a valid input (corresponding
-to no change points, so a singular time series model), and the current
-implementation can reasonably include up to 6 change points. The
-number of change points is used to dictate the segmentation of the
-time series into chunks fit with separate models dictated by
+to no change points, so a singular time series model), and the current 
+implementation can reasonably include up to 6 change points. The 
+number of change points is used to dictate the segmentation of the 
+time series into chunks fit with separate models dictated by 
 \code{formula}.}
 
 \item{timename}{\code{character} element indicating the time variable
@@ -53,75 +53,75 @@ integer-conformable or a \code{Date}. If the variable named
 is a \code{Date}, the input is converted to an integer, resulting in the
 timestep being 1 day, which is often not desired behavior.}
 
-\item{weights}{Optional class \code{numeric} vector of weights for each
+\item{weights}{Optional class \code{numeric} vector of weights for each 
 document. Defaults to \code{NULL}, translating to an equal weight for
-each document. When using \code{multinom_TS} in a standard LDATS
+each document. When using \code{multinom_TS} in a standard LDATS 
 analysis, it is advisable to weight the documents by their total size,
-as the result of \code{\link[topicmodels]{LDA}} is a matrix of
+as the result of \code{\link[topicmodels]{LDA}} is a matrix of 
 proportions, which does not account for size differences among documents.
 For most models, a scaling of the weights (so that the average is 1) is
 most appropriate, and this is accomplished using \code{document_weights}.}
 
 \item{control}{A \code{list} of parameters to control the fitting of the
-Time Series model including the parallel tempering Markov Chain
-Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
+Time Series model including the parallel tempering Markov Chain 
+Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
 \code{\link{TS_control}}.}
 }
 \value{
 \code{TS}: \code{TS_fit}-class list containing the following
-elements, many of
-which are hidden for \code{print}ing, but are accessible:
-\describe{
-\item{data}{\code{data} input to the function.}
-\item{formula}{\code{\link[stats]{formula}} input to the function.}
-\item{nchangepoints}{\code{nchangepoints} input to the function.}
-\item{weights}{\code{weights} input to the function.}
-\item{control}{\code{control} input to the function.}
-\item{lls}{Iteration-by-iteration
-\link[=logLik.multinom_TS_fit]{logLik} values for the
-full time series fit by \code{\link{multinom_TS}}.}
-\item{rhos}{Iteration-by-iteration change point estimates from
-\code{\link{est_changepoints}}.}
-\item{etas}{Iteration-by-iteration marginal regressor estimates from
-\code{\link{est_regressors}}, which have been
-unconditioned with respect to the change point locations.}
-\item{ptMCMC_diagnostics}{ptMCMC diagnostics,
-see \code{\link{diagnose_ptMCMC}}}
-\item{rho_summary}{Summary table describing \code{rhos} (the change
-point locations),
-see \code{\link{summarize_rhos}}.}
-\item{rho_vcov}{Variance-covariance matrix for the estimates of
-\code{rhos} (the change point locations), see
-\code{\link{measure_rho_vcov}}.}
-\item{eta_summary}{Summary table describing \code{ets} (the
-regressors),
-see \code{\link{summarize_etas}}.}
-\item{eta_vcov}{Variance-covariance matrix for the estimates of
-\code{etas} (the regressors), see
-\code{\link{measure_eta_vcov}}.}
-\item{logLik}{Across-iteration average of log-likelihoods
-(\code{lls}).}
-\item{nparams}{Total number of parameters in the full model,
-including the change point locations and regressors.}
-\item{deviance}{Penalized negative log-likelihood, based on
-\code{logLik} and \code{nparams}.}
-}
-\code{check_TS_inputs}: An error message is thrown if any input
-is not proper, else \code{NULL}.
+  elements, many of
+  which are hidden for \code{print}ing, but are accessible:
+  \describe{
+    \item{data}{\code{data} input to the function.}
+    \item{formula}{\code{\link[stats]{formula}} input to the function.}
+    \item{nchangepoints}{\code{nchangepoints} input to the function.}
+    \item{weights}{\code{weights} input to the function.}
+    \item{control}{\code{control} input to the function.}
+    \item{lls}{Iteration-by-iteration 
+               \link[=logLik.multinom_TS_fit]{logLik} values for the
+                full time series fit by \code{\link{multinom_TS}}.}
+    \item{rhos}{Iteration-by-iteration change point estimates from
+                \code{\link{est_changepoints}}.}
+    \item{etas}{Iteration-by-iteration marginal regressor estimates from
+                \code{\link{est_regressors}}, which have been 
+                unconditioned with respect to the change point locations.}
+    \item{ptMCMC_diagnostics}{ptMCMC diagnostics, 
+                               see \code{\link{diagnose_ptMCMC}}}
+    \item{rho_summary}{Summary table describing \code{rhos} (the change
+                       point locations), 
+                       see \code{\link{summarize_rhos}}.}
+    \item{rho_vcov}{Variance-covariance matrix for the estimates of
+                     \code{rhos} (the change point locations), see 
+                     \code{\link{measure_rho_vcov}}.}
+    \item{eta_summary}{Summary table describing \code{ets} (the 
+                       regressors), 
+                       see \code{\link{summarize_etas}}.}
+    \item{eta_vcov}{Variance-covariance matrix for the estimates of
+                     \code{etas} (the regressors), see 
+                     \code{\link{measure_eta_vcov}}.}
+    \item{logLik}{Across-iteration average of log-likelihoods 
+                   (\code{lls}).}
+    \item{nparams}{Total number of parameters in the full model,
+                   including the change point locations and regressors.}
+    \item{deviance}{Penalized negative log-likelihood, based on 
+                    \code{logLik} and \code{nparams}.}
+  } 
+  \code{check_TS_inputs}: An error message is thrown if any input
+  is not proper, else \code{NULL}.
 }
 \description{
 This is the main interface function for the LDATS application
-of Bayesian change point Time Series analyses (Christensen \emph{et al.}
-2018), which extends the model of Western and Kleykamp (2004;
-see also Ruggieri 2013) to multinomial (proportional) response data using
-softmax regression (Ripley 1996, Venables and Ripley 2002, Bishop 2006)
-using a generalized linear modeling approach (McCullagh and Nelder 1989).
-The models are fit using parallel tempering Markov Chain Monte Carlo
-(ptMCMC) methods (Earl and Deem 2005) to locate change points and
-neural networks (Ripley 1996, Venables and Ripley 2002, Bishop 2006) to
-estimate regressors. \cr \cr
-\code{check_TS_inputs} checks that the inputs to
-\code{TS} are of proper classes for a full analysis.
+  of Bayesian change point Time Series analyses (Christensen \emph{et al.}
+  2018), which extends the model of Western and Kleykamp (2004;
+  see also Ruggieri 2013) to multinomial (proportional) response data using
+  softmax regression (Ripley 1996, Venables and Ripley 2002, Bishop 2006) 
+  using a generalized linear modeling approach (McCullagh and Nelder 1989).
+  The models are fit using parallel tempering Markov Chain Monte Carlo
+  (ptMCMC) methods (Earl and Deem 2005) to locate change points and 
+  neural networks (Ripley 1996, Venables and Ripley 2002, Bishop 2006) to
+  estimate regressors. \cr \cr
+  \code{check_TS_inputs} checks that the inputs to 
+  \code{TS} are of proper classes for a full analysis.
 }
 \examples{
   data(rodents)
@@ -138,35 +138,35 @@ estimate regressors. \cr \cr
 
 }
 \references{
-Bishop, C. M. 2006. \emph{Pattern Recognition and Machine Learning}.
-Springer, New York, NY, USA.
+Bishop, C. M. 2006. \emph{Pattern Recognition and Machine Learning}. 
+   Springer, New York, NY, USA.
 
-Christensen, E., D. J. Harris, and S. K. M. Ernest. 2018.
-Long-term community change through multiple rapid transitions in a
-desert rodent community. \emph{Ecology} \strong{99}:1523-1529.
-\href{https://doi.org/10.1002/ecy.2373}{link}.
+  Christensen, E., D. J. Harris, and S. K. M. Ernest. 2018.
+  Long-term community change through multiple rapid transitions in a 
+  desert rodent community. \emph{Ecology} \strong{99}:1523-1529. 
+  \href{https://doi.org/10.1002/ecy.2373}{link}.
 
-Earl, D. J. and M. W. Deem. 2005. Parallel tempering: theory,
-applications, and new perspectives. \emph{Physical Chemistry Chemical
-Physics} \strong{7}: 3910-3916.
-\href{https://doi.org/10.1039/B509983H}{link}.
+  Earl, D. J. and M. W. Deem. 2005. Parallel tempering: theory, 
+  applications, and new perspectives. \emph{Physical Chemistry Chemical 
+  Physics} \strong{7}: 3910-3916.
+  \href{https://doi.org/10.1039/B509983H}{link}.
 
-McCullagh, P. and J. A. Nelder. 1989. \emph{Generalized Linear Models}.
-2nd Edition. Chapman and Hall, New York, NY, USA.
+  McCullagh, P. and J. A. Nelder. 1989. \emph{Generalized Linear Models}.
+  2nd Edition. Chapman and Hall, New York, NY, USA.
 
-Ripley, B. D. 1996. \emph{Pattern Recognition and Neural Networks}.
-Cambridge University Press, Cambridge, UK.
+  Ripley, B. D. 1996. \emph{Pattern Recognition and Neural Networks}. 
+  Cambridge University Press, Cambridge, UK.
 
-Ruggieri, E. 2013. A Bayesian approach to detecting change points in
-climactic records. \emph{International Journal of Climatology}
-\strong{33}:520-528.
-\href{https://doi.org/10.1002/joc.3447}{link}.
+  Ruggieri, E. 2013. A Bayesian approach to detecting change points in 
+  climactic records. \emph{International Journal of Climatology}
+  \strong{33}:520-528.
+  \href{https://doi.org/10.1002/joc.3447}{link}.
 
-Venables, W. N. and B. D. Ripley. 2002. \emph{Modern and Applied
-Statistics with S}. Fourth Edition. Springer, New York, NY, USA.
+  Venables, W. N. and B. D. Ripley. 2002. \emph{Modern and Applied
+  Statistics with S}. Fourth Edition. Springer, New York, NY, USA.
 
-Western, B. and M. Kleykamp. 2004. A Bayesian change point model for
-historical time series analysis. \emph{Political Analysis}
-\strong{12}:354-374.
-\href{https://doi.org/10.1093/pan/mph023}{link}.
+  Western, B. and M. Kleykamp. 2004. A Bayesian change point model for 
+  historical time series analysis. \emph{Political Analysis}
+  \strong{12}:354-374.
+  \href{https://doi.org/10.1093/pan/mph023}{link}.
 }

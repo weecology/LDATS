@@ -4,8 +4,8 @@
 \alias{LDA_TS}
 \alias{conform_LDA_TS_data}
 \alias{check_LDA_TS_inputs}
-\title{Run a full set of Latent Dirichlet Allocations and Time
-Series models}
+\title{Run a full set of Latent Dirichlet Allocations and Time 
+  Series models}
 \usage{
 LDA_TS(
   data,
@@ -34,44 +34,44 @@ check_LDA_TS_inputs(
 \arguments{
 \item{data}{Either a document term table or a list including at least
 a document term table (with the word "term" in the name of the element)
-and optionally also a document covariate table  (with the word
-"covariate" in the name of the element).
-\cr \cr
-The document term table is a table of observation count data (rows:
-documents, columns: terms) that may be a \code{matrix} or
+and optionally also a document covariate table  (with the word 
+"covariate" in the name of the element). 
+\cr \cr 
+The document term table is a table of observation count data (rows: 
+documents, columns: terms) that may be a \code{matrix} or 
 \code{data.frame}, but must be conformable to a matrix of integers,
-as verified by \code{\link{check_document_term_table}}.
+as verified by \code{\link{check_document_term_table}}.   
 \cr \cr
-The document covariate table is a table of associated data (rows:
+The document covariate table is a table of associated data (rows: 
 documents, columns: time index and covariate options) that may be a
-\code{matrix} or \code{data.frame}, but must be a conformable to a data
-table, as verified by \code{\link{check_document_covariate_table}}. Every
-model needs a covariate to describe the time value for each document
-(in whatever units and whose name in the table is input in
-\code{timename}) that dictates the application of the change points.
-\strong{\emph{If a covariate table is not provided, the model assumes the
-observations were equi-spaced in time}}. All covariates named within
+\code{matrix} or \code{data.frame}, but must be a conformable to a data 
+table, as verified by \code{\link{check_document_covariate_table}}. Every 
+model needs a covariate to describe the time value for each document 
+(in whatever units and whose name in the table is input in 
+\code{timename}) that dictates the application of the change points. 
+\strong{\emph{If a covariate table is not provided, the model assumes the 
+observations were equi-spaced in time}}. All covariates named within 
 specific models in \code{formulas} must be included.}
 
 \item{topics}{Vector of the number of topics to evaluate for each model.
 Must be conformable to \code{integer} values.}
 
-\item{nseeds}{\code{integer} number of seeds (replicate starts) to use for
-each value of \code{topics} in the LDAs. Must be conformable to
+\item{nseeds}{\code{integer} number of seeds (replicate starts) to use for 
+each value of \code{topics} in the LDAs. Must be conformable to 
 \code{integer} value.}
 
-\item{formulas}{Vector of \code{\link[stats]{formula}}(s) for the
-continuous (non-change point) component of the time series models. Any
+\item{formulas}{Vector of \code{\link[stats]{formula}}(s) for the 
+continuous (non-change point) component of the time series models. Any 
 predictor variable included in a formula must also be a column in the
 \code{document_covariate_table}. Each element (formula) in the vector
 is evaluated for each number of change points and each LDA model.}
 
-\item{nchangepoints}{Vector of \code{integer}s corresponding to the number
-of change points to include in the time series models. 0 is a valid input
+\item{nchangepoints}{Vector of \code{integer}s corresponding to the number 
+of change points to include in the time series models. 0 is a valid input 
 corresponding to no change points (\emph{i.e.}, a singular time series
-model), and the current implementation can reasonably include up to 6
-change points. Each element in the vector is the number of change points
-used to segment the data for each formula (entry in \code{formulas})
+model), and the current implementation can reasonably include up to 6 
+change points. Each element in the vector is the number of change points 
+used to segment the data for each formula (entry in \code{formulas}) 
 component of the TS model, for each selected LDA model.}
 
 \item{timename}{\code{character} element indicating the time variable
@@ -80,47 +80,47 @@ integer-conformable or a \code{Date}. If the variable named
 is a \code{Date}, the input is converted to an integer, resulting in the
 timestep being 1 day, which is often not desired behavior.}
 
-\item{weights}{Optional input for overriding standard weighting for
+\item{weights}{Optional input for overriding standard weighting for 
 documents in the time series. Defaults to \code{TRUE},
 translating to an appropriate weighting of the documents
-based on the size (number of words) each document (the result of
+based on the size (number of words) each document (the result of 
 \code{\link[topicmodels]{LDA}} is a matrix of proportions, which does not
-account for size differences among documents. Alternatively can be
+account for size differences among documents. Alternatively can be 
 \code{NULL} for an equal weighting among documents or a \code{numeric}
 vector.}
 
-\item{control}{A \code{list} of parameters to control the running and
-selecting of LDA and TS models. Values not input assume default values
+\item{control}{A \code{list} of parameters to control the running and 
+selecting of LDA and TS models. Values not input assume default values 
 set by \code{\link{LDA_TS_control}}.}
 
-\item{quiet}{\code{logical} indicator for \code{conform_LDA_TS_data} to
+\item{quiet}{\code{logical} indicator for \code{conform_LDA_TS_data} to 
 indicate if messages should be printed.}
 }
 \value{
-\code{LDA_TS}: a class \code{LDA_TS} list object including all
-fitted LDA and TS models and selected models specifically as elements
-\code{"LDA models"} (from \code{\link{LDA_set}}),
-\code{"Selected LDA model"} (from \code{\link{select_LDA}}),
-\code{"TS models"} (from \code{\link{TS_on_LDA}}), and
-\code{"Selected TS model"} (from \code{\link{select_TS}}). \cr \cr
-\code{conform_LDA_TS_data}: a data \code{list} that is ready for analyses
-using the stage-specific functions. \cr \cr
-\code{check_LDA_TS_inputs}: an error message is thrown if any input is
-improper, otherwise \code{NULL}.
+\code{LDA_TS}: a class \code{LDA_TS} list object including all 
+  fitted LDA and TS models and selected models specifically as elements 
+  \code{"LDA models"} (from \code{\link{LDA_set}}),
+  \code{"Selected LDA model"} (from \code{\link{select_LDA}}), 
+  \code{"TS models"} (from \code{\link{TS_on_LDA}}), and
+  \code{"Selected TS model"} (from \code{\link{select_TS}}). \cr \cr
+  \code{conform_LDA_TS_data}: a data \code{list} that is ready for analyses 
+  using the stage-specific functions. \cr \cr
+  \code{check_LDA_TS_inputs}: an error message is thrown if any input is 
+  improper, otherwise \code{NULL}.
 }
 \description{
-Conduct a complete LDATS analysis (Christensen
-\emph{et al.} 2018), including running a suite of Latent Dirichlet
-Allocation (LDA) models (Blei \emph{et al.} 2003, Grun and Hornik 2011)
-via \code{\link{LDA_set}}, selecting LDA model(s) via
-\code{\link{select_LDA}}, running a complete set of Bayesian Time Series
-(TS) models (Western and Kleykamp 2004) via \code{\link{TS_on_LDA}} on
-the chosen LDA model(s), and selecting the best TS model via
-\code{\link{select_TS}}. \cr \cr
-\code{conform_LDA_TS_data} converts the \code{data} input to
-match internal and sub-function specifications. \cr \cr
-\code{check_LDA_TS_inputs} checks that the inputs to
-\code{LDA_TS} are of proper classes for a full analysis.
+Conduct a complete LDATS analysis (Christensen 
+  \emph{et al.} 2018), including running a suite of Latent Dirichlet
+  Allocation (LDA) models (Blei \emph{et al.} 2003, Grun and Hornik 2011) 
+  via \code{\link{LDA_set}}, selecting LDA model(s) via 
+  \code{\link{select_LDA}}, running a complete set of Bayesian Time Series
+  (TS) models (Western and Kleykamp 2004) via \code{\link{TS_on_LDA}} on
+  the chosen LDA model(s), and selecting the best TS model via 
+  \code{\link{select_TS}}. \cr \cr
+  \code{conform_LDA_TS_data} converts the \code{data} input to
+  match internal and sub-function specifications. \cr \cr
+  \code{check_LDA_TS_inputs} checks that the inputs to 
+  \code{LDA_TS} are of proper classes for a full analysis.
 }
 \examples{
   data(rodents)
@@ -134,21 +134,21 @@ match internal and sub-function specifications. \cr \cr
 }
 \references{
 Blei, D. M., A. Y. Ng, and M. I. Jordan. 2003. Latent Dirichlet
-Allocation. \emph{Journal of Machine Learning Research}
-\strong{3}:993-1022.
-\href{http://jmlr.csail.mit.edu/papers/v3/blei03a.html}{link}.
+  Allocation. \emph{Journal of Machine Learning Research} 
+  \strong{3}:993-1022.
+  \href{http://jmlr.csail.mit.edu/papers/v3/blei03a.html}{link}.
 
-Christensen, E., D. J. Harris, and S. K. M. Ernest. 2018.
-Long-term community change through multiple rapid transitions in a
-desert rodent community. \emph{Ecology} \strong{99}:1523-1529.
-\href{https://doi.org/10.1002/ecy.2373}{link}.
+  Christensen, E., D. J. Harris, and S. K. M. Ernest. 2018.
+  Long-term community change through multiple rapid transitions in a 
+  desert rodent community. \emph{Ecology} \strong{99}:1523-1529. 
+  \href{https://doi.org/10.1002/ecy.2373}{link}.
 
-Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
-Models. \emph{Journal of Statistical Software} \strong{40}:13.
-\href{https://www.jstatsoft.org/article/view/v040i13}{link}.
+  Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
+  Models. \emph{Journal of Statistical Software} \strong{40}:13.
+  \href{https://www.jstatsoft.org/article/view/v040i13}{link}.
 
-Western, B. and M. Kleykamp. 2004. A Bayesian change point model for
-historical time series analysis. \emph{Political Analysis}
-\strong{12}:354-374.
-\href{https://doi.org/10.1093/pan/mph023}{link}.
+  Western, B. and M. Kleykamp. 2004. A Bayesian change point model for 
+  historical time series analysis. \emph{Political Analysis}
+  \strong{12}:354-374.
+  \href{https://doi.org/10.1093/pan/mph023}{link}.
 }

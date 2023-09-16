@@ -12,7 +12,7 @@ x axis where the specific change points being used are located.}
 }
 \description{
 Adds vertical lines to the plot of the time series of fitted
-proportions associated with the change points of interest.
+  proportions associated with the change points of interest.
 }
 \examples{
 \donttest{

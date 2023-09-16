@@ -12,16 +12,16 @@
 \item{...}{Not used, simply included to maintain method compatibility.}
 }
 \value{
-Log likelihood of the model, as class \code{logLik}, with
-attributes \code{df} (degrees of freedom) and \code{nobs} (the number of
-weighted observations, accounting for size differences among documents).
+Log likelihood of the model, as class \code{logLik}, with 
+  attributes \code{df} (degrees of freedom) and \code{nobs} (the number of
+  weighted observations, accounting for size differences among documents).
 }
 \description{
 Convenience function to simply extract the \code{logLik}
-element (and \code{df} and \code{nobs}) from a \code{multinom_TS_fit}
-object fit by \code{\link{multinom_TS}}. Extends
-\code{\link[stats]{logLik}} from \code{\link[nnet]{multinom}} to
-\code{multinom_TS_fit} objects.
+  element (and \code{df} and \code{nobs}) from a \code{multinom_TS_fit}
+  object fit by \code{\link{multinom_TS}}. Extends 
+  \code{\link[stats]{logLik}} from \code{\link[nnet]{multinom}} to 
+  \code{multinom_TS_fit} objects.
 }
 \examples{
   data(rodents)

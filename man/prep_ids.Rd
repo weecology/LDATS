@@ -11,8 +11,8 @@ update_ids(ids, swaps)
 }
 \arguments{
 \item{control}{A \code{list} of parameters to control the fitting of the
-Time Series model including the parallel tempering Markov Chain
-Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
+Time Series model including the parallel tempering Markov Chain 
+Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
 \code{\link{TS_control}}.}
 
 \item{ids}{The existing vector of chain ids.}
@@ -23,15 +23,15 @@ Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
 The vector of chain ids.
 }
 \description{
-\code{prep_ids} creates and \code{update_ids} updates
-the active vector of identities (ids) for each of the chains in the
-ptMCMC algorithm. These ids are used to track trips of the particles
-among chains.
-\cr \cr
-These functions were designed to work within \code{\link{TS}} and
-specifically \code{\link{est_changepoints}}, but have been generalized
-and would work within any general ptMCMC as long as \code{control},
-\code{ids}, and \code{swaps} are formatted properly.
+\code{prep_ids} creates and \code{update_ids} updates 
+  the active vector of identities (ids) for each of the chains in the 
+  ptMCMC algorithm. These ids are used to track trips of the particles
+  among chains.
+  \cr \cr
+  These functions were designed to work within \code{\link{TS}} and 
+  specifically \code{\link{est_changepoints}}, but have been generalized
+  and would work within any general ptMCMC as long as \code{control},
+  \code{ids}, and \code{swaps} are formatted properly.
 }
 \examples{
   prep_ids()

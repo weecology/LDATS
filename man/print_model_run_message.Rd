@@ -2,14 +2,14 @@
 % Please edit documentation in R/TS_on_LDA.R
 \name{print_model_run_message}
 \alias{print_model_run_message}
-\title{Print the message to the console about which combination of the
-Time Series and LDA models is being run}
+\title{Print the message to the console about which combination of the 
+  Time Series and LDA models is being run}
 \usage{
 print_model_run_message(models, i, LDA_models, control)
 }
 \arguments{
-\item{models}{\code{data.frame} object returned from
-\code{\link{expand_TS}} that contains the combinations of LDA models,
+\item{models}{\code{data.frame} object returned from 
+\code{\link{expand_TS}} that contains the combinations of LDA models, 
 and formulas and nchangepoints used in the TS models.}
 
 \item{i}{\code{integer} index of the row to use from \code{models}.}
@@ -19,9 +19,9 @@ and formulas and nchangepoints used in the TS models.}
 produced by \code{\link[topicmodels]{LDA}}).}
 
 \item{control}{A \code{list} of parameters to control the fitting of the
-Time Series model including the parallel tempering Markov Chain
-Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
-\code{\link{TS_control}}. Of particular importance here is
+Time Series model including the parallel tempering Markov Chain 
+Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
+\code{\link{TS_control}}. Of particular importance here is 
 the \code{logical}-class element named \code{quiet}.}
 }
 \value{
@@ -29,7 +29,7 @@ the \code{logical}-class element named \code{quiet}.}
 }
 \description{
 If desired, print a message at the beginning of every model
-combination stating the TS model and the LDA model being evaluated.
+  combination stating the TS model and the LDA model being evaluated.
 }
 \examples{
 \donttest{

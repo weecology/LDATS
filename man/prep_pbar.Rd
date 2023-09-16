@@ -11,14 +11,14 @@ update_pbar(pbar, control = list())
 }
 \arguments{
 \item{control}{A \code{list} of parameters to control the fitting of the
-Time Series model including the parallel tempering Markov Chain
-Monte Carlo (ptMCMC) controls. Values not input assume defaults set by
+Time Series model including the parallel tempering Markov Chain 
+Monte Carlo (ptMCMC) controls. Values not input assume defaults set by 
 \code{\link{TS_control}}. Of use here is \code{quiet} which is a
-a \code{logical} indicator of whether there should be information
-(i.e. the progress bar) printed during the run or not. Default is
+a \code{logical} indicator of whether there should be information 
+(i.e. the progress bar) printed during the run or not. Default is 
 \code{TRUE}.}
 
-\item{bar_type}{"rho" (for change point locations) or "eta" (for
+\item{bar_type}{"rho" (for change point locations) or "eta" (for 
 regressors).}
 
 \item{nr}{\code{integer} number of unique realizations, needed when
@@ -28,11 +28,11 @@ regressors).}
 }
 \value{
 \code{prep_pbar}: the initialized progress bar object. \cr \cr
-\code{update_pbar}: the ticked-forward \code{pbar}.
+  \code{update_pbar}: the ticked-forward \code{pbar}.
 }
 \description{
 \code{prep_pbar} creates and \code{update_pbar} steps
-through the progress bars (if desired) in \code{\link{TS}}
+  through the progress bars (if desired) in \code{\link{TS}}
 }
 \examples{
   pb <- prep_pbar(control = list(nit = 2)); pb

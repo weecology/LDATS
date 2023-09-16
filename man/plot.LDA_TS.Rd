@@ -53,8 +53,8 @@ summary plot. Currently only defined for \code{"median"} and
 }
 \description{
 Generalization of the \code{\link[graphics]{plot}} function to
-work on fitted LDA_TS model objects (class \code{LDA_TS}) returned by
-\code{\link{LDA_TS}}).
+  work on fitted LDA_TS model objects (class \code{LDA_TS}) returned by
+  \code{\link{LDA_TS}}).
 }
 \examples{
 \donttest{

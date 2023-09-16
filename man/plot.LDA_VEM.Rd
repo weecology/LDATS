@@ -50,23 +50,23 @@ proportions (otherwise defaults to "Document").}
 
 \item{cols}{Colors to be used to plot the topics.
 Any valid color values (\emph{e.g.}, see \code{\link[grDevices]{colors}},
-\code{\link[grDevices]{rgb}}) can be input as with a standard plot.
-The default (\code{cols = NULL}) triggers use of
+\code{\link[grDevices]{rgb}}) can be input as with a standard plot. 
+The default (\code{cols = NULL}) triggers use of 
 \code{\link[viridis]{viridis}} color options (see \code{option}).}
 
 \item{option}{A \code{character} string indicating the color option
-from \code{\link[viridis]{viridis}} to use if \code{cols == NULL}. Four
-options are available: "magma" (or "A"), "inferno" (or "B"), "plasma"
+from \code{\link[viridis]{viridis}} to use if `cols == NULL`. Four 
+options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" 
 (or "C", the default option), "viridis" (or "D") and "cividis" (or "E").}
 
-\item{alpha}{Numeric value \link{0,1} that indicates the transparency of the
-colors used. Supported only on some devices, see
+\item{alpha}{Numeric value [0,1] that indicates the transparency of the 
+colors used. Supported only on some devices, see 
 \code{\link[grDevices]{rgb}}.}
 
-\item{LDATS}{\code{logical} indicating if the LDA plot is part of a larger
+\item{LDATS}{\code{logical} indicating if the LDA plot is part of a larger 
 LDATS plot output.}
 
-\item{together}{\code{logical} indicating if the subplots are part of a
+\item{together}{\code{logical} indicating if the subplots are part of a 
 larger LDA plot output.}
 }
 \value{
@@ -74,14 +74,14 @@ larger LDA plot output.}
 }
 \description{
 Create an LDATS LDA summary plot, with a top panel showing
-the topic proportions for each word and a bottom panel showing the topic
-proportions of each document/over time. The plot function is defined for
-class \code{LDA_VEM} specifically (see \code{\link[topicmodels]{LDA}}).
-\cr \cr
-\code{LDA_plot_top_panel} creates an LDATS LDA summary plot
-top panel showing the topic proportions word-by-word. \cr \cr
-\code{LDA_plot_bottom_panel} creates an LDATS LDA summary plot
-bottom panel showing the topic proportions over time/documents.
+  the topic proportions for each word and a bottom panel showing the topic
+  proportions of each document/over time. The plot function is defined for
+  class \code{LDA_VEM} specifically (see \code{\link[topicmodels]{LDA}}).
+  \cr \cr
+  \code{LDA_plot_top_panel} creates an LDATS LDA summary plot 
+  top panel showing the topic proportions word-by-word. \cr \cr
+  \code{LDA_plot_bottom_panel} creates an LDATS LDA summary plot
+  bottom panel showing the topic proportions over time/documents.
 }
 \examples{
 \donttest{

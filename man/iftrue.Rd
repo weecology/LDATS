@@ -15,8 +15,8 @@ iftrue(x = TRUE, alt = NULL)
 \code{x} if not \code{TRUE}, \code{alt} otherwise.
 }
 \description{
-If the focal input is \code{TRUE}, replace it with
-alternative.
+If the focal input is \code{TRUE}, replace it with 
+  alternative.
 }
 \examples{
  iftrue()

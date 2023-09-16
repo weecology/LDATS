@@ -15,9 +15,9 @@
 The non-hidden parts of \code{x} as a \code{list}.
 }
 \description{
-Convenience function to print only the most important
-components of a \code{TS_fit}-class object fit by
-\code{\link{TS}}.
+Convenience function to print only the most important 
+  components of a \code{TS_fit}-class object fit by 
+  \code{\link{TS}}.
 }
 \examples{
 \donttest{

@@ -3,7 +3,7 @@
 \name{expand_TS}
 \alias{expand_TS}
 \title{Expand the TS models across the factorial combination of
-LDA models, formulas, and number of change points}
+  LDA models, formulas, and number of change points}
 \usage{
 expand_TS(LDA_models, formulas, nchangepoints)
 }
@@ -12,29 +12,29 @@ expand_TS(LDA_models, formulas, nchangepoints)
 \code{\link{LDA_set}}) or a singular LDA model (class \code{LDA},
 produced by \code{\link[topicmodels]{LDA}}).}
 
-\item{formulas}{Vector of \code{\link[stats]{formula}}(s) for the
-continuous (non-change point) component of the time series models. Any
+\item{formulas}{Vector of \code{\link[stats]{formula}}(s) for the 
+continuous (non-change point) component of the time series models. Any 
 predictor variable included in a formula must also be a column in the
 \code{document_covariate_table}. Each element (formula) in the vector
 is evaluated for each number of change points and each LDA model.}
 
-\item{nchangepoints}{Vector of \code{integer}s corresponding to the number
-of change points to include in the time series models. 0 is a valid input
+\item{nchangepoints}{Vector of \code{integer}s corresponding to the number 
+of change points to include in the time series models. 0 is a valid input 
 corresponding to no change points (\emph{i.e.}, a singular time series
-model), and the current implementation can reasonably include up to 6
-change points. Each element in the vector is the number of change points
-used to segment the data for each formula (entry in \code{formulas})
+model), and the current implementation can reasonably include up to 6 
+change points. Each element in the vector is the number of change points 
+used to segment the data for each formula (entry in \code{formulas}) 
 component of the TS model, for each selected LDA model.}
 }
 \value{
 Expanded \code{data.frame} table of the three values (columns) for
-each unique model run (rows): \link{1} the LDA model (indicated
-as a numeric element reference to the \code{LDA_models} object), \link{2} the
-regressor formula, and \link{3} the number of changepoints.
+  each unique model run (rows): [1] the LDA model (indicated
+  as a numeric element reference to the \code{LDA_models} object), [2] the 
+  regressor formula, and [3] the number of changepoints.
 }
 \description{
-Expand the completely crossed combination of model inputs:
-LDA model results, formulas, and number of change points.
+Expand the completely crossed combination of model inputs: 
+  LDA model results, formulas, and number of change points.
 }
 \examples{
 \donttest{

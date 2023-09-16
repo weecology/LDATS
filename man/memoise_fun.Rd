@@ -9,7 +9,7 @@ memoise_fun(fun, memoise_tf = TRUE)
 \arguments{
 \item{fun}{Function name to (potentially) be memoised.}
 
-\item{memoise_tf}{\code{logical} value indicating if \code{fun} should be
+\item{memoise_tf}{\code{logical} value indicating if \code{fun} should be 
 memoised.}
 }
 \value{
@@ -17,8 +17,8 @@ memoised.}
 }
 \description{
 This function provides a simple, logical toggle control on
-whether the function \code{fun} should be memoised via
-\code{\link[memoise]{memoise}} or not.
+  whether the function \code{fun} should be memoised via
+  \code{\link[memoise]{memoise}} or not.
 }
 \examples{
   sum_memo <- memoise_fun(sum)

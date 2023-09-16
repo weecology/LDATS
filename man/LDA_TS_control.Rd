@@ -28,41 +28,41 @@ LDA_TS_control(
 )
 }
 \arguments{
-\item{quiet}{\code{logical} indicator of whether the model should run
+\item{quiet}{\code{logical} indicator of whether the model should run 
 quietly.}
 
-\item{measurer_LDA, selector_LDA}{Function names for use in evaluation of
-the LDA models. \code{measurer_LDA} is used to create a value for each
+\item{measurer_LDA, selector_LDA}{Function names for use in evaluation of 
+the LDA models. \code{measurer_LDA} is used to create a value for each 
 model and \code{selector_LDA} operates on the values to choose the model.}
 
 \item{iseed}{\code{integer} initial seed for the LDA model set.}
 
-\item{memoise}{\code{logical} indicator of whether the multinomial
-functions should be memoised (via \code{\link[memoise]{memoise}}).
-Memoisation happens to both \code{\link{multinom_TS}} and
+\item{memoise}{\code{logical} indicator of whether the multinomial 
+functions should be memoised (via \code{\link[memoise]{memoise}}). 
+Memoisation happens to both \code{\link{multinom_TS}} and 
 \code{\link{multinom_TS_chunk}}.}
 
-\item{response}{\code{character} element indicating the response variable
+\item{response}{\code{character} element indicating the response variable 
 used in the time series. Should be set to \code{"gamma"} for LDATS.}
 
 \item{lambda}{\code{numeric} "weight" decay term used to set the prior
-on the regressors within each chunk-level model. Defaults to 0,
+on the regressors within each chunk-level model. Defaults to 0, 
 corresponding to a fully vague prior.}
 
-\item{measurer_TS, selector_TS}{Function names for use in evaluation of the
+\item{measurer_TS, selector_TS}{Function names for use in evaluation of the 
 TS models. \code{measurer_TS} is used to create a value for each model
 and \code{selector_TS} operates on the values to choose the model.}
 
-\item{ntemps}{\code{integer} number of temperatures (chains) to use in the
+\item{ntemps}{\code{integer} number of temperatures (chains) to use in the 
 ptMCMC algorithm.}
 
 \item{penultimate_temp}{Penultimate temperature in the ptMCMC sequence.}
 
 \item{ultimate_temp}{Ultimate temperature in the ptMCMC sequence.}
 
-\item{q}{Exponent controlling the ptMCMC temperature sequence from the
+\item{q}{Exponent controlling the ptMCMC temperature sequence from the 
 focal chain (reference with temperature = 1) to the penultimate chain. 0
-(default) implies a geometric sequence. 1 implies squaring before
+(default) implies a geometric sequence. 1 implies squaring before 
 exponentiating.}
 
 \item{nit}{\code{integer} number of iterations (steps) used in the ptMCMC
@@ -71,29 +71,29 @@ algorithm.}
 \item{magnitude}{Average magnitude (defining a geometric distribution)
 for the proposed step size in the ptMCMC algorithm.}
 
-\item{burnin}{\code{integer} number of iterations to remove from the
+\item{burnin}{\code{integer} number of iterations to remove from the 
 beginning of the ptMCMC algorithm.}
 
 \item{thin_frac}{Fraction of iterations to retain, from the ptMCMC. Must be
 \eqn{(0, 1]}, and the default value of 1 represents no thinning.}
 
-\item{summary_prob}{Probability used for summarizing the posterior
+\item{summary_prob}{Probability used for summarizing the posterior 
 distributions (via the highest posterior density interval, see
 \code{\link[coda]{HPDinterval}}) of the TS model.}
 
-\item{seed}{Input to \code{set.seed} in the time series model for
+\item{seed}{Input to \code{set.seed} in the time series model for 
 replication purposes.}
 
-\item{...}{Additional arguments to be passed to
+\item{...}{Additional arguments to be passed to 
 \code{\link[topicmodels]{LDA}} as a \code{control} input.}
 }
 \value{
-\code{list} of control \code{lists}, with named elements
-\code{LDAcontrol}, \code{TScontrol}, and \code{quiet}.
+\code{list} of control \code{lists}, with named elements 
+  \code{LDAcontrol}, \code{TScontrol}, and \code{quiet}.
 }
 \description{
 Create and define a list of control options used to run the
-LDATS model, as implemented by \code{\link{LDA_TS}}.
+  LDATS model, as implemented by \code{\link{LDA_TS}}.
 }
 \examples{
   LDA_TS_control()

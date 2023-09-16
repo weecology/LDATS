@@ -24,32 +24,32 @@ TS_control(
 )
 }
 \arguments{
-\item{memoise}{\code{logical} indicator of whether the multinomial
-functions should be memoised (via \code{\link[memoise]{memoise}}).
-Memoisation happens to both \code{\link{multinom_TS}} and
+\item{memoise}{\code{logical} indicator of whether the multinomial 
+functions should be memoised (via \code{\link[memoise]{memoise}}). 
+Memoisation happens to both \code{\link{multinom_TS}} and 
 \code{\link{multinom_TS_chunk}}.}
 
-\item{response}{\code{character} element indicating the response variable
+\item{response}{\code{character} element indicating the response variable 
 used in the time series.}
 
 \item{lambda}{\code{numeric} "weight" decay term used to set the prior
-on the regressors within each chunk-level model. Defaults to 0,
+on the regressors within each chunk-level model. Defaults to 0, 
 corresponding to a fully vague prior.}
 
 \item{measurer, selector}{Function names for use in evaluation of the TS
 models. \code{measurer} is used to create a value for each model
 and \code{selector} operates on the values to choose the model.}
 
-\item{ntemps}{\code{integer} number of temperatures (chains) to use in the
+\item{ntemps}{\code{integer} number of temperatures (chains) to use in the 
 ptMCMC algorithm.}
 
 \item{penultimate_temp}{Penultimate temperature in the ptMCMC sequence.}
 
 \item{ultimate_temp}{Ultimate temperature in the ptMCMC sequence.}
 
-\item{q}{Exponent controlling the ptMCMC temperature sequence from the
+\item{q}{Exponent controlling the ptMCMC temperature sequence from the 
 focal chain (reference with temperature = 1) to the penultimate chain. 0
-(default) implies a geometric sequence. 1 implies squaring before
+(default) implies a geometric sequence. 1 implies squaring before 
 exponentiating.}
 
 \item{nit}{\code{integer} number of iterations (steps) used in the ptMCMC
@@ -58,16 +58,16 @@ algorithm.}
 \item{magnitude}{Average magnitude (defining a geometric distribution)
 for the proposed step size in the ptMCMC algorithm.}
 
-\item{quiet}{\code{logical} indicator of whether the model should run
+\item{quiet}{\code{logical} indicator of whether the model should run 
 quietly (if \code{FALSE}, a progress bar and notifications are printed).}
 
-\item{burnin}{\code{integer} number of iterations to remove from the
+\item{burnin}{\code{integer} number of iterations to remove from the 
 beginning of the ptMCMC algorithm.}
 
 \item{thin_frac}{Fraction of iterations to retain, must be \eqn{(0, 1]},
 and the default value of 1 represents no thinning.}
 
-\item{summary_prob}{Probability used for summarizing the posterior
+\item{summary_prob}{Probability used for summarizing the posterior 
 distributions (via the highest posterior density interval, see
 \code{\link[coda]{HPDinterval}}).}
 
@@ -78,8 +78,8 @@ distributions (via the highest posterior density interval, see
 }
 \description{
 This function provides a simple creation and definition of a
-list used to control the time series model fit occurring within
-\code{\link{TS}}.
+  list used to control the time series model fit occurring within 
+  \code{\link{TS}}.
 }
 \examples{
   TS_control()

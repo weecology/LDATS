@@ -445,12 +445,12 @@ ldats_ldamodel <- readRDS(file.path(vignette_files, "output", "ldats_ldamodel.RD
 ```
 
 How the paper LDA model assigns species to topics:
-```{r plot paper LDA, fig.width = 7, fig.height = 6}
+```{r plot-paper-LDA, fig.width = 7, fig.height = 6}
 plot(ldamodel, cols = NULL, option = "D")
 ```
 
 How the LDATS LDA model assigns species to topics:
-```{r plot LDATS LDA, fig.width = 7, fig.height = 6}
+```{r plot-LDATS-LDA, fig.width = 7, fig.height = 6}
 plot(ldats_ldamodel, cols = NULL, option = "D")
 ```
 

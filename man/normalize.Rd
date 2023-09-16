@@ -13,7 +13,7 @@ normalize(x)
 Normalized \code{x}.
 }
 \description{
-Normalize a \code{numeric} vector to be on the scale of \link{0,1}.
+Normalize a \code{numeric} vector to be on the scale of [0,1].
 }
 \examples{
  normalize(1:10)

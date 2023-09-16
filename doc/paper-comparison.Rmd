@@ -15,7 +15,7 @@ params:
 
 # Introduction
 
-This document provides a side-by-side comparison of **`LDATS`** (version 0.2.7) results with analysis from [Christensen et al. 2018](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2373). 
+This document provides a side-by-side comparison of **`LDATS`** (version 0.3.0) results with analysis from [Christensen et al. 2018](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2373). 
 Due to the size and duration of model runs, we use pre-generated model output from the [LDATS-replications repo](https://github.com/weecology/LDATS-replications).
 
 ## Summary
@@ -464,7 +464,7 @@ How the paper LDA model assigns species to topics:
 plot(ldamodel, cols = NULL, option = "D")
 ```
 
-![plot of chunk plot paper LDA](figure/plot paper LDA-1.png)
+![plot of chunk plot-paper-LDA](figure/plot-paper-LDA-1.png)
 
 How the LDATS LDA model assigns species to topics:
 
@@ -472,7 +472,7 @@ How the LDATS LDA model assigns species to topics:
 plot(ldats_ldamodel, cols = NULL, option = "D")
 ```
 
-![plot of chunk plot LDATS LDA](figure/plot LDATS LDA-1.png)
+![plot of chunk plot-LDATS-LDA](figure/plot-LDATS-LDA-1.png)
 
 The paper method finds 4 topics and LDATS finds 6. This is because of an update to the model selection procedure. The paper conservatively overestimates the number of parameters (by counting all of the variational parameters) and therefore overpenalizes the AIC for models with more topics. Comparatively, the LDATS method now uses the number of parameters remaining after the variational approximation, as returned by the LDA object. For this vignette, we will compare the results from using both LDA models.
 

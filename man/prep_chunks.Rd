@@ -2,17 +2,17 @@
 % Please edit documentation in R/multinom_TS.R
 \name{prep_chunks}
 \alias{prep_chunks}
-\title{Prepare the time chunk table for a multinomial change point
-Time Series model}
+\title{Prepare the time chunk table for a multinomial change point 
+  Time Series model}
 \usage{
 prep_chunks(data, changepoints = NULL, timename = "time")
 }
 \arguments{
-\item{data}{Class \code{data.frame} object including the predictor and
+\item{data}{Class \code{data.frame} object including the predictor and 
 response variables, but specifically here containing the column indicated
 by the \code{timename} input.}
 
-\item{changepoints}{Numeric vector indicating locations of the change
+\item{changepoints}{Numeric vector indicating locations of the change 
 points. Must be conformable to \code{integer} values.}
 
 \item{timename}{\code{character} element indicating the time variable
@@ -23,14 +23,14 @@ timestep being 1 day, which is often not desired behavior.}
 }
 \value{
 \code{data.frame} of \code{start} and \code{end} times (columns)
-for each chunk (rows).
+  for each chunk (rows).
 }
 \description{
 Creates the table containing the start and end times for each
-chunk within a time series, based on the change points (used to break up
-the time series) and the range of the time series. If there are no
-change points (i.e. \code{changepoints} is \code{NULL}, there is still a
-single chunk defined by the start and end of the time series.
+  chunk within a time series, based on the change points (used to break up
+  the time series) and the range of the time series. If there are no 
+  change points (i.e. \code{changepoints} is \code{NULL}, there is still a
+  single chunk defined by the start and end of the time series.
 }
 \examples{
   data(rodents)

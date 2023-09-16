@@ -13,11 +13,11 @@
 }
 \value{
 Log likelihood of the model \code{logLik}, also with \code{df}
-(degrees of freedom) and \code{nobs} (number of observations) values.
+  (degrees of freedom) and \code{nobs} (number of observations) values.
 }
 \description{
 Convenience function to extract and format the log likelihood
-of a \code{TS_fit}-class object fit by \code{\link{multinom_TS}}.
+  of a \code{TS_fit}-class object fit by \code{\link{multinom_TS}}.
 }
 \examples{
 \donttest{

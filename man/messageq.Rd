@@ -7,7 +7,7 @@
 messageq(msg = NULL, quiet = FALSE)
 }
 \arguments{
-\item{msg}{\code{character} vector of the message(s) to generate or
+\item{msg}{\code{character} vector of the message(s) to generate or 
 \code{NULL}. If more than one element is contained in \code{msg}, they
 are concatenated with a newline between.}
 
@@ -15,8 +15,8 @@ are concatenated with a newline between.}
 generated.}
 }
 \description{
-Given the input to \code{quiet}, generate the message(s)
-in \code{msg} or not.
+Given the input to \code{quiet}, generate the message(s) 
+  in \code{msg} or not.
 }
 \examples{
   messageq("hello")

@@ -12,11 +12,11 @@ for triggering internal weighting by document sizes.}
 }
 \value{
 An error message is thrown if \code{weights} is not proper,
-else \code{NULL}.
+  else \code{NULL}.
 }
 \description{
-Check that the vector of document weights is numeric and
-positive and inform the user if the average weight isn't 1.
+Check that the vector of document weights is numeric and 
+  positive and inform the user if the average weight isn't 1.
 }
 \examples{
   check_weights(1)

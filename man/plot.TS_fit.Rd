@@ -30,15 +30,15 @@ used, just retained for alignment with \code{\link[graphics]{plot}}.}
 testing.}
 
 \item{cols}{\code{list} of elements used to define the colors for the two
-panels of the summary plot, as generated simply using
-\code{\link{set_TS_summary_plot_cols}}. \code{cols} has two elements
-\code{rho} and \code{gamma}, each corresponding to the related panel,
+panels of the summary plot, as generated simply using 
+\code{\link{set_TS_summary_plot_cols}}. \code{cols} has two elements 
+\code{rho} and \code{gamma}, each corresponding to the related panel, 
 and each containing default values for entries named \code{cols},
-\code{option}, and \code{alpha}. See \code{\link{set_gamma_colors}} and
+\code{option}, and \code{alpha}. See \code{\link{set_gamma_colors}} and 
 \code{\link{set_rho_hist_colors}} for details on usage.}
 
-\item{bin_width}{Width of the bins used in the histograms of the summary
-time series plot, in units of the x-axis (the time variable used to fit
+\item{bin_width}{Width of the bins used in the histograms of the summary 
+time series plot, in units of the x-axis (the time variable used to fit 
 the model).}
 
 \item{xname}{Label for the x-axis in the summary time series plot. Defaults
@@ -49,19 +49,19 @@ no label printed, set \code{xname = ""}.}
 \item{border}{Border for the histogram, default is \code{NA}.}
 
 \item{selection}{Indicator of the change points to use in the time series
-summary plot. Currently only defined for \code{"median"} and
+summary plot. Currently only defined for \code{"median"} and 
 \code{"mode"}.}
 
-\item{LDATS}{\code{logical} indicating if the plot is part of a larger
+\item{LDATS}{\code{logical} indicating if the plot is part of a larger 
 LDATS plot output.}
 }
 \value{
 \code{NULL}.
 }
 \description{
-Generalization of the \code{\link[graphics]{plot}} function to
-work on fitted TS model objects (class \code{TS_fit}) returned from
-\code{\link{TS}}.
+Generalization of the \code{\link[graphics]{plot}} function to 
+  work on fitted TS model objects (class \code{TS_fit}) returned from 
+  \code{\link{TS}}.
 }
 \examples{
 \donttest{

@@ -11,11 +11,11 @@ sim_LDA_TS_data(N, Beta, X, Eta, rho, tD, err = 0, seed = NULL)
 conformable. Is used to infer the total number of documents.}
 
 \item{Beta}{\code{matrix} of categorical distribution parameters defining
-terms within topics. Dimension: k x V (number of topics x number of
-terms). Used to infer both (k) and (V). Must be non-negative and sum to
+terms within topics. Dimension: k x V (number of topics x number of 
+terms). Used to infer both (k) and (V). Must be non-negative and sum to 
 1 within topics.}
 
-\item{X}{\code{matrix} of covariates, dimension M (number of documents) x
+\item{X}{\code{matrix} of covariates, dimension M (number of documents) x 
 C (number of covariates, including the intercept) (a.k.a the design
 matrix).}
 
@@ -23,15 +23,15 @@ matrix).}
 dimension: SC (number of segments x number of covariates, including the
 intercept) x k (number of topics).}
 
-\item{rho}{Vector of integer-conformable time locations of changepoints or
-\code{NULL} if no changepoints. Used to determine the number of
+\item{rho}{Vector of integer-conformable time locations of changepoints or 
+\code{NULL} if no changepoints. Used to determine the number of 
 segments. Must exist within the bounds of the times of the documents,
 \code{tD}.}
 
 \item{tD}{Vector of integer-conformable times of the documents. Must be
 of length M (as determined by \code{X}).}
 
-\item{err}{Additive error on the link-scale. Must be a non-negative
+\item{err}{Additive error on the link-scale. Must be a non-negative 
 \code{numeric} value. Default value of \code{0} indicates no error.}
 
 \item{seed}{Input to \code{\link{set.seed}}.}
@@ -40,13 +40,13 @@ of length M (as determined by \code{X}).}
 A document-by-term \code{matrix} of counts (dim: M x V).
 }
 \description{
-For a given set of covariates \code{X}; parameters
-\code{Beta}, \code{Eta}, \code{rho}, and \code{err}; and
-document-specific time stamps \code{tD} and lengths \code{N}),
-simulate a document-by-topic matrix.
-Additional structuring variables (the numbers of topics (k), terms (V),
-documents (M), segments (S), and covariates per segment (C))
-are inferred from input objects.
+For a given set of covariates \code{X}; parameters 
+  \code{Beta}, \code{Eta}, \code{rho}, and \code{err}; and 
+  document-specific time stamps \code{tD} and lengths \code{N}),
+  simulate a document-by-topic matrix.
+  Additional structuring variables (the numbers of topics (k), terms (V), 
+  documents (M), segments (S), and covariates per segment (C))
+  are inferred from input objects.
 }
 \examples{
   N <- c(10, 22, 15, 31)

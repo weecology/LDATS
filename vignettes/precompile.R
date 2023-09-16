@@ -2,10 +2,12 @@
 
 knitr::knit("vignettes/paper-comparison.Rmd.remote_needs", output = "vignettes/paper-comparison.Rmd")
 
-# Manually move figure files from /figure to /vignettes/figure
+# Manually move figure files from /figure to /vignettes
 
-dir.create(file.path("vignettes", "figure"), showWarnings = FALSE)
-file.copy(file.path("figure"), file.path("vignettes"), recursive = TRUE)
+
+file.copy(from = list.files(file.path("figure"), full.names = TRUE),
+          to   = file.path("vignettes"))
+
 unlink(file.path("figure"), force = TRUE, recursive = TRUE)
 
 # Build checking
