@@ -15,7 +15,7 @@ params:
 
 # Introduction
 
-This document provides a side-by-side comparison of **`LDATS`** (version 0.2.7) results with analysis from [Christensen et al. 2018](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2373). 
+This document provides a side-by-side comparison of **`LDATS`** (version 0.3.0) results with analysis from [Christensen et al. 2018](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.2373). 
 Due to the size and duration of model runs, we use pre-generated model output from the [LDATS-replications repo](https://github.com/weecology/LDATS-replications).
 
 ## Summary
