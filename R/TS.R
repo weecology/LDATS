@@ -104,7 +104,7 @@
 #'   Christensen, E., D. J. Harris, and S. K. M. Ernest. 2018.
 #'   Long-term community change through multiple rapid transitions in a 
 #'   desert rodent community. \emph{Ecology} \strong{99}:1523-1529. 
-#'   \href{https://esajournals.onlinelibrary.wiley.com/doi/epdf/10.1002/ecy.2373}{link}.
+#'   \href{https://pubmed.ncbi.nlm.nih.gov/29718539/}{link}.
 #'
 #'   Earl, D. J. and M. W. Deem. 2005. Parallel tempering: theory, 
 #'   applications, and new perspectives. \emph{Physical Chemistry Chemical 
@@ -120,7 +120,7 @@
 #'   Ruggieri, E. 2013. A Bayesian approach to detecting change points in 
 #'   climactic records. \emph{International Journal of Climatology}
 #'   \strong{33}:520-528.
-#'   \href{https://rmets.onlinelibrary.wiley.com/doi/10.1002/joc.3447}{link}.
+#'   \href{https://mathcs.holycross.edu/~eruggier/joc3447.pdf}{link}.
 #'
 #'   Venables, W. N. and B. D. Ripley. 2002. \emph{Modern and Applied
 #'   Statistics with S}. Fourth Edition. Springer, New York, NY, USA.

@@ -155,12 +155,12 @@ Version numbers follow [Semantic Versioning](https://semver.org/).
 * `plot.LDA_TS()` plots produce the combination of plots.
 
 ## Rodents data set
-* Portal rodent data from [Christensen *et al.* (2018)](https://doi.org/10.1002/ecy.2373) are now provided in a pre-formatted and ready-to-roll data object.
+* Portal rodent data from [Christensen *et al.* (2018)](https://pubmed.ncbi.nlm.nih.gov/29718539/) are now provided in a pre-formatted and ready-to-roll data object.
 * Access the data using `data(rodents)`.
 * Note, however, that the data in Christensen *et al.* 2018 are scaled according to trapping effort. The data included in LDATS are not, to allow for appropriate weighting. See [comparison vignette](https://weecology.github.io/LDATS/articles/paper-comparison.html) for further details.
 
 
-## Comparison with [Christensen *et al.* (2018)](https://doi.org/10.1002/ecy.2373)
+## Comparison with [Christensen *et al.* (2018)](https://pubmed.ncbi.nlm.nih.gov/29718539/)
 * The [comparison vignette](https://weecology.github.io/LDATS/articles/paper-comparison.html) provides a step-by-step comparison of the LDATS pipeline to the analysis in Christensen *et al.* 2018. 
 * The key differences are as follows:
 
@@ -172,4 +172,4 @@ Version numbers follow [Semantic Versioning](https://semver.org/).
 # [LDATS 0.0.1](https://github.com/weecology/LDATS/commit/326506b9d7fb3e0223948d0245381963f83a2b37) 
 *2017-11-16*
 
-* Beginning initial development of package from [original code](https://github.com/emchristensen/Extreme-events-LDA) used in [Christensen *et al.* (2018)](https://doi.org/10.1002/ecy.2373).
+* Beginning initial development of package from [original code](https://github.com/emchristensen/Extreme-events-LDA) used in [Christensen *et al.* (2018)](https://pubmed.ncbi.nlm.nih.gov/29718539/).
