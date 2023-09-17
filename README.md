@@ -54,11 +54,11 @@ prints the selected LDA and TS models and
 plot(r_LDATS)
 ```
 produces a 4-panel figure of them a la Figure 1 from
-[Christensen et al. 2018](https://esajournals.onlinelibrary.wiley.com/doi/epdf/10.1002/ecy.2373).
+[Christensen et al. 2018](https://pubmed.ncbi.nlm.nih.gov/29718539/).
 
 ## More Information 
 
-Based on initial work using [LDA to analyze time-series data at Portal by Erica M. Christensen, David J. Harris, and S. K. Morgan Ernest](https://github.com/emchristensen/Extreme-events-LDA), which has been [published in *Ecology*](https://esajournals.onlinelibrary.wiley.com/doi/epdf/10.1002/ecy.2373)
+Based on initial work using [LDA to analyze time-series data at Portal by Erica M. Christensen, David J. Harris, and S. K. Morgan Ernest](https://github.com/emchristensen/Extreme-events-LDA), which has been [published in *Ecology*](https://pubmed.ncbi.nlm.nih.gov/29718539/)
 
 ## Acknowledgements 
 
@@ -69,10 +69,10 @@ R. Diaz was supported in part by a [National Science Foundation Graduate Researc
 ## Author Contributions
 
 **J. L. Simonis** provided insight on LDA applications and feedback on technical writing during development of the first version of the LDATS model and application, led the coding and mathematical development of the model into an R package, and led writing on the technical model document. 
-**E. M. Christensen** led the project during development of the first version of the LDATS model and its application to the Portal data, specifically conceiving the project, coding the pipeline wrappers of the analysis, and writing and editing the first description of the model and its application ([Christensen *et al.* 2018](https://esajournals.onlinelibrary.wiley.com/doi/epdf/10.1002/ecy.2373)). 
-**D. J. Harris** was involved in developing and applying the first version of the LDATS model, specifically suggesting the LDA and change point approaches, coding the first version of the change point model, and writing and editing the first description of the model ([Christensen *et al.* 2018](https://esajournals.onlinelibrary.wiley.com/doi/epdf/10.1002/ecy.2373)). 
+**E. M. Christensen** led the project during development of the first version of the LDATS model and its application to the Portal data, specifically conceiving the project, coding the pipeline wrappers of the analysis, and writing and editing the first description of the model and its application ([Christensen *et al.* 2018](https://pubmed.ncbi.nlm.nih.gov/29718539/)). 
+**D. J. Harris** was involved in developing and applying the first version of the LDATS model, specifically suggesting the LDA and change point approaches, coding the first version of the change point model, and writing and editing the first description of the model ([Christensen *et al.* 2018](https://pubmed.ncbi.nlm.nih.gov/29718539/)). 
 **R. Diaz** contributed code to the LDATS package, wrote vignettes, provided insight into model development, and conducted extensive end-user code application testing. 
 **H. Ye** contributed code to the LDATS package, insight into data structures and LDA algorithms, and significant feedback on vignettes. 
 **E. P. White** helped design, troubleshoot, and supervise initial methods development; provided big-picture feedback on development of the R package; contributed end-user application testing; and gave substantial editing feedback on the technical document. 
-**S. K. Morgan Ernest** provided managerial oversight and feedback on the project in both the initial and second stages of LDATS development, tested applications of the code to data sets, and assisted with writing and editing of the first description of the model and its application ([Christensen *et al.* 2018](https://esajournals.onlinelibrary.wiley.com/doi/epdf/10.1002/ecy.2373)) as well as the technical model document.
+**S. K. Morgan Ernest** provided managerial oversight and feedback on the project in both the initial and second stages of LDATS development, tested applications of the code to data sets, and assisted with writing and editing of the first description of the model and its application ([Christensen *et al.* 2018](https://pubmed.ncbi.nlm.nih.gov/29718539/)) as well as the technical model document.
 

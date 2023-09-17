@@ -32,7 +32,7 @@
 #'   Long-term monitoring and experimental manipulation of a Chihuahuan desert
 #'     ecosystem near Portal, Arizona ({1977-2013}).
 #'   \emph{Ecology} \strong{97}:1082. 
-#'   \href{https://www.researchgate.net/publication/301905617_Long-term_monitoring_and_experimental_manipulation_of_a_Chihuahuan_desert_ecosystem_near_Portal_Arizona_1977-2013}{link}.
+#'   \href{https://experts.nebraska.edu/en/publications/long-term-monitoring-and-experimental-manipulation-of-a-chihuahua}{link}.
 #'  
 "rodents"
 

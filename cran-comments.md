@@ -17,9 +17,9 @@ We now pre-compile the paper-comparison vignette following https://ropensci.org/
 * GitHub Actions: Ubuntu 22.04.3 LTS, x86_64-pc-linux-gnu (64-bit), R 4.0.5 (2021-03-31)  
 * GitHub Actions: Ubuntu 22.04.3 LTS, x86_64-pc-linux-gnu (64-bit), R 3.6.3 (2020-02-29)
 
-* win-builder: 
-* win-builder: 
-* win-builder: 
+* win-builder: Windows Server 2022 x64 (build 20348), x86_64-w64-mingw32, R Under development (unstable) (2023-09-15 r85153 ucrt)
+* win-builder: Windows Server 2022 x64 (build 20348), x86_64-w64-mingw32, R 4.3.1 (2023-06-16 ucrt)
+* win-builder: Windows Server 2022 x64 (build 20348), x86_64-w64-mingw32, R 4.2.3 (2023-03-15 ucrt)
 
 * mac-builder: macosx, macOS 13.3.1 (22E261), r-release-macosx-arm64, R 4.3.0
 
