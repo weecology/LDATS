@@ -14,7 +14,7 @@ params:
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "figure/"
+  fig.path = "output/"
 )
 if(is.na(tryCatch(params, error = function(x){NA}))){
   params <- list(run_models = FALSE)

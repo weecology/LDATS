@@ -4,7 +4,7 @@
 # temporarily change working directory 
 
 wd <- getwd()
-setwd("paper_comparison/")
+setwd("precompile/")
 
 knitr::knit(input  = "paper-comparison.Rmd.remote_needs", 
             output = "../vignettes/paper-comparison.Rmd")
@@ -17,11 +17,6 @@ from_files <- list.files(path       = "output",
 
 file.copy(from      = from_files,
           to        = file.path("..", "vignettes", "output"),
-          recursive = TRUE,
-          overwrite = TRUE)
-
-file.copy(from      = file.path("figure"),
-          to        = file.path("..", "vignettes"),
           recursive = TRUE,
           overwrite = TRUE)
 
