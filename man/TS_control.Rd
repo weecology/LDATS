@@ -4,11 +4,24 @@
 \alias{TS_control}
 \title{Create the controls list for the Time Series model}
 \usage{
-TS_control(memoise = TRUE, response = "gamma", lambda = 0,
-  measurer = AIC, selector = min, ntemps = 6,
-  penultimate_temp = 2^6, ultimate_temp = 1e+10, q = 0,
-  nit = 10000, magnitude = 12, quiet = FALSE, burnin = 0,
-  thin_frac = 1, summary_prob = 0.95, seed = NULL)
+TS_control(
+  memoise = TRUE,
+  response = "gamma",
+  lambda = 0,
+  measurer = AIC,
+  selector = min,
+  ntemps = 6,
+  penultimate_temp = 2^6,
+  ultimate_temp = 1e+10,
+  q = 0,
+  nit = 10000,
+  magnitude = 12,
+  quiet = FALSE,
+  burnin = 0,
+  thin_frac = 1,
+  summary_prob = 0.95,
+  seed = NULL
+)
 }
 \arguments{
 \item{memoise}{\code{logical} indicator of whether the multinomial 

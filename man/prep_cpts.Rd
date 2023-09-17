@@ -6,8 +6,7 @@
 \title{Initialize and update the change point matrix used in the ptMCMC
   algorithm}
 \usage{
-prep_cpts(data, formula, nchangepoints, timename, weights,
-  control = list())
+prep_cpts(data, formula, nchangepoints, timename, weights, control = list())
 
 update_cpts(cpts, swaps)
 }

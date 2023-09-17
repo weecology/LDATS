@@ -6,14 +6,34 @@
 \alias{rho_hist}
 \title{Create the summary plot for a TS fit to an LDA model}
 \usage{
-TS_summary_plot(x, cols = set_TS_summary_plot_cols(), bin_width = 1,
-  xname = NULL, border = NA, selection = "median", LDATS = FALSE)
+TS_summary_plot(
+  x,
+  cols = set_TS_summary_plot_cols(),
+  bin_width = 1,
+  xname = NULL,
+  border = NA,
+  selection = "median",
+  LDATS = FALSE
+)
 
-pred_gamma_TS_plot(x, selection = "median", cols = set_gamma_colors(x),
-  xname = NULL, together = FALSE, LDATS = FALSE)
+pred_gamma_TS_plot(
+  x,
+  selection = "median",
+  cols = set_gamma_colors(x),
+  xname = NULL,
+  together = FALSE,
+  LDATS = FALSE
+)
 
-rho_hist(x, cols = set_rho_hist_colors(x$rhos), bin_width = 1,
-  xname = NULL, border = NA, together = FALSE, LDATS = FALSE)
+rho_hist(
+  x,
+  cols = set_rho_hist_colors(x$rhos),
+  bin_width = 1,
+  xname = NULL,
+  border = NA,
+  together = FALSE,
+  LDATS = FALSE
+)
 }
 \arguments{
 \item{x}{Object of class \code{TS_fit} produced by \code{\link{TS}}.}

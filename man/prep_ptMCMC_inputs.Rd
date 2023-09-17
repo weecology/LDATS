@@ -5,8 +5,14 @@
 \title{Prepare the inputs for the ptMCMC algorithm estimation of 
   change points}
 \usage{
-prep_ptMCMC_inputs(data, formula, nchangepoints, timename,
-  weights = NULL, control = list())
+prep_ptMCMC_inputs(
+  data,
+  formula,
+  nchangepoints,
+  timename,
+  weights = NULL,
+  control = list()
+)
 }
 \arguments{
 \item{data}{Class \code{data.frame} object including [1] the time variable

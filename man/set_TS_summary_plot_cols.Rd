@@ -4,9 +4,14 @@
 \alias{set_TS_summary_plot_cols}
 \title{Create the list of colors for the TS summary plot}
 \usage{
-set_TS_summary_plot_cols(rho_cols = NULL, rho_option = "D",
-  rho_alpha = 0.4, gamma_cols = NULL, gamma_option = "C",
-  gamma_alpha = 0.8)
+set_TS_summary_plot_cols(
+  rho_cols = NULL,
+  rho_option = "D",
+  rho_alpha = 0.4,
+  gamma_cols = NULL,
+  gamma_option = "C",
+  gamma_alpha = 0.8
+)
 }
 \arguments{
 \item{rho_cols}{Colors to be used to plot the histograms of change points.

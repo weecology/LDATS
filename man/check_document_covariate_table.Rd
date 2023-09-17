@@ -4,8 +4,11 @@
 \alias{check_document_covariate_table}
 \title{Check that the document covariate table is proper}
 \usage{
-check_document_covariate_table(document_covariate_table,
-  LDA_models = NULL, document_term_table = NULL)
+check_document_covariate_table(
+  document_covariate_table,
+  LDA_models = NULL,
+  document_term_table = NULL
+)
 }
 \arguments{
 \item{document_covariate_table}{Document covariate table to evaluate.}

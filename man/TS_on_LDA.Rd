@@ -5,13 +5,25 @@
 \alias{check_TS_on_LDA_inputs}
 \title{Conduct a set of Time Series analyses on a set of LDA models}
 \usage{
-TS_on_LDA(LDA_models, document_covariate_table, formulas = ~1,
-  nchangepoints = 0, timename = "time", weights = NULL,
-  control = list())
+TS_on_LDA(
+  LDA_models,
+  document_covariate_table,
+  formulas = ~1,
+  nchangepoints = 0,
+  timename = "time",
+  weights = NULL,
+  control = list()
+)
 
-check_TS_on_LDA_inputs(LDA_models, document_covariate_table,
-  formulas = ~1, nchangepoints = 0, timename = "time",
-  weights = NULL, control = list())
+check_TS_on_LDA_inputs(
+  LDA_models,
+  document_covariate_table,
+  formulas = ~1,
+  nchangepoints = 0,
+  timename = "time",
+  weights = NULL,
+  control = list()
+)
 }
 \arguments{
 \item{LDA_models}{List of LDA models (class \code{LDA_set}, produced by

@@ -40,7 +40,7 @@
 #'   Blei, D. M., A. Y. Ng, and M. I. Jordan. 2003. Latent Dirichlet
 #'   Allocation. \emph{Journal of Machine Learning Research} 
 #'   \strong{3}:993-1022.
-#'   \href{http://jmlr.csail.mit.edu/papers/v3/blei03a.html}{link}.
+#'   \href{https://jmlr.csail.mit.edu/papers/v3/blei03a.html}{link}.
 #'
 #'   Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
 #'   Models. \emph{Journal of Statistical Software} \strong{40}:13.
@@ -91,7 +91,7 @@ LDA_set <- function(document_term_table, topics = 2, nseeds = 1,
 #' @references 
 #'   Buntine, W. 2002. Variational extensions to EM and multinomial PCA. 
 #'   \emph{European Conference on Machine Learning, Lecture Notes in Computer 
-#'   Science} \strong{2430}:23-34. \href{https://bit.ly/327sltH}{link}.
+#'   Science} \strong{2430}:23-34. \href{https://link.springer.com/chapter/10.1007/3-540-36755-1_3}{link}.
 #'
 #'   Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
 #'   Models. \emph{Journal of Statistical Software} \strong{40}:13.
@@ -100,7 +100,7 @@ LDA_set <- function(document_term_table, topics = 2, nseeds = 1,
 #'   Hoffman, M. D., D. M. Blei, and F. Bach. 2010. Online learning for 
 #'   latent Dirichlet allocation. \emph{Advances in Neural Information 
 #'   Processing Systems} \strong{23}:856-864.
-#'   \href{https://bit.ly/2LEr5sb}{link}.
+#'   \href{https://papers.nips.cc/paper/3902-online-learning-for-latent-dirichlet-allocation}{link}.
 #'
 #' @examples 
 #'   data(rodents)

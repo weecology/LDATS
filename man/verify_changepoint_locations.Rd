@@ -4,8 +4,7 @@
 \alias{verify_changepoint_locations}
 \title{Verify the change points of a multinomial time series model}
 \usage{
-verify_changepoint_locations(data, changepoints = NULL,
-  timename = "time")
+verify_changepoint_locations(data, changepoints = NULL, timename = "time")
 }
 \arguments{
 \item{data}{Class \code{data.frame} object including the predictor and 

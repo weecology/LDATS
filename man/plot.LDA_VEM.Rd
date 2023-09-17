@@ -6,14 +6,36 @@
 \alias{LDA_plot_bottom_panel}
 \title{Plot the results of an LDATS LDA model}
 \usage{
-\method{plot}{LDA_VEM}(x, ..., xtime = NULL, xname = NULL,
-  cols = NULL, option = "C", alpha = 0.8, LDATS = FALSE)
+\method{plot}{LDA_VEM}(
+  x,
+  ...,
+  xtime = NULL,
+  xname = NULL,
+  cols = NULL,
+  option = "C",
+  alpha = 0.8,
+  LDATS = FALSE
+)
 
-LDA_plot_top_panel(x, cols = NULL, option = "C", alpha = 0.8,
-  together = FALSE, LDATS = FALSE)
+LDA_plot_top_panel(
+  x,
+  cols = NULL,
+  option = "C",
+  alpha = 0.8,
+  together = FALSE,
+  LDATS = FALSE
+)
 
-LDA_plot_bottom_panel(x, xtime = NULL, xname = NULL, cols = NULL,
-  option = "C", alpha = 0.8, together = FALSE, LDATS = FALSE)
+LDA_plot_bottom_panel(
+  x,
+  xtime = NULL,
+  xname = NULL,
+  cols = NULL,
+  option = "C",
+  alpha = 0.8,
+  together = FALSE,
+  LDATS = FALSE
+)
 }
 \arguments{
 \item{x}{Object of class \code{LDA_VEM}.}

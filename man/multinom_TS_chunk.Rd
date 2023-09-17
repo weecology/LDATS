@@ -4,8 +4,14 @@
 \alias{multinom_TS_chunk}
 \title{Fit a multinomial Time Series model chunk}
 \usage{
-multinom_TS_chunk(data, formula, chunk, timename = "time",
-  weights = NULL, control = list())
+multinom_TS_chunk(
+  data,
+  formula,
+  chunk,
+  timename = "time",
+  weights = NULL,
+  control = list()
+)
 }
 \arguments{
 \item{data}{Class \code{data.frame} object including the predictor and 

@@ -1,9 +1,9 @@
 ---
-title: "Latent Dirichlet Allocation Time Series (LDATS)"
+title: "LDATS Codebase"
 author: "Juniper L. Simonis"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{LDATScodebase}
+  %\VignetteIndexEntry{LDATS Codebase}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

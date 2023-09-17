@@ -4,8 +4,15 @@
 \alias{plot.LDA_TS}
 \title{Plot the key results from a full LDATS analysis}
 \usage{
-\method{plot}{LDA_TS}(x, ..., cols = set_LDA_TS_plot_cols(),
-  bin_width = 1, xname = NULL, border = NA, selection = "median")
+\method{plot}{LDA_TS}(
+  x,
+  ...,
+  cols = set_LDA_TS_plot_cols(),
+  bin_width = 1,
+  xname = NULL,
+  border = NA,
+  selection = "median"
+)
 }
 \arguments{
 \item{x}{A \code{LDA_TS} object of a full LDATS model fit by

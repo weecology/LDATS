@@ -6,3 +6,5 @@ Meta
 working/~$ats_ms.docx
 docs/*
 *.Rproj
+/doc/
+/Meta/

@@ -5,11 +5,23 @@
 \alias{check_TS_inputs}
 \title{Conduct a single multinomial Bayesian Time Series analysis}
 \usage{
-TS(data, formula = gamma ~ 1, nchangepoints = 0, timename = "time",
-  weights = NULL, control = list())
+TS(
+  data,
+  formula = gamma ~ 1,
+  nchangepoints = 0,
+  timename = "time",
+  weights = NULL,
+  control = list()
+)
 
-check_TS_inputs(data, formula = gamma ~ 1, nchangepoints = 0,
-  timename = "time", weights = NULL, control = list())
+check_TS_inputs(
+  data,
+  formula = gamma ~ 1,
+  nchangepoints = 0,
+  timename = "time",
+  weights = NULL,
+  control = list()
+)
 }
 \arguments{
 \item{data}{\code{data.frame} including [1] the time variable (indicated 
@@ -132,12 +144,12 @@ Bishop, C. M. 2006. \emph{Pattern Recognition and Machine Learning}.
   Christensen, E., D. J. Harris, and S. K. M. Ernest. 2018.
   Long-term community change through multiple rapid transitions in a 
   desert rodent community. \emph{Ecology} \strong{99}:1523-1529. 
-  \href{https://doi.org/10.1002/ecy.2373}{link}.
+  \href{https://pubmed.ncbi.nlm.nih.gov/29718539/}{link}.
 
   Earl, D. J. and M. W. Deem. 2005. Parallel tempering: theory, 
   applications, and new perspectives. \emph{Physical Chemistry Chemical 
   Physics} \strong{7}: 3910-3916.
-  \href{https://doi.org/10.1039/B509983H}{link}.
+  \href{https://pubs.rsc.org/en/content/articlelanding/2005/CP/b509983h}{link}.
 
   McCullagh, P. and J. A. Nelder. 1989. \emph{Generalized Linear Models}.
   2nd Edition. Chapman and Hall, New York, NY, USA.
@@ -148,7 +160,7 @@ Bishop, C. M. 2006. \emph{Pattern Recognition and Machine Learning}.
   Ruggieri, E. 2013. A Bayesian approach to detecting change points in 
   climactic records. \emph{International Journal of Climatology}
   \strong{33}:520-528.
-  \href{https://doi.org/10.1002/joc.3447}{link}.
+  \href{https://mathcs.holycross.edu/~eruggier/joc3447.pdf}{link}.
 
   Venables, W. N. and B. D. Ripley. 2002. \emph{Modern and Applied
   Statistics with S}. Fourth Edition. Springer, New York, NY, USA.
@@ -156,5 +168,5 @@ Bishop, C. M. 2006. \emph{Pattern Recognition and Machine Learning}.
   Western, B. and M. Kleykamp. 2004. A Bayesian change point model for 
   historical time series analysis. \emph{Political Analysis}
   \strong{12}:354-374.
-  \href{https://doi.org/10.1093/pan/mph023}{link}.
+  \href{https://www.cambridge.org/core/journals/political-analysis/article/abs/bayesian-change-point-model-for-historical-time-series-analysis/F7D2EDBBC211278EC6C6CB43FE170812}{link}.
 }

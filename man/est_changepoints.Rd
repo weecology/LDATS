@@ -4,8 +4,14 @@
 \alias{est_changepoints}
 \title{Use ptMCMC to estimate the distribution of change point locations}
 \usage{
-est_changepoints(data, formula, nchangepoints, timename, weights,
-  control = list())
+est_changepoints(
+  data,
+  formula,
+  nchangepoints,
+  timename,
+  weights,
+  control = list()
+)
 }
 \arguments{
 \item{data}{\code{data.frame} including [1] the time variable (indicated 

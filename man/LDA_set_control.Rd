@@ -4,8 +4,7 @@
 \alias{LDA_set_control}
 \title{Create control list for set of LDA models}
 \usage{
-LDA_set_control(quiet = FALSE, measurer = AIC, selector = min,
-  iseed = 2, ...)
+LDA_set_control(quiet = FALSE, measurer = AIC, selector = min, iseed = 2, ...)
 }
 \arguments{
 \item{quiet}{\code{logical} indicator of whether the model should run 

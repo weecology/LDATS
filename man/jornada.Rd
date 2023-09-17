@@ -4,14 +4,16 @@
 \name{jornada}
 \alias{jornada}
 \title{Jornada rodent data}
-\format{A \code{list} of two \code{data.frame}-class objects with rows 
+\format{
+A \code{list} of two \code{data.frame}-class objects with rows 
   corresponding to documents (sampling events). One element is the
   document term table (called \code{document_term_table}), which contains
   counts of the species (terms) in each sample (document), and the other is
   the document covariate table (called \code{document_covariate_table}) 
-  with columns of covariates (time step, year, season).}
+  with columns of covariates (time step, year, season).
+}
 \source{
-\url{https://jornada.nmsu.edu/lter/dataset/49798/view}
+\url{https://lter.jornada.nmsu.edu/data-catalog/}
 }
 \usage{
 jornada
@@ -26,6 +28,6 @@ Lightfoot, D. C., A. D. Davidson, D. G. Parker, L. Hernandez, and J. W.
   Laundre. 2012. Bottom-up regulation of desert grassland and shrubland 
   rodent communities: implications of species-specific reproductive
   potentials. \emph{Journal of Mammalogy} \strong{93}:1017-1028.
-  \href{https://doi.org/10.1644/11-MAMM-A-391.1}{link}.
+  \href{https://academic.oup.com/jmammal/article/93/4/1017/957927}{link}.
 }
 \keyword{datasets}

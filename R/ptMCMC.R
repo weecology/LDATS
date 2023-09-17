@@ -36,7 +36,7 @@
 #'   Katzgraber, H. G., S. Trebst, D. A. Huse. And M. Troyer. 2006. 
 #'   Feedback-optimized parallel tempering Monte Carlo. \emph{Journal of 
 #'   Statistical Mechanics: Theory and Experiment} \strong{3}:P03018
-#'   \href{https://bit.ly/2LICGXh}{link}.
+#'   \href{https://iopscience.iop.org/article/10.1088/1742-5468/2006/03/P03018}{link}.
 #'
 #' @examples 
 #' \donttest{
@@ -89,7 +89,7 @@ diagnose_ptMCMC <- function(ptMCMCout){
 #'   Katzgraber, H. G., S. Trebst, D. A. Huse. And M. Troyer. 2006. 
 #'   Feedback-optimized parallel tempering Monte Carlo. \emph{Journal of 
 #'   Statistical Mechanics: Theory and Experiment} \strong{3}:P03018
-#'   \href{https://bit.ly/2LICGXh}{link}.
+#'   \href{https://iopscience.iop.org/article/10.1088/1742-5468/2006/03/P03018}{link}.
 #'
 #' @examples 
 #' \donttest{
@@ -168,12 +168,12 @@ count_trips <- function(ids){
 #'   Earl, D. J. and M. W. Deem. 2005. Parallel tempering: theory, 
 #'   applications, and new perspectives. \emph{Physical Chemistry Chemical 
 #'   Physics} \strong{7}: 3910-3916.
-#'   \href{https://rsc.li/2XkxPCm}{link}.
+#'   \href{https://pubs.rsc.org/en/content/articlelanding/2005/cp/b509983h}{link}.
 #'
 #'   Falcioni, M. and M. W. Deem. 1999. A biased Monte Carlo scheme for 
 #'   zeolite structure solution.  \emph{Journal of Chemical Physics}
 #'   \strong{110}: 1754-1766.
-#'   \href{https://aip.scitation.org/doi/10.1063/1.477812}{link}.
+#'   \href{https://pubs.aip.org/aip/jcp/article/110/3/1754/475486/A-biased-Monte-Carlo-scheme-for-zeolite-structure}{link}.
 #' 
 #'   Geyer, C. J. 1991. Markov Chain Monte Carlo maximum likelihood. \emph{In
 #'   Computing Science and Statistics: Proceedings of the 23rd Symposium on 
@@ -293,7 +293,7 @@ swap_chains <- function(chainsin, inputs, ids){
 #'
 #'   Hastings, W. K. 1970. Monte Carlo sampling methods using Markov Chains
 #'   and their applications. \emph{Biometrika} \strong{57}:97-109.
-#'   \href{https://doi.org/10.2307/2334940}{link}.
+#'   \href{https://academic.oup.com/biomet/article-abstract/57/1/97/284580}{link}.
 #'  
 #'   Metropolis, N., A. W. Rosenbluth, M. N. Rosenbluth, A. H. Teller, and E.
 #'   Teller. 1953. Equations of state calculations by fast computing machines.

@@ -4,10 +4,18 @@
 \alias{plot.TS_fit}
 \title{Plot an LDATS TS model}
 \usage{
-\method{plot}{TS_fit}(x, ..., plot_type = "summary",
-  interactive = FALSE, cols = set_TS_summary_plot_cols(),
-  bin_width = 1, xname = NULL, border = NA, selection = "median",
-  LDATS = FALSE)
+\method{plot}{TS_fit}(
+  x,
+  ...,
+  plot_type = "summary",
+  interactive = FALSE,
+  cols = set_TS_summary_plot_cols(),
+  bin_width = 1,
+  xname = NULL,
+  border = NA,
+  selection = "median",
+  LDATS = FALSE
+)
 }
 \arguments{
 \item{x}{A \code{TS_fit} object of a multinomial time series model fit by

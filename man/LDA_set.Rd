@@ -5,8 +5,7 @@
 \alias{check_LDA_set_inputs}
 \title{Run a set of Latent Dirichlet Allocation models}
 \usage{
-LDA_set(document_term_table, topics = 2, nseeds = 1,
-  control = list())
+LDA_set(document_term_table, topics = 2, nseeds = 1, control = list())
 
 check_LDA_set_inputs(document_term_table, topics, nseeds, control)
 }
@@ -58,7 +57,7 @@ For a given dataset consisting of counts of words across
 Blei, D. M., A. Y. Ng, and M. I. Jordan. 2003. Latent Dirichlet
   Allocation. \emph{Journal of Machine Learning Research} 
   \strong{3}:993-1022.
-  \href{http://jmlr.csail.mit.edu/papers/v3/blei03a.html}{link}.
+  \href{https://jmlr.csail.mit.edu/papers/v3/blei03a.html}{link}.
 
   Grun B. and K. Hornik. 2011. topicmodels: An R Package for Fitting Topic
   Models. \emph{Journal of Statistical Software} \strong{40}:13.

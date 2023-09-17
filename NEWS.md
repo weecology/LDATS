@@ -3,7 +3,16 @@
 Version numbers follow [Semantic Versioning](https://semver.org/).
 
 
-# LDATS 0.2.7(https://github.com/weecology/ldats/releases/tag/v0.2.7)
+# LDATS 0.3.0
+*2023-09-16* 
+
+## Patching CRAN issues with vignette building
+* The paper comparison vignette is now pre-computed to avoid needing to access internet resources during cran build (see https://ropensci.org/blog/2019/12/08/precompute-vignettes/). 
+
+## Converting from travis ci to github actions
+* Travis CI no longer works, so shifting to github actions for builds
+
+# [LDATS 0.2.7](https://github.com/weecology/ldats/releases/tag/v0.2.7)
 *2020-03-18* 
 
 ## Patching CRAN issues with vignette building
@@ -11,14 +20,14 @@ Version numbers follow [Semantic Versioning](https://semver.org/).
 * For the paper comparison vignette, all of the code is pre-run and saved in the LDATS-replications repository
 * Allows removal of otherwise unused packages from this package's dependency list
 
-# LDATS 0.2.6(https://github.com/weecology/ldats/releases/tag/v0.2.6)
+# [LDATS 0.2.6](https://github.com/weecology/ldats/releases/tag/v0.2.6)
 *2020-03-02* 
 
 ## Patching a bug in tests for r-devel
 * `straingsAsFactors` update
 * only involved patching one test
 
-# LDATS 0.2.5(https://github.com/weecology/ldats/releases/tag/v0.2.5)
+# [LDATS 0.2.5](https://github.com/weecology/ldats/releases/tag/v0.2.5)
 *2019-12-22* 
 
 ## General editing of simulation functions
@@ -146,12 +155,12 @@ Version numbers follow [Semantic Versioning](https://semver.org/).
 * `plot.LDA_TS()` plots produce the combination of plots.
 
 ## Rodents data set
-* Portal rodent data from [Christensen *et al.* (2018)](https://doi.org/10.1002/ecy.2373) are now provided in a pre-formatted and ready-to-roll data object.
+* Portal rodent data from [Christensen *et al.* (2018)](https://pubmed.ncbi.nlm.nih.gov/29718539/) are now provided in a pre-formatted and ready-to-roll data object.
 * Access the data using `data(rodents)`.
 * Note, however, that the data in Christensen *et al.* 2018 are scaled according to trapping effort. The data included in LDATS are not, to allow for appropriate weighting. See [comparison vignette](https://weecology.github.io/LDATS/articles/paper-comparison.html) for further details.
 
 
-## Comparison with [Christensen *et al.* (2018)](https://doi.org/10.1002/ecy.2373)
+## Comparison with [Christensen *et al.* (2018)](https://pubmed.ncbi.nlm.nih.gov/29718539/)
 * The [comparison vignette](https://weecology.github.io/LDATS/articles/paper-comparison.html) provides a step-by-step comparison of the LDATS pipeline to the analysis in Christensen *et al.* 2018. 
 * The key differences are as follows:
 
@@ -163,4 +172,4 @@ Version numbers follow [Semantic Versioning](https://semver.org/).
 # [LDATS 0.0.1](https://github.com/weecology/LDATS/commit/326506b9d7fb3e0223948d0245381963f83a2b37) 
 *2017-11-16*
 
-* Beginning initial development of package from [original code](https://github.com/emchristensen/Extreme-events-LDA) used in [Christensen *et al.* (2018)](https://doi.org/10.1002/ecy.2373).
+* Beginning initial development of package from [original code](https://github.com/emchristensen/Extreme-events-LDA) used in [Christensen *et al.* (2018)](https://pubmed.ncbi.nlm.nih.gov/29718539/).

@@ -5,12 +5,23 @@
 \alias{check_multinom_TS_inputs}
 \title{Fit a multinomial change point Time Series model}
 \usage{
-multinom_TS(data, formula, changepoints = NULL, timename = "time",
-  weights = NULL, control = list())
+multinom_TS(
+  data,
+  formula,
+  changepoints = NULL,
+  timename = "time",
+  weights = NULL,
+  control = list()
+)
 
-check_multinom_TS_inputs(data, formula = gamma ~ 1,
-  changepoints = NULL, timename = "time", weights = NULL,
-  control = list())
+check_multinom_TS_inputs(
+  data,
+  formula = gamma ~ 1,
+  changepoints = NULL,
+  timename = "time",
+  weights = NULL,
+  control = list()
+)
 }
 \arguments{
 \item{data}{\code{data.frame} including [1] the time variable (indicated 

@@ -1,9 +1,9 @@
 ---
-title: "LDATS Rodents Example"
+title: "Rodents Example"
 author: "Renata Diaz and Juniper L. Simonis"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{rodentsexample}
+  %\VignetteIndexEntry{Rodents Example}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
