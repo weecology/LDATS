@@ -32,7 +32,7 @@ Blei, D. M., A. Y. Ng, and M. I. Jordan. 2003. Latent Dirichlet
   Christensen, E., D. J. Harris, and S. K. M. Ernest. 2018.
   Long-term community change through multiple rapid transitions in a 
   desert rodent community. \emph{Ecology} \strong{99}:1523-1529. 
-  \href{https://esajournals.onlinelibrary.wiley.com/doi/epdf/10.1002/ecy.2373}{link}.
+  \href{https://pubmed.ncbi.nlm.nih.gov/29718539/}{link}.
 
   Venables, W. N. and B. D. Ripley. 2002. \emph{Modern and Applied
   Statistics with S}. Fourth Edition. Springer, New York, NY, USA.
