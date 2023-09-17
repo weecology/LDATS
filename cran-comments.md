@@ -31,7 +31,7 @@ We now pre-compile the paper-comparison vignette prior to the formal build proce
 ## R CMD check results:
 There were no ERRORs, WARNINGs, or substantive NOTEs
 
-There are spurious NOTES associated with URLs on the win-builder system:
+### There are spurious NOTES associated with URLs on the win-builder system:
 
 * checking CRAN incoming feasibility ... NOTE
 Maintainer: 'Juniper L. Simonis <juniper.simonis@weecology.org>'
@@ -48,7 +48,7 @@ Found the following (possibly) invalid DOIs:
     Status: Forbidden
     Message: 403
 
-There are spurious NOTES associated with URLs and the manual build on the Windows Server of R hub:
+### There are spurious NOTES associated with URLs and the manual build on the Windows Server of R hub:
 
 * checking CRAN incoming feasibility ... [224s] NOTE
 Maintainer: 'Juniper L. Simonis <juniper.simonis@weecology.org>'
